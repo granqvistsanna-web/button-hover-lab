@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Thirty-five button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Fifty-two button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Thirty-five button hover animations, actually built.">
+<meta property="og:description" content="Fifty-two button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -98,79 +98,62 @@
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
   .icon{display:block; width:14px; height:14px}
 
-  /* 01 Textrull */
+  /* 26 Textrull */
   .roll .track{display:block; overflow:hidden; height:1.25em}
   .roll .inner{display:block; transition:transform var(--t-5) var(--e-quint)}
   .roll .inner span{display:block; line-height:1.25}
   .roll:hover .inner{transform:translateY(-50%)}
 
-  /* 02 Weight crossfade */
-  .wcross .stack{display:inline-grid; justify-items:center}
-  .wcross .stack span{grid-area:1/1; white-space:nowrap; transition:opacity var(--t-3) ease}
-  .wcross .w-a{font-weight:450}
-  .wcross .w-b{font-weight:760; opacity:0}
-  .wcross:hover .w-a{opacity:0}
-  .wcross:hover .w-b{opacity:1}
-
-  /* 03 Split-flap */
-  .flap .word{display:inline-flex}
-  .flap .cell{position:relative; display:inline-block; perspective:260px}
-  .flap .fa,.flap .fb{display:inline-block; transition:transform var(--t-4) var(--e-quint),opacity var(--t-4) ease; transition-delay:calc(var(--i) * var(--t-stagger))}
-  .flap .fa{transform:rotateX(0)}
-  .flap .fb{position:absolute; left:0; top:0; transform:rotateX(-92deg); opacity:0}
-  .flap:hover .fa{transform:rotateX(92deg); opacity:0}
-  .flap:hover .fb{transform:rotateX(0); opacity:1}
-
-  /* 04 Riktad svep */
+  /* 01 Riktad svep */
   .sweep{overflow:hidden}
   .sweep::before{content:""; position:absolute; inset:0; background:var(--ink); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
   .sweep:hover::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .sweep:hover .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
 
-  /* 05 Slutare */
+  /* 02 Slutare */
   .shutter{overflow:hidden}
   .shutter::before{content:""; position:absolute; inset:0; background:var(--accent); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
   .shutter:hover::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .shutter:hover .lbl{color:var(--on-accent); transition-delay:var(--d-1)}
 
-  /* 06 Ink fill */
+  /* 03 Ink fill */
   .inkfill{overflow:hidden; border:1px solid color-mix(in srgb,var(--ink) 35%,transparent)}
   .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
   .inkfill:hover::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
   .inkfill:hover .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
 
-  /* 07 Sheen */
+  /* 04 Sheen */
   .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease}
   .sheen:hover{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
   .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
   .sheen:hover::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
   .sheen .lbl{position:relative}
 
-  /* 08 Pilstafett */
+  /* 05 Pilstafett */
   .relay .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .relay .a1{transition:transform var(--t-4) var(--e-quint)}
   .relay .a2{position:absolute; inset:0; transform:translateX(-150%); transition:transform var(--t-4) var(--e-quint) var(--d-1)}
   .relay:hover .a1{transform:translateX(150%)}
   .relay:hover .a2{transform:translateX(0)}
 
-  /* 09 Punkt → pil */
+  /* 06 Punkt → pil */
   .dotm .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .dotm .d{position:absolute; inset:0; margin:auto; width:6px; height:6px; border-radius:50%; background:currentColor; transition:transform var(--t-4) var(--e-quint),opacity var(--t-3) ease}
   .dotm .ar{position:absolute; inset:0; transform:translateX(-160%); transition:transform var(--t-4) var(--e-quint) var(--d-1)}
   .dotm:hover .d{transform:translateX(190%); opacity:0}
   .dotm:hover .ar{transform:translateX(0)}
 
-  /* 10 Guillemeter */
+  /* 07 Guillemeter */
   .guil{gap:8px}
   .guil .g{display:inline-block; width:.55em; color:var(--accent); opacity:0; transition:transform var(--t-4) var(--e-quint),opacity var(--t-3) ease}
   .guil .g--l{transform:translateX(9px)}
   .guil .g--r{transform:translateX(-9px)}
   .guil:hover .g{opacity:1; transform:translateX(0)}
 
-  /* 11 Crop marks */
+  /* 08 Crop marks */
   .corners{font:500 11.5px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; border-radius:0; padding:15px 24px}
   .corners::before,.corners::after,.corners i::before,.corners i::after{
     content:""; position:absolute; width:9px; height:9px; opacity:0;
@@ -187,19 +170,19 @@
   }
   .corners:focus-visible{outline:none}
 
-  /* 12 Riktad understrykning */
+  /* 09 Riktad understrykning */
   .uline{font-weight:500}
   .uline::after{content:""; position:absolute; left:4px; right:4px; bottom:2px; height:1.5px; background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform var(--t-4) var(--e-quint)}
   .uline:hover::after{transform:scaleX(1); transform-origin:left}
 
-  /* 13 Elevation step */
+  /* 10 Elevation step */
   .lift{background:var(--lift-bg); border:1px solid var(--line);
     box-shadow:0 1px 2px rgba(var(--shadow-rgb),.07);
     transition:transform var(--t-4) var(--e-quint),box-shadow var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
   .lift:hover{transform:translateY(-2px); border-color:color-mix(in srgb,var(--ink) 30%,var(--line)); box-shadow:0 7px 18px rgba(var(--shadow-rgb),.13),0 2px 5px rgba(var(--shadow-rgb),.08)}
   .lift:active{transform:translateY(0) scale(.98); box-shadow:0 1px 2px rgba(var(--shadow-rgb),.08); transition-duration:var(--t-1)}
 
-  /* 14 Magnetisk */
+  /* 11 Magnetisk */
   .magnet{will-change:transform}
   .magnet .m-lbl{display:inline-block; will-change:transform}
 
@@ -274,6 +257,24 @@
   .fav:active{transform:scale(.88)}
   .fav svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor; stroke-width:1.6}
   .fav[aria-pressed="true"] svg{fill:currentColor}
+  /* Copy to Framer — mirrors .fav at the other corner of the stage, so the two
+     stage actions read as one small bar rather than two unrelated affordances. */
+  .copy{
+    position:absolute; top:9px; left:9px; z-index:2;
+    width:36px; height:36px; display:grid; place-items:center;
+    background:none; border:0; border-radius:7px; cursor:pointer;
+    color:var(--line); opacity:0;
+    transition:opacity var(--t-3) ease,color var(--t-3) ease,transform var(--t-3) var(--e-out);
+  }
+  .spec:hover .copy,.copy:focus-visible,.copy[data-done="1"]{opacity:1}
+  /* No hover to reveal it on touch — show it faintly instead. */
+  @media (hover: none){ .copy{opacity:.6; color:var(--muted)} }
+  .copy:hover{color:var(--muted)}
+  .copy:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .copy:active{transform:scale(.88)}
+  .copy[data-done="1"]{color:var(--accent)}
+  .copy svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor;
+    stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
   .spec[hidden],.sect[hidden]{display:none}
   .tools-empty{margin-top:28px; padding:26px; border:1px dashed var(--line); border-radius:12px; text-align:center; font-size:13.5px; color:var(--muted)}
 
@@ -285,9 +286,9 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">Hover studies · 35 in all</p>
+    <p class="eyebrow">Hover studies · 52 in all</p>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Thirty-five hover animations, actually built — hover, tab and press all of them.
+    <p class="lede">Fifty-two hover animations, actually built — hover, tab and press all of them.
     A monochrome base, so each one carries any brand tone. Five house rules apply to every single one:</p>
     <div class="rules">
       <div><b>Instant response</b><span>The press lands on pointer-down, not on release.</span></div>
@@ -322,52 +323,15 @@
     </div>
   </div>
 
-  <section class="sect">
-    <h2>A — The label does the work</h2>
-    <div class="grid">
-
-      <article class="spec">
-        <div class="stage">
-          <button class="btn btn--solid roll"><span class="track"><span class="inner"><span>Book a meeting</span><span aria-hidden="true">Book a meeting</span></span></span></button>
-        </div>
-        <h3><span class="num">01</span>Label roll</h3>
-        <p>The label rolls up and its duplicate takes its place from below. The standard for a reason — clear without asking for room.</p>
-        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-      </article>
-
-      <article class="spec">
-        <div class="stage">
-          <button class="btn btn--line wcross"><span class="stack"><span class="w-a">About the studio</span><span class="w-b" aria-hidden="true">About the studio</span></span></button>
-        </div>
-        <h3><span class="num">02</span>Weight crossfade</h3>
-        <p>The weight goes from 450 to 760 without the button changing width — the bolder duplicate holds the space. Almost subliminal.</p>
-        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-      </article>
-
-      <article class="spec">
-        <div class="stage">
-          <button class="btn btn--line flap">
-            <span class="word" aria-hidden="true"><span class="cell" style="--i:0"><span class="fa">C</span><span class="fb">C</span></span><span class="cell" style="--i:1"><span class="fa">o</span><span class="fb">o</span></span><span class="cell" style="--i:2"><span class="fa">n</span><span class="fb">n</span></span><span class="cell" style="--i:3"><span class="fa">t</span><span class="fb">t</span></span><span class="cell" style="--i:4"><span class="fa">a</span><span class="fb">a</span></span><span class="cell" style="--i:5"><span class="fa">c</span><span class="fb">c</span></span><span class="cell" style="--i:6"><span class="fa">t</span><span class="fb">t</span></span></span>
-            <span class="sr">Contact</span>
-          </button>
-        </div>
-        <h3><span class="num">03</span>Split-flap</h3>
-        <p>Every character turns like a board in a railway station, 26 ms apart. Save it for one important button per page.</p>
-        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-      </article>
-
-    </div>
-  </section>
-
-  <section class="sect">
-    <h2>B — The fill tells you</h2>
+    <section class="sect">
+    <h2>A — The fill tells you</h2>
     <div class="grid">
 
       <article class="spec">
         <div class="stage">
           <button class="btn btn--line sweep"><span class="lbl">See all work</span></button>
         </div>
-        <h3><span class="num">04</span>Directional sweep</h3>
+        <h3><span class="num">01</span>Directional sweep</h3>
         <p>The fill enters from the left and leaves to the right — it never reverses the way it came. Same logic as the directional underline.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
       </article>
@@ -376,7 +340,7 @@
         <div class="stage">
           <button class="btn btn--line shutter"><span class="lbl">What we do</span></button>
         </div>
-        <h3><span class="num">05</span>Shutter</h3>
+        <h3><span class="num">02</span>Shutter</h3>
         <p>The fill opens from the centre line, like a shutter. Symmetrical, so it survives fast passes back and forth.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
       </article>
@@ -385,7 +349,7 @@
         <div class="stage">
           <button class="btn inkfill"><span class="lbl">Start a project</span></button>
         </div>
-        <h3><span class="num">06</span>Ink fill</h3>
+        <h3><span class="num">03</span>Ink fill</h3>
         <p>The fill grows from the exact point where the pointer entered — and retreats to where it left.</p>
         <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
       </article>
@@ -394,7 +358,7 @@
         <div class="stage">
           <button class="btn sheen"><span class="lbl">Watch the showreel</span></button>
         </div>
-        <h3><span class="num">07</span>Sheen</h3>
+        <h3><span class="num">04</span>Sheen</h3>
         <p>A soft light crosses the dark surface, once per hover. The return sweep is switched off — that is the detail that keeps it serious.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -403,7 +367,7 @@
   </section>
 
   <section class="sect">
-    <h2>C — The sign points</h2>
+    <h2>B — The sign points</h2>
     <div class="grid">
 
       <article class="spec">
@@ -415,7 +379,7 @@
             </span>
           </button>
         </div>
-        <h3><span class="num">08</span>Arrow relay</h3>
+        <h3><span class="num">05</span>Arrow relay</h3>
         <p>The arrow leaves to the right and its twin takes over from the left. The direction points where the button leads.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -428,7 +392,7 @@
               <svg class="icon ar" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
             </span>All services</button>
         </div>
-        <h3><span class="num">09</span>Dot becomes arrow</h3>
+        <h3><span class="num">06</span>Dot becomes arrow</h3>
         <p>The dot that marks rest gives way to the arrow that marks action — in the same fixed slot, so nothing in the layout jumps.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -437,7 +401,7 @@
         <div class="stage">
           <button class="btn btn--text guil"><span class="g g--l" aria-hidden="true">«</span>What we offer<span class="g g--r" aria-hidden="true">»</span></button>
         </div>
-        <h3><span class="num">10</span>Guillemets</h3>
+        <h3><span class="num">07</span>Guillemets</h3>
         <p>« » slide in and frame the label. Typographic, quiet and very Swedish — the space is reserved, so nothing shifts sideways.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -446,7 +410,7 @@
         <div class="stage">
           <button class="btn corners">Read the report<i aria-hidden="true"></i></button>
         </div>
-        <h3><span class="num">11</span>Crop marks</h3>
+        <h3><span class="num">08</span>Crop marks</h3>
         <p>Register marks land in the corners, as on a press sheet. Doubles as the keyboard focus state.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -455,7 +419,7 @@
         <div class="stage">
           <button class="btn btn--text uline">More insights</button>
         </div>
-        <h3><span class="num">12</span>Directional underline</h3>
+        <h3><span class="num">09</span>Directional underline</h3>
         <p>In from the left, out to the right — the line never snaps back. For text buttons and navigation.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -464,14 +428,14 @@
   </section>
 
   <section class="sect">
-    <h2>D — You feel the physics</h2>
+    <h2>C — You feel the physics</h2>
     <div class="grid">
 
       <article class="spec">
         <div class="stage">
           <button class="btn lift">Download</button>
         </div>
-        <h3><span class="num">13</span>Elevation step</h3>
+        <h3><span class="num">10</span>Elevation step</h3>
         <p>The button lifts 2 px and the shadow deepens; the press pushes it back down. The response sits on pointer-down, not on release.</p>
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
@@ -480,7 +444,7 @@
         <div class="stage">
           <button class="btn btn--solid magnet"><span class="m-lbl">Keep in touch</span></button>
         </div>
-        <h3><span class="num">14</span>Magnetic</h3>
+        <h3><span class="num">11</span>Magnetic</h3>
         <p>The button is drawn toward the pointer on a critically damped spring; the label follows with extra parallax. Interruptible at any moment — the velocity carries out with it.</p>
         <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
       </article>
@@ -491,13 +455,13 @@
 <style>
   /* ============ Section E — Utmanarna ============ */
 
-  /* 15 Weight wave — variable weight follows the pointer through the characters */
+  /* 12 Weight wave — variable weight follows the pointer through the characters */
   .e-wave .e-wave-stack{display:inline-grid; justify-items:center}
   .e-wave .e-wave-ghost{grid-area:1/1; font-weight:800; white-space:nowrap; visibility:hidden}
   .e-wave .e-wave-live{grid-area:1/1; white-space:nowrap; font-variation-settings:"wght" 500; transition:font-variation-settings var(--t-4) var(--e-out)}
   .e-wave:focus-visible .e-wave-live{font-variation-settings:"wght" 660}
 
-  /* 16 Ritad kontur — stroke-dashoffset ritar ramen */
+  /* 13 Ritad kontur — stroke-dashoffset ritar ramen */
   .e-draw{border-radius:12px; border:1px solid var(--line)}
   .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible}
   .e-draw .e-draw-frame rect{
@@ -506,10 +470,12 @@
     stroke-dasharray:40; stroke-dashoffset:40;
     transition:stroke-dashoffset var(--t-5) var(--e-quint);
   }
+  /* Fallback with no script: draws in, then erases back the way it came. The
+     init after this section replaces it with a stroke that only travels one way. */
   .e-draw:hover .e-draw-frame rect,
   .e-draw:focus-visible .e-draw-frame rect{stroke-dashoffset:0}
 
-  /* 17 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
+  /* 14 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
   .e-chamfer{border-radius:0; color:var(--on-ink)}
   .e-chamfer::before{
     content:""; position:absolute; inset:0; background:var(--ink);
@@ -522,7 +488,7 @@
   }
   .e-chamfer .lbl{position:relative}
 
-  /* 18 In register — an out-of-register accent frame slides into place */
+  /* 15 In register — an out-of-register accent frame slides into place */
   .e-reg::before{
     content:""; position:absolute; inset:-1px; border:1px solid var(--accent);
     border-radius:inherit; pointer-events:none;
@@ -532,18 +498,7 @@
   .e-reg:hover::before,
   .e-reg:focus-visible::before{transform:translate(0,0)}
 
-  /* 19 Levelling out — a wave stretched flat into a line (scaleY + non-scaling-stroke) */
-  .e-vag{font-weight:500}
-  .e-vag .e-vag-line{
-    position:absolute; left:4px; right:4px; bottom:1px; height:7px; width:auto;
-    color:var(--muted); overflow:visible;
-    transform:scaleY(1); transform-origin:50% 50%;
-    transition:transform var(--t-5) var(--e-quint), color var(--t-3) ease;
-  }
-  .e-vag:hover .e-vag-line,
-  .e-vag:focus-visible .e-vag-line{transform:scaleY(.14); color:var(--ink)}
-
-  /* 20 Counter — a @property-registered integer steps a counter up */
+  /* 16 Counter — a @property-registered integer steps a counter up */
   @property --e-n{syntax:"<integer>"; inherits:true; initial-value:0}
   .e-count .e-count-n{
     --e-n:0;
@@ -559,7 +514,7 @@
 </style>
 
 <section class="sect">
-  <h2>E — The challengers</h2>
+  <h2>D — The challengers</h2>
   <div class="grid">
 
     <article class="spec">
@@ -572,7 +527,7 @@
           </span>
         </button>
       </div>
-      <h3><span class="num">15</span>Weight wave</h3>
+      <h3><span class="num">12</span>Weight wave</h3>
         <p>The weight rises in the characters nearest the pointer and ebbs once it has passed — the typography answers, nothing moves. For a single hero button where the typography is the brand.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -583,16 +538,16 @@
           <svg class="e-draw-frame" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="12" pathLength="40"/></svg>
         </button>
       </div>
-      <h3><span class="num">16</span>Drawn outline</h3>
-        <p>The frame is drawn around the button like a pen stroke over the faint base rule, then erased backwards. For editorial moments — manifesto, method, long reads.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      <h3><span class="num">13</span>Drawn outline</h3>
+        <p>The frame is drawn around the button like a pen stroke over the faint base rule, and on the way out the stroke carries on the same way round rather than erasing back over itself. Interrupt it half-drawn and the pen finishes the line before it leaves.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec">
       <div class="stage">
         <button class="btn e-chamfer"><span class="lbl">Our method</span></button>
       </div>
-      <h3><span class="num">17</span>Chamfered corner</h3>
+      <h3><span class="num">14</span>Chamfered corner</h3>
         <p>The chamfered corners unfold and the rectangle becomes whole. Geometry instead of colour — for studios that would rather demonstrate precision.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -601,22 +556,9 @@
       <div class="stage">
         <button class="btn btn--line e-reg">Subscribe</button>
       </div>
-      <h3><span class="num">18</span>In register</h3>
+      <h3><span class="num">15</span>In register</h3>
         <p>The accent frame sits a few pixels out of register and slides into place on hover. A print reference for whoever notices it — use it sparingly, one per view.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button class="btn btn--text e-vag">Start here
-          <svg class="e-vag-line" viewBox="0 0 120 8" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 4 Q3 0.8 6 4 T12 4 T18 4 T24 4 T30 4 T36 4 T42 4 T48 4 T54 4 T60 4 T66 4 T72 4 T78 4 T84 4 T90 4 T96 4 T102 4 T108 4 T114 4 T120 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-          </svg>
-        </button>
-      </div>
-      <h3><span class="num">19</span>Levelling out</h3>
-        <p>The underline rests as a wave and is drawn level on hover. For text links allowed to suggest lightness without raising their voice.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
     <article class="spec">
@@ -626,7 +568,7 @@
           <span class="sr">, three roles open right now</span>
         </button>
       </div>
-      <h3><span class="num">20</span>Counter</h3>
+      <h3><span class="num">16</span>Counter</h3>
         <p>The counter wakes and steps up to today's number. For buttons that carry a figure — open roles, places left — where the number is an aside, not the message.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -635,7 +577,7 @@
 </section>
 
 <script>
-  // 15 Weight wave — exponential smoothing per character (critically damped feel, interruptible at any moment)
+  // 12 Weight wave — exponential smoothing per character (critically damped feel, interruptible at any moment)
   (function(){
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     document.querySelectorAll('.e-wave').forEach(function(btn){
@@ -676,6 +618,33 @@
       btn.addEventListener('pointerleave', function(){ px = null; retarget(); });
     });
   })();
+
+  // 13 Drawn outline — the stroke only ever travels one way round.
+  // With stroke-dasharray:40 on a pathLength of 40 the pattern repeats every
+  // 80, so offset 40 and -40 are BOTH hidden, and 0 and -80 are both fully
+  // drawn. Every state change is therefore the same move: subtract 40. Hidden
+  // becomes drawn becomes hidden again on the far side, and the pen never
+  // retraces. Nothing here animates — the CSS transition retargets from the
+  // presentation value, so leaving half-drawn finishes the line and carries on
+  // instead of snapping.
+  (function(){
+    document.querySelectorAll('.e-draw').forEach(function(btn){
+      var rect = btn.querySelector('.e-draw-frame rect');
+      if (!rect) return;
+      var at = 40, on = false, hovering = false, focused = false;
+      function sync(){
+        var next = hovering || focused;
+        if (next === on) return;          // a click fires pointerenter AND focus
+        on = next;
+        at -= 40;
+        rect.style.strokeDashoffset = at;
+      }
+      btn.addEventListener('pointerenter', function(){ hovering = true;  sync(); });
+      btn.addEventListener('pointerleave', function(){ hovering = false; sync(); });
+      btn.addEventListener('focus',        function(){ focused  = true;  sync(); });
+      btn.addEventListener('blur',         function(){ focused  = false; sync(); });
+    });
+  })();
 </script>
 
 <style>
@@ -690,7 +659,7 @@
   }
   :root[data-theme="dark"] .f-mat{ --f-lys:var(--ink); --f-mork:var(--on-ink) }
 
-  /* 21 Frostat glas — suddning, yta och ljuskant materialiseras samtidigt */
+  /* 17 Frostat glas — suddning, yta och ljuskant materialiseras samtidigt */
   .stage.f-ruta{ background-image:repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 10px) }
   .f-glas{ background:none; border:1px solid var(--line); overflow:hidden;
     transition:border-color var(--t-5) var(--e-out) }
@@ -712,7 +681,7 @@
     backdrop-filter:blur(9px) saturate(1.06);
   }
 
-  /* 22 Backlight — a rising light turns surface AND label in a single layer (difference) */
+  /* 18 Backlight — a rising light turns surface AND label in a single layer (difference) */
   .f-motljus{ background:var(--lift-bg); border:1px solid var(--line); overflow:hidden; isolation:isolate }
   .f-motljus .f-sol{
     position:absolute; left:50%; bottom:0; width:240%; height:240%;
@@ -722,7 +691,7 @@
   }
   .f-motljus:hover .f-sol, .f-motljus:focus-visible .f-sol{ transform:translate(-50%,44%) }
 
-  /* 23 The lantern — the light follows the pointer across a dark plate */
+  /* 19 The lantern — the light follows the pointer across a dark plate */
   .f-lykta{
     --f-px:50%; --f-py:50%;
     background:var(--f-mork); color:var(--f-lys); overflow:hidden;
@@ -740,7 +709,7 @@
   .f-lykta:hover, .f-lykta:focus-visible{ border-color:color-mix(in srgb, var(--f-lys) 34%, transparent) }
   .f-lykta:hover::before, .f-lykta:focus-visible::before{ opacity:1 }
 
-  /* 24 The grain settles — a coarse screen tightens into a finely calibrated surface */
+  /* 20 The grain settles — a coarse screen tightens into a finely calibrated surface */
   .f-korn{ background:var(--lift-bg); border:1px solid var(--line); overflow:hidden }
   .f-korn .f-korn-yta{
     position:absolute; inset:0; pointer-events:none; color:var(--ink); opacity:.42;
@@ -755,7 +724,7 @@
   .f-korn .lbl{ position:relative }
   .f-korn:hover .f-korn-yta, .f-korn:focus-visible .f-korn-yta{ transform:scale(1); opacity:.2 }
 
-  /* 25 Edge light — a @property angle runs an accent streak one lap around the hairline */
+  /* 21 Edge light — a @property angle runs an accent streak one lap around the hairline */
   @property --f-vinkel{ syntax:"<angle>"; inherits:false; initial-value:0deg }
   .f-kant{
     background:var(--lift-bg); border:1px solid var(--line);
@@ -787,14 +756,14 @@
 </style>
 
 <section class="sect f-mat">
-  <h2>F — Light and material</h2>
+  <h2>E — Light and material</h2>
   <div class="grid">
 
     <article class="spec">
       <div class="stage f-ruta">
         <button class="btn f-glas"><i class="f-glas-yta" aria-hidden="true"></i><span class="lbl">Book a walkthrough</span></button>
       </div>
-      <h3><span class="num">21</span>Frosted glass</h3>
+      <h3><span class="num">17</span>Frosted glass</h3>
         <p>The glass materialises: the blur grows in as the surface tints up and a light edge catches along the top. For buttons over an image or a pattern — the line screen in the frame exists only so the blur has something to work on.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -803,7 +772,7 @@
       <div class="stage">
         <button class="btn f-motljus">Read the annual report<i class="f-sol" aria-hidden="true"></i></button>
       </div>
-      <h3><span class="num">22</span>Backlight</h3>
+      <h3><span class="num">18</span>Backlight</h3>
         <p>A light rises behind the button and turns surface and label in the same movement — one layer handles both colour states. Save it for the page's main action; it will be noticed.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -812,7 +781,7 @@
       <div class="stage">
         <button class="btn f-lykta"><span class="lbl">See the case</span></button>
       </div>
-      <h3><span class="num">23</span>The lantern</h3>
+      <h3><span class="num">19</span>The lantern</h3>
         <p>The light follows the pointer across the dark plate, like a lamp carried over the material. Build it only on a dark ground — hero, footer, dark interludes.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -821,7 +790,7 @@
       <div class="stage">
         <button class="btn f-korn"><i class="f-korn-yta" aria-hidden="true"></i><span class="lbl">Follow the work</span></button>
       </div>
-      <h3><span class="num">24</span>The grain settles</h3>
+      <h3><span class="num">20</span>The grain settles</h3>
         <p>At rest a coarse grain lies over the surface; on hover the screen tightens into a quiet, finely calibrated finish. The hover calms instead of raising its voice — good for long rows of secondary buttons.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -830,7 +799,7 @@
       <div class="stage">
         <button class="btn f-kant"><span class="lbl">Download the report</span></button>
       </div>
-      <h3><span class="num">25</span>Edge light</h3>
+      <h3><span class="num">21</span>Edge light</h3>
         <p>A narrow accent streak lights up and runs one lap around the edge, parking as a small tick at twelve and leaving the hairline a shade darker. One per view; repeated, it turns restless.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -839,7 +808,7 @@
 </section>
 
 <script>
-  // 23 The lantern — the pointer position feeds the gradient through two custom properties.
+  // 19 The lantern — the pointer position feeds the gradient through two custom properties.
   // No animation of its own: the light sits where the pointer is, so it is interruptible by definition.
   (function(){
     var rm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -868,7 +837,7 @@
 <style>
   /* ============ Section G — Plattan och geometrin ============ */
 
-  /* 26 Diagonal radius — the capsule releases two opposite corners */
+  /* 22 Diagonal radius — the capsule releases two opposite corners */
   .g-radius{
     border-radius:26px;
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-2) var(--e-out);
@@ -876,42 +845,40 @@
   .g-radius:hover,
   .g-radius:focus-visible{border-radius:5px 26px 5px 26px}
 
-  /* 27 The seam — the plate parts along a slanted joint */
-  .g-seam{color:var(--on-ink)}
-  .g-seam .g-seam-plate{
-    position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none;
-    background:color-mix(in srgb,var(--ink) 78%,var(--stage));
-  }
-  .g-seam .g-seam-half{
-    position:absolute; inset:0; background:var(--ink);
-    transition:transform var(--t-4) var(--e-quint);
-  }
-  .g-seam .g-seam-a{clip-path:polygon(0 0, 58% 0, 42% 100%, 0 100%)}
-  .g-seam .g-seam-b{clip-path:polygon(58% 0, 100% 0, 100% 100%, 42% 100%)}
-  .g-seam:hover .g-seam-a,
-  .g-seam:focus-visible .g-seam-a{transform:translateX(-3px)}
-  .g-seam:hover .g-seam-b,
-  .g-seam:focus-visible .g-seam-b{transform:translateX(3px)}
-  .g-seam .lbl{position:relative}
-
-  /* 28 Rule becomes frame — one line, two jobs (clip-path + radius) */
+  /* 23 Rule becomes frame — one line, two jobs (clip-path + radius) */
   .g-frame{padding:14px 26px}
   .g-frame .g-frame-ring{
     position:absolute; inset:0; pointer-events:none;
     border:1.5px solid color-mix(in srgb,var(--ink) 62%,transparent);
-    border-radius:3px;
+    /* 0, not 3px: at rest only a 1.5px band of this box is visible, and a 3px
+       corner arc bites into both ends of what has to read as a straight rule. */
+    border-radius:0px;
     clip-path:inset(calc(100% - 1.5px) 22% 0% 22%);
-    transition:clip-path var(--t-5) var(--e-quint), border-radius var(--t-5) var(--e-quint), border-color var(--t-4) ease;
+    /* TWO movements, not one, and this is the fix. Run together they landed on
+       top of each other in the first 150ms of a 450ms transition and the card
+       read as a snap. Now the frame rises, THEN the corners soften; on the way
+       out the corners sharpen first and the frame drops after. Each delay is the
+       other movement's own duration — enter 500ms, exit 333ms. */
+    transition:clip-path var(--t-4) var(--e-quint) var(--t-3),
+               border-radius var(--t-3) var(--e-quint) 0s,
+               border-color var(--t-4) ease 0s;
   }
   .g-frame:hover .g-frame-ring,
   .g-frame:focus-visible .g-frame-ring{
     clip-path:inset(0% 0% 0% 0%);
-    border-radius:999px;
+    /* 22px, not 999px. The ring is 43px tall — 14px padding, a 15px line box,
+       14px padding — so anything over 21.5px clamps to 21.5px. Interpolating to
+       999px passed 309px at 30ms, which means it reached its visual maximum
+       about two milliseconds in: the rule snapped into a pill before it had
+       begun to rise. 22px is a hair over half, so it still reads as a full pill
+       and only the last two per cent of the travel is clamped. */
+    border-radius:22px;
     border-color:var(--ink);
+    transition-delay:0s, var(--t-4), 0s;
   }
   .g-frame .lbl{position:relative}
 
-  /* 29 Filling the measure — the plate grows out to its reserved measure */
+  /* 24 Filling the measure — the plate grows out to its reserved measure */
   .g-measure{padding:17px 34px; color:var(--on-ink)}
   .g-measure .g-measure-trim{
     position:absolute; inset:0; border:1px solid var(--line);
@@ -927,7 +894,7 @@
   .g-measure:focus-visible .g-measure-plate{clip-path:inset(0px 0px round 999px)}
   .g-measure .lbl{position:relative}
 
-  /* 30 The key — a hard bottom edge, a real depression on press */
+  /* 25 The key — a hard bottom edge, a real depression on press */
   .g-key{
     background:var(--lift-bg);
     border:1px solid var(--line);
@@ -949,31 +916,16 @@
 </style>
 
 <section class="sect">
-  <h2>G — The plate and its geometry</h2>
+  <h2>F — The plate and its geometry</h2>
   <div class="grid">
 
     <article class="spec">
       <div class="stage">
         <button class="btn btn--solid g-radius">See the full case</button>
       </div>
-      <h3><span class="num">26</span>Diagonal radius</h3>
+      <h3><span class="num">22</span>Diagonal radius</h3>
         <p>The capsule keeps two corners and draws the other two in, so the plate changes body without moving. The shape change costs nothing in layout — a good house default.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button class="btn g-seam">
-          <span class="g-seam-plate" aria-hidden="true">
-            <span class="g-seam-half g-seam-a"></span>
-            <span class="g-seam-half g-seam-b"></span>
-          </span>
-          <span class="lbl">Get in touch</span>
-        </button>
-      </div>
-      <h3><span class="num">27</span>The seam</h3>
-        <p>The plate parts along a slanted seam and slides six pixels apart; the seam beneath is darker, never transparent, so the label stays readable throughout. One per page — it pulls the eye.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec">
@@ -983,7 +935,7 @@
           <span class="lbl">How we work</span>
         </button>
       </div>
-      <h3><span class="num">28</span>Rule becomes frame</h3>
+      <h3><span class="num">23</span>Rule becomes frame</h3>
         <p>At rest it is a line under the label; on hover it rises along the sides and closes into a full frame. One line, two jobs — for links that sometimes have to behave like buttons.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -996,7 +948,7 @@
           <span class="lbl">Read the findings</span>
         </button>
       </div>
-      <h3><span class="num">29</span>Filling the measure</h3>
+      <h3><span class="num">24</span>Filling the measure</h3>
         <p>The plate sits inset within its own measure and grows out to the hairline on hover. The label holds still and the surrounding space is already reserved, so nothing outside the button moves.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -1005,7 +957,7 @@
       <div class="stage">
         <button class="btn g-key">Sign up</button>
       </div>
-      <h3><span class="num">30</span>The key</h3>
+      <h3><span class="num">25</span>The key</h3>
         <p>The plate stands on a hard bottom edge like a keycap and collapses under the press. The depth is carried by the surface step and the hard edge rather than a drop shadow — which is why the feel survives dark mode.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -1016,19 +968,7 @@
 <style>
   /* ============ Section H — Ordet och tecknet ============ */
 
-  /* 31 Tracking opens — letter-spacing widens; the duplicate at the widest setting holds the space */
-  .h-track .h-track-stack{display:inline-grid; justify-items:center}
-  .h-track .h-track-ghost,
-  .h-track .h-track-live{grid-area:1/1; white-space:nowrap; font-weight:500}
-  .h-track .h-track-ghost{visibility:hidden; letter-spacing:.16em}
-  .h-track .h-track-live{
-    letter-spacing:.005em; color:var(--ink-soft);
-    transition:letter-spacing var(--t-4) var(--e-quint), color var(--t-3) ease;
-  }
-  .h-track:hover .h-track-live,
-  .h-track:focus-visible .h-track-live{letter-spacing:.16em; color:var(--ink)}
-
-  /* 32 The second line — the hidden addition grows from 0fr to content width; the plate is measured for it from the start */
+  /* 27 The second line — the hidden addition grows from 0fr to content width; the plate is measured for it from the start */
   .h-second .h-second-stack{display:inline-grid; justify-items:center}
   .h-second .h-second-ghost,
   .h-second .h-second-row{grid-area:1/1; white-space:nowrap}
@@ -1050,7 +990,7 @@
   .h-second:hover .h-second-add>span,
   .h-second:focus-visible .h-second-add>span{opacity:1; transition-delay:var(--d-2)}
 
-  /* 33 Tre punkter blir pil — ellipsens punkter blir pilens egna streck, fast 14 px slot */
+  /* 28 Tre punkter blir pil — ellipsens punkter blir pilens egna streck, fast 14 px slot */
   .h-ellip{gap:6px}
   .h-ellip .h-ellip-slot{position:relative; display:block; width:14px; height:14px}
   .h-ellip .h-ellip-d{
@@ -1070,7 +1010,7 @@
   .h-ellip:hover .h-ellip-d3,
   .h-ellip:focus-visible .h-ellip-d3{transform:translateX(.6px) rotate(-135deg) scale(2.176,.577)}
 
-  /* 34 The caret — the label as a field about to be typed into */
+  /* 29 The caret — the label as a field about to be typed into */
   .h-caret{gap:7px}
   .h-caret .h-caret-slot{position:relative; display:block; width:1.5px; height:1em}
   .h-caret .h-caret-bar{
@@ -1085,7 +1025,7 @@
   }
   @keyframes h-caret-blink{0%,52%{opacity:1} 53%,100%{opacity:.1}}
 
-  /* 35 Only when it doesn't fit — the label moves only if it is actually clipped */
+  /* 30 Only when it doesn't fit — the label moves only if it is actually clipped */
   .h-marq{max-width:min(100%,264px)}
   .h-marq .h-marq-clip{position:relative; display:block; overflow:hidden; min-width:0}
   .h-marq .h-marq-txt{display:inline-block; white-space:nowrap; transition:transform var(--t-5) var(--e-out)}
@@ -1114,23 +1054,17 @@
 </style>
 
 <section class="sect">
-  <h2>H — The word and the mark</h2>
+  <h2>G — The word and the mark</h2>
   <div class="grid">
 
     <article class="spec">
-      <div class="stage">
-        <button class="btn btn--line h-track">
-          <span class="h-track-stack">
-            <span class="h-track-ghost" aria-hidden="true">Open the report</span>
-            <span class="h-track-live" aria-hidden="true">Open the report</span>
-            <span class="sr">Open the report</span>
-          </span>
-        </button>
-      </div>
-      <h3><span class="num">31</span>Tracking opens</h3>
-        <p>The tracking opens from .005 to .16 em while the plate stands perfectly still — an invisible duplicate at the widest setting holds the space. For a hero button where the typography is the brand.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
+        <div class="stage">
+          <button class="btn btn--solid roll"><span class="track"><span class="inner"><span>Book a meeting</span><span aria-hidden="true">Book a meeting</span></span></span></button>
+        </div>
+        <h3><span class="num">26</span>Label roll</h3>
+        <p>The label rolls up and its duplicate takes its place from below. The standard for a reason — clear without asking for room.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+      </article>
 
     <article class="spec">
       <div class="stage">
@@ -1142,7 +1076,7 @@
           </span>
         </button>
       </div>
-      <h3><span class="num">32</span>The second line</h3>
+      <h3><span class="num">27</span>The second line</h3>
         <p>The label unfolds the detail it was withholding, and the plate is measured for the wide state from the start — nothing outside the button moves. For booking and contact buttons where the time it takes is the silent objection.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -1155,7 +1089,7 @@
           </span>
         </button>
       </div>
-      <h3><span class="num">33</span>Three dots become an arrow</h3>
+      <h3><span class="num">28</span>Three dots become an arrow</h3>
         <p>The ellipsis's three dots slide together and swing out into the arrow's own strokes — no finished arrow is swapped in, it is the same three marks the whole way. For read-on links where the ellipsis already promises a continuation.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -1166,7 +1100,7 @@
           <span class="h-caret-slot" aria-hidden="true"><i class="h-caret-bar"></i></span>
         </button>
       </div>
-      <h3><span class="num">34</span>The caret</h3>
+      <h3><span class="num">29</span>The caret</h3>
         <p>A caret lights up out of the baseline after the label, as if the button were a field about to be typed into, then blinks at a calm rate. Only on buttons that genuinely lead to a field — otherwise it is a promise not kept.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -1177,7 +1111,7 @@
           <span class="h-marq-clip"><span class="h-marq-txt">Sign up for the breakfast seminar in Gothenburg</span></span>
         </button>
       </div>
-      <h3><span class="num">35</span>Only when it doesn't fit</h3>
+      <h3><span class="num">30</span>Only when it doesn't fit</h3>
         <p>The label moves only if it is actually too long for the plate; if it fits, nothing happens at all. The edge fades into the plate's own colour so the clip is visible, and the text returns home when the pointer leaves. For menus and cards with fixed widths and long headings.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -1186,7 +1120,7 @@
 </section>
 
 <script>
-  // 35 Only when it doesn't fit — measure first, move only what is clipped.
+  // 30 Only when it doesn't fit — measure first, move only what is clipped.
   // The one duration outside the ladder, on purpose: travel is proportional to the
   // distance clipped (160ms + 2.2ms/px, capped at 600) so the label moves at a
   // constant SPEED regardless of how long it is. A fixed rung would crawl on a
@@ -1223,14 +1157,997 @@
   })();
 </script>
 
+<style>
+  /* ============ Section I — Mass, lag and resistance ============
+     Ten studies in one idea: a button that behaves like an object. It has
+     weight, so its parts arrive at different times; it resists; it settles
+     rather than stops; and it answers at the tempo you approached it with.
+
+     COLOUR: this section declares no colour of its own. Every value is an
+     existing token or a color-mix() of one, so all three theme blocks in the
+     head — :root, the guarded prefers-color-scheme, and [data-theme="dark"] —
+     already carry it. The one place that needed thought is card 36, below.
+
+     DEPTH: no box-shadow anywhere. In dark mode --shadow-rgb is 0,0,0 and a
+     black shadow is invisible on a near-black stage, so the cards that have to
+     read as material carry it in the surface step and the hairline instead.
+     Those survive the theme flip; a shadow would not.
+
+     COMPOSITING: no backdrop-filter and no mix-blend-mode. The page already
+     spends one of each (21 and 22); this section adds neither.
+
+     TRANSFORMS are written as an explicit identity at rest — translateX(0),
+     scale(1) — rather than left to `none`. Interpolating between `none` and a
+     function list makes the browser fall back to matrix interpolation, which
+     travels a straight chord instead of the intended path. */
+
+  /* 31 The plate gives, the type doesn't — the press compresses the plate and
+     the label counter-scales by exactly 1/0.97, so the composite on the type is
+     1.000000 and only the material moves. Down on --t-1 (never remapped, so a
+     press reads instant), up on --t-3 restored by :hover — fast down, slow up.
+
+     The rest border is --line-ctl, not --line: this plate is a control boundary
+     and needs 3:1. Measured on the stage, --line clears 1.24:1 in dark, which
+     is not a boundary at all; --line-ctl clears 3.52 light and 3.16 dark. */
+  .btn.i-give{
+    background:var(--lift-bg); border:1px solid var(--line-ctl);
+    transition:transform var(--t-3) var(--e-out), border-color var(--t-3) ease;
+  }
+  .i-give .i-give-lbl{display:inline-block; transform:scale(1); transition:transform var(--t-3) var(--e-out)}
+  /* .btn.i-give above is (0,2,0), so the hover has to carry .btn too or it loses. */
+  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink) 40%,var(--line-ctl))}
+  .btn.i-give:active{transition-duration:var(--t-1)}
+  .btn.i-give:active .i-give-lbl{transform:scale(1.030928); transition-duration:var(--t-1)}
+
+  /* 32 Two masses — same distance, same instant, different rates. The light
+     block takes --t-2 and the heavy label --t-5, so the space between them
+     opens about three pixels mid-travel and closes as the label lands. On the
+     way out both drop one rung, so the block snaps home and the label drifts. */
+  .i-mass .i-mass-lbl{display:inline-block; transform:translateX(0); transition:transform var(--t-5) var(--e-out)}
+  .i-mass .i-mass-block{
+    display:block; width:8px; height:8px; border-radius:2px; background:currentColor;
+    transform:translateX(0); transition:transform var(--t-2) var(--e-out);
+  }
+  .i-mass:hover .i-mass-lbl, .i-mass:focus-visible .i-mass-lbl,
+  .i-mass:hover .i-mass-block, .i-mass:focus-visible .i-mass-block{transform:translateX(3px)}
+
+  /* 33 The settle — a critically-underdamped spring (damping ratio .50,
+     omega 12 rad/s) sampled to a linear() curve: one 16.3% overshoot, second
+     lobe 0.43% so it never reads as a bounce. Still one plain transition, so it
+     reverses from wherever it has got to. The slot is 14px and the dash 10px,
+     so a 2.28px overshoot lands inside it — nothing is clipped. */
+  .i-settle .i-settle-slot{position:relative; display:block; width:14px; height:1.5px; overflow:hidden}
+  .i-settle .i-settle-dash{
+    position:absolute; top:0; left:0; width:10px; height:1.5px;
+    background:currentColor; border-radius:1px;
+    transform:translateX(-14px);
+    transition:transform var(--t-4) var(--e-out);
+  }
+  .i-settle:hover .i-settle-dash, .i-settle:focus-visible .i-settle-dash{
+    transform:translateX(0);
+    transition-timing-function:linear(0 0%, 0.1044 4.17%, 0.3403 8.33%, 0.6105 12.5%,
+      0.8494 16.67%, 1.0234 20.83%, 1.1244 25%, 1.1616 29.17%, 1.1531 33.33%, 1.1184 37.5%,
+      1.0746 41.67%, 1.0336 45.83%, 1.0023 50%, 0.9828 54.17%, 0.9744 58.33%, 0.9742 62.5%,
+      0.979 66.67%, 0.986 70.83%, 0.9929 75%, 0.9985 79.17%, 1.0022 83.33%, 1.004 87.5%,
+      1.0043 91.67%, 1.0037 95.83%, 1 100%);
+  }
+
+  /* 34 Anticipation — the other half of a spring. The easing dips to -0.205
+     before it climbs, so a 7px advance winds 1.44px backwards first. The slot
+     is the house 14px with overflow visible: the wind-up borrows from the 10px
+     gap and the arrival from the 28px right padding, so no dead space is
+     reserved and the plate never changes width. The exit keeps the plain curve
+     — a wind-up on the way out would read as the arrow lunging as it leaves. */
+  .i-anti .i-anti-slot{position:relative; display:block; width:14px; height:14px}
+  .i-anti .i-anti-arrow{
+    position:absolute; top:0; left:0;
+    transform:translateX(0);
+    transition:transform var(--t-4) var(--e-out);
+  }
+  .i-anti:hover .i-anti-arrow, .i-anti:focus-visible .i-anti-arrow{
+    transform:translateX(7px);
+    transition-timing-function:cubic-bezier(.5,-.8,.25,1);
+  }
+
+  /* 35 The rule takes the load — the SVG path itself is interpolated (the CSS
+     `d` property), so the line deflects like a loaded beam instead of being
+     scaled from a pre-bent shape. The control point moves 10 units, which puts
+     the apex 5 units down = 4px at this box height. Where `d` is not animated
+     the rule stays straight and only the stroke darkens, so the hover still
+     reports itself.
+
+     An absolutely positioned <svg> is a REPLACED element: with width:auto it
+     takes its intrinsic ratio from the viewBox and `right` is simply dropped,
+     which left the rule 96px wide under a 198px label. The width is stated. */
+  .i-beam{padding-bottom:12px}
+  .i-beam .i-beam-rule{
+    position:absolute; left:4px; bottom:2px; height:8px;
+    width:calc(100% - 8px); overflow:visible; color:var(--muted);
+    transition:color var(--t-3) ease;
+  }
+  .i-beam .i-beam-rule path{
+    d:path("M0 2 Q60 2 120 2");
+    transition:d var(--t-4) var(--e-quint);
+  }
+  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--ink)}
+  .i-beam:hover .i-beam-rule path, .i-beam:focus-visible .i-beam-rule path{
+    d:path("M0 2 Q60 12 120 2");
+  }
+
+  /* 36 Re-spacing — one registered length feeds two opposing metrics, so the
+     sum is exact rather than approximately equal: the gap grows by --i-gap and
+     the right padding gives up the same --i-gap. Declared and transitioned on
+     the same element as it is read on, which is the only way a registered
+     property is safe to rely on. On a solid plate, because the mark travelling
+     toward a hard colour boundary is the whole point. This is the one card here
+     that lays out on every frame; it earns it — the measure is conserved to the
+     pixel rather than to within a rounding error. */
+  @property --i-gap{syntax:"<length>"; inherits:false; initial-value:0px}
+  .btn.i-space{
+    --i-gap:0px;
+    gap:calc(10px + var(--i-gap));
+    padding-right:calc(28px - var(--i-gap));
+    transition:--i-gap var(--t-4) var(--e-quint);
+  }
+  .btn.i-space:hover, .btn.i-space:focus-visible{--i-gap:7px}
+
+  /* 37 Setting the line — a hard edge travels through the label, so each glyph
+     changes colour mid-stroke. Two copies at the SAME weight, so the metrics
+     are identical and no ghost sizer is needed; both are aria-hidden and a
+     clean single string sits in .sr. On a bordered plate: as bare text the
+     muted rest state reads as disabled copy rather than as a control. --muted
+     on the stage measures 4.96:1 light and 4.63:1 dark, so the rest label
+     clears 4.5:1 in both themes. */
+  .i-set .i-set-stack{display:inline-grid; justify-items:start}
+  .i-set .i-set-base, .i-set .i-set-top{grid-area:1/1; white-space:nowrap; font-weight:500}
+  .i-set .i-set-base{color:var(--muted)}
+  .i-set .i-set-top{
+    color:var(--ink);
+    clip-path:inset(0 100% 0 0);
+    transition:clip-path var(--t-5) var(--e-quint);
+  }
+  .i-set:hover .i-set-top, .i-set:focus-visible .i-set-top{clip-path:inset(0 0 0 0)}
+
+  /* 38 The real underline — the browser's own decoration, not a pseudo-element,
+     which is the whole point: skip-ink keeps clean gaps around the descenders
+     the entire way through the thickening. Decoration is painted, not laid out,
+     so the box never changes. The offset travels .26em → .12em so the rise is
+     legible and not just a thickening. */
+  .i-rule .i-rule-lbl{
+    text-decoration-line:underline;
+    text-decoration-skip-ink:auto;
+    text-decoration-color:color-mix(in srgb,var(--ink) 42%,transparent);
+    text-decoration-thickness:1px;
+    text-underline-offset:.26em;
+    transition:text-decoration-thickness var(--t-4) var(--e-quint),
+               text-underline-offset var(--t-4) var(--e-quint),
+               text-decoration-color var(--t-3) ease;
+  }
+  .i-rule:hover .i-rule-lbl, .i-rule:focus-visible .i-rule-lbl{
+    text-decoration-thickness:2px;
+    text-underline-offset:.12em;
+    text-decoration-color:var(--ink);
+  }
+
+  /* 39 It matches your tempo — the carrier is deliberately the plainest thing
+     on the page, a colour arriving, because the mechanism is the CLOCK. The
+     script picks a rung and writes a token NAME into --i-rung; it never writes
+     a number, so the ladder still owns every duration. Two rungs apart, not
+     one: 133 against 450 is a difference you can feel without a stopwatch.
+     No pointer, no reading — a keyboard focus falls through to --t-4, the rung
+     in between. */
+  .btn.i-tempo{
+    --i-rung:var(--t-4);
+    background-color:color-mix(in srgb,var(--ink) 0%,transparent);
+    transition:background-color var(--i-rung) var(--e-out),
+               color var(--i-rung) var(--e-out);
+  }
+  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink); color:var(--on-ink)}
+
+  /* 40 The exit remembers — the return home is handed the pointer's exit
+     velocity and settled by a critically damped spring (omega 20 rad/s), so a
+     quick sweep away carries the mark about 2.5px past rest and a slow drift
+     just eases home. The rest test measures the distance to the TARGET and the
+     velocity, never the distance to the origin: at dt = 0 an origin test is
+     already satisfied and the loop dies on its first frame. No CSS transition
+     on the mark — the spring owns that transform outright. */
+  .i-throw .i-throw-slot{position:relative; display:block; width:14px; height:14px}
+  .i-throw .i-throw-mark{
+    position:absolute; top:2px; left:2px; width:10px; height:10px;
+    border:1.5px solid currentColor; border-radius:50%;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    /* 45 is JS-only, and the script stands down under reduced motion — so the
+       end state has to come from CSS, or the one card here would do nothing. */
+    .i-throw:hover .i-throw-mark, .i-throw:focus-visible .i-throw-mark{transform:translateX(6px)}
+  }
+</style>
+
+<section class="sect">
+  <h2>H — Mass, lag and resistance</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn i-give"><span class="i-give-lbl">Download the specification</span></button>
+      </div>
+      <h3><span class="num">31</span>The plate gives, the type doesn't</h3>
+      <p>The press compresses the plate while the label counter-scales by exactly the inverse, so the type stays rigid and only the material moves. Down in 83&nbsp;ms and up over 200&nbsp;ms — fast down, slow up, the way a real key behaves.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid i-mass"><span class="i-mass-lbl">Continue to review</span><i class="i-mass-block" aria-hidden="true"></i></button>
+      </div>
+      <h3><span class="num">32</span>Two masses</h3>
+      <p>The block and the label leave at the same instant and travel the same distance at different rates, so the space between them opens by three pixels and closes again as the heavier label lands. For a primary button that should read as an object rather than a rectangle.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-dash"></i></span>See the schedule</button>
+      </div>
+      <h3><span class="num">33</span>The settle</h3>
+      <p>The dash slides into its reserved slot on a damped spring written as a linear() easing curve — one sixteen-per-cent overshoot and no second bounce. It is still a plain transition, so it turns from wherever it has got to.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid i-anti">Continue
+          <span class="i-anti-slot" aria-hidden="true">
+            <svg class="icon i-anti-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">34</span>Anticipation</h3>
+      <p>The arrow winds a pixel and a half backwards before it goes — one easing whose curve dips below zero, nothing more. The exit keeps the plain curve, so the wind-up only ever reads on the way in.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--text i-beam">Open the engineering brief
+          <svg class="i-beam-rule" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 2 Q60 2 120 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          </svg>
+        </button>
+      </div>
+      <h3><span class="num">35</span>The rule takes the load</h3>
+      <p>The rule under the label deflects four pixels, like a beam under load, and comes back straight — the path itself is interpolated rather than a bent shape being scaled. One per page; it is the most physical thing here.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid i-space">View the index
+          <span aria-hidden="true">
+            <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">36</span>Re-spacing</h3>
+      <p>The gap between label and mark opens by exactly what the right padding gives up, so the mark travels out toward the trim while the measure stays identical to the pixel. Both metrics read the same registered length, which is what makes the sum exact rather than close.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line i-set">
+          <span class="i-set-stack">
+            <span class="i-set-base" aria-hidden="true">Read the method</span>
+            <span class="i-set-top" aria-hidden="true">Read the method</span>
+            <span class="sr">Read the method</span>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">37</span>Setting the line</h3>
+      <p>A hard edge travels through the label and every glyph changes colour mid-stroke, as a line of type being set rather than a fill passing behind it. For buttons where the label is the whole message.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line i-rule"><span class="i-rule-lbl">Open the pricing brief</span></button>
+      </div>
+      <h3><span class="num">38</span>The real underline</h3>
+      <p>The browser's own underline thickens and rises toward the baseline, so skip-ink keeps clean gaps around the descenders the whole way through. No pseudo-element can do that — for text links that sit inside a bordered plate.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line i-tempo">Request access</button>
+      </div>
+      <h3><span class="num">39</span>It matches your tempo</h3>
+      <p>The pointer's approach speed picks the rung: a fast, glancing arrival gets 133&nbsp;ms and a slow, deliberate one 450&nbsp;ms. A keyboard has no velocity to read, so it gets the rung in between — and the script only ever writes a token name, never a number.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid i-throw">Send the brief
+          <span class="i-throw-slot" aria-hidden="true"><i class="i-throw-mark"></i></span>
+        </button>
+      </div>
+      <h3><span class="num">40</span>The exit remembers</h3>
+      <p>The mark's way home is handed the pointer's exit velocity, so a quick sweep away carries it about two and a half pixels past rest before it settles and a slow drift simply eases home. Critically damped, so there is never a second bounce.</p>
+      <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // Section I — one shared pointer-speed reading, two consumers.
+  (function(){
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Shared: the last two pointermove samples, so both 44 and 45 can ask
+    // "how fast was the pointer moving just now" without their own listeners.
+    // pointerenter fires BEFORE the first pointermove inside the element, so
+    // what this holds at that moment is the approach speed, which is the point.
+    var last = null, speed = 0;   // speed in px/s
+    addEventListener('pointermove', function(e){
+      var now = e.timeStamp;
+      if (last){
+        var dt = now - last.t;
+        if (dt > 0){
+          var inst = (Math.hypot(e.clientX - last.x, e.clientY - last.y) / dt) * 1000;
+          // After a pause the old reading is meaningless — a sprint across the
+          // screen, a stop, then a slow approach must read as slow. Otherwise
+          // smooth lightly, so one jittery sample cannot decide the rung.
+          speed = dt > 150 ? inst : speed * 0.4 + inst * 0.6;
+        }
+      }
+      last = {x:e.clientX, y:e.clientY, t:now};
+    }, {passive:true});
+
+    // ---- 44 It matches your tempo -------------------------------------
+    // The rung is chosen, never computed: --i-rung is set to a token NAME,
+    // which the element resolves itself — so the asymmetry rule still applies
+    // and the exit is one rung shorter for free.
+    var FAST = 1100;                                  // px/s
+    document.querySelectorAll('.i-tempo').forEach(function(btn){
+      btn.addEventListener('pointerenter', function(){
+        if (reduced.matches) return;
+        btn.style.setProperty('--i-rung', speed > FAST ? 'var(--t-2)' : 'var(--t-5)');
+      });
+      // Deliberately NOT cleared on pointerleave: the exit has to resolve the
+      // SAME rung it entered on, so the asymmetry rule shortens it by one step.
+      // Clearing it here would send a 133ms entry out over the rest --t-4.
+      btn.addEventListener('focus', function(){
+        btn.style.removeProperty('--i-rung');       // keyboard: no velocity, no rung
+      });
+    });
+
+    // ---- 45 The exit remembers ----------------------------------------
+    // Integrated in CLOSED FORM, not by Euler steps: at 60fps the damping term
+    // of a zeta = 1 spring is c*dt = 0.67, which swallows two thirds of the
+    // handed-over velocity in a single step — the overshoot simply never
+    // happened. x(t) = (c1 + c2*t)e^-Wt is exact at any dt, and stable on a
+    // dropped frame, which is the whole reason the handoff is worth doing.
+    var W = 20;                                       // rad/s, zeta = 1.0
+    var ADV = 6;                                      // px
+    var GAIN = 0.19, VCAP = 350;                      // tuned for a ~2.5px peak
+    document.querySelectorAll('.i-throw').forEach(function(btn){
+      if (reduced.matches) return;                    // CSS carries the end state instead
+      var mark = btn.querySelector('.i-throw-mark');
+      if (!mark) return;
+      var x = 0, v = 0, target = 0, raf = null, t0 = 0;
+
+      function step(now){
+        var dt = t0 ? Math.min((now - t0) / 1000, 1/30) : 0;
+        t0 = now;
+        if (dt > 0){
+          var c1 = x - target, c2 = v + W * c1, e = Math.exp(-W * dt);
+          x = target + (c1 + c2 * dt) * e;
+          v = (c2 - W * (c1 + c2 * dt)) * e;
+        }
+        mark.style.transform = 'translateX(' + x.toFixed(3) + 'px)';
+        // Rest is measured against the TARGET plus the velocity. A test against
+        // the origin is already true on the first frame, where dt is 0.
+        if (Math.abs(target - x) < 0.02 && Math.abs(v) < 0.5){
+          x = target; v = 0; raf = null; t0 = 0;
+          mark.style.transform = x === 0 ? '' : 'translateX(' + x + 'px)';
+          return;
+        }
+        raf = requestAnimationFrame(step);
+      }
+      function run(){ if (raf === null){ t0 = 0; raf = requestAnimationFrame(step); } }
+
+      btn.addEventListener('pointerenter', function(){ target = ADV; run(); });
+      btn.addEventListener('pointerleave', function(){
+        target = 0;
+        v = -Math.min(speed * GAIN, VCAP);            // the exit carries it home
+        run();
+      });
+      btn.addEventListener('focus', function(){ target = ADV; v = 0; run(); });
+      btn.addEventListener('blur',  function(){ target = 0;   v = 0; run(); });
+    });
+  })();
+</script>
+
+<style>
+  /* ============ Section J — The studio idioms ============
+     Six hover mechanics borrowed from the agency vocabulary — the Osmo house
+     style and the momo hover set — and rebuilt to this page's rules rather than
+     to theirs.
+
+     WHAT WAS BORROWED: the direction-aware tile (46), the curved liquid wipe
+     (47), the asymmetric per-child choreography that a Framer variant
+     structurally cannot do (48), the external-link mark that leaves by the
+     corner (49), and the resolve-from-noise label (51).
+
+     WHAT WAS NOT: momo ships its own curve set — house, expo, overshoot — and
+     its own five-band duration ladder. Two timing vocabularies in one document
+     is one too many, and this page's --e-quint is momo's expo to within a
+     rounding error, so nothing new is declared here. Every duration below is a
+     rung off the existing ladder.
+
+     Momo also gates every hover behind @media (hover: hover) and (pointer:
+     fine). This page deliberately does not, so that a tap still shows the
+     effect on a phone — see the footer note. That convention wins here.
+
+     TRANSFORMS carry an explicit identity at rest — translateX(0),
+     translate(0px,0px) rotate(0deg) — never `none`. Two reasons: interpolating
+     from `none` to a function list drops to matrix interpolation, which travels
+     a straight chord rather than the intended path; and a element that is
+     transformed in BOTH states keeps one rasterisation the whole way, so the
+     type never visibly changes weight as it starts to move. */
+
+  /* 41 Directional fill — the tile enters from the edge the pointer actually
+     crossed and leaves by the opposite one. Two custom properties carry the
+     offset and the transform reads them, so the script decides a direction and
+     CSS does every frame of the work.
+
+     The trap this recipe is known for: placing the tile at the incoming edge
+     and animating it to zero in the same frame gets batched, so the tile slides
+     in from wherever it was LAST time. The transition is suppressed, a reflow
+     is forced, and only then is the target set. */
+  .btn.j-dir{overflow:hidden}
+  .j-dir .j-dir-tile{
+    position:absolute; inset:0; pointer-events:none;
+    background:var(--ink);
+    --j-x:0%; --j-y:100%;
+    transform:translate(var(--j-x), var(--j-y));
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  /* The label waits out the tile's own exit before it turns back — a delay
+     choreographed against another movement takes that movement's duration. */
+  .j-dir .lbl{position:relative; transition:color var(--t-2) ease var(--t-5)}
+  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-1)}
+
+  /* 42 The wave — the fill rises with a curved leading edge that flattens as it
+     lands, so it reads as liquid finding its level rather than a rectangle
+     arriving. The crest is deliberately off-centre (56/44) — a perfect dome
+     reads as a shape, an uneven one reads as a material. It overhangs 12% each
+     side so the arc's ends fall outside the plate and the corners never strand. */
+  .btn.j-wave{overflow:hidden}
+  .j-wave .j-wave-fill{
+    position:absolute; left:-12%; right:-12%; bottom:0; height:100%;
+    pointer-events:none; background:var(--ink);
+    border-radius:56% 44% 0% 0% / 34% 34% 0% 0%;
+    transform:translateY(100%);
+    transition:transform var(--t-5) var(--e-quint), border-radius var(--t-5) var(--e-quint);
+  }
+  .j-wave:hover .j-wave-fill, .j-wave:focus-visible .j-wave-fill{
+    transform:translateY(0%);
+    border-radius:0% 0% 0% 0% / 0% 0% 0% 0%;
+  }
+  .j-wave .lbl{position:relative; transition:color var(--t-2) ease var(--t-5)}
+  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+
+  /* 43 In one order, out another — the one thing a gesture variant cannot do at
+     all: its exit is always its entrance played backwards. Here the rest-state
+     delay is the EXIT delay and the hover-state delay is the ENTER delay, so
+     the wave passes through the button left to right on the way in and right to
+     left on the way out. Three children, three delays, one hover. */
+  .j-order .j-order-dot{width:5px; height:5px; border-radius:50%; background:currentColor}
+  .j-order .j-order-dot,
+  .j-order .j-order-mark{display:block}
+  .j-order .j-order-lbl{display:inline-block}
+  .j-order .j-order-dot,
+  .j-order .j-order-lbl,
+  .j-order .j-order-mark{transform:translateX(0); transition:transform var(--t-3) var(--e-out)}
+  /* rest — the exit runs right to left */
+  .j-order .j-order-dot{transition-delay:var(--d-2)}
+  .j-order .j-order-lbl{transition-delay:var(--d-1)}
+  .j-order .j-order-mark{transition-delay:0s}
+  /* hover — the entrance runs left to right */
+  .j-order:hover .j-order-dot, .j-order:focus-visible .j-order-dot{transform:translateX(4px); transition-delay:0s}
+  .j-order:hover .j-order-lbl, .j-order:focus-visible .j-order-lbl{transform:translateX(4px); transition-delay:var(--d-1)}
+  .j-order:hover .j-order-mark, .j-order:focus-visible .j-order-mark{transform:translateX(4px); transition-delay:var(--d-2)}
+
+  /* 44 It leaves by the corner — the mark rotates to point out of the page and
+     travels along that same diagonal, so the direction it turns and the
+     direction it moves are the same statement. Both states carry the identical
+     function list, translate() then rotate(), in that order: swap the order and
+     the browser interpolates the composed matrices instead, and the arrow cuts
+     a straight chord rather than swinging. The 14px slot is fixed; the travel
+     borrows from the plate's own padding. */
+  .j-out .j-out-slot{position:relative; display:block; width:14px; height:14px}
+  .j-out .j-out-mark{
+    position:absolute; top:0; left:0;
+    transform:translate(0px,0px) rotate(0deg);
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .j-out:hover .j-out-mark, .j-out:focus-visible .j-out-mark{
+    transform:translate(4px,-4px) rotate(-45deg);
+  }
+
+  /* 45 The optical centre holds — the mark's space is reserved from the start,
+     which normally means the label sits visibly off-centre while the mark is
+     still invisible. So at rest the whole group is offset by exactly half the
+     reserved measure (14px slot + 10px gap = 24, half = 12), which puts the
+     LABEL on the plate's centre line; on hover the group returns to zero, which
+     puts the label-and-mark PAIR on the same centre line. Both states are
+     optically centred, and the thing that moves is the compensation. */
+  .j-optic .j-optic-group{
+    display:inline-flex; align-items:center; gap:10px;
+    transform:translateX(12px);
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .j-optic:hover .j-optic-group, .j-optic:focus-visible .j-optic-group{transform:translateX(0px)}
+  .j-optic .j-optic-slot{position:relative; display:block; width:14px; height:14px}
+  .j-optic .j-optic-mark{opacity:0; transition:opacity var(--t-3) ease}
+  .j-optic:hover .j-optic-mark, .j-optic:focus-visible .j-optic-mark{opacity:1; transition-delay:var(--d-1)}
+
+  /* 46 Resolve — the label churns and locks in left to right. Two decisions
+     keep it from becoming a gimmick: the pool is the label's OWN characters, so
+     the button never shows a glyph that does not belong to it; and the face is
+     the mono, where every advance is identical, so a scramble cannot move the
+     plate by a fraction of a pixel. Nothing is reserved because nothing can
+     change width. */
+  .btn.j-resolve{
+    font:500 13px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    border-radius:6px; padding:16px 24px;
+  }
+  .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
+  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink)}
+</style>
+
+<section class="sect">
+  <h2>I — The studio idioms</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line j-dir" data-j-dir="idle">
+          <i class="j-dir-tile" aria-hidden="true"></i><span class="lbl">See the work</span>
+        </button>
+      </div>
+      <h3><span class="num">41</span>Directional fill</h3>
+      <p>The fill enters from whichever of the four edges the pointer actually crossed, and leaves by the opposite one. Approach the same button from above and from the left and it answers differently — for a list of rows, where nothing else reads as considered.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line j-wave">
+          <i class="j-wave-fill" aria-hidden="true"></i><span class="lbl">Start a project</span>
+        </button>
+      </div>
+      <h3><span class="num">42</span>The wave</h3>
+      <p>The fill rises with a curved leading edge that flattens as it lands, so it reads as a liquid finding its level rather than a rectangle arriving. The crest is off-centre on purpose — a perfect dome reads as a shape.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line j-order">
+          <i class="j-order-dot" aria-hidden="true"></i>
+          <span class="j-order-lbl">How we work</span>
+          <span class="j-order-mark" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">43</span>In one order, out another</h3>
+      <p>Three parts move the same four pixels fifty milliseconds apart, so a wave passes through the button left to right on the way in and right to left on the way out. The exit is not the entrance reversed, which is the one thing a hover variant can never give you.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid j-out">Read the case
+          <span class="j-out-slot" aria-hidden="true">
+            <svg class="icon j-out-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">44</span>It leaves by the corner</h3>
+      <p>The mark turns to point out of the page and travels along that same diagonal, so the way it rotates and the way it moves say one thing. For anything that opens elsewhere — a case study, a PDF, an external profile.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line j-optic">
+          <span class="j-optic-group">
+            <span class="j-optic-lbl">Read the note</span>
+            <span class="j-optic-slot">
+              <svg class="icon j-optic-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+            </span>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">45</span>The optical centre holds</h3>
+      <p>The mark's space is reserved from the start, so the group sits offset by half of it and the label alone reads as centred; on hover the offset returns to zero and the label-and-mark pair reads as centred instead. Both states are balanced, and what moves is the compensation.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line j-resolve">
+          <span class="j-resolve-lbl" aria-hidden="true">Request the audit</span>
+          <span class="sr">Request the audit</span>
+        </button>
+      </div>
+      <h3><span class="num">46</span>Resolve</h3>
+      <p>The label churns and locks in left to right, drawing only on its own characters, so the button never shows a glyph that does not belong to it. Set in the mono, where every advance is identical and a scramble cannot move the plate.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // Section J — two inits. The scripts decide; CSS animates.
+  (function(){
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+    // ---- 46 Directional fill ------------------------------------------
+    // The status attribute carries a WORD, not a boolean: readable in DevTools
+    // and it leaves room for a fifth state. The script's only job is choosing it.
+    var OFF = {left:['-100%','0%'], right:['100%','0%'], top:['0%','-100%'], bottom:['0%','100%']};
+    var OPP = {left:'right', right:'left', top:'bottom', bottom:'top'};
+
+    function nearestEdge(btn, e){
+      var r = btn.getBoundingClientRect();
+      // Distance to each edge in pixels, smallest wins. Comparing normalised
+      // offsets instead biases a wide pill toward its long axis.
+      var d = {
+        left:   e.clientX - r.left,
+        right:  r.right - e.clientX,
+        top:    e.clientY - r.top,
+        bottom: r.bottom - e.clientY
+      };
+      var best = 'left', k;
+      for (k in d) if (d[k] < d[best]) best = k;
+      return best;
+    }
+
+    document.querySelectorAll('.j-dir').forEach(function(btn){
+      var tile = btn.querySelector('.j-dir-tile');
+      if (!tile) return;
+
+      function place(dir, animate){
+        if (!animate) tile.style.transition = 'none';
+        tile.style.setProperty('--j-x', OFF[dir][0]);
+        tile.style.setProperty('--j-y', OFF[dir][1]);
+        if (!animate){
+          void tile.offsetWidth;              // forced reflow — without it the
+          tile.style.transition = '';         // jump animates and the tile
+        }                                     // enters from the LAST edge
+      }
+      function enter(dir){
+        place(dir, false);
+        tile.style.setProperty('--j-x', '0%');
+        tile.style.setProperty('--j-y', '0%');
+        btn.setAttribute('data-j-dir', dir);
+      }
+      function leave(){
+        place(OPP[btn.getAttribute('data-j-dir')] || 'bottom', true);
+        btn.setAttribute('data-j-dir', 'idle');
+      }
+
+      btn.addEventListener('pointerenter', function(e){ enter(nearestEdge(btn, e)); });
+      btn.addEventListener('pointerleave', leave);
+      // A keyboard crosses no edge, so it gets the reading direction.
+      btn.addEventListener('focus', function(){ enter('left'); });
+      btn.addEventListener('blur', leave);
+    });
+
+    // ---- 51 Resolve ---------------------------------------------------
+    // The duration is read from the root ladder rather than restated here, so
+    // the script and the stylesheet cannot drift apart. Root, not the element:
+    // .btn remaps --t-5 one rung shorter at rest and restores it on hover, and
+    // this is the entering rung.
+    var DUR = parseFloat(getComputedStyle(document.documentElement)
+                .getPropertyValue('--t-5')) || 450;
+
+    document.querySelectorAll('.j-resolve').forEach(function(btn){
+      var el = btn.querySelector('.j-resolve-lbl');
+      if (!el) return;
+      var text = el.textContent;
+      var chars = text.split('');
+      var pool = [];
+      chars.forEach(function(c){ if (c !== ' ' && pool.indexOf(c) === -1) pool.push(c); });
+      if (!pool.length) return;
+      var raf = null, t0 = 0, frame = 0;
+
+      function stop(){
+        if (raf !== null) cancelAnimationFrame(raf);
+        raf = null;
+        el.textContent = text;                // interrupted: home immediately
+      }
+      function tick(now){
+        if (!t0) t0 = now;
+        var p = Math.min(1, (now - t0) / DUR);
+        var locked = Math.floor(p * chars.length);
+        // Every second frame: 60 swaps a second reads as strobe, 30 as churn.
+        if (frame++ % 2 === 0 || p === 1){
+          el.textContent = chars.map(function(c, i){
+            if (c === ' ' || i < locked) return c;
+            return pool[(Math.random() * pool.length) | 0];
+          }).join('');
+        }
+        if (p < 1){ raf = requestAnimationFrame(tick); }
+        else { raf = null; el.textContent = text; }
+      }
+      function start(){
+        if (reduced.matches) return;          // the colour shift carries it
+        stop(); t0 = 0; frame = 0;
+        raf = requestAnimationFrame(tick);
+      }
+
+      btn.addEventListener('pointerenter', start);
+      btn.addEventListener('pointerleave', stop);
+      btn.addEventListener('focus', start);
+      btn.addEventListener('blur', stop);
+    });
+  })();
+</script>
+
+<style>
+  /* ============ Section J — In company ============
+     The first six on this page that know their siblings exist. Every earlier
+     card is a lone button; a real interface puts them in rows, and the
+     interesting behaviour there happens BETWEEN items — one receding so
+     another can lead, a rule travelling, a row conserving its width as one
+     item gains. :has() made all six of these CSS-only; none needs a script.
+
+     PREFIX: k-, one past the section letter. Prefixes on this page track the
+     order things were authored, not where they sit — sections A to C carry no
+     prefix at all. The letter in the heading moves when the page is
+     restructured; a class name that has been copied into someone's project
+     must not.
+
+     A GROUP CARD is marked data-copy-root, so Copy hands over the whole row.
+     One button lifted out of a sibling effect does nothing at all. */
+
+  /* Shared by all six.
+     THE LADDER PROBLEM, and it is specific to sibling effects. .btn redeclares
+     --t-2…--t-5 one rung short at rest and .btn:hover restores them — that is
+     what gives every other card its shorter exit. But a sibling effect animates
+     a button that is NOT itself hovered, so it would read the short rung in
+     both directions and lose the asymmetry the whole page is built on.
+
+     One rule fixes it for the section. --k-2…--k-5 are captured on the ROW,
+     which is not a .btn and therefore still sees the root ladder; while any
+     button in the row is hovered, every button gets those full values back.
+     (0,3,0) beats .btn's (0,1,0), and it hands the hovered button exactly what
+     .btn:hover would have given it, so nothing is counted twice. No literal
+     durations: the row reads the ladder rather than restating it. */
+  .k-row{
+    display:flex; align-items:center;
+    --k-2:var(--t-2); --k-3:var(--t-3); --k-4:var(--t-4); --k-5:var(--t-5);
+  }
+  .k-row:has(.btn:hover) .btn,
+  .k-row:has(.btn:focus-visible) .btn{
+    --t-2:var(--k-2); --t-3:var(--k-3); --t-4:var(--k-4); --t-5:var(--k-5);
+  }
+
+  /* 47 The others recede — nothing is added to the hovered item; the row simply
+     stops competing with it. The receded state is --muted, which measures
+     4.96:1 on the stage in light and 4.63 in dark — a de-emphasised label still
+     has to be readable, so this is a colour step and not an opacity fade. */
+  .k-recede{gap:14px}
+  .k-recede .k-recede-i{transition:color var(--t-3) ease}
+  .k-recede:has(.btn:hover) .k-recede-i:not(:hover),
+  .k-recede:has(.btn:focus-visible) .k-recede-i:not(:focus-visible){color:var(--muted)}
+
+  /* 48 The travelling indicator — one rule for the whole row, moved by a custom
+     property the row sets from :has(). It parks on the current item rather than
+     vanishing, which is what a real nav does.
+     THE CONSTRAINT, and it is honest: the columns are equal, so one step is
+     always 100% of the bar's own width. Unequal widths need a measured offset
+     per item, which means JavaScript — and that is a different card. */
+  .k-ind{position:relative; display:grid; grid-template-columns:repeat(4,1fr); --k-n:0}
+  .k-ind .k-ind-i{justify-content:center}
+  .k-ind .k-ind-bar{
+    position:absolute; left:0; bottom:0; width:25%; height:1.5px;
+    background:var(--ink); border-radius:1px;
+    transform:translateX(calc(var(--k-n) * 100%));
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .k-ind:has(.k-ind-i:nth-child(1):is(:hover,:focus-visible)){--k-n:0}
+  .k-ind:has(.k-ind-i:nth-child(2):is(:hover,:focus-visible)){--k-n:1}
+  .k-ind:has(.k-ind-i:nth-child(3):is(:hover,:focus-visible)){--k-n:2}
+  .k-ind:has(.k-ind-i:nth-child(4):is(:hover,:focus-visible)){--k-n:3}
+
+  /* 49 Conserved compression — card 36 conserved one button's measure by
+     trading its gap against its padding. This is the same principle one scope
+     up: the hovered item takes 24px and its two neighbours give up 12px each,
+     so the row's width is unchanged by construction rather than by rounding.
+     The padding is cut to 12px because the house 28px leaves no room to squeeze
+     — a clipped label would be a worse failure than no effect at all. Measured
+     here: 92px cells go to 116 / 80 / 80, and the longest label needs 74. THE
+     SQUEEZE BUDGET IS 12px PER ITEM, so if you carry this over, check the
+     longest label against the shrunk cell rather than the resting one. */
+  .k-share{gap:6px; width:min(100%,288px)}
+  .k-share .k-share-i{
+    flex:none; justify-content:center; white-space:nowrap; overflow:hidden;
+    padding:15px 12px;
+    --k-w:calc((100% - 12px) / 3);        /* three items, two 6px gaps */
+    --k-give:0px;
+    width:calc(var(--k-w) + var(--k-give));
+    transition:width var(--t-4) var(--e-quint);
+  }
+  .k-share:has(.btn:hover) .k-share-i:hover,
+  .k-share:has(.btn:focus-visible) .k-share-i:focus-visible{--k-give:24px}
+  .k-share:has(.btn:hover) .k-share-i:not(:hover),
+  .k-share:has(.btn:focus-visible) .k-share-i:not(:focus-visible){--k-give:-12px}
+
+  /* 50 Repulsion — four rules, no :has() arithmetic and no per-item states.
+     Sibling combinators reach forward and :has() reaches back, so the falloff
+     is written twice in mirror image rather than once per hovered position. The
+     hovered item is deliberately not targeted: it holds still and the row makes
+     room, which is the opposite of the item growing into its neighbours. */
+  .k-rep{gap:10px}
+  .k-rep .k-rep-i{transform:translateX(0); transition:transform var(--t-4) var(--e-quint)}
+  .k-rep .k-rep-i:is(:hover,:focus-visible) + .k-rep-i{transform:translateX(5px)}
+  .k-rep .k-rep-i:is(:hover,:focus-visible) + .k-rep-i + .k-rep-i{transform:translateX(2px)}
+  .k-rep .k-rep-i:has(+ .k-rep-i:is(:hover,:focus-visible)){transform:translateX(-5px)}
+  .k-rep .k-rep-i:has(+ .k-rep-i + .k-rep-i:is(:hover,:focus-visible)){transform:translateX(-2px)}
+
+  /* 51 The pair — emphasis is a fixed quantity, so the secondary can only take
+     it by the primary giving it up. Both plates carry a 1px border from the
+     start, transparent on the primary, so the trade costs nothing in layout.
+     The primary's own hover deliberately does almost nothing: it already has
+     the emphasis, and there is nothing for it to win. */
+  .k-pair{gap:10px}
+  .k-pair .btn{
+    border:1px solid transparent;
+    transition:background-color var(--t-3) ease, color var(--t-3) ease, border-color var(--t-3) ease;
+  }
+  .k-pair .k-pair-a{background-color:var(--ink); color:var(--on-ink)}
+  .k-pair .k-pair-b{
+    background-color:color-mix(in srgb,var(--ink) 0%,transparent);
+    color:var(--ink); border-color:var(--line-ctl);
+  }
+  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-a{
+    background-color:color-mix(in srgb,var(--ink) 0%,transparent);
+    color:var(--ink); border-color:var(--line-ctl);
+  }
+  .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-b{
+    background-color:var(--ink); color:var(--on-ink); border-color:transparent;
+  }
+
+  /* 52 The divider yields — the two hairlines touching the hovered segment
+     stand down, so it reads as lifted out of the row rather than tinted inside
+     it. No overflow:hidden on the row, deliberately: it would clip the focus
+     ring, which sits at outline-offset 3px. The end segments carry the corner
+     radii themselves instead. */
+  .k-div{border:1px solid var(--line-ctl); border-radius:8px}
+  .k-div .k-div-i{
+    position:relative; padding:11px 16px; border-radius:0;
+    transition:background-color var(--t-3) ease;
+  }
+  .k-div .k-div-i:first-child{border-radius:7px 0 0 7px}
+  .k-div .k-div-i:last-child{border-radius:0 7px 7px 0}
+  .k-div .k-div-i + .k-div-i::before{
+    content:""; position:absolute; left:0; top:7px; bottom:7px; width:1px;
+    background:var(--line-ctl);
+    transition:opacity var(--t-3) ease;
+  }
+  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 7%,transparent)}
+  .k-div .k-div-i:is(:hover,:focus-visible)::before,
+  .k-div .k-div-i:is(:hover,:focus-visible) + .k-div-i::before{opacity:0}
+</style>
+
+<section class="sect">
+  <h2>J — In company</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <div class="k-row k-recede" data-copy-root>
+          <button class="btn btn--text k-recede-i">Work</button>
+          <button class="btn btn--text k-recede-i">Studio</button>
+          <button class="btn btn--text k-recede-i">Journal</button>
+        </div>
+      </div>
+      <h3><span class="num">47</span>The others recede</h3>
+      <p>Nothing is added to the item you are pointing at — the rest of the row simply stops competing with it. The receded state is a colour step, not an opacity fade, so a de-emphasised label is still a readable one.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <div class="k-row k-ind" data-copy-root>
+          <button class="btn btn--text k-ind-i" aria-current="page">Overview</button>
+          <button class="btn btn--text k-ind-i">Pricing</button>
+          <button class="btn btn--text k-ind-i">Docs</button>
+          <button class="btn btn--text k-ind-i">Log</button>
+          <i class="k-ind-bar" aria-hidden="true"></i>
+        </div>
+      </div>
+      <h3><span class="num">48</span>The travelling indicator</h3>
+      <p>One rule serves the whole row and slides to whichever item you point at, parking back on the current one when you leave. The columns have to be equal for a step to be a fixed distance — unequal widths need a measured offset, which is a different card.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <div class="k-row k-share" data-copy-root>
+          <button class="btn btn--line k-share-i">Design</button>
+          <button class="btn btn--line k-share-i">Build</button>
+          <button class="btn btn--line k-share-i">Ship</button>
+        </div>
+      </div>
+      <h3><span class="num">49</span>Conserved compression</h3>
+      <p>The item you point at takes twenty-four pixels and its two neighbours give up twelve each, so the row's width is unchanged by construction rather than by rounding. Card 36 does this inside one button; this is the same principle one scope up.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <div class="k-row k-rep" data-copy-root>
+          <button class="btn btn--text k-rep-i">Index</button>
+          <button class="btn btn--text k-rep-i">Work</button>
+          <button class="btn btn--text k-rep-i">About</button>
+          <button class="btn btn--text k-rep-i">Notes</button>
+          <button class="btn btn--text k-rep-i">Contact</button>
+        </div>
+      </div>
+      <h3><span class="num">50</span>Repulsion</h3>
+      <p>The neighbours step away from the item you point at, five pixels for the ones beside it and two for the ones beyond, and the item itself holds still. Four rules do it: sibling combinators reach forward, and :has() reaches back.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <div class="k-row k-pair" data-copy-root>
+          <button class="btn k-pair-a">Book a call</button>
+          <button class="btn k-pair-b">See pricing</button>
+        </div>
+      </div>
+      <h3><span class="num">51</span>The pair</h3>
+      <p>Emphasis is a fixed quantity, so the secondary can only take it by the primary giving it up — point at the outline and the two trade places. The primary's own hover does almost nothing, because it has already won.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <div class="k-row k-div" data-copy-root>
+          <button class="btn btn--text k-div-i">Day</button>
+          <button class="btn btn--text k-div-i">Week</button>
+          <button class="btn btn--text k-div-i">Month</button>
+          <button class="btn btn--text k-div-i">Year</button>
+        </div>
+      </div>
+      <h3><span class="num">52</span>The divider yields</h3>
+      <p>The two hairlines touching the segment you point at stand down, so it reads as lifted out of the row rather than tinted inside it. For segmented controls, where a fill alone leaves the divider cutting through the thing it is meant to separate.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
   <footer class="foot">
     <p><b>Porting to Framer:</b> «Variant» means it builds as a hover variant straight on the canvas. «Code» means it needs a code override or a component — duplicated labels, transform-origin swaps and springs are not something variants can do.</p>
-    <p>All thirty-five have an :active press, a visible focus state and a reduced-motion fallback. Hover is deliberately left ungated here so a tap still shows the effect on a phone — in production, put the hover rules inside <code>@media (any-hover: hover)</code> and keep <code>:active</code> outside it, so a touch tap compresses without the hover state sticking.</p>
+    <p>All fifty-two have an :active press, a visible focus state and a reduced-motion fallback. Hover is deliberately left ungated here so a tap still shows the effect on a phone — in production, put the hover rules inside <code>@media (any-hover: hover)</code> and keep <code>:active</code> outside it, so a touch tap compresses without the hover state sticking.</p>
   </footer>
 </div>
 
 <script>
-  // 06 Ink fill — the fill originates at the pointer's entry and exit point
+  // 03 Ink fill — the fill originates at the pointer's entry and exit point
   document.querySelectorAll('.inkfill').forEach(function(b){
     function set(e){
       var r = b.getBoundingClientRect();
@@ -1241,7 +2158,7 @@
     b.addEventListener('pointerleave', set);
   });
 
-  // 14 Magnetic — critically damped spring (k=170, c≈2√k), interruptible with velocity preserved
+  // 11 Magnetic — critically damped spring (k=170, c≈2√k), interruptible with velocity preserved
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll('.magnet').forEach(function(btn){
       var lbl = btn.querySelector('.m-lbl');
@@ -1394,5 +2311,241 @@
     apply();
   })();
 </script>
+
+<script>
+  // Copy to Framer — builds each card's snippet by READING the live
+  // stylesheets rather than storing a second copy of every effect. Nothing can
+  // drift out of sync, because there is only ever one source.
+  (function(){
+    var SOURCE = 'https://granqvistsanna-web.github.io/button-hover-lab/';
+    var VARIANTS = {'btn':1, 'btn--solid':1, 'btn--line':1, 'btn--text':1};
+    var ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 6.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1.5"/></svg>';
+    var DONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+
+    var live = document.createElement('span');
+    live.className = 'sr';
+    live.setAttribute('aria-live', 'polite');
+    document.body.appendChild(live);
+
+    function sheets(){
+      return [].slice.call(document.styleSheets).filter(function(sh){
+        try { return !!sh.cssRules } catch(e){ return false; }   // cross-origin: the font CSS
+      });
+    }
+    // One walk, used by every collector. @media / @supports recurse carrying
+    // their condition; everything else is handed over with it.
+    function walk(fn){
+      function rec(rules, cond){
+        [].forEach.call(rules, function(r){
+          var grouping = (typeof CSSMediaRule !== 'undefined' && r instanceof CSSMediaRule) ||
+                         (typeof CSSSupportsRule !== 'undefined' && r instanceof CSSSupportsRule);
+          if (grouping){
+            var at = (r instanceof CSSMediaRule ? '@media ' : '@supports ') + r.conditionText;
+            rec(r.cssRules, cond ? cond + ' and ' + r.conditionText : at);
+            return;
+          }
+          fn(r, cond);
+        });
+      }
+      sheets().forEach(function(sh){ rec(sh.cssRules, ''); });
+    }
+    // The base collector is the mirror of the effect one: a selector qualifies
+    // only if EVERY class in it is a base class. Matching `.btn` loosely drags
+    // in every other card's `.btn.x` compound rule — and its tokens with it.
+    function baseMatcher(btns, markup){
+      var allow = {btn:1};
+      btns.forEach(function(b){
+        [].forEach.call(b.classList, function(c){ if (VARIANTS[c]) allow[c] = 1; });
+      });
+      if (/class="[^"]*\bsr\b/.test(markup)) allow.sr = 1;
+      if (/class="[^"]*\bicon\b/.test(markup)) allow.icon = 1;
+      return function(sel){
+        var cs = sel.match(/\.[\w-]+/g);
+        return !!cs && cs.every(function(c){ return allow[c.slice(1)]; });
+      };
+    }
+    // Re-indent a multi-line snippet to column zero — the source indentation is
+    // four levels deep inside the page and reads as broken once pasted.
+    function dedent(html){
+      var lines = html.split('\n');
+      if (lines.length < 2) return html;
+      var min = Infinity;
+      lines.slice(1).forEach(function(l){
+        if (!l.trim()) return;
+        min = Math.min(min, l.match(/^[ \t]*/)[0].length);
+      });
+      if (!isFinite(min) || !min) return html;
+      return [lines[0]].concat(lines.slice(1).map(function(l){ return l.slice(min); })).join('\n');
+    }
+    // A class boundary, so .i-set never collects .i-settle's rules.
+    function matcher(keys){
+      var res = keys.map(function(k){
+        return new RegExp('\\.' + k.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&') + '(?![\\w-])');
+      });
+      return function(sel){ return res.some(function(re){ return re.test(sel); }); };
+    }
+    function wrap(cond, body){
+      if (!cond) return body;
+      return cond + '{\n' + body.replace(/^/gm, '  ') + '\n}';
+    }
+    function block(title){ return '\n/* ' + title + ' */\n'; }
+
+    function snippet(card){
+      // Most cards are one button. A group card marks its wrapper with
+      // data-copy-root, and then the row IS the deliverable — copying one
+      // button out of a sibling effect would give you nothing that works.
+      var root = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
+      var btns = root.classList.contains('btn')
+        ? [root] : [].slice.call(root.querySelectorAll('.btn'));
+      var num = (card.querySelector('.num') || {}).textContent || '';
+      var name = (card.querySelector('h3') || {textContent:''}).textContent.replace(num, '').trim();
+      var chips = [].slice.call(card.querySelectorAll('.chip')).map(function(c){ return c.textContent.trim(); });
+      var stage = card.querySelector('.stage');
+      var sect = card.closest('.sect');
+
+      // Every class that scopes this card: the effect class on the button, any
+      // extra class on its stage, and any on the section (card 21's line screen
+      // and section F's per-theme alias both live outside the button).
+      var keys = [];
+      function keysFrom(el, skip){
+        [].forEach.call(el.classList, function(c){
+          if (!VARIANTS[c] && c !== skip && keys.indexOf(c) === -1) keys.push(c);
+        });
+      }
+      keysFrom(root);
+      btns.forEach(function(b){ keysFrom(b); });
+      keysFrom(stage, 'stage');
+      keysFrom(sect, 'sect');
+
+      // Runtime writes inline styles (the tempo rung, the spring's transform).
+      // Authored markup on this page carries none, so the clone drops them all.
+      var clone = root.cloneNode(true);
+      [].concat(clone, [].slice.call(clone.querySelectorAll('*'))).forEach(function(n){
+        n.removeAttribute && n.removeAttribute('style');
+      });
+      clone.removeAttribute('data-copy-root');      // a marker for this page, not for yours
+      var markup = dedent(clone.outerHTML);
+
+      var isEffect = matcher(keys);
+      var isBase = baseMatcher(btns, markup);
+
+      var base = [], effect = [], atRules = [], usedTokens = {}, seen = {};
+      function note(text){
+        var m, re = /var\((--[\w-]+)/g;
+        while ((m = re.exec(text))) usedTokens[m[1]] = 1;
+      }
+      walk(function(r, cond){
+        if (r.selectorText){
+          var into = isEffect(r.selectorText) ? effect : (isBase(r.selectorText) ? base : null);
+          if (!into) return;
+          var k = cond + '||' + r.cssText;
+          if (seen[k]) return; seen[k] = 1;
+          note(r.cssText);
+          into.push(wrap(cond, r.cssText));
+        } else if (r.name){
+          // @property and @keyframes carry no selector — keep the ones this
+          // card actually names.
+          atRules.push({name: r.name, text: r.cssText});
+        }
+      });
+      var effectCss = effect.join('\n');
+      var ats = atRules.filter(function(a){
+        return effectCss.indexOf(a.name) !== -1;
+      }).map(function(a){ return a.text; });
+      ats.forEach(note);
+
+      // The token declarations, from all three theme blocks, narrowed to the
+      // ones this card actually reads.
+      var tokens = [];
+      walk(function(r, cond){
+        if (!r.selectorText || !/^:root/.test(r.selectorText.trim())) return;
+        var decls = [];
+        for (var i = 0; i < r.style.length; i++){
+          var prop = r.style[i];
+          if (usedTokens[prop]) decls.push(prop + ':' + r.style.getPropertyValue(prop).trim() + ';');
+        }
+        if (decls.length) tokens.push(wrap(cond, r.selectorText + '{' + decls.join(' ') + '}'));
+      });
+
+      var js = '';
+      if (/JS/.test(chips.join(' '))){
+        [].slice.call(document.querySelectorAll('script')).some(function(sc){
+          if (keys.some(function(k){ return sc.textContent.indexOf("'." + k + "'") !== -1; })){
+            js = sc.textContent.trim();
+            return true;
+          }
+          return false;
+        });
+      }
+
+      var route = /Code in Framer/.test(chips.join(' '))
+        ? 'Code in Framer — paste into a code component or a code override.'
+        : 'Variant in Framer — this one rebuilds as a hover variant on the canvas; the CSS below is the reference, not the deliverable.';
+
+      var out = [];
+      out.push('/* ' + num + ' · ' + name);
+      out.push('   ' + chips.join(' · '));
+      out.push('   ' + route);
+      out.push('   Button Hover Lab — ' + SOURCE + ' */');
+      if (tokens.length) out.push(block('1 — tokens this effect reads') + tokens.join('\n'));
+      if (base.length)   out.push(block('2 — button base') + base.join('\n'));
+      if (ats.length)    out.push(block('3 — registered properties / keyframes') + ats.join('\n'));
+      out.push(block((ats.length ? '4' : '3') + ' — the effect') + effectCss);
+      out.push(block((ats.length ? '5' : '4') + ' — markup') + markup);
+      if (js) out.push(block((ats.length ? '6' : '5') + ' — script (this section’s inits)') + js);
+      return out.join('\n');
+    }
+
+    function put(text){
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise(function(res, rej){
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch(e){}
+        document.body.removeChild(ta);
+        ok ? res() : rej();
+      });
+    }
+
+    document.querySelectorAll('.spec').forEach(function(card){
+      var stage = card.querySelector('.stage');
+      if (!stage || !card.querySelector('.btn')) return;
+      var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
+      var name = (card.querySelector('h3') || {textContent:''}).textContent.replace(num, '').trim();
+
+      var b = document.createElement('button');
+      b.className = 'copy';
+      b.type = 'button';
+      b.innerHTML = ICON;
+      b.title = 'Copy the code for “' + name + '”';
+      b.setAttribute('aria-label', b.title);
+      var t = null;
+      b.addEventListener('click', function(){
+        put(snippet(card)).then(function(){
+          clearTimeout(t);
+          b.innerHTML = DONE;
+          b.setAttribute('data-done', '1');
+          live.textContent = name + ' copied';
+          t = setTimeout(function(){
+            b.innerHTML = ICON;
+            b.removeAttribute('data-done');
+            live.textContent = '';
+          }, 1400);
+        }, function(){
+          live.textContent = 'Could not copy — the clipboard was refused';
+        });
+      });
+      stage.appendChild(b);
+    });
+  })();
+</script>
+
 </body>
 </html>
