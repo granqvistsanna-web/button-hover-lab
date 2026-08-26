@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Fifty-two button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Fifty-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Fifty-two button hover animations, actually built.">
+<meta property="og:description" content="Fifty-eight button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -286,9 +286,9 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">Hover studies · 52 in all</p>
+    <p class="eyebrow">Hover studies · 58 in all</p>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Fifty-two hover animations, actually built — hover, tab and press all of them.
+    <p class="lede">Fifty-eight hover animations, actually built — hover, tab and press all of them.
     A monochrome base, so each one carries any brand tone. Five house rules apply to every single one:</p>
     <div class="rules">
       <div><b>Instant response</b><span>The press lands on pointer-down, not on release.</span></div>
@@ -2140,9 +2140,258 @@
   </div>
 </section>
 
+<style>
+  /* ============ Section K — Borrowed from objects ============
+     Six mechanisms whose reference is a physical thing rather than another
+     website: a camera's knurled dial, a letterpress impression, a printer's
+     line gauge, a machine's data plate, a milled chassis, a mechanical
+     end-stop. Each card names its object.
+
+     Two of them were not buildable when the other fifty-two were written.
+     Card 56 tethers its plate with CSS anchor positioning and moves it in and
+     out of `display:none` with @starting-style and allow-discrete; card 57
+     animates `corner-shape`, which changes a corner's curvature without
+     changing its radius. Both were checked in the browser rather than assumed:
+     corner-shape interpolates round → superellipse(1.33) → (1.68) → (2.18) →
+     (4), and the anchored plate resolves position-area, flip-block fallbacks
+     and a discrete display transition.
+
+     ONE THAT DID NOT MAKE IT. `interpolate-size: allow-keywords` finally lets
+     a transition run to `auto`, which is the honest answer to the 0fr → 1fr
+     trick on card 27 and the measured JavaScript on card 30. It is also the
+     one thing this page forbids: growing to an intrinsic size IS layout shift.
+     Noted rather than built.
+
+     PREFIX: l-, one past the section letter, same as the last three. Prefixes
+     track the order things were authored; the heading letter moves when the
+     page is restructured and a copied class name must not. */
+
+  /* The light half of the token pair is ALWAYS --l-lys and the dark half
+     ALWAYS --l-mork, whichever theme is running. Card 54's impression depends
+     on it: a sunk face is dark along its top edge and catches light along its
+     bottom one, and that has to stay true when the whole palette inverts. */
+  .l-mat{ --l-lys:var(--on-ink); --l-mork:var(--ink) }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .l-mat{ --l-lys:var(--ink); --l-mork:var(--on-ink) }
+  }
+  :root[data-theme="dark"] .l-mat{ --l-lys:var(--ink); --l-mork:var(--on-ink) }
+
+  /* 53 Knurling — a camera dial, or the grip ring on a lens. The grooves sit
+     at the ENDS, where a hand would actually hold it, not across the face
+     where they would fight the label. The mask is a token colour rather than a
+     literal because only its alpha matters — a mask has no colour of its own. */
+  .btn.l-knurl{
+    background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden;
+    transition:border-color var(--t-3) ease;
+  }
+  .l-knurl .l-knurl-grip{
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    color:var(--ink); opacity:0;
+    background-image:repeating-linear-gradient(72deg, currentColor 0 1px, transparent 1px 6px);
+    -webkit-mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
+    mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
+    transition:opacity var(--t-4) var(--e-out);
+  }
+  .l-knurl .lbl{position:relative}
+  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .l-knurl:hover .l-knurl-grip, .l-knurl:focus-visible .l-knurl-grip{opacity:.17}
+
+  /* 54 Deboss — a letterpress impression, or a stamped nameplate. The exact
+     inversion of card 31: there the plate compresses and the type stays rigid,
+     here the type sinks and the plate does not move at all, which is why the
+     house press transform is cancelled rather than inherited.
+     Both text-shadow lists carry TWO shadows, including at rest. Shadow lists
+     only interpolate when they are the same length; one transparent shadow
+     against two would have snapped instead of pressing. */
+  .btn.l-deboss{
+    background:var(--lift-bg); border:1px solid var(--line-ctl);
+    transition:border-color var(--t-3) ease;
+  }
+  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .l-deboss .l-deboss-lbl{
+    display:inline-block;
+    text-shadow:0 -1px 0 transparent, 0 1px 0 transparent;
+    transition:text-shadow var(--t-2) var(--e-out), color var(--t-2) ease;
+  }
+  .btn.l-deboss:active{transform:scale(1)}
+  .btn.l-deboss:active .l-deboss-lbl{
+    color:color-mix(in srgb,var(--ink) 70%,var(--lift-bg));
+    /* The shadow does most of the work and the highlight is a bonus, because
+       the highlight cannot always be seen: in light mode --l-lys resolves to
+       --on-ink (#F6F6F1) sitting on --lift-bg (#FBFBF8), five values apart. On
+       a plate that is already almost the lightest thing in the palette there is
+       no brighter tone to catch — which is true of real light material too. In
+       dark mode the pair separates properly and both edges read. */
+    text-shadow:0 -1px 0 color-mix(in srgb,var(--l-mork) 42%,transparent),
+                0 1px 0 color-mix(in srgb,var(--l-lys) 85%,transparent);
+    transition-duration:var(--t-1);
+  }
+
+  /* 55 The line gauge — a printer's type gauge. Two repeating gradients: a
+     short tick every 6px and a long one every 30th, which is what a real gauge
+     does. It opens from the centre outward, so the label is measured from its
+     middle rather than from one end. */
+  .l-gauge{padding-bottom:17px}
+  .l-gauge .l-gauge-rule{
+    position:absolute; left:4px; right:4px; bottom:2px; height:9px;
+    pointer-events:none; color:var(--ink-soft);
+    background-image:
+      repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 8px),
+      repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 32px);
+    background-size:100% 4px, 100% 9px;
+    background-position:left bottom, left bottom;
+    background-repeat:repeat-x, repeat-x;
+    clip-path:inset(0 50% 0 50%);
+    transition:clip-path var(--t-5) var(--e-quint), color var(--t-3) ease;
+  }
+  .l-gauge:hover .l-gauge-rule, .l-gauge:focus-visible .l-gauge-rule{
+    clip-path:inset(0 0 0 0); color:var(--ink);
+  }
+
+  /* 56 The data plate — the small engraved plate on a machine, and the first
+     thing on this page the engine positions rather than the stylesheet. The
+     tag is display:none at rest, which is the point: opacity:0 leaves it in
+     the accessibility tree and in the hit test, and a shortcut hint that
+     screen readers announce at all times is worse than no hint. @starting-style
+     supplies the value to transition FROM, and allow-discrete holds display
+     open until the fade finishes. position-try-fallbacks flips it below the
+     button when there is no room above.
+     The tag is a SIBLING of the button, not a child: .btn:active carries a
+     scale, and a transformed ancestor becomes the containing block for a fixed
+     descendant, which would move the plate on every press. */
+  .btn.l-plate{anchor-name:--l-plate}
+  .l-plate-wrap{display:inline-block; position:relative}
+  .l-plate-tag{
+    position:fixed; position-anchor:--l-plate;
+    position-area:top center; margin-bottom:8px;
+    position-try-fallbacks:flip-block;
+    font:500 10px/1 var(--mono); letter-spacing:.1em;
+    color:var(--on-ink); background:var(--ink);
+    padding:5px 7px; border-radius:5px; pointer-events:none;
+    display:none; opacity:0;
+    transition:opacity var(--t-2) var(--e-out), display var(--t-2) allow-discrete;
+  }
+  .l-plate:hover + .l-plate-tag,
+  .l-plate:focus-visible + .l-plate-tag{display:block; opacity:1}
+  @starting-style{
+    .l-plate:hover + .l-plate-tag,
+    .l-plate:focus-visible + .l-plate-tag{opacity:0}
+  }
+  /* No anchor positioning, no plate. A fixed element with nothing to tether to
+     lands in the corner of the viewport, which is worse than absent. */
+  @supports not (position-area: top center){
+    .l-plate-tag{display:none !important}
+  }
+
+  /* 57 Continuous corners — a milled aluminium chassis, where the corner is a
+     continuous curve rather than an arc spliced between two straight edges.
+     The RADIUS never changes; only the curvature does, which is what separates
+     this from card 22. The background step is there so the card still reports
+     itself where corner-shape is unsupported. */
+  .btn.l-corner{
+    border-radius:20px;
+    corner-shape:superellipse(1);
+    transition:corner-shape var(--t-4) var(--e-out), background-color var(--t-3) ease;
+  }
+  .btn.l-corner:hover, .btn.l-corner:focus-visible{
+    corner-shape:superellipse(5);
+    background-color:color-mix(in srgb,var(--ink) 88%,var(--bg));
+  }
+
+  /* 58 The stop — a mechanical end-stop, and the one card on this page that
+     travels on `linear`. Everything else eases out, because everything else is
+     settling; a thing that runs into a stop does not settle, it arrives at
+     speed and is stopped. The wall then acknowledges the contact, and the
+     delay on that flash is the travel's OWN duration, which is exactly what
+     the house rule about choreographed delays is for. */
+  .l-stop .l-stop-track{position:relative; display:block; width:26px; height:10px}
+  .l-stop .l-stop-mark{
+    position:absolute; top:4px; left:0; width:10px; height:2px;
+    background:currentColor; border-radius:1px;
+    transform:translateX(0);
+    transition:transform var(--t-3) linear;
+  }
+  .l-stop .l-stop-wall{
+    position:absolute; right:0; top:0; bottom:0; width:1.5px;
+    background:currentColor; border-radius:1px; opacity:.3;
+    transition:opacity var(--t-2) ease;
+  }
+  /* 26 track − 10 mark − 1.5 wall = 14.5, so the mark's edge meets the wall's */
+  .l-stop:hover .l-stop-mark, .l-stop:focus-visible .l-stop-mark{transform:translateX(14.5px)}
+  .l-stop:hover .l-stop-wall, .l-stop:focus-visible .l-stop-wall{
+    opacity:1; transition-delay:var(--t-3); transition-duration:var(--t-1);
+  }
+</style>
+
+<section class="sect l-mat">
+  <h2>K — Borrowed from objects</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn l-knurl"><i class="l-knurl-grip" aria-hidden="true"></i><span class="lbl">Adjust the exposure</span></button>
+      </div>
+      <h3><span class="num">53</span>Knurling</h3>
+      <p>Fine grooves rise along the two ends of the plate — the grip you would actually hold, the way a lens ring or a camera dial is cut. Nothing moves; the surface simply admits it can be gripped.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn l-deboss"><span class="l-deboss-lbl">Set the tolerance</span></button>
+      </div>
+      <h3><span class="num">54</span>Deboss</h3>
+      <p>The press sinks the type into the plate — dark along the top edge, catching light along the bottom — and the plate itself does not move at all. The exact inversion of card 31, where the plate gives and the type stays rigid.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--text l-gauge">Measure twice<i class="l-gauge-rule" aria-hidden="true"></i></button>
+      </div>
+      <h3><span class="num">55</span>The line gauge</h3>
+      <p>A printer's type gauge unrolls beneath the label, short ticks every eight pixels and a long one every thirty-second, opening from the centre out. Measurement as ornament — for anything that wants to look like it was specified rather than decided.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <span class="l-plate-wrap" data-copy-root>
+          <button class="btn btn--line l-plate" aria-keyshortcuts="Meta+K">Open the console</button>
+          <span class="l-plate-tag" aria-hidden="true">⌘K</span>
+        </span>
+      </div>
+      <h3><span class="num">56</span>The data plate</h3>
+      <p>The shortcut sits on a small engraved plate the browser tethers to the button and flips below it when there is no room above. It is genuinely absent when idle rather than merely invisible, so nothing announces a shortcut that is not being offered.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid l-corner">Open the spec sheet</button>
+      </div>
+      <h3><span class="num">57</span>Continuous corners</h3>
+      <p>The corner's curvature changes while its radius stays exactly where it was, so the silhouette fills out into the continuous curve of a milled chassis rather than an arc spliced between two straight edges. Card 22 changes the radius; this one never touches it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line l-stop">Advance the roll
+          <span class="l-stop-track" aria-hidden="true"><i class="l-stop-mark"></i><i class="l-stop-wall"></i></span>
+        </button>
+      </div>
+      <h3><span class="num">58</span>The stop</h3>
+      <p>The mark runs at a constant speed and is stopped dead by the wall, which brightens at the instant of contact. The only thing here that travels on a linear curve — everything else on this page is settling, and a thing that hits an end-stop does not settle.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
   <footer class="foot">
     <p><b>Porting to Framer:</b> «Variant» means it builds as a hover variant straight on the canvas. «Code» means it needs a code override or a component — duplicated labels, transform-origin swaps and springs are not something variants can do.</p>
-    <p>All fifty-two have an :active press, a visible focus state and a reduced-motion fallback. Hover is deliberately left ungated here so a tap still shows the effect on a phone — in production, put the hover rules inside <code>@media (any-hover: hover)</code> and keep <code>:active</code> outside it, so a touch tap compresses without the hover state sticking.</p>
+    <p>All fifty-eight have an :active press, a visible focus state and a reduced-motion fallback. Hover is deliberately left ungated here so a tap still shows the effect on a phone — in production, put the hover rules inside <code>@media (any-hover: hover)</code> and keep <code>:active</code> outside it, so a touch tap compresses without the hover state sticking.</p>
   </footer>
 </div>
 
@@ -2337,11 +2586,16 @@
     function walk(fn){
       function rec(rules, cond){
         [].forEach.call(rules, function(r){
-          var grouping = (typeof CSSMediaRule !== 'undefined' && r instanceof CSSMediaRule) ||
-                         (typeof CSSSupportsRule !== 'undefined' && r instanceof CSSSupportsRule);
-          if (grouping){
-            var at = (r instanceof CSSMediaRule ? '@media ' : '@supports ') + r.conditionText;
-            rec(r.cssRules, cond ? cond + ' and ' + r.conditionText : at);
+          var isMedia    = typeof CSSMediaRule !== 'undefined' && r instanceof CSSMediaRule;
+          var isSupports = typeof CSSSupportsRule !== 'undefined' && r instanceof CSSSupportsRule;
+          var isStarting = typeof CSSStartingStyleRule !== 'undefined' && r instanceof CSSStartingStyleRule;
+          if (isMedia || isSupports || isStarting){
+            // @starting-style carries no condition and must NOT be flattened:
+            // its inner rule copied out on its own would set the from-value
+            // unconditionally and the effect would never play.
+            var at = isStarting ? '@starting-style'
+                   : (isMedia ? '@media ' : '@supports ') + r.conditionText;
+            rec(r.cssRules, cond && !isStarting ? cond + ' and ' + r.conditionText : at);
             return;
           }
           fn(r, cond);
@@ -2406,14 +2660,17 @@
       // Every class that scopes this card: the effect class on the button, any
       // extra class on its stage, and any on the section (card 21's line screen
       // and section F's per-theme alias both live outside the button).
+      // House classes are shared by every card and must never become keys —
+      // `.lbl` as a key would collect every other card's label rules.
+      var HOUSE = {btn:1, 'btn--solid':1, 'btn--line':1, 'btn--text':1, lbl:1, icon:1, sr:1};
       var keys = [];
       function keysFrom(el, skip){
         [].forEach.call(el.classList, function(c){
-          if (!VARIANTS[c] && c !== skip && keys.indexOf(c) === -1) keys.push(c);
+          if (!HOUSE[c] && c !== skip && keys.indexOf(c) === -1) keys.push(c);
         });
       }
       keysFrom(root);
-      btns.forEach(function(b){ keysFrom(b); });
+      [].slice.call(root.querySelectorAll('*')).forEach(function(el){ keysFrom(el); });
       keysFrom(stage, 'stage');
       keysFrom(sect, 'sect');
 

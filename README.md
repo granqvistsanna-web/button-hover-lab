@@ -1,6 +1,6 @@
 # Button Hover Lab
 
-Fifty-two button hover animations, actually built. Hover, tab and press all of them.
+Fifty-eight button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -12,7 +12,7 @@ its script, extracted from the live stylesheet so nothing can drift out of sync.
 
 ## House rules
 
-Every one of the fifty-two obeys all five:
+Every one of the fifty-eight obeys all five:
 
 | | |
 |---|---|
@@ -27,7 +27,7 @@ identical to three decimals), nothing longer than 600 ms, a visible focus state,
 light *and* dark theme, and a clean accessible name even where the label is split into
 per-character spans.
 
-## The ten families
+## The eleven families
 
 | | |
 |---|---|
@@ -41,14 +41,18 @@ per-character spans.
 | **H** Mass, lag and resistance | the plate gives, the type doesn't, two masses, the settle, anticipation, the rule takes the load, re-spacing, setting the line, the real underline, it matches your tempo, the exit remembers |
 | **I** The studio idioms | directional fill, the wave, in one order, out another, it leaves by the corner, the optical centre holds, resolve |
 | **J** In company | the others recede, the travelling indicator, conserved compression, repulsion, the pair, the divider yields |
+| **K** Borrowed from objects | knurling, deboss, the line gauge, the data plate, continuous corners, the stop |
 
-The last three are the newest. **Mass, lag and resistance** treats the button as an object
+The last four are the newest. **Mass, lag and resistance** treats the button as an object
 with weight — parts of it arrive at different times, it resists, it settles rather than
 stops, and it answers at the tempo you approached it with. **The studio idioms** rebuilds the
 agency vocabulary — direction-aware fills, liquid wipes, resolve-from-noise labels — to this
 page's rules rather than to theirs. **In company** is the first family where a button knows
 its siblings exist: the row receding so one item can lead, an indicator travelling, a group
-conserving its width as one item gains.
+conserving its width as one item gains. **Borrowed from objects** takes its references from
+outside the browser entirely — a knurled camera dial, a letterpress impression, a printer's
+line gauge, a machine's data plate, a milled chassis, a mechanical end-stop — and two of the
+six were not buildable at all when the rest of the page was written.
 
 Filter by intensity or by how it ports, and star the ones worth keeping — the shortlist
 persists in your browser.
@@ -95,7 +99,7 @@ Each card carries an honest chip:
 ## Notes on the build
 
 Single file, no dependencies, no build step. Two Google Fonts (Schibsted Grotesk, Spline
-Sans Mono); everything else is CSS, with small vanilla-JS loops in 10 of the 52 cards, only
+Sans Mono); everything else is CSS, with small vanilla-JS loops in 10 of the 58 cards, only
 where CSS genuinely cannot reach — a critically damped spring, a pointer-driven gradient, a
 per-character weight ripple, an overflow measurement, a velocity handoff, a pointer-speed
 reading, and the edge the pointer crossed.
