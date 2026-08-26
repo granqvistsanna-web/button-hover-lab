@@ -275,6 +275,9 @@
   .copy[data-done="1"]{color:var(--accent)}
   .copy svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor;
     stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+  /* The Framer copy sits flush against the CSS copy, so the two read as one
+     pair of stage actions and not as a third unrelated affordance. */
+  .copy--fr{left:45px}
   .spec[hidden],.sect[hidden]{display:none}
   .tools-empty{margin-top:28px; padding:26px; border:1px dashed var(--line); border-radius:12px; text-align:center; font-size:13.5px; color:var(--muted)}
 
@@ -2392,8 +2395,12 @@
 
 <style>
   /* ============ Section L — Argued the other way ============
-     Four mechanics taken from a hover showcase and rebuilt here only where this
-     page had not already answered better. Nine were shortlisted off the
+     Three mechanics taken from a hover showcase and rebuilt here only where
+     this page had not already answered better — plus card 62, which came from
+     misreading one of them: the thin line across that button was a shutter fill
+     caught mid-open, which is card 02, not a rule drawn through the label. The
+     card is kept because nothing here crosses a label, not because the
+     reference did it. Nine were shortlisted off the
      reference; five went in the bin once sections H through K landed — the
      progressive label recolour is card 37 done properly, a diagonal fill is a
      straight-edged version of card 42's curve, and a per-character roll would
@@ -2755,8 +2762,16 @@
   (function(){
     var SOURCE = 'https://granqvistsanna-web.github.io/button-hover-lab/';
     var VARIANTS = {'btn':1, 'btn--solid':1, 'btn--line':1, 'btn--text':1};
+    // House classes are shared by every card. They must never become effect
+    // keys — `.lbl` as a key would collect every other card's label rules —
+    // and on the way into Framer they get prefixed, because `.btn` and `.lbl`
+    // are generic enough to collide with whatever else is on the target site.
+    var HOUSE = {btn:1, 'btn--solid':1, 'btn--line':1, 'btn--text':1, lbl:1, icon:1, sr:1};
+    var HOUSE_RE = /\.(btn--solid|btn--line|btn--text|btn|lbl|icon|sr)(?![\w-])/g;
+    var PREFIX = 'bhl-';
     var ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 6.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1.5"/></svg>';
     var DONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+    var FRAMER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 7L5 12l4.5 5M14.5 7l4.5 5-4.5 5"/></svg>';
 
     var live = document.createElement('span');
     live.className = 'sr';
@@ -2818,6 +2833,34 @@
       if (!isFinite(min) || !min) return html;
       return [lines[0]].concat(lines.slice(1).map(function(l){ return l.slice(min); })).join('\n');
     }
+    // Every line of a script block is indented to sit inside the page. Strip
+    // the common indent, or it reads as broken once it is inside an effect.
+    function dedentAll(s){
+      var min = Infinity;
+      s.split('\n').forEach(function(l){
+        if (l.trim()) min = Math.min(min, l.match(/^[ \t]*/)[0].length);
+      });
+      if (!isFinite(min) || !min) return s;
+      return s.split('\n').map(function(l){ return l.slice(min); }).join('\n');
+    }
+    // A section script is several cards' inits under `// NN Name` headers, and
+    // only this card's are wanted. But a block that opens with a preamble
+    // instead of a header is sharing state between its cards — section I reads
+    // pointer speed once for two of them — and slicing that would break it, so
+    // a preamble means the whole block is handed over.
+    function trimScript(text, keys){
+      var parts = text.split(/\n(?=[ \t]*\/\/ \d+ )/), body;
+      if (parts.length < 2 || parts[0].trim()){
+        body = text;
+      } else {
+        var want = parts.slice(1).filter(function(p){
+          return keys.some(function(k){ return p.indexOf("'." + k + "'") !== -1; });
+        });
+        body = (want.length ? want : parts.slice(1)).join('\n');
+      }
+      return dedentAll(body).trim();
+    }
+
     // A class boundary, so .i-set never collects .i-settle's rules.
     function matcher(keys){
       var res = keys.map(function(k){
@@ -2831,7 +2874,7 @@
     }
     function block(title){ return '\n/* ' + title + ' */\n'; }
 
-    function snippet(card){
+    function parts(card){
       // Most cards are one button. A group card marks its wrapper with
       // data-copy-root, and then the row IS the deliverable — copying one
       // button out of a sibling effect would give you nothing that works.
@@ -2847,9 +2890,6 @@
       // Every class that scopes this card: the effect class on the button, any
       // extra class on its stage, and any on the section (card 21's line screen
       // and section F's per-theme alias both live outside the button).
-      // House classes are shared by every card and must never become keys —
-      // `.lbl` as a key would collect every other card's label rules.
-      var HOUSE = {btn:1, 'btn--solid':1, 'btn--line':1, 'btn--text':1, lbl:1, icon:1, sr:1};
       var keys = [];
       function keysFrom(el, skip){
         [].forEach.call(el.classList, function(c){
@@ -2860,6 +2900,11 @@
       [].slice.call(root.querySelectorAll('*')).forEach(function(el){ keysFrom(el); });
       keysFrom(stage, 'stage');
       keysFrom(sect, 'sect');
+      // A pasted component has to carry the section's own classes on its root:
+      // .f-mat and .l-mat are token aliases the effect reads. The stage's are
+      // demo furniture — .f-ruta is a baseline grid behind the button, not part
+      // of it — so they are deliberately left behind.
+      var wrapKeys = [].filter.call(sect.classList, function(c){ return c !== 'sect'; });
 
       // Runtime writes inline styles (the tempo rung, the spring's transform).
       // Authored markup on this page carries none, so the clone drops them all.
@@ -2908,14 +2953,16 @@
           var prop = r.style[i];
           if (usedTokens[prop]) decls.push(prop + ':' + r.style.getPropertyValue(prop).trim() + ';');
         }
-        if (decls.length) tokens.push(wrap(cond, r.selectorText + '{' + decls.join(' ') + '}'));
+        // Kept as parts, not as finished text: the CSS copy prints the
+        // selector as authored, the Framer copy has to re-scope it.
+        if (decls.length) tokens.push({cond: cond, sel: r.selectorText.trim(), decls: decls.join(' ')});
       });
 
       var js = '';
       if (/JS/.test(chips.join(' '))){
         [].slice.call(document.querySelectorAll('script')).some(function(sc){
           if (keys.some(function(k){ return sc.textContent.indexOf("'." + k + "'") !== -1; })){
-            js = sc.textContent.trim();
+            js = trimScript(sc.textContent, keys);
             return true;
           }
           return false;
@@ -2926,18 +2973,203 @@
         ? 'Code in Framer — paste into a code component or a code override.'
         : 'Variant in Framer — this one rebuilds as a hover variant on the canvas; the CSS below is the reference, not the deliverable.';
 
+      // The label is what a property control will drive, so it only makes
+      // sense when the card is one button. A group card is a row of different
+      // labels and keeps them in the markup.
+      var lblEl = root.querySelector('.lbl');
+      var label = ((lblEl || root).textContent || '').trim();
+      if (btns.length !== 1 || !label || label.length > 60 || /\n/.test(label)) label = '';
+      var box = root.getBoundingClientRect();
+
+      return {num:num, name:name, chips:chips, route:route, tokens:tokens,
+              base:base, ats:ats, effectCss:effectCss, markup:markup, js:js,
+              label:label, multi:btns.length !== 1, wrapKeys:wrapKeys,
+              w:Math.round(box.width) || 180, h:Math.round(box.height) || 48};
+    }
+
+    // ---- formatter one: the CSS reference, unchanged --------------------
+    function asCss(p){
       var out = [];
-      out.push('/* ' + num + ' · ' + name);
-      out.push('   ' + chips.join(' · '));
-      out.push('   ' + route);
+      out.push('/* ' + p.num + ' · ' + p.name);
+      out.push('   ' + p.chips.join(' · '));
+      out.push('   ' + p.route);
       out.push('   Button Hover Lab — ' + SOURCE + ' */');
-      if (tokens.length) out.push(block('1 — tokens this effect reads') + tokens.join('\n'));
-      if (base.length)   out.push(block('2 — button base') + base.join('\n'));
-      if (ats.length)    out.push(block('3 — registered properties / keyframes') + ats.join('\n'));
-      out.push(block((ats.length ? '4' : '3') + ' — the effect') + effectCss);
-      out.push(block((ats.length ? '5' : '4') + ' — markup') + markup);
-      if (js) out.push(block((ats.length ? '6' : '5') + ' — script (this section’s inits)') + js);
+      if (p.tokens.length) out.push(block('1 — tokens this effect reads') +
+        p.tokens.map(function(t){ return wrap(t.cond, t.sel + '{' + t.decls + '}'); }).join('\n'));
+      if (p.base.length)   out.push(block('2 — button base') + p.base.join('\n'));
+      if (p.ats.length)    out.push(block('3 — registered properties / keyframes') + p.ats.join('\n'));
+      out.push(block((p.ats.length ? '4' : '3') + ' — the effect') + p.effectCss);
+      out.push(block((p.ats.length ? '5' : '4') + ' — markup') + p.markup);
+      if (p.js) out.push(block((p.ats.length ? '6' : '5') + ' — script (this section’s inits)') + p.js);
       return out.join('\n');
+    }
+
+    // ---- formatter two: a Framer code component ------------------------
+    // Framer has no canvas paste target for HTML and CSS, so the deliverable
+    // is a whole code file: the effect's CSS inlined, the markup as JSX, the
+    // label exposed as a property control, and any init script moved into an
+    // effect that is scoped to the instance.
+    function pascal(s){
+      var t = s.replace(/[’']/g, '').replace(/[^A-Za-z0-9]+/g, ' ')
+               .trim().split(/\s+/).map(function(w){
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      }).join('');
+      return /^[A-Za-z]/.test(t) ? t : 'Button' + t;
+    }
+    function kebab(s){
+      return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'button';
+    }
+    // A template literal is the only place the CSS can live, so the three
+    // sequences that would end it early have to be escaped — backslash first,
+    // or the escapes we add get escaped again.
+    function tpl(s){
+      return s.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+    }
+    // Only the token blocks get re-scoped. Everything else already carries a
+    // distinctive class, and a :root selector that HAS a descendant part (the
+    // .f-mat aliases) is already pointing at the component root.
+    function scopeRoot(sel, cls){
+      return /\s/.test(sel) ? sel : sel + ' .' + cls;
+    }
+    function jsxify(markup){
+      // class is the only attribute React will not take as authored. data-*,
+      // aria-* and the hyphenated SVG presentation attributes pass through.
+      return markup.replace(/\bclass="([^"]*)"/g, function(_, v){
+        return 'className="' + v.split(/\s+/).map(function(c){
+          return HOUSE[c] ? PREFIX + c : c;
+        }).join(' ') + '"';
+      });
+    }
+    function indent(s, pad, skipFirst){
+      return s.split('\n').map(function(l, i){
+        return (skipFirst && !i) || !l ? l : pad + l;
+      }).join('\n');
+    }
+
+    function asFramer(p){
+      var comp = pascal(p.name);
+      var cls  = PREFIX + kebab(p.name);
+      var chipText = p.chips.join(' ');
+
+      // Two page-wide rules the collector cannot see, because both are
+      // universal selectors and it only ever keeps rules with a class. Without
+      // them the effect would be pasted with no box model and — the part that
+      // actually matters — no reduced-motion fallback.
+      var preamble =
+        '/* the two page-wide rules this effect was authored against */\n' +
+        '.' + cls + ',.' + cls + ' *,.' + cls + ' *::before,.' + cls + ' *::after{box-sizing:border-box}\n' +
+        '.' + cls + ' *{margin:0; padding:0}\n' +
+        '@media (prefers-reduced-motion: reduce){\n' +
+        '  .' + cls + ',.' + cls + ' *,.' + cls + ' *::before,.' + cls + ' *::after{\n' +
+        '    transition-duration:.01ms !important; animation-duration:.01ms !important}\n' +
+        '}';
+
+      var css = [preamble];
+      if (p.tokens.length) css.push(block('tokens, scoped to this component') +
+        p.tokens.map(function(t){ return wrap(t.cond, scopeRoot(t.sel, cls) + '{' + t.decls + '}'); }).join('\n'));
+      if (p.base.length) css.push(block('button base') + p.base.join('\n'));
+      if (p.ats.length)  css.push(block('registered properties / keyframes') + p.ats.join('\n'));
+      css.push(block('the effect') + p.effectCss);
+      var cssText = tpl(css.join('\n').replace(HOUSE_RE, '.' + PREFIX + '$1'));
+
+      // On the page these sit in no form. In Framer they might, and a
+      // type-less button submits it.
+      var markup = jsxify(p.markup).replace(/<button(?![^>]*\btype=)/g, '<button type="button"');
+      if (p.label){
+        var lit = p.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        markup = markup.replace(new RegExp('="' + lit + '"', 'g'), '={label}')
+                       .replace(new RegExp('>\\s*' + lit + '\\s*<', 'g'), '>{label}<');
+      }
+
+      var head = ['/**'];
+      head.push(' * ' + p.num + ' · ' + p.name + ' — ' + p.chips.join(' · '));
+      head.push(' * Button Hover Lab — ' + SOURCE);
+      head.push(' *');
+      head.push(' * Paste the whole file into Framer: Assets → Code → New File, select all,');
+      head.push(' * paste. The component then sits in the Code section, ready to drag out.');
+      head.push(' *');
+      head.push(' * The tokens are scoped to this component and the shared classes are');
+      head.push(' * prefixed ' + PREFIX + ', so nothing in here restyles the rest of the site.');
+      head.push(' * Dark values follow the visitor’s system setting.');
+      head.push(' * The face is Schibsted Grotesk with a system-ui fallback — add the font to');
+      head.push(' * the project, or change the family in the CSS below.');
+      if (!p.label && p.multi){
+        head.push(' *');
+        head.push(' * This card is a row of buttons, so the labels stay in the markup rather');
+        head.push(' * than becoming one property control.');
+      } else if (!p.label){
+        head.push(' *');
+        head.push(' * The label is duplicated across layers here — that is how the effect');
+        head.push(' * holds its width — so it is not a property control. To change the');
+        head.push(' * wording, change every copy in the markup, the .' + PREFIX + 'sr one included.');
+      }
+      if (/Variant in Framer/.test(chipText)){
+        head.push(' *');
+        head.push(' * Chipped «Variant in Framer»: this one also rebuilds as a hover variant');
+        head.push(' * straight on the canvas, which is the lighter option of the two.');
+      }
+      if (p.js){
+        head.push(' *');
+        head.push(' * The script is this section’s inits, with every lookup scoped to the');
+        head.push(' * instance — the other cards in it find nothing and do nothing.');
+      }
+      head.push(' */');
+
+      var imports = [];
+      if (p.js)    imports.push('import { useEffect, useRef } from "react"');
+      if (p.label) imports.push('import { addPropertyControls, ControlType } from "framer"');
+
+      var body = [];
+      body.push('export default function ' + comp + '(' +
+        (p.label ? '{ label = ' + JSON.stringify(p.label) + ', style }' : '{ style }') + ') {');
+      if (p.js){
+        body.push('    const root = useRef(null)');
+        body.push('    useEffect(() => {');
+        body.push('        const el = root.current');
+        body.push('        if (!el || el.dataset.bhlReady) return');
+        body.push('        el.dataset.bhlReady = "1"');
+        body.push('        // Scoped to this instance, so two of them on one page never bind');
+        body.push('        // each other’s nodes, and a canvas re-mount cannot bind twice.');
+        body.push('        const scope = {');
+        body.push('            querySelector: (s) => (el.matches(s) ? el : el.querySelector(s)),');
+        body.push('            querySelectorAll: (s) => {');
+        body.push('                const out = [].slice.call(el.querySelectorAll(s))');
+        body.push('                if (el.matches(s)) out.unshift(el)');
+        body.push('                return out');
+        body.push('            },');
+        body.push('        }');
+        body.push(indent(p.js.replace(/document\.querySelectorAll\(/g, 'scope.querySelectorAll(')
+                             .replace(/document\.querySelector\(/g, 'scope.querySelector('), '        '));
+        body.push('    }, [])');
+      }
+      body.push('    return (');
+      body.push('        <div' + (p.js ? ' ref={root}' : '') +
+                ' className="' + [cls].concat(p.wrapKeys).join(' ') +
+                '" style={{ display: "inline-flex", ...style }}>');
+      body.push('            <style>{CSS}</style>');
+      body.push('            ' + indent(markup, '            ', true));
+      body.push('        </div>');
+      body.push('    )');
+      body.push('}');
+      if (p.label){
+        body.push('');
+        body.push('addPropertyControls(' + comp + ', {');
+        body.push('    label: { type: ControlType.String, title: "Label", defaultValue: ' +
+                  JSON.stringify(p.label) + ' },');
+        body.push('})');
+      }
+
+      var file = [head.join('\n'), ''];
+      if (imports.length) file.push(imports.join('\n'), '');
+      file.push('const CSS = `\n' + cssText.replace(/^\n+/, '') + '\n`', '');
+      file.push('/**');
+      file.push(' * @framerSupportedLayoutWidth auto');
+      file.push(' * @framerSupportedLayoutHeight auto');
+      file.push(' * @framerIntrinsicWidth ' + p.w);
+      file.push(' * @framerIntrinsicHeight ' + p.h);
+      file.push(' */');
+      file.push(body.join('\n'));
+      return file.join('\n') + '\n';
     }
 
     function put(text){
@@ -2958,35 +3190,49 @@
       });
     }
 
+    // Two actions, one collector. The left one is the CSS as authored, for
+    // reading and for any target that is not Framer; the right one is the same
+    // effect as a Framer code file, for pasting.
+    var ACTIONS = [
+      {cls:'copy',           icon:ICON,    fmt:asCss,
+       title:function(n){ return 'Copy the CSS for “' + n + '”'; },
+       said:function(n){ return n + ' — CSS copied'; }},
+      {cls:'copy copy--fr',  icon:FRAMER,  fmt:asFramer,
+       title:function(n){ return 'Copy “' + n + '” as a Framer code component'; },
+       said:function(n){ return n + ' — Framer component copied'; }}
+    ];
+
     document.querySelectorAll('.spec').forEach(function(card){
       var stage = card.querySelector('.stage');
       if (!stage || !card.querySelector('.btn')) return;
       var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
       var name = (card.querySelector('h3') || {textContent:''}).textContent.replace(num, '').trim();
 
-      var b = document.createElement('button');
-      b.className = 'copy';
-      b.type = 'button';
-      b.innerHTML = ICON;
-      b.title = 'Copy the code for “' + name + '”';
-      b.setAttribute('aria-label', b.title);
-      var t = null;
-      b.addEventListener('click', function(){
-        put(snippet(card)).then(function(){
-          clearTimeout(t);
-          b.innerHTML = DONE;
-          b.setAttribute('data-done', '1');
-          live.textContent = name + ' copied';
-          t = setTimeout(function(){
-            b.innerHTML = ICON;
-            b.removeAttribute('data-done');
-            live.textContent = '';
-          }, 1400);
-        }, function(){
-          live.textContent = 'Could not copy — the clipboard was refused';
+      ACTIONS.forEach(function(a){
+        var b = document.createElement('button');
+        b.className = a.cls;
+        b.type = 'button';
+        b.innerHTML = a.icon;
+        b.title = a.title(name);
+        b.setAttribute('aria-label', b.title);
+        var t = null;
+        b.addEventListener('click', function(){
+          put(a.fmt(parts(card))).then(function(){
+            clearTimeout(t);
+            b.innerHTML = DONE;
+            b.setAttribute('data-done', '1');
+            live.textContent = a.said(name);
+            t = setTimeout(function(){
+              b.innerHTML = a.icon;
+              b.removeAttribute('data-done');
+              live.textContent = '';
+            }, 1400);
+          }, function(){
+            live.textContent = 'Could not copy — the clipboard was refused';
+          });
         });
+        stage.appendChild(b);
       });
-      stage.appendChild(b);
     });
   })();
 </script>
