@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Thirty-five button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — with notes on porting each one to Framer.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Button Hover Lab">
+<meta property="og:description" content="Thirty-five button hover animations, actually built.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
+<title>Button Hover Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#EFEFE9; --stage:#F6F6F1; --ink:#1C1C16; --ink-soft:#4C4C43;
+    --muted:#838376; --line:#DEDED4; --line-soft:#E6E6DD;
+    --accent:#2F3DCE; --on-accent:#F6F6F1; --on-ink:#F6F6F1;
+    --lift-bg:#FBFBF8; --shadow-rgb:28,28,20;
+    --mono:"Spline Sans Mono",ui-monospace,monospace;
+    --e-quint:cubic-bezier(0.22,1,0.36,1);
+    --e-out:cubic-bezier(0.33,1,0.68,1);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#151512; --stage:#1B1B17; --ink:#EBEBE2; --ink-soft:#B9B9AD;
+      --muted:#84847A; --line:#2B2B25; --line-soft:#242420;
+      --accent:#93A0FF; --on-accent:#10122A; --on-ink:#161612;
+      --lift-bg:#2A2A23; --shadow-rgb:0,0,0;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#151512; --stage:#1B1B17; --ink:#EBEBE2; --ink-soft:#B9B9AD;
+    --muted:#84847A; --line:#2B2B25; --line-soft:#242420;
+    --accent:#93A0FF; --on-accent:#10122A; --on-ink:#161612;
+    --lift-bg:#2A2A23; --shadow-rgb:0,0,0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Schibsted Grotesk",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  .wrap{max-width:1160px; margin:0 auto; padding:64px 28px 96px}
+
+  /* ============ header ============ */
+  .eyebrow{font:500 11px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--accent)}
+  h1{font-size:clamp(2.4rem,5.5vw,3.6rem); font-weight:700; letter-spacing:-0.035em; line-height:1.02; margin:14px 0 18px; text-wrap:balance}
+  .lede{max-width:58ch; font-size:16.5px; color:var(--ink-soft)}
+  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:36px}
+  .rules div{background:var(--stage); padding:16px 18px}
+  .rules b{display:block; font:500 10.5px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+  .rules span{font-size:13px; color:var(--ink-soft)}
+
+  /* ============ sections & cards ============ */
+  .sect{margin-top:64px}
+  .sect>h2{display:flex; align-items:center; gap:14px; font:500 12px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--muted)}
+  .sect>h2::after{content:""; flex:1; height:1px; background:var(--line)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:36px 24px; margin-top:24px}
+  .stage{display:grid; place-items:center; min-height:172px; background:var(--stage); border:1px solid var(--line-soft); border-radius:16px}
+  .spec h3{display:flex; align-items:baseline; gap:10px; font-size:16.5px; font-weight:600; letter-spacing:-.01em; margin:14px 2px 6px}
+  .num{font:400 11px/1 var(--mono); color:var(--muted)}
+  .spec p{font-size:13.5px; color:var(--ink-soft); margin:0 2px 10px; max-width:48ch}
+  .chips{display:flex; gap:6px; flex-wrap:wrap; margin:0 2px}
+  .chip{font:500 10px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; padding:5px 8px; border:1px solid var(--line); border-radius:5px; color:var(--muted)}
+  .chip--kod{color:var(--accent); border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+
+  /* ============ button base ============ */
+  .btn{
+    position:relative; display:inline-flex; align-items:center; gap:10px;
+    font:500 15px/1 "Schibsted Grotesk",system-ui,sans-serif; letter-spacing:.005em;
+    color:var(--ink); background:none; border:0; border-radius:999px;
+    padding:15px 28px; cursor:pointer;
+    transition:transform .15s var(--e-out);
+  }
+  .btn:active{transform:scale(.97)}
+  .btn:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+  .btn--solid{background:var(--ink); color:var(--on-ink)}
+  .btn--line{border:1px solid var(--ink)}
+  .btn--text{padding:8px 4px; border-radius:2px}
+  .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
+  .icon{display:block; width:14px; height:14px}
+
+  /* 01 Textrull */
+  .roll .track{display:block; overflow:hidden; height:1.25em}
+  .roll .inner{display:block; transition:transform .42s var(--e-quint)}
+  .roll .inner span{display:block; line-height:1.25}
+  .roll:hover .inner{transform:translateY(-50%)}
+
+  /* 02 Weight crossfade */
+  .wcross .stack{display:inline-grid; justify-items:center}
+  .wcross .stack span{grid-area:1/1; white-space:nowrap; transition:opacity .18s ease}
+  .wcross .w-a{font-weight:450}
+  .wcross .w-b{font-weight:760; opacity:0}
+  .wcross:hover .w-a{opacity:0}
+  .wcross:hover .w-b{opacity:1}
+
+  /* 03 Split-flap */
+  .flap .word{display:inline-flex}
+  .flap .cell{position:relative; display:inline-block; perspective:260px}
+  .flap .fa,.flap .fb{display:inline-block; transition:transform .34s var(--e-quint),opacity .3s ease; transition-delay:calc(var(--i)*26ms)}
+  .flap .fa{transform:rotateX(0)}
+  .flap .fb{position:absolute; left:0; top:0; transform:rotateX(-92deg); opacity:0}
+  .flap:hover .fa{transform:rotateX(92deg); opacity:0}
+  .flap:hover .fb{transform:rotateX(0); opacity:1}
+
+  /* 04 Riktad svep */
+  .sweep{overflow:hidden}
+  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink); transform:scaleX(0); transform-origin:right; transition:transform .42s var(--e-quint)}
+  .sweep:hover::before{transform:scaleX(1); transform-origin:left}
+  .sweep .lbl{position:relative; transition:color .16s ease .04s}
+  .sweep:hover .lbl{color:var(--on-ink); transition-delay:.1s}
+
+  /* 05 Slutare */
+  .shutter{overflow:hidden}
+  .shutter::before{content:""; position:absolute; inset:0; background:var(--accent); transform:scaleY(0); transition:transform .34s var(--e-quint)}
+  .shutter:hover::before{transform:scaleY(1)}
+  .shutter .lbl{position:relative; transition:color .14s ease .05s}
+  .shutter:hover .lbl{color:var(--on-accent); transition-delay:.07s}
+
+  /* 06 Ink fill */
+  .inkfill{overflow:hidden; border:1px solid color-mix(in srgb,var(--ink) 35%,transparent)}
+  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%) scale(0); transition:transform .5s var(--e-quint)}
+  .inkfill:hover::before{transform:translate(-50%,-50%) scale(1)}
+  .inkfill .lbl{position:relative; transition:color .16s ease}
+  .inkfill:hover .lbl{color:var(--on-ink); transition-delay:.12s}
+
+  /* 07 Sheen */
+  .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background .25s ease}
+  .sheen:hover{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
+  .sheen:hover::after{transform:translateX(340%) skewX(-14deg); transition:transform .7s cubic-bezier(.3,.6,.35,1)}
+  .sheen .lbl{position:relative}
+
+  /* 08 Pilstafett */
+  .relay .slot{position:relative; width:14px; height:14px; overflow:hidden}
+  .relay .a1{transition:transform .32s var(--e-quint)}
+  .relay .a2{position:absolute; inset:0; transform:translateX(-150%); transition:transform .32s var(--e-quint) .05s}
+  .relay:hover .a1{transform:translateX(150%)}
+  .relay:hover .a2{transform:translateX(0)}
+
+  /* 09 Punkt → pil */
+  .dotm .slot{position:relative; width:14px; height:14px; overflow:hidden}
+  .dotm .d{position:absolute; inset:0; margin:auto; width:6px; height:6px; border-radius:50%; background:currentColor; transition:transform .3s var(--e-quint),opacity .25s ease}
+  .dotm .ar{position:absolute; inset:0; transform:translateX(-160%); transition:transform .3s var(--e-quint) .05s}
+  .dotm:hover .d{transform:translateX(190%); opacity:0}
+  .dotm:hover .ar{transform:translateX(0)}
+
+  /* 10 Guillemeter */
+  .guil{gap:8px}
+  .guil .g{display:inline-block; width:.55em; color:var(--accent); opacity:0; transition:transform .3s var(--e-quint),opacity .22s ease}
+  .guil .g--l{transform:translateX(9px)}
+  .guil .g--r{transform:translateX(-9px)}
+  .guil:hover .g{opacity:1; transform:translateX(0)}
+
+  /* 11 Crop marks */
+  .corners{font:500 11.5px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; border-radius:0; padding:15px 24px}
+  .corners::before,.corners::after,.corners i::before,.corners i::after{
+    content:""; position:absolute; width:9px; height:9px; opacity:0;
+    transition:opacity .2s ease,transform .3s var(--e-quint);
+  }
+  .corners i{position:absolute; inset:0; pointer-events:none}
+  .corners::before{top:0; left:0; border-top:1.5px solid; border-left:1.5px solid; transform:translate(7px,7px)}
+  .corners::after{top:0; right:0; border-top:1.5px solid; border-right:1.5px solid; transform:translate(-7px,7px)}
+  .corners i::before{bottom:0; left:0; border-bottom:1.5px solid; border-left:1.5px solid; transform:translate(7px,-7px)}
+  .corners i::after{bottom:0; right:0; border-bottom:1.5px solid; border-right:1.5px solid; transform:translate(-7px,-7px)}
+  .corners:hover::before,.corners:hover::after,.corners:hover i::before,.corners:hover i::after,
+  .corners:focus-visible::before,.corners:focus-visible::after,.corners:focus-visible i::before,.corners:focus-visible i::after{
+    opacity:1; transform:translate(0,0);
+  }
+  .corners:focus-visible{outline:none}
+
+  /* 12 Riktad understrykning */
+  .uline{font-weight:500}
+  .uline::after{content:""; position:absolute; left:4px; right:4px; bottom:2px; height:1.5px; background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform .32s var(--e-quint)}
+  .uline:hover::after{transform:scaleX(1); transform-origin:left}
+
+  /* 13 Elevation step */
+  .lift{background:var(--lift-bg); border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(var(--shadow-rgb),.07);
+    transition:transform .28s var(--e-quint),box-shadow .28s var(--e-quint),background .2s ease,border-color .2s ease}
+  .lift:hover{transform:translateY(-2px); border-color:color-mix(in srgb,var(--ink) 30%,var(--line)); box-shadow:0 7px 18px rgba(var(--shadow-rgb),.13),0 2px 5px rgba(var(--shadow-rgb),.08)}
+  .lift:active{transform:translateY(0) scale(.98); box-shadow:0 1px 2px rgba(var(--shadow-rgb),.08); transition-duration:.1s}
+
+  /* 14 Magnetisk */
+  .magnet{will-change:transform}
+  .magnet .m-lbl{display:inline-block; will-change:transform}
+
+  /* ============ footer ============ */
+  .foot{margin-top:72px; border-top:1px solid var(--line); padding-top:26px; display:flex; flex-wrap:wrap; gap:14px 40px; justify-content:space-between}
+  .foot p{font-size:12.5px; color:var(--muted); max-width:62ch}
+  .foot b{font-weight:600; color:var(--ink-soft)}
+
+  /* ============ verktygsrad + favoriter ============ */
+  .tools{
+    position:sticky; top:0; z-index:20; margin:32px 0 -8px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px 26px;
+    padding:14px 16px; border:1px solid var(--line); border-radius:12px;
+    background:color-mix(in srgb,var(--bg) 82%,transparent);
+    backdrop-filter:blur(14px) saturate(150%);
+  }
+  @media (prefers-reduced-transparency: reduce){
+    .tools{background:var(--bg); backdrop-filter:none}
+  }
+  .tools-row{display:flex; align-items:center; gap:10px}
+  .tools-lbl{font:500 10px/1 var(--mono); letter-spacing:.13em; text-transform:uppercase; color:var(--muted)}
+  .seg{display:flex; gap:2px; padding:2px; border:1px solid var(--line); border-radius:8px}
+  .seg-b{
+    font:500 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted); background:none; border:0; border-radius:6px;
+    padding:6px 9px; cursor:pointer; transition:color .16s ease,background .16s ease;
+  }
+  .seg-b:hover{color:var(--ink)}
+  .seg-b[aria-pressed="true"]{color:var(--on-ink); background:var(--ink)}
+  .seg-b:focus-visible,.fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .fav-only{
+    display:inline-flex; align-items:center; gap:7px;
+    font:500 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted); background:none; border:1px solid var(--line); border-radius:8px;
+    padding:8px 11px; cursor:pointer; transition:color .16s ease,border-color .16s ease;
+  }
+  .fav-only:hover{color:var(--ink)}
+  .fav-only[aria-pressed="true"]{color:var(--accent); border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+  .tools-count{font:400 11px/1 var(--mono); color:var(--muted); font-variant-numeric:tabular-nums}
+  .tools-reset{font:500 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); background:none; border:0; padding:6px 2px; cursor:pointer; text-decoration:underline; text-underline-offset:3px}
+  .tools-reset:hover{color:var(--ink)}
+  .tools-reset:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .spec .stage{position:relative}
+  .fav{
+    position:absolute; top:9px; right:9px; z-index:2;
+    width:28px; height:28px; display:grid; place-items:center;
+    background:none; border:0; border-radius:7px; cursor:pointer;
+    color:var(--line); opacity:0;
+    transition:opacity .18s ease,color .18s ease,transform .18s var(--e-out);
+  }
+  .spec:hover .fav,.fav:focus-visible,.fav[aria-pressed="true"]{opacity:1}
+  .fav:hover{color:var(--muted)}
+  .fav[aria-pressed="true"]{color:var(--accent)}
+  .fav:active{transform:scale(.88)}
+  .fav svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor; stroke-width:1.6}
+  .fav[aria-pressed="true"] svg{fill:currentColor}
+  .spec[hidden],.sect[hidden]{display:none}
+  .tools-empty{margin-top:28px; padding:26px; border:1px dashed var(--line); border-radius:12px; text-align:center; font-size:13.5px; color:var(--muted)}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{transition-duration:.01ms !important; animation-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Hover studies · 35 in all</p>
+    <h1>Button Hover Lab</h1>
+    <p class="lede">Thirty-five hover animations, actually built — hover, tab and press all of them.
+    A monochrome base, so each one carries any brand tone. Four house rules apply to every single one:</p>
+    <div class="rules">
+      <div><b>Instant response</b><span>The press lands on pointer-down, not on release.</span></div>
+      <div><b>Interruptible</b><span>Hover out halfway — the animation turns smoothly from wherever it is.</span></div>
+      <div><b>In one way, out another</b><span>The exit is designed, never just the entrance rewound.</span></div>
+      <div><b>Reduced motion</b><span>Everything falls back to plain colour and opacity changes.</span></div>
+    </div>
+  </header>
+
+  <div class="tools" role="group" aria-label="Filter the studies">
+    <div class="tools-row">
+      <span class="tools-lbl">Intensity</span>
+      <div class="seg" data-axis="ton">
+        <button class="seg-b" data-val="all" aria-pressed="true">All</button>
+        <button class="seg-b" data-val="Subtle" aria-pressed="false">Subtle</button>
+        <button class="seg-b" data-val="Bold" aria-pressed="false">Bold</button>
+      </div>
+    </div>
+    <div class="tools-row">
+      <span class="tools-lbl">In Framer</span>
+      <div class="seg" data-axis="framer">
+        <button class="seg-b" data-val="all" aria-pressed="true">All</button>
+        <button class="seg-b" data-val="Variant" aria-pressed="false">Variant</button>
+        <button class="seg-b" data-val="Code" aria-pressed="false">Code</button>
+      </div>
+    </div>
+    <div class="tools-row">
+      <button class="fav-only" aria-pressed="false">Starred only</button>
+      <span class="tools-count" aria-live="polite"></span>
+      <button class="tools-reset" hidden>Reset</button>
+    </div>
+  </div>
+
+  <section class="sect">
+    <h2>A — The label does the work</h2>
+    <div class="grid">
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--solid roll"><span class="track"><span class="inner"><span>Book a meeting</span><span aria-hidden="true">Book a meeting</span></span></span></button>
+        </div>
+        <h3><span class="num">01</span>Label roll</h3>
+        <p>The label rolls up and its duplicate takes its place from below. The standard for a reason — clear without asking for room.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--line wcross"><span class="stack"><span class="w-a">About the studio</span><span class="w-b" aria-hidden="true">About the studio</span></span></button>
+        </div>
+        <h3><span class="num">02</span>Weight crossfade</h3>
+        <p>The weight goes from 450 to 760 without the button changing width — the bolder duplicate holds the space. Almost subliminal.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--line flap">
+            <span class="word" aria-hidden="true"><span class="cell" style="--i:0"><span class="fa">K</span><span class="fb">K</span></span><span class="cell" style="--i:1"><span class="fa">o</span><span class="fb">o</span></span><span class="cell" style="--i:2"><span class="fa">n</span><span class="fb">n</span></span><span class="cell" style="--i:3"><span class="fa">t</span><span class="fb">t</span></span><span class="cell" style="--i:4"><span class="fa">a</span><span class="fb">a</span></span><span class="cell" style="--i:5"><span class="fa">k</span><span class="fb">k</span></span><span class="cell" style="--i:6"><span class="fa">t</span><span class="fb">t</span></span></span>
+            <span class="sr">Contact</span>
+          </button>
+        </div>
+        <h3><span class="num">03</span>Split-flap</h3>
+        <p>Every character turns like a board in a railway station, 26 ms apart. Save it for one important button per page.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="sect">
+    <h2>B — The fill tells you</h2>
+    <div class="grid">
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--line sweep"><span class="lbl">See all work</span></button>
+        </div>
+        <h3><span class="num">04</span>Directional sweep</h3>
+        <p>The fill enters from the left and leaves to the right — it never reverses the way it came. Same logic as the directional underline.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--line shutter"><span class="lbl">What we do</span></button>
+        </div>
+        <h3><span class="num">05</span>Shutter</h3>
+        <p>The fill opens from the centre line, like a shutter. Symmetrical, so it survives fast passes back and forth.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn inkfill"><span class="lbl">Start a project</span></button>
+        </div>
+        <h3><span class="num">06</span>Ink fill</h3>
+        <p>The fill grows from the exact point where the pointer entered — and retreats to where it left.</p>
+        <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn sheen"><span class="lbl">Watch the showreel</span></button>
+        </div>
+        <h3><span class="num">07</span>Sheen</h3>
+        <p>A soft light crosses the dark surface, once per hover. The return sweep is switched off — that is the detail that keeps it serious.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="sect">
+    <h2>C — The sign points</h2>
+    <div class="grid">
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--solid relay">Next step
+            <span class="slot" aria-hidden="true">
+              <svg class="icon a1" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+              <svg class="icon a2" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+            </span>
+          </button>
+        </div>
+        <h3><span class="num">08</span>Arrow relay</h3>
+        <p>The arrow leaves to the right and its twin takes over from the left. The direction points where the button leads.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--line dotm">
+            <span class="slot" aria-hidden="true">
+              <i class="d"></i>
+              <svg class="icon ar" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+            </span>All services</button>
+        </div>
+        <h3><span class="num">09</span>Dot becomes arrow</h3>
+        <p>The dot that marks rest gives way to the arrow that marks action — in the same fixed slot, so nothing in the layout jumps.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--text guil"><span class="g g--l" aria-hidden="true">«</span>What we offer<span class="g g--r" aria-hidden="true">»</span></button>
+        </div>
+        <h3><span class="num">10</span>Guillemets</h3>
+        <p>« » slide in and frame the label. Typographic, quiet and very Swedish — the space is reserved, so nothing shifts sideways.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn corners">Read the report<i aria-hidden="true"></i></button>
+        </div>
+        <h3><span class="num">11</span>Crop marks</h3>
+        <p>Register marks land in the corners, as on a press sheet. Doubles as the keyboard focus state.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--text uline">More insights</button>
+        </div>
+        <h3><span class="num">12</span>Directional underline</h3>
+        <p>In from the left, out to the right — the line never snaps back. For text buttons and navigation.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="sect">
+    <h2>D — You feel the physics</h2>
+    <div class="grid">
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn lift">Download</button>
+        </div>
+        <h3><span class="num">13</span>Elevation step</h3>
+        <p>The button lifts 2 px and the shadow deepens; the press pushes it back down. The response sits on pointer-down, not on release.</p>
+        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+      </article>
+
+      <article class="spec">
+        <div class="stage">
+          <button class="btn btn--solid magnet"><span class="m-lbl">Keep in touch</span></button>
+        </div>
+        <h3><span class="num">14</span>Magnetic</h3>
+        <p>The button is drawn toward the pointer on a critically damped spring; the label follows with extra parallax. Interruptible at any moment — the velocity carries out with it.</p>
+        <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      </article>
+
+    </div>
+  </section>
+
+<style>
+  /* ============ Section E — Utmanarna ============ */
+
+  /* 15 Weight wave — variable weight follows the pointer through the characters */
+  .e-wave .e-wave-stack{display:inline-grid; justify-items:center}
+  .e-wave .e-wave-ghost{grid-area:1/1; font-weight:800; white-space:nowrap; visibility:hidden}
+  .e-wave .e-wave-live{grid-area:1/1; white-space:nowrap; font-variation-settings:"wght" 500; transition:font-variation-settings .3s var(--e-out)}
+  .e-wave:focus-visible .e-wave-live{font-variation-settings:"wght" 660}
+
+  /* 16 Ritad kontur — stroke-dashoffset ritar ramen */
+  .e-draw{border-radius:12px; border:1px solid var(--line)}
+  .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible}
+  .e-draw .e-draw-frame rect{
+    x:0.75px; y:0.75px; width:calc(100% - 1.5px); height:calc(100% - 1.5px); rx:11.5px; ry:11.5px;
+    fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round;
+    stroke-dasharray:40; stroke-dashoffset:40;
+    transition:stroke-dashoffset .55s var(--e-quint);
+  }
+  .e-draw:hover .e-draw-frame rect,
+  .e-draw:focus-visible .e-draw-frame rect{stroke-dashoffset:0}
+
+  /* 17 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
+  .e-chamfer{border-radius:0; color:var(--on-ink)}
+  .e-chamfer::before{
+    content:""; position:absolute; inset:0; background:var(--ink);
+    clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition:clip-path .38s var(--e-quint);
+  }
+  .e-chamfer:hover::before,
+  .e-chamfer:focus-visible::before{
+    clip-path:polygon(0 0, 100% 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+  .e-chamfer .lbl{position:relative}
+
+  /* 18 In register — an out-of-register accent frame slides into place */
+  .e-reg::before{
+    content:""; position:absolute; inset:-1px; border:1px solid var(--accent);
+    border-radius:inherit; pointer-events:none;
+    transform:translate(5px,5px);
+    transition:transform .34s var(--e-quint);
+  }
+  .e-reg:hover::before,
+  .e-reg:focus-visible::before{transform:translate(0,0)}
+
+  /* 19 Levelling out — a wave stretched flat into a line (scaleY + non-scaling-stroke) */
+  .e-vag{font-weight:500}
+  .e-vag .e-vag-line{
+    position:absolute; left:4px; right:4px; bottom:1px; height:7px; width:auto;
+    color:var(--muted); overflow:visible;
+    transform:scaleY(1); transform-origin:50% 50%;
+    transition:transform .38s var(--e-quint), color .25s ease;
+  }
+  .e-vag:hover .e-vag-line,
+  .e-vag:focus-visible .e-vag-line{transform:scaleY(.14); color:var(--ink)}
+
+  /* 20 Counter — a @property-registered integer steps a counter up */
+  @property --e-n{syntax:"<integer>"; inherits:true; initial-value:0}
+  .e-count .e-count-n{
+    --e-n:0;
+    font:500 10.5px/1 var(--mono); letter-spacing:.06em;
+    padding:4px 6px 3px; border-radius:5px;
+    border:1px solid color-mix(in srgb,var(--on-ink) 35%,transparent);
+    opacity:.6;
+    transition:--e-n .55s var(--e-quint), opacity .2s ease;
+  }
+  .e-count .e-count-n::after{counter-reset:e-num calc(var(--e-n)); content:counter(e-num, decimal-leading-zero)}
+  .e-count:hover .e-count-n,
+  .e-count:focus-visible .e-count-n{--e-n:3; opacity:1}
+</style>
+
+<section class="sect">
+  <h2>E — The challengers</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line e-wave">
+          <span class="e-wave-stack">
+            <span class="e-wave-ghost" aria-hidden="true">Meet the team</span>
+            <span class="e-wave-live" aria-hidden="true">Meet the team</span>
+            <span class="sr">Meet the team</span>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">15</span>Weight wave</h3>
+        <p>The weight rises in the characters nearest the pointer and ebbs once it has passed — the typography answers, nothing moves. For a single hero button where the typography is the brand.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn e-draw">Read the manifesto
+          <svg class="e-draw-frame" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="12" pathLength="40"/></svg>
+        </button>
+      </div>
+      <h3><span class="num">16</span>Drawn outline</h3>
+        <p>The frame is drawn around the button like a pen stroke over the faint base rule, then erased backwards. For editorial moments — manifesto, method, long reads.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn e-chamfer"><span class="lbl">Our method</span></button>
+      </div>
+      <h3><span class="num">17</span>Chamfered corner</h3>
+        <p>The chamfered corners unfold and the rectangle becomes whole. Geometry instead of colour — for studios that would rather demonstrate precision.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line e-reg">Subscribe</button>
+      </div>
+      <h3><span class="num">18</span>In register</h3>
+        <p>The accent frame sits a few pixels out of register and slides into place on hover. A print reference for whoever notices it — use it sparingly, one per view.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--text e-vag">Start here
+          <svg class="e-vag-line" viewBox="0 0 120 8" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 4 Q3 0.8 6 4 T12 4 T18 4 T24 4 T30 4 T36 4 T42 4 T48 4 T54 4 T60 4 T66 4 T72 4 T78 4 T84 4 T90 4 T96 4 T102 4 T108 4 T114 4 T120 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          </svg>
+        </button>
+      </div>
+      <h3><span class="num">19</span>Levelling out</h3>
+        <p>The underline rests as a wave and is drawn level on hover. For text links allowed to suggest lightness without raising their voice.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid e-count">See open roles
+          <span class="e-count-n" aria-hidden="true"></span>
+          <span class="sr">, three roles open right now</span>
+        </button>
+      </div>
+      <h3><span class="num">20</span>Counter</h3>
+        <p>The counter wakes and steps up to today's number. For buttons that carry a figure — open roles, places left — where the number is an aside, not the message.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 15 Weight wave — exponential smoothing per character (critically damped feel, interruptible at any moment)
+  (function(){
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('.e-wave').forEach(function(btn){
+      var live = btn.querySelector('.e-wave-live');
+      if (!live) return;
+      var BASE = 500, PEAK = 800, R = 56;
+      var letters = [], raf = null, px = null;
+      var text = live.textContent;
+      live.textContent = '';
+      text.split('').forEach(function(ch){
+        if (ch === ' '){ live.appendChild(document.createTextNode(' ')); return; }
+        var s = document.createElement('span');
+        s.textContent = ch;
+        live.appendChild(s);
+        letters.push({el:s, w:BASE, t:BASE});
+      });
+      function frame(){
+        var moving = false;
+        letters.forEach(function(L){
+          L.w += (L.t - L.w) * .18;
+          if (Math.abs(L.t - L.w) > .4){ moving = true; } else { L.w = L.t; }
+          if (L.w === BASE && L.t === BASE){ L.el.style.fontVariationSettings = ''; }
+          else { L.el.style.fontVariationSettings = '"wght" ' + L.w.toFixed(1); }
+        });
+        raf = moving ? requestAnimationFrame(frame) : null;
+      }
+      function retarget(){
+        letters.forEach(function(L){
+          if (px === null){ L.t = BASE; return; }
+          var r = L.el.getBoundingClientRect();
+          var d = Math.abs(px - (r.left + r.width/2));
+          var f = Math.max(0, 1 - d/R);
+          L.t = BASE + (PEAK - BASE) * f * f;
+        });
+        if (raf === null) raf = requestAnimationFrame(frame);
+      }
+      btn.addEventListener('pointermove', function(e){ px = e.clientX; retarget(); });
+      btn.addEventListener('pointerleave', function(){ px = null; retarget(); });
+    });
+  })();
+</script>
+
+<style>
+  /* ============ Section F — Ljus och materia ============ */
+
+  /* Theme switch: --f-lys is ALWAYS the light half of the token pair, --f-mork always the
+     dark one. In light mode --on-ink is the light one; in dark mode --ink is. This alias is
+     what makes the difference knockout and the light edges turn the RIGHT way in both themes. */
+  .f-mat{ --f-lys:var(--on-ink); --f-mork:var(--ink) }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .f-mat{ --f-lys:var(--ink); --f-mork:var(--on-ink) }
+  }
+  :root[data-theme="dark"] .f-mat{ --f-lys:var(--ink); --f-mork:var(--on-ink) }
+
+  /* 21 Frostat glas — suddning, yta och ljuskant materialiseras samtidigt */
+  .stage.f-ruta{ background-image:repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 10px) }
+  .f-glas{ background:none; border:1px solid var(--line); overflow:hidden;
+    transition:border-color .42s var(--e-out) }
+  .f-glas .f-glas-yta{
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background-color:color-mix(in srgb, var(--ink) 0%, transparent);
+    box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 0%, transparent);
+    -webkit-backdrop-filter:blur(0px) saturate(1);
+    backdrop-filter:blur(0px) saturate(1);
+    transition:backdrop-filter .42s var(--e-out), -webkit-backdrop-filter .42s var(--e-out),
+               background-color .42s var(--e-out), box-shadow .42s var(--e-out);
+  }
+  .f-glas .lbl{ position:relative }
+  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink) 22%, var(--line)) }
+  .f-glas:hover .f-glas-yta, .f-glas:focus-visible .f-glas-yta{
+    background-color:color-mix(in srgb, var(--ink) 7%, transparent);
+    box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 65%, transparent);
+    -webkit-backdrop-filter:blur(9px) saturate(1.06);
+    backdrop-filter:blur(9px) saturate(1.06);
+  }
+
+  /* 22 Backlight — a rising light turns surface AND label in a single layer (difference) */
+  .f-motljus{ background:var(--lift-bg); border:1px solid var(--line); overflow:hidden; isolation:isolate }
+  .f-motljus .f-sol{
+    position:absolute; left:50%; bottom:0; width:240%; height:240%;
+    border-radius:50%; background:var(--f-lys); mix-blend-mode:difference;
+    pointer-events:none; transform:translate(-50%,100%);
+    transition:transform .5s var(--e-quint);
+  }
+  .f-motljus:hover .f-sol, .f-motljus:focus-visible .f-sol{ transform:translate(-50%,44%) }
+
+  /* 23 The lantern — the light follows the pointer across a dark plate */
+  .f-lykta{
+    --f-px:50%; --f-py:50%;
+    background:var(--f-mork); color:var(--f-lys); overflow:hidden;
+    border:1px solid color-mix(in srgb, var(--f-lys) 16%, transparent);
+    transition:border-color .3s var(--e-out);
+  }
+  .f-lykta::before{
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0;
+    background:radial-gradient(170px circle at var(--f-px) var(--f-py),
+      color-mix(in srgb, var(--f-lys) 22%, transparent),
+      color-mix(in srgb, var(--f-lys) 7%, transparent) 44%, transparent 72%);
+    transition:opacity .3s var(--e-out);
+  }
+  .f-lykta .lbl{ position:relative }
+  .f-lykta:hover, .f-lykta:focus-visible{ border-color:color-mix(in srgb, var(--f-lys) 34%, transparent) }
+  .f-lykta:hover::before, .f-lykta:focus-visible::before{ opacity:1 }
+
+  /* 24 The grain settles — a coarse screen tightens into a finely calibrated surface */
+  .f-korn{ background:var(--lift-bg); border:1px solid var(--line); overflow:hidden }
+  .f-korn .f-korn-yta{
+    position:absolute; inset:0; pointer-events:none; color:var(--ink); opacity:.42;
+    background-image:
+      radial-gradient(circle at 50% 50%, currentColor 0 .5px, transparent .75px),
+      radial-gradient(circle at 50% 50%, currentColor 0 .5px, transparent .75px);
+    background-size:3.2px 3.2px, 5.1px 5.1px;
+    background-position:0 0, 1.3px .7px;
+    transform:scale(1.8); transform-origin:50% 50%;
+    transition:transform .46s var(--e-quint), opacity .46s var(--e-out);
+  }
+  .f-korn .lbl{ position:relative }
+  .f-korn:hover .f-korn-yta, .f-korn:focus-visible .f-korn-yta{ transform:scale(1); opacity:.2 }
+
+  /* 25 Edge light — a @property angle runs an accent streak one lap around the hairline */
+  @property --f-vinkel{ syntax:"<angle>"; inherits:false; initial-value:0deg }
+  .f-kant{
+    background:var(--lift-bg); border:1px solid var(--line);
+    transition:border-color .3s var(--e-out);
+  }
+  .f-kant::before{
+    content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; opacity:0;
+    background:conic-gradient(from var(--f-vinkel),
+      color-mix(in srgb, var(--accent) 92%, transparent) 0 4%,
+      color-mix(in srgb, var(--accent) 30%, transparent) 10%, transparent 18% 100%);
+    transition:opacity .22s var(--e-out), --f-vinkel .56s var(--e-out);
+  }
+  .f-kant::after{
+    content:""; position:absolute; inset:0; border-radius:inherit;
+    background:var(--lift-bg); pointer-events:none;
+  }
+  .f-kant .lbl{ position:relative; z-index:1 }
+  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink) 24%, var(--line)) }
+  .f-kant:hover::before, .f-kant:focus-visible::before{ opacity:1; --f-vinkel:360deg }
+
+  /* Reduced motion: the end state must still read as "hover" — the light becomes an even lift */
+  @media (prefers-reduced-motion: reduce){
+    .f-lykta::before{
+      background:radial-gradient(420px circle at 50% 50%,
+        color-mix(in srgb, var(--f-lys) 14%, transparent),
+        color-mix(in srgb, var(--f-lys) 9%, transparent) 60%, transparent 100%);
+    }
+  }
+</style>
+
+<section class="sect f-mat">
+  <h2>F — Light and material</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage f-ruta">
+        <button class="btn f-glas"><i class="f-glas-yta" aria-hidden="true"></i><span class="lbl">Book a walkthrough</span></button>
+      </div>
+      <h3><span class="num">21</span>Frosted glass</h3>
+        <p>The glass materialises: the blur grows in as the surface tints up and a light edge catches along the top. For buttons over an image or a pattern — the line screen in the frame exists only so the blur has something to work on.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn f-motljus">Read the annual report<i class="f-sol" aria-hidden="true"></i></button>
+      </div>
+      <h3><span class="num">22</span>Backlight</h3>
+        <p>A light rises behind the button and turns surface and label in the same movement — one layer handles both colour states. Save it for the page's main action; it will be noticed.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn f-lykta"><span class="lbl">See the case</span></button>
+      </div>
+      <h3><span class="num">23</span>The lantern</h3>
+        <p>The light follows the pointer across the dark plate, like a lamp carried over the material. Build it only on a dark ground — hero, footer, dark interludes.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn f-korn"><i class="f-korn-yta" aria-hidden="true"></i><span class="lbl">Follow the work</span></button>
+      </div>
+      <h3><span class="num">24</span>The grain settles</h3>
+        <p>At rest a coarse grain lies over the surface; on hover the screen tightens into a quiet, finely calibrated finish. The hover calms instead of raising its voice — good for long rows of secondary buttons.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn f-kant"><span class="lbl">Download the report</span></button>
+      </div>
+      <h3><span class="num">25</span>Edge light</h3>
+        <p>A narrow accent streak lights up and runs one lap around the edge, leaving the hairline a shade darker. One per view; repeated, it turns restless.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 23 The lantern — the pointer position feeds the gradient through two custom properties.
+  // No animation of its own: the light sits where the pointer is, so it is interruptible by definition.
+  (function(){
+    var rm = matchMedia('(prefers-reduced-motion: reduce)');
+    document.querySelectorAll('.f-lykta').forEach(function(btn){
+      var raf = null, px = 0, py = 0;
+      function paint(){
+        raf = null;
+        btn.style.setProperty('--f-px', px + 'px');
+        btn.style.setProperty('--f-py', py + 'px');
+      }
+      btn.addEventListener('pointermove', function(e){
+        if (rm.matches) return;              // reduced motion: the gradient stays centred
+        var r = btn.getBoundingClientRect();
+        px = e.clientX - r.left; py = e.clientY - r.top;
+        if (raf === null) raf = requestAnimationFrame(paint);
+      });
+      btn.addEventListener('pointerleave', function(){
+        if (raf !== null){ cancelAnimationFrame(raf); raf = null; }
+        btn.style.removeProperty('--f-px');
+        btn.style.removeProperty('--f-py');
+      });
+    });
+  })();
+</script>
+
+<style>
+  /* ============ Section G — Plattan och geometrin ============ */
+
+  /* 26 Diagonal radius — the capsule releases two opposite corners */
+  .g-radius{
+    border-radius:26px;
+    transition:border-radius .38s var(--e-quint), transform .15s var(--e-out);
+  }
+  .g-radius:hover,
+  .g-radius:focus-visible{border-radius:5px 26px 5px 26px}
+
+  /* 27 The seam — the plate parts along a slanted joint */
+  .g-seam{color:var(--on-ink)}
+  .g-seam .g-seam-plate{
+    position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none;
+    background:color-mix(in srgb,var(--ink) 78%,var(--stage));
+  }
+  .g-seam .g-seam-half{
+    position:absolute; inset:0; background:var(--ink);
+    transition:transform .34s var(--e-quint);
+  }
+  .g-seam .g-seam-a{clip-path:polygon(0 0, 58% 0, 42% 100%, 0 100%)}
+  .g-seam .g-seam-b{clip-path:polygon(58% 0, 100% 0, 100% 100%, 42% 100%)}
+  .g-seam:hover .g-seam-a,
+  .g-seam:focus-visible .g-seam-a{transform:translateX(-3px)}
+  .g-seam:hover .g-seam-b,
+  .g-seam:focus-visible .g-seam-b{transform:translateX(3px)}
+  .g-seam .lbl{position:relative}
+
+  /* 28 Rule becomes frame — one line, two jobs (clip-path + radius) */
+  .g-frame{padding:14px 26px}
+  .g-frame .g-frame-ring{
+    position:absolute; inset:0; pointer-events:none;
+    border:1.5px solid color-mix(in srgb,var(--ink) 62%,transparent);
+    border-radius:3px;
+    clip-path:inset(calc(100% - 1.5px) 22% 0% 22%);
+    transition:clip-path .42s var(--e-quint), border-radius .42s var(--e-quint), border-color .3s ease;
+  }
+  .g-frame:hover .g-frame-ring,
+  .g-frame:focus-visible .g-frame-ring{
+    clip-path:inset(0% 0% 0% 0%);
+    border-radius:999px;
+    border-color:var(--ink);
+  }
+  .g-frame .lbl{position:relative}
+
+  /* 29 Filling the measure — the plate grows out to its reserved measure */
+  .g-measure{padding:17px 34px; color:var(--on-ink)}
+  .g-measure .g-measure-trim{
+    position:absolute; inset:0; border:1px solid var(--line);
+    border-radius:inherit; pointer-events:none;
+  }
+  .g-measure .g-measure-plate{
+    position:absolute; inset:0; background:var(--ink);
+    border-radius:inherit; pointer-events:none;
+    clip-path:inset(5px 14px round 999px);
+    transition:clip-path .4s var(--e-quint);
+  }
+  .g-measure:hover .g-measure-plate,
+  .g-measure:focus-visible .g-measure-plate{clip-path:inset(0px 0px round 999px)}
+  .g-measure .lbl{position:relative}
+
+  /* 30 The key — a hard bottom edge, a real depression on press */
+  .g-key{
+    background:var(--lift-bg);
+    border:1px solid var(--line);
+    box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 20%,var(--line));
+    transition:transform .12s var(--e-out), box-shadow .16s var(--e-out),
+               background-color .2s ease, border-color .2s ease;
+  }
+  .g-key:hover,
+  .g-key:focus-visible{
+    border-color:color-mix(in srgb,var(--ink) 32%,var(--line));
+    box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 34%,var(--line));
+  }
+  .btn.g-key:active{
+    transform:translateY(2px);
+    background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
+    box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 34%,var(--line)),
+               inset 0 2px 3px rgba(var(--shadow-rgb),.2);
+  }
+</style>
+
+<section class="sect">
+  <h2>G — The plate and its geometry</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid g-radius">See the full case</button>
+      </div>
+      <h3><span class="num">26</span>Diagonal radius</h3>
+        <p>The capsule keeps two corners and draws the other two in, so the plate changes body without moving. The shape change costs nothing in layout — a good house default.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn g-seam">
+          <span class="g-seam-plate" aria-hidden="true">
+            <span class="g-seam-half g-seam-a"></span>
+            <span class="g-seam-half g-seam-b"></span>
+          </span>
+          <span class="lbl">Get in touch</span>
+        </button>
+      </div>
+      <h3><span class="num">27</span>The seam</h3>
+        <p>The plate parts along a slanted seam and slides six pixels apart; the seam beneath is darker, never transparent, so the label stays readable throughout. One per page — it pulls the eye.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn g-frame">
+          <span class="g-frame-ring" aria-hidden="true"></span>
+          <span class="lbl">How we work</span>
+        </button>
+      </div>
+      <h3><span class="num">28</span>Rule becomes frame</h3>
+        <p>At rest it is a line under the label; on hover it rises along the sides and closes into a full frame. One line, two jobs — for links that sometimes have to behave like buttons.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn g-measure">
+          <span class="g-measure-trim" aria-hidden="true"></span>
+          <span class="g-measure-plate" aria-hidden="true"></span>
+          <span class="lbl">Read the findings</span>
+        </button>
+      </div>
+      <h3><span class="num">29</span>Filling the measure</h3>
+        <p>The plate sits inset within its own measure and grows out to the hairline on hover. The label holds still and the surrounding space is already reserved, so nothing outside the button moves.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn g-key">Sign up</button>
+      </div>
+      <h3><span class="num">30</span>The key</h3>
+        <p>The plate stands on a hard bottom edge like a keycap and collapses under the press. The depth is carried by the surface step and the hard edge rather than a drop shadow — which is why the feel survives dark mode.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<style>
+  /* ============ Section H — Ordet och tecknet ============ */
+
+  /* 31 Tracking opens — letter-spacing widens; the duplicate at the widest setting holds the space */
+  .h-track .h-track-stack{display:inline-grid; justify-items:center}
+  .h-track .h-track-ghost,
+  .h-track .h-track-live{grid-area:1/1; white-space:nowrap; font-weight:500}
+  .h-track .h-track-ghost{visibility:hidden; letter-spacing:.16em}
+  .h-track .h-track-live{
+    letter-spacing:.005em; color:var(--ink-soft);
+    transition:letter-spacing .36s var(--e-quint), color .24s ease;
+  }
+  .h-track:hover .h-track-live,
+  .h-track:focus-visible .h-track-live{letter-spacing:.16em; color:var(--ink)}
+
+  /* 32 The second line — the hidden addition grows from 0fr to content width; the plate is measured for it from the start */
+  .h-second .h-second-stack{display:inline-grid; justify-items:center}
+  .h-second .h-second-ghost,
+  .h-second .h-second-row{grid-area:1/1; white-space:nowrap}
+  .h-second .h-second-ghost{visibility:hidden}
+  .h-second .h-second-add,
+  .h-second .h-second-ghost-add{display:inline-grid; grid-template-columns:minmax(0,1fr); vertical-align:baseline}
+  .h-second .h-second-add{
+    grid-template-columns:minmax(0,0fr);
+    transition:grid-template-columns .4s var(--e-quint);
+  }
+  .h-second .h-second-add>span,
+  .h-second .h-second-ghost-add>span{
+    overflow:hidden; white-space:nowrap;
+    color:color-mix(in srgb,var(--on-ink) 66%,transparent);
+  }
+  .h-second .h-second-add>span{opacity:0; transition:opacity .26s ease}
+  .h-second:hover .h-second-add,
+  .h-second:focus-visible .h-second-add{grid-template-columns:minmax(0,1fr)}
+  .h-second:hover .h-second-add>span,
+  .h-second:focus-visible .h-second-add>span{opacity:1; transition-delay:.12s}
+
+  /* 33 Tre punkter blir pil — ellipsens punkter blir pilens egna streck, fast 14 px slot */
+  .h-ellip{gap:6px}
+  .h-ellip .h-ellip-slot{position:relative; display:block; width:14px; height:14px}
+  .h-ellip .h-ellip-d{
+    position:absolute; top:50%; margin-top:-1.3px; width:2.6px; height:2.6px;
+    border-radius:999px; background:currentColor;
+    transform-origin:0 50%;
+    transition:transform .42s var(--e-quint);
+  }
+  .h-ellip .h-ellip-d1{left:0}
+  .h-ellip .h-ellip-d2{left:5.7px}
+  .h-ellip .h-ellip-d3{left:11.4px}
+  /* the end state is pixel-identical to the page's SVG arrow: shaft 2→12, head 45° out to (8,3) and (8,11) */
+  .h-ellip:hover .h-ellip-d1,
+  .h-ellip:focus-visible .h-ellip-d1{transform:translateX(2px) scale(3.846,.577)}
+  .h-ellip:hover .h-ellip-d2,
+  .h-ellip:focus-visible .h-ellip-d2{transform:translateX(6.3px) rotate(135deg) scale(2.176,.577)}
+  .h-ellip:hover .h-ellip-d3,
+  .h-ellip:focus-visible .h-ellip-d3{transform:translateX(.6px) rotate(-135deg) scale(2.176,.577)}
+
+  /* 34 The caret — the label as a field about to be typed into */
+  .h-caret{gap:7px}
+  .h-caret .h-caret-slot{position:relative; display:block; width:1.5px; height:1em}
+  .h-caret .h-caret-bar{
+    position:absolute; inset:0; background:var(--accent); border-radius:1px;
+    opacity:0; transform:scaleY(.35); transform-origin:50% 100%;
+    transition:opacity .16s ease, transform .3s var(--e-quint);
+  }
+  .h-caret:hover .h-caret-bar,
+  .h-caret:focus-visible .h-caret-bar{
+    opacity:1; transform:scaleY(1);
+    animation:h-caret-blink 1.1s steps(1,end) .38s infinite;
+  }
+  @keyframes h-caret-blink{0%,52%{opacity:1} 53%,100%{opacity:.1}}
+
+  /* 35 Only when it doesn't fit — the label moves only if it is actually clipped */
+  .h-marq{max-width:min(100%,264px)}
+  .h-marq .h-marq-clip{position:relative; display:block; overflow:hidden; min-width:0}
+  .h-marq .h-marq-txt{display:inline-block; white-space:nowrap; transition:transform .5s var(--e-out)}
+  .h-marq .h-marq-clip::before,
+  .h-marq .h-marq-clip::after{
+    content:""; position:absolute; top:0; bottom:0; width:24px;
+    opacity:0; pointer-events:none; transition:opacity .22s ease;
+  }
+  .h-marq .h-marq-clip::after{right:0; background:linear-gradient(90deg,transparent,var(--ink))}
+  .h-marq .h-marq-clip::before{left:0; background:linear-gradient(270deg,transparent,var(--ink))}
+  .h-marq.h-is-clipped .h-marq-clip::after{opacity:1}
+  .h-marq.h-is-clipped:hover .h-marq-clip::after,
+  .h-marq.h-is-clipped:focus-visible .h-marq-clip::after{opacity:0; transition-delay:.3s}
+  .h-marq.h-is-clipped:hover .h-marq-clip::before,
+  .h-marq.h-is-clipped:focus-visible .h-marq-clip::before{opacity:1; transition-delay:.14s}
+
+  /* Reduced motion — the end state remains, the caret does not blink */
+  @media (prefers-reduced-motion: reduce){
+    .h-caret .h-caret-bar,
+    .h-caret:hover .h-caret-bar,
+    .h-caret:focus-visible .h-caret-bar{animation:none !important}
+    .h-caret:hover .h-caret-bar,
+    .h-caret:focus-visible .h-caret-bar{opacity:1; transform:scaleY(1)}
+    .h-marq .h-marq-txt{transform:none !important}
+  }
+</style>
+
+<section class="sect">
+  <h2>H — The word and the mark</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line h-track">
+          <span class="h-track-stack">
+            <span class="h-track-ghost" aria-hidden="true">Open the report</span>
+            <span class="h-track-live" aria-hidden="true">Open the report</span>
+            <span class="sr">Open the report</span>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">31</span>Tracking opens</h3>
+        <p>The tracking opens from .005 to .16 em while the plate stands perfectly still — an invisible duplicate at the widest setting holds the space. For a hero button where the typography is the brand.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid h-second">
+          <span class="h-second-stack">
+            <span class="h-second-ghost" aria-hidden="true">Book an intro call<span class="h-second-ghost-add"><span>&nbsp;· 20 min</span></span></span>
+            <span class="h-second-row" aria-hidden="true">Book an intro call<span class="h-second-add"><span>&nbsp;· 20 min</span></span></span>
+            <span class="sr">Book an intro call, 20 minutes</span>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">32</span>The second line</h3>
+        <p>The label unfolds the detail it was withholding, and the plate is measured for the wide state from the start — nothing outside the button moves. For booking and contact buttons where the time it takes is the silent objection.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--text h-ellip">Read on
+          <span class="h-ellip-slot" aria-hidden="true">
+            <i class="h-ellip-d h-ellip-d1"></i><i class="h-ellip-d h-ellip-d2"></i><i class="h-ellip-d h-ellip-d3"></i>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">33</span>Three dots become an arrow</h3>
+        <p>The ellipsis's three dots slide together and swing out into the arrow's own strokes — no finished arrow is swapped in, it is the same three marks the whole way. For read-on links where the ellipsis already promises a continuation.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line h-caret">Search the press room
+          <span class="h-caret-slot" aria-hidden="true"><i class="h-caret-bar"></i></span>
+        </button>
+      </div>
+      <h3><span class="num">34</span>The caret</h3>
+        <p>A caret lights up out of the baseline after the label, as if the button were a field about to be typed into, then blinks at a calm rate. Only on buttons that genuinely lead to a field — otherwise it is a promise not kept.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid h-marq">
+          <span class="h-marq-clip"><span class="h-marq-txt">Sign up for the breakfast seminar in Gothenburg</span></span>
+        </button>
+      </div>
+      <h3><span class="num">35</span>Only when it doesn't fit</h3>
+        <p>The label moves only if it is actually too long for the plate; if it fits, nothing happens at all. The edge fades into the plate's own colour so the clip is visible, and the text returns home when the pointer leaves. For menus and cards with fixed widths and long headings.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 35 Only when it doesn't fit — measure first, move only what is clipped
+  (function(){
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.h-marq').forEach(function(btn){
+      var clip = btn.querySelector('.h-marq-clip');
+      var txt = btn.querySelector('.h-marq-txt');
+      if (!clip || !txt) return;
+      function overflow(){
+        return txt.getBoundingClientRect().width - clip.getBoundingClientRect().width;
+      }
+      function mark(){ btn.classList.toggle('h-is-clipped', overflow() > 1); }
+      mark();
+      addEventListener('resize', mark);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(mark);
+      if (reduced) return;
+      function go(){
+        var d = overflow();
+        if (d <= 1) return;
+        txt.style.transitionDuration = Math.min(600, 160 + d * 2.2) + 'ms';
+        txt.style.transform = 'translateX(' + (-d) + 'px)';
+      }
+      function back(){
+        txt.style.transitionDuration = '';
+        txt.style.transform = '';
+      }
+      btn.addEventListener('pointerenter', go);
+      btn.addEventListener('pointerleave', back);
+      btn.addEventListener('focus', go);
+      btn.addEventListener('blur', back);
+    });
+  })();
+</script>
+
+  <footer class="foot">
+    <p><b>Porting to Framer:</b> «Variant» means it builds as a hover variant straight on the canvas. «Code» means it needs a code override or a component — duplicated labels, transform-origin swaps and springs are not something variants can do.</p>
+    <p>All thirty-five have an :active press, a visible focus state and a reduced-motion fallback.</p>
+  </footer>
+</div>
+
+<script>
+  // 06 Ink fill — the fill originates at the pointer's entry and exit point
+  document.querySelectorAll('.inkfill').forEach(function(b){
+    function set(e){
+      var r = b.getBoundingClientRect();
+      b.style.setProperty('--x', (e.clientX - r.left) + 'px');
+      b.style.setProperty('--y', (e.clientY - r.top) + 'px');
+    }
+    b.addEventListener('pointerenter', set);
+    b.addEventListener('pointerleave', set);
+  });
+
+  // 14 Magnetic — critically damped spring (k=170, c≈2√k), interruptible with velocity preserved
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.magnet').forEach(function(btn){
+      var lbl = btn.querySelector('.m-lbl');
+      var x=0, y=0, vx=0, vy=0, tx=0, ty=0, raf=null, last=null;
+      var k=170, c=26;
+      function paint(){
+        btn.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        lbl.style.transform = 'translate(' + (x*.5) + 'px,' + (y*.5) + 'px)';
+      }
+      function tick(t){
+        if (last===null) last=t;
+        var dt = Math.min((t-last)/1000, .03); last=t;
+        vx += (k*(tx-x) - c*vx)*dt;  vy += (k*(ty-y) - c*vy)*dt;
+        x += vx*dt;  y += vy*dt;
+        // at rest = arrived AT the target and still — not merely near the origin
+        if (Math.abs(tx-x)+Math.abs(ty-y)+Math.abs(vx)+Math.abs(vy) > .05) {
+          paint();
+          raf = requestAnimationFrame(tick);
+          return;
+        }
+        x=tx; y=ty; vx=vy=0; raf=null; last=null;
+        if (tx===0 && ty===0) { btn.style.transform=''; lbl.style.transform=''; }
+        else paint();
+      }
+      function start(){ if(!raf){ last=null; raf=requestAnimationFrame(tick); } }
+      btn.addEventListener('pointermove', function(e){
+        var r = btn.getBoundingClientRect();
+        tx = Math.max(-8, Math.min(8, (e.clientX - r.left - r.width/2) * .22));
+        ty = Math.max(-6, Math.min(6, (e.clientY - r.top - r.height/2) * .3));
+        start();
+      });
+      btn.addEventListener('pointerleave', function(){ tx=0; ty=0; start(); });
+    });
+  }
+</script>
+
+<script>
+  // Toolbar: tags are read from each card's chips at runtime, so the filter
+  // works on every card regardless of which section it came from.
+  (function(){
+    var KEY = 'knapplabbet-favoriter';
+    var cards = [].slice.call(document.querySelectorAll('.spec'));
+    var tools = document.querySelector('.tools');
+    if (!tools || !cards.length) return;
+
+    var countEl = tools.querySelector('.tools-count');
+    var favBtn  = tools.querySelector('.fav-only');
+    var reset   = tools.querySelector('.tools-reset');
+    var state   = {ton:'all', framer:'all', fav:false};
+
+    function load(){
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ return []; }
+    }
+    function save(list){
+      try { localStorage.setItem(KEY, JSON.stringify(list)); } catch(e){}
+    }
+    var favs = load();
+
+    var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.85-4.25 4.15 1 5.9-5.25-2.75-5.25 2.75 1-5.9L3.5 9.75l5.9-.85z" stroke-linejoin="round"/></svg>';
+
+    cards.forEach(function(card){
+      var chips = [].slice.call(card.querySelectorAll('.chip')).map(function(c){ return c.textContent.trim(); });
+      var joined = chips.join(' ');
+      card.dataset.ton    = /Bold/i.test(joined) ? 'Bold' : 'Subtle';
+      card.dataset.framer = /Code in Framer/i.test(joined) ? 'Code' : 'Variant';
+
+      var num  = (card.querySelector('.num') || {}).textContent || '';
+      var name = (card.querySelector('h3') || {}).textContent || '';
+      var id   = num.trim();
+      card.dataset.id = id;
+
+      var stage = card.querySelector('.stage');
+      if (!stage) return;
+      var b = document.createElement('button');
+      b.className = 'fav';
+      b.type = 'button';
+      b.innerHTML = STAR;
+      b.setAttribute('aria-pressed', favs.indexOf(id) > -1 ? 'true' : 'false');
+      b.setAttribute('aria-label', 'Star ' + name.replace(id, '').trim());
+      b.addEventListener('click', function(){
+        var on = b.getAttribute('aria-pressed') === 'true';
+        b.setAttribute('aria-pressed', on ? 'false' : 'true');
+        var i = favs.indexOf(id);
+        if (on && i > -1) favs.splice(i, 1);
+        if (!on && i === -1) favs.push(id);
+        save(favs);
+        apply();
+      });
+      stage.appendChild(b);
+    });
+
+    var empty = document.createElement('p');
+    empty.className = 'tools-empty';
+    empty.hidden = true;
+    empty.textContent = 'Nothing matches this filter.';
+    tools.parentNode.insertBefore(empty, tools.nextSibling);
+
+    function apply(){
+      var shown = 0;
+      cards.forEach(function(card){
+        var ok = (state.ton === 'all' || card.dataset.ton === state.ton)
+              && (state.framer === 'all' || card.dataset.framer === state.framer)
+              && (!state.fav || favs.indexOf(card.dataset.id) > -1);
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+      // hide a section heading whose cards have all been filtered out
+      document.querySelectorAll('.sect').forEach(function(sect){
+        var own = [].slice.call(sect.querySelectorAll('.spec'));
+        sect.hidden = own.length > 0 && own.every(function(c){ return c.hidden; });
+      });
+      empty.hidden = shown > 0;
+      countEl.textContent = shown === cards.length
+        ? cards.length + ' studies'
+        : shown + ' of ' + cards.length;
+      var filtered = state.ton !== 'all' || state.framer !== 'all' || state.fav;
+      reset.hidden = !filtered;
+    }
+
+    tools.querySelectorAll('.seg').forEach(function(seg){
+      var axis = seg.dataset.axis;
+      seg.addEventListener('click', function(e){
+        var b = e.target.closest('.seg-b');
+        if (!b) return;
+        seg.querySelectorAll('.seg-b').forEach(function(x){
+          x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+        });
+        state[axis] = b.dataset.val;
+        apply();
+      });
+    });
+
+    favBtn.addEventListener('click', function(){
+      state.fav = favBtn.getAttribute('aria-pressed') !== 'true';
+      favBtn.setAttribute('aria-pressed', state.fav ? 'true' : 'false');
+      apply();
+    });
+
+    reset.addEventListener('click', function(){
+      state = {ton:'all', framer:'all', fav:false};
+      tools.querySelectorAll('.seg').forEach(function(seg){
+        seg.querySelectorAll('.seg-b').forEach(function(x){
+          x.setAttribute('aria-pressed', x.dataset.val === 'all' ? 'true' : 'false');
+        });
+      });
+      favBtn.setAttribute('aria-pressed', 'false');
+      apply();
+    });
+
+    apply();
+  })();
+</script>
+</body>
+</html>
