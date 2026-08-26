@@ -140,56 +140,70 @@
   .roll .track{display:block; overflow:hidden; height:1.25em}
   .roll .inner{display:block; transition:transform var(--t-5) var(--e-quint)}
   .roll .inner span{display:block; line-height:1.25}
-  .roll:hover .inner{transform:translateY(-50%)}
+  .roll:hover .inner,
+  .roll:focus-visible .inner{transform:translateY(-50%)}
 
   /* 01 Riktad svep */
   .sweep{overflow:hidden}
   .sweep::before{content:""; position:absolute; inset:0; background:var(--ink); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
-  .sweep:hover::before{transform:scaleX(1); transform-origin:left}
+  .sweep:hover::before,
+  .sweep:focus-visible::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
-  .sweep:hover .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .sweep:hover .lbl,
+  .sweep:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
 
   /* 02 Slutare */
   .shutter{overflow:hidden}
   .shutter::before{content:""; position:absolute; inset:0; background:var(--accent); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
-  .shutter:hover::before{transform:scaleY(1)}
+  .shutter:hover::before,
+  .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
-  .shutter:hover .lbl{color:var(--on-accent); transition-delay:var(--d-1)}
+  .shutter:hover .lbl,
+  .shutter:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-1)}
 
   /* 03 Ink fill */
-  .inkfill{overflow:hidden; border:1px solid color-mix(in srgb,var(--ink) 35%,transparent)}
+  .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
   .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
-  .inkfill:hover::before{transform:translate(-50%,-50%) scale(1)}
+  .inkfill:hover::before,
+  .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
-  .inkfill:hover .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .inkfill:hover .lbl,
+  .inkfill:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
 
   /* 04 Sheen */
-  .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease}
-  .sheen:hover{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  .sheen:hover,
+  .sheen:focus-visible{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
   .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
-  .sheen:hover::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
+  .sheen:hover::after,
+  .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
   .sheen .lbl{position:relative}
 
   /* 05 Pilstafett */
   .relay .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .relay .a1{transition:transform var(--t-4) var(--e-quint)}
   .relay .a2{position:absolute; inset:0; transform:translateX(-150%); transition:transform var(--t-4) var(--e-quint) var(--d-1)}
-  .relay:hover .a1{transform:translateX(150%)}
-  .relay:hover .a2{transform:translateX(0)}
+  .relay:hover .a1,
+  .relay:focus-visible .a1{transform:translateX(150%)}
+  .relay:hover .a2,
+  .relay:focus-visible .a2{transform:translateX(0)}
 
   /* 06 Punkt → pil */
   .dotm .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .dotm .d{position:absolute; inset:0; margin:auto; width:6px; height:6px; border-radius:50%; background:currentColor; transition:transform var(--t-4) var(--e-quint),opacity var(--t-3) ease}
   .dotm .ar{position:absolute; inset:0; transform:translateX(-160%); transition:transform var(--t-4) var(--e-quint) var(--d-1)}
-  .dotm:hover .d{transform:translateX(190%); opacity:0}
-  .dotm:hover .ar{transform:translateX(0)}
+  .dotm:hover .d,
+  .dotm:focus-visible .d{transform:translateX(190%); opacity:0}
+  .dotm:hover .ar,
+  .dotm:focus-visible .ar{transform:translateX(0)}
 
   /* 07 Guillemeter */
   .guil{gap:8px}
   .guil .g{display:inline-block; width:.55em; color:var(--accent); opacity:0; transition:transform var(--t-4) var(--e-quint),opacity var(--t-3) ease}
   .guil .g--l{transform:translateX(9px)}
   .guil .g--r{transform:translateX(-9px)}
-  .guil:hover .g{opacity:1; transform:translateX(0)}
+  .guil:hover .g,
+  .guil:focus-visible .g{opacity:1; transform:translateX(0)}
 
   /* 08 Crop marks */
   .corners{font:500 11.5px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; border-radius:0; padding:15px 24px}
@@ -211,22 +225,32 @@
   /* 09 Riktad understrykning */
   .uline{font-weight:500}
   .uline::after{content:""; position:absolute; left:4px; right:4px; bottom:2px; height:1.5px; background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform var(--t-4) var(--e-quint)}
-  .uline:hover::after{transform:scaleX(1); transform-origin:left}
+  .uline:hover::after,
+  .uline:focus-visible::after{transform:scaleX(1); transform-origin:left}
 
   /* 10 Elevation step */
   /* Elevation is lightness: bg-2 at rest, one ladder step up on hover. The
      2px rise stays — it is what makes the step read as height and not just as
      a colour change — but no shadow does the work, because on a near-black
      stage a black shadow is nothing at all. */
-  .lift{background:var(--bg-2); border:1px solid var(--line);
+  .lift{background:var(--bg-2); border:1px solid var(--line-ctl);
     transition:transform var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
-  .lift:hover{transform:translateY(-2px); background:var(--bg-3);
-    border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
+  .lift:hover,
+  .lift:focus-visible{transform:translateY(-2px); background:var(--bg-3);
+    border-color:color-mix(in srgb,var(--ink) 22%,var(--line-ctl))}
   .lift:active{transform:translateY(0) scale(.98); background:var(--bg-4); transition-duration:var(--t-1)}
 
   /* 11 Magnetisk */
-  .magnet{will-change:transform}
+  /* The pull is driven by pointer POSITION, so a keyboard has nothing to aim
+     at and reduced motion has no business moving the plate at all. Both fall
+     through to the house fallback in rule four — a plain colour change — which
+     is why this is the one card whose focus state is not its hover state. */
+  .magnet{will-change:transform; transition:transform var(--t-1) var(--e-out), background var(--t-3) ease}
   .magnet .m-lbl{display:inline-block; will-change:transform}
+  .magnet:focus-visible{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+  @media (prefers-reduced-motion: reduce){
+    .magnet:hover{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+  }
 
   /* ============ footer ============ */
   .foot{margin-top:80px; border-top:1px solid var(--hairline); padding-top:22px;
@@ -337,7 +361,11 @@
     font-size:13.5px; color:var(--ink-low)}
 
   @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{transition-duration:.01ms !important; animation-duration:.01ms !important}
+    /* Duration alone is not enough. A delay is still staging: cards 41 and 42
+       held their label colour for 300ms after the fill had already snapped,
+       which reads worse than the animation it replaced. Both clocks stop. */
+    *,*::before,*::after{transition-duration:.01ms !important; animation-duration:.01ms !important;
+      transition-delay:0ms !important; animation-delay:0ms !important}
   }
 </style>
 </head>
@@ -510,16 +538,22 @@
   </section>
 
 <style>
-  /* ============ Section E — Utmanarna ============ */
+  /* ============ Section D — The challengers ============ */
 
   /* 12 Weight wave — variable weight follows the pointer through the characters */
   .e-wave .e-wave-stack{display:inline-grid; justify-items:center}
   .e-wave .e-wave-ghost{grid-area:1/1; font-weight:800; white-space:nowrap; visibility:hidden}
   .e-wave .e-wave-live{grid-area:1/1; white-space:nowrap; font-variation-settings:"wght" 500; transition:font-variation-settings var(--t-4) var(--e-out)}
   .e-wave:focus-visible .e-wave-live{font-variation-settings:"wght" 660}
+  /* The script stands down under reduced motion, so without this the card is
+     the one on the page that answers a hover with nothing. A weight is a state,
+     not a movement, so the end state is allowed to arrive instantly. */
+  @media (prefers-reduced-motion: reduce){
+    .e-wave:hover .e-wave-live{font-variation-settings:"wght" 660}
+  }
 
   /* 13 Ritad kontur — stroke-dashoffset ritar ramen */
-  .e-draw{border-radius:12px; border:1px solid var(--line)}
+  .e-draw{border-radius:12px; border:1px solid var(--line-ctl)}
   .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible}
   .e-draw .e-draw-frame rect{
     x:0.75px; y:0.75px; width:calc(100% - 1.5px); height:calc(100% - 1.5px); rx:11.5px; ry:11.5px;
@@ -705,7 +739,7 @@
 </script>
 
 <style>
-  /* ============ Section F — Ljus och materia ============ */
+  /* ============ Section E — Light and material ============ */
 
   /* Theme switch: --f-lys is ALWAYS the light half of the token pair, --f-mork always the
      dark one. In light mode --on-ink is the light one; in dark mode --ink is. This alias is
@@ -716,8 +750,8 @@
 
   /* 17 Frostat glas — suddning, yta och ljuskant materialiseras samtidigt */
   .stage.f-ruta{ background-image:repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 10px) }
-  .f-glas{ background:none; border:1px solid var(--line); overflow:hidden;
-    transition:border-color var(--t-5) var(--e-out) }
+  .f-glas{ background:none; border:1px solid var(--line-ctl); overflow:hidden;
+    transition:border-color var(--t-5) var(--e-out), transform var(--t-1) var(--e-out) }
   .f-glas .f-glas-yta{
     position:absolute; inset:0; border-radius:inherit; pointer-events:none;
     background-color:color-mix(in srgb, var(--ink) 0%, transparent);
@@ -737,7 +771,7 @@
   }
 
   /* 18 Backlight — a rising light turns surface AND label in a single layer (difference) */
-  .f-motljus{ background:var(--lift-bg); border:1px solid var(--line); overflow:hidden; isolation:isolate }
+  .f-motljus{ background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden; isolation:isolate }
   .f-motljus .f-sol{
     position:absolute; left:50%; bottom:0; width:240%; height:240%;
     border-radius:50%; background:var(--f-lys); mix-blend-mode:difference;
@@ -750,8 +784,8 @@
   .f-lykta{
     --f-px:50%; --f-py:50%;
     background:var(--f-mork); color:var(--f-lys); overflow:hidden;
-    border:1px solid color-mix(in srgb, var(--f-lys) 16%, transparent);
-    transition:border-color var(--t-4) var(--e-out);
+    border:1px solid color-mix(in srgb, var(--f-lys) 38%, transparent);
+    transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
   }
   .f-lykta::before{
     content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0;
@@ -765,7 +799,7 @@
   .f-lykta:hover::before, .f-lykta:focus-visible::before{ opacity:1 }
 
   /* 20 The grain settles — a coarse screen tightens into a finely calibrated surface */
-  .f-korn{ background:var(--lift-bg); border:1px solid var(--line); overflow:hidden }
+  .f-korn{ background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden }
   .f-korn .f-korn-yta{
     position:absolute; inset:0; pointer-events:none; color:var(--ink); opacity:.42;
     background-image:
@@ -782,8 +816,8 @@
   /* 21 Edge light — a @property angle runs an accent streak one lap around the hairline */
   @property --f-vinkel{ syntax:"<angle>"; inherits:false; initial-value:0deg }
   .f-kant{
-    background:var(--lift-bg); border:1px solid var(--line);
-    transition:border-color var(--t-4) var(--e-out);
+    background:var(--lift-bg); border:1px solid var(--line-ctl);
+    transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
   }
   .f-kant::before{
     content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; opacity:0;
@@ -890,7 +924,7 @@
 </script>
 
 <style>
-  /* ============ Section G — Plattan och geometrin ============ */
+  /* ============ Section F — The plate and its geometry ============ */
 
   /* 22 Diagonal radius — the capsule releases two opposite corners */
   .g-radius{
@@ -952,7 +986,7 @@
   /* 25 The key — a hard bottom edge, a real depression on press */
   .g-key{
     background:var(--lift-bg);
-    border:1px solid var(--line);
+    border:1px solid var(--line-ctl);
     box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 20%,var(--line));
     transition:transform var(--t-2) var(--e-out), box-shadow var(--t-2) var(--e-out),
                background-color var(--t-3) ease, border-color var(--t-3) ease;
@@ -1021,7 +1055,7 @@
 </section>
 
 <style>
-  /* ============ Section H — Ordet och tecknet ============ */
+  /* ============ Section G — The word and the mark ============ */
 
   /* 27 The second line — the hidden addition grows from 0fr to content width; the plate is measured for it from the start */
   .h-second .h-second-stack{display:inline-grid; justify-items:center}
@@ -1213,7 +1247,7 @@
 </script>
 
 <style>
-  /* ============ Section I — Mass, lag and resistance ============
+  /* ============ Section H — Mass, lag and resistance ============
      Ten studies in one idea: a button that behaves like an object. It has
      weight, so its parts arrive at different times; it resists; it settles
      rather than stops; and it answers at the tempo you approached it with.
@@ -1341,7 +1375,7 @@
     --i-gap:0px;
     gap:calc(10px + var(--i-gap));
     padding-right:calc(28px - var(--i-gap));
-    transition:--i-gap var(--t-4) var(--e-quint);
+    transition:--i-gap var(--t-4) var(--e-quint), transform var(--t-1) var(--e-out);
   }
   .btn.i-space:hover, .btn.i-space:focus-visible{--i-gap:7px}
 
@@ -1394,7 +1428,7 @@
     --i-rung:var(--t-4);
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
     transition:background-color var(--i-rung) var(--e-out),
-               color var(--i-rung) var(--e-out);
+               color var(--i-rung) var(--e-out), transform var(--t-1) var(--e-out);
   }
   .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink); color:var(--on-ink)}
 
@@ -1412,7 +1446,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    /* 45 is JS-only, and the script stands down under reduced motion — so the
+    /* 40 is JS-only, and the script stands down under reduced motion — so the
        end state has to come from CSS, or the one card here would do nothing. */
     .i-throw:hover .i-throw-mark, .i-throw:focus-visible .i-throw-mark{transform:translateX(6px)}
   }
@@ -1536,7 +1570,7 @@
 </section>
 
 <script>
-  // Section I — one shared pointer-speed reading, two consumers.
+  // Section H — one shared pointer-speed reading, two consumers.
   (function(){
     var reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -1560,7 +1594,7 @@
       last = {x:e.clientX, y:e.clientY, t:now};
     }, {passive:true});
 
-    // ---- 44 It matches your tempo -------------------------------------
+    // ---- 39 It matches your tempo -------------------------------------
     // The rung is chosen, never computed: --i-rung is set to a token NAME,
     // which the element resolves itself — so the asymmetry rule still applies
     // and the exit is one rung shorter for free.
@@ -1578,7 +1612,7 @@
       });
     });
 
-    // ---- 45 The exit remembers ----------------------------------------
+    // ---- 40 The exit remembers ----------------------------------------
     // Integrated in CLOSED FORM, not by Euler steps: at 60fps the damping term
     // of a zeta = 1 spring is c*dt = 0.67, which swallows two thirds of the
     // handed-over velocity in a single step — the overshoot simply never
@@ -1626,7 +1660,7 @@
 </script>
 
 <style>
-  /* ============ Section J — The studio idioms ============
+  /* ============ Section I — The studio idioms ============
      Six hover mechanics borrowed from the agency vocabulary — the Osmo house
      style and the momo hover set — and rebuilt to this page's rules rather than
      to theirs.
@@ -1850,11 +1884,11 @@
 </section>
 
 <script>
-  // Section J — two inits. The scripts decide; CSS animates.
+  // Section I — two inits. The scripts decide; CSS animates.
   (function(){
     var reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-    // ---- 46 Directional fill ------------------------------------------
+    // ---- 41 Directional fill ------------------------------------------
     // The status attribute carries a WORD, not a boolean: readable in DevTools
     // and it leaves room for a fifth state. The script's only job is choosing it.
     var OFF = {left:['-100%','0%'], right:['100%','0%'], top:['0%','-100%'], bottom:['0%','100%']};
@@ -1906,7 +1940,7 @@
       btn.addEventListener('blur', leave);
     });
 
-    // ---- 51 Resolve ---------------------------------------------------
+    // ---- 46 Resolve ---------------------------------------------------
     // The duration is read from the root ladder rather than restated here, so
     // the script and the stylesheet cannot drift apart. Root, not the element:
     // .btn remaps --t-5 one rung shorter at rest and restores it on hover, and
@@ -2001,7 +2035,7 @@
      4.96:1 on the stage in light and 4.63 in dark — a de-emphasised label still
      has to be readable, so this is a colour step and not an opacity fade. */
   .k-recede{gap:14px}
-  .k-recede .k-recede-i{transition:color var(--t-3) ease}
+  .k-recede .k-recede-i{transition:color var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .k-recede:has(.btn:hover) .k-recede-i:not(:hover),
   .k-recede:has(.btn:focus-visible) .k-recede-i:not(:focus-visible){color:var(--muted)}
 
@@ -2040,7 +2074,7 @@
     --k-w:calc((100% - 12px) / 3);        /* three items, two 6px gaps */
     --k-give:0px;
     width:calc(var(--k-w) + var(--k-give));
-    transition:width var(--t-4) var(--e-quint);
+    transition:width var(--t-4) var(--e-quint), transform var(--t-1) var(--e-out);
   }
   .k-share:has(.btn:hover) .k-share-i:hover,
   .k-share:has(.btn:focus-visible) .k-share-i:focus-visible{--k-give:24px}
@@ -2067,7 +2101,8 @@
   .k-pair{gap:10px}
   .k-pair .btn{
     border:1px solid transparent;
-    transition:background-color var(--t-3) ease, color var(--t-3) ease, border-color var(--t-3) ease;
+    transition:background-color var(--t-3) ease, color var(--t-3) ease, border-color var(--t-3) ease,
+               transform var(--t-1) var(--e-out);
   }
   .k-pair .k-pair-a{background-color:var(--ink); color:var(--on-ink)}
   .k-pair .k-pair-b{
@@ -2091,7 +2126,7 @@
   .k-div{border:1px solid var(--line-ctl); border-radius:8px}
   .k-div .k-div-i{
     position:relative; padding:11px 16px; border-radius:0;
-    transition:background-color var(--t-3) ease;
+    transition:background-color var(--t-3) ease, transform var(--t-1) var(--e-out);
   }
   .k-div .k-div-i:first-child{border-radius:7px 0 0 7px}
   .k-div .k-div-i:last-child{border-radius:0 7px 7px 0}
@@ -2234,7 +2269,7 @@
      literal because only its alpha matters — a mask has no colour of its own. */
   .btn.l-knurl{
     background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden;
-    transition:border-color var(--t-3) ease;
+    transition:border-color var(--t-3) ease, transform var(--t-1) var(--e-out);
   }
   .l-knurl .l-knurl-grip{
     position:absolute; inset:0; border-radius:inherit; pointer-events:none;
@@ -2343,7 +2378,8 @@
   .btn.l-corner{
     border-radius:20px;
     corner-shape:superellipse(1);
-    transition:corner-shape var(--t-4) var(--e-out), background-color var(--t-3) ease;
+    transition:corner-shape var(--t-4) var(--e-out), background-color var(--t-3) ease,
+               transform var(--t-1) var(--e-out);
   }
   .btn.l-corner:hover, .btn.l-corner:focus-visible{
     corner-shape:superellipse(5);
@@ -2573,7 +2609,7 @@
       </div>
       <h3><span class="num">59</span>Changes sides</h3>
       <p>The mark starts to the left of the label and ends up to its right, crossing it rather than negotiating around it — the position cards 36 and 45 both decline to take.</p>
-      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec">
@@ -2607,7 +2643,7 @@
 </section>
 
 <script>
-  // 53 Changes sides — the mark's travel is the label's width plus the gap, and
+  // 59 Changes sides — the mark's travel is the label's width plus the gap, and
   // CSS cannot name it: container-type would, but it carries inline-size
   // containment, which collapses a button that hugs its own label. So it is
   // measured the way card 30 measures its overflow — once now, once after the
