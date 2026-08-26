@@ -27,7 +27,11 @@
     --muted:var(--ink-low);
     --line:var(--hairline);
     --line-soft:var(--hairline);
-    --line-ctl:rgba(255,255,255,.16);
+    /* .36, not .16. This is the CONTROL BOUNDARY token and it has to clear 3:1 —
+       card 31's own note is why it exists at all. At .16 it composites to #3c3c3c
+       and measures 1.63:1 on bg-1, which is not a boundary. .36 gives 3.36:1 on
+       bg-1 and 3.29:1 on bg-0, restoring the 3.16:1 the old dark theme had. */
+    --line-ctl:rgba(255,255,255,.36);
     /* The inverse pair IS the accent — no hue anywhere on the page. */
     --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
     --on-ink:var(--inverse-ink);
@@ -62,9 +66,10 @@
   .lede strong{color:var(--ink-hi); font-weight:600}
   /* The five house rules, as a spec strip rather than five prose boxes —
      one mono line per rule, in the register graphite gives to metadata. */
-  .rules{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:26px;
-    font:400 11.5px/1.7 var(--mono); color:var(--ink-faint)}
-  .rules b{color:var(--ink-low); font-weight:500}
+  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:6px 22px; margin-top:26px;
+    font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
+  .rules b{color:var(--ink-mid); font-weight:500}
 
   /* ============ sections & cards ============ */
   .sect{margin-top:72px}
@@ -77,17 +82,33 @@
      lightness — the card is bg-1 on bg-0 and carries no border and no shadow. */
   .spec{background:var(--bg-1); border-radius:var(--r-xl); overflow:hidden;
     display:flex; flex-direction:column}
-  .stage{display:grid; place-items:center; flex:1; min-height:150px;
-    padding:32px 24px; background:none; border:0; border-radius:0}
+  /* Three demos are rows of controls rather than single buttons — a nav row, a
+     button pair, a segmented pair — and want more width than one column gives.
+     Graphite's answer is a wide card, not a squeezed one. */
+  .spec--wide{grid-column:span 2}
+  @media (max-width: 760px){ .spec--wide{grid-column:auto} }
+  /* One stage height for all sixty-two, so the hairline under every stage
+     lands on the same line right across the page — and the chips are pinned to
+     the card's bottom edge, so the panels close level too. The slack from a
+     one-line spec falls between the paragraph and the chips, where nothing
+     needs to align. */
+  .stage{display:grid; grid-template-columns:minmax(0,1fr); place-items:center;
+    height:172px; padding:28px 24px; background:none; border:0; border-radius:0}
+  /* Without an explicit column the implicit one is auto-sized, so a demo whose
+     natural width beats the stage (card 30's over-long label) sizes the column
+     to max-content and gets centred in an area wider than the card — off to one
+     side and clipped by the panel. minmax(0,1fr) pins the column to the stage. */
   .spec h3{display:flex; align-items:baseline; gap:10px;
     border-top:1px solid var(--hairline); padding:15px 20px 0; margin:0 0 4px;
     font-size:14.5px; font-weight:600; color:var(--ink-hi); letter-spacing:0}
-  .num{font:400 11px/1 var(--mono); color:var(--ink-faint);
+  .num{font:400 11px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
   .spec p{padding:0 20px; margin:0 0 10px; font-size:13px; color:var(--ink-low)}
-  .chips{display:flex; gap:14px; flex-wrap:wrap; padding:0 20px 18px;
-    font:400 11.5px/1.6 var(--mono)}
-  .chip{color:var(--ink-faint)}
+  .chips{display:flex; gap:14px; flex-wrap:wrap; margin-top:auto;
+    padding:0 20px 18px; font:400 11.5px/1.6 var(--mono)}
+  /* --ink-faint measures 2.8:1 on the panel — under AA. Every chip is
+     information, not decoration, so the ladder starts one step higher. */
+  .chip{color:var(--ink-low)}
   .chip--kod{color:var(--ink-mid)}
 
   /* ============ button base ============ */
@@ -193,11 +214,15 @@
   .uline:hover::after{transform:scaleX(1); transform-origin:left}
 
   /* 10 Elevation step */
-  .lift{background:var(--lift-bg); border:1px solid var(--line);
-    box-shadow:0 1px 2px rgba(var(--shadow-rgb),.07);
-    transition:transform var(--t-4) var(--e-quint),box-shadow var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
-  .lift:hover{transform:translateY(-2px); border-color:color-mix(in srgb,var(--ink) 30%,var(--line)); box-shadow:0 7px 18px rgba(var(--shadow-rgb),.13),0 2px 5px rgba(var(--shadow-rgb),.08)}
-  .lift:active{transform:translateY(0) scale(.98); box-shadow:0 1px 2px rgba(var(--shadow-rgb),.08); transition-duration:var(--t-1)}
+  /* Elevation is lightness: bg-2 at rest, one ladder step up on hover. The
+     2px rise stays — it is what makes the step read as height and not just as
+     a colour change — but no shadow does the work, because on a near-black
+     stage a black shadow is nothing at all. */
+  .lift{background:var(--bg-2); border:1px solid var(--line);
+    transition:transform var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
+  .lift:hover{transform:translateY(-2px); background:var(--bg-3);
+    border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
+  .lift:active{transform:translateY(0) scale(.98); background:var(--bg-4); transition-duration:var(--t-1)}
 
   /* 11 Magnetisk */
   .magnet{will-change:transform}
@@ -206,9 +231,9 @@
   /* ============ footer ============ */
   .foot{margin-top:80px; border-top:1px solid var(--hairline); padding-top:22px;
     display:flex; flex-wrap:wrap; gap:6px 26px;
-    font:400 11.5px/1.7 var(--mono); color:var(--ink-faint)}
+    font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
   .foot p{margin:0}
-  .foot b{font-weight:500; color:var(--ink-low)}
+  .foot b{font-weight:500; color:var(--ink-mid)}
 
   /* ============ verktygsrad + favoriter ============ */
   .tools{
@@ -249,7 +274,7 @@
   .fav-only:hover{background:var(--bg-3); color:var(--ink-hi)}
   .fav-only[aria-pressed="true"]{background:var(--inverse-bg); color:var(--inverse-ink)}
   .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
-  .tools-count{font:400 12.5px/1 var(--mono); color:var(--ink-faint);
+  .tools-count{font:400 12.5px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
   .tools-reset{font:400 13.5px/1 var(--font-ui); color:var(--ink-low);
     background:none; border:0; padding:6px 2px; cursor:pointer}
@@ -261,8 +286,10 @@
   @media (max-width: 420px){ .grid{grid-template-columns:1fr} }
 
   @media (max-width: 520px){
-    .tools{gap:8px 16px; padding:11px 13px}
-    .tools-lbl{display:none}
+    .tools{gap:8px; padding:11px 13px}
+    /* Each axis gets its own line WITH its label — two unlabelled «All»
+       groups stacked on each other are a coin toss. */
+    .tools-row{width:100%; justify-content:space-between}
   }
 
   .spec .stage{position:relative}
@@ -270,7 +297,7 @@
     position:absolute; top:9px; right:9px; z-index:2;
     width:36px; height:36px; display:grid; place-items:center;
     background:none; border:0; border-radius:10px; cursor:pointer;
-    color:var(--ink-faint); opacity:0;
+    color:var(--ink-low); opacity:0;
     transition:opacity var(--t-3) ease,color var(--t-3) ease,
                background var(--t-fast) var(--ease),transform var(--t-3) var(--e-out);
   }
@@ -288,7 +315,7 @@
     position:absolute; top:9px; left:9px; z-index:2;
     width:36px; height:36px; display:grid; place-items:center;
     background:none; border:0; border-radius:10px; cursor:pointer;
-    color:var(--ink-faint); opacity:0;
+    color:var(--ink-low); opacity:0;
     transition:opacity var(--t-3) ease,color var(--t-3) ease,
                background var(--t-fast) var(--ease),transform var(--t-3) var(--e-out);
   }
@@ -317,7 +344,6 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">62 studies</p>
     <h1>Button Hover Lab</h1>
     <p class="lede">Sixty-two button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
@@ -2096,7 +2122,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec">
+    <article class="spec spec--wide">
       <div class="stage">
         <div class="k-row k-ind" data-copy-root>
           <button class="btn btn--text k-ind-i" aria-current="page">Overview</button>
@@ -2124,7 +2150,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec">
+    <article class="spec spec--wide">
       <div class="stage">
         <div class="k-row k-rep" data-copy-root>
           <button class="btn btn--text k-rep-i">Index</button>
@@ -2139,7 +2165,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec">
+    <article class="spec spec--wide">
       <div class="stage">
         <div class="k-row k-pair" data-copy-root>
           <button class="btn k-pair-a">Book a call</button>

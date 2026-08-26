@@ -1,18 +1,22 @@
 # Button Hover Lab
 
-Fifty-eight button hover animations, actually built. Hover, tab and press all of them.
+Sixty-two button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
 A monochrome specimen page, so each effect can be judged on its mechanism rather than its
-colour. Every card names the technique, says when to reach for it, and is honest about what
-it costs to build. Each one also has a **Copy** button that hands you a paste-ready snippet —
-only the tokens that effect actually reads, the button base, its own rules, its markup and
-its script, extracted from the live stylesheet so nothing can drift out of sync.
+colour. The page itself is built in
+[Graphite Console](https://granqvistsanna-web.github.io/graphite-console/) — one grayscale
+ladder, white as the only accent, elevation stated as lightness rather than shadow — so the
+chrome stays out of the way of the thing being shown. Every card names the technique, says when to reach for it, and is honest about what
+it costs to build. Each one also has two copy buttons, both extracted from the live
+stylesheet so nothing can drift out of sync: **CSS** hands you a paste-ready snippet — only
+the tokens that effect actually reads, the button base, its own rules, its markup and its
+script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the fifty-eight obeys all five:
+Every one of the sixty-two obeys all five:
 
 | | |
 |---|---|
@@ -23,9 +27,9 @@ Every one of the fifty-eight obeys all five:
 | **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. |
 
 And, without exception: no layout shift (the button's own box and its parent's stay
-identical to three decimals), nothing longer than 600 ms, a visible focus state, a working
-light *and* dark theme, and a clean accessible name even where the label is split into
-per-character spans.
+identical to three decimals), nothing longer than 600 ms, a visible focus state, every
+string at AA contrast or better, and a clean accessible name even where the label is split
+into per-character spans.
 
 ## The eleven families
 
@@ -96,17 +100,42 @@ Each card carries an honest chip:
   animation, springs, `:has()` sibling logic and anything asymmetric between enter and exit
   are all things Framer variants cannot express.
 
+The **`</>`** button on each card writes that component for you. It is a whole code file:
+paste it into Assets → Code → New File and the effect appears in the Code section, ready to
+drag out. What it does on the way there is worth knowing, because Framer is not a browser
+page and the extraction has to make up the difference:
+
+- The colour tokens are **scoped to the component**, not to `:root`, and the shared classes
+  are prefixed `bhl-`. Nothing a pasted component brings with it restyles the rest of the
+  site. Tokens that live in a stylesheet the page cannot enumerate are resolved off the root
+  and labelled as such, so an alias chain still arrives with a value.
+- Two page-wide rules are **element selectors**, so the extractor cannot see them and writes
+  them back by hand: the box model, and the `prefers-reduced-motion` fallback. Losing the
+  second one silently would be the worst of the two.
+- The label becomes a **property control**, except where the effect duplicates it across
+  layers to hold its width — there a single control would change one copy and not the other,
+  so the labels stay in the markup and the file's header says so.
+- A section's init script moves into a `useEffect`, **scoped to the instance**, so two of them
+  on one page never bind each other's nodes. Only that card's chunk comes along, unless the
+  block shares state between cards, in which case it arrives whole.
+- The face is Geist with a `system-ui` fallback. Add the font to the Framer project or
+  change the family — the component cannot bring a webfont with it.
+
 ## Notes on the build
 
-Single file, no dependencies, no build step. Two Google Fonts (Schibsted Grotesk, Spline
-Sans Mono); everything else is CSS, with small vanilla-JS loops in 10 of the 58 cards, only
+Single file, no dependencies, no build step. One linked stylesheet — the Graphite Console
+tokens, which carry self-hosted Geist and Geist Mono — and everything else is CSS, with
+small vanilla-JS loops in 10 of the 62 cards, only
 where CSS genuinely cannot reach — a critically damped spring, a pointer-driven gradient, a
 per-character weight ripple, an overflow measurement, a velocity handoff, a pointer-speed
 reading, and the edge the pointer crossed.
 
-Colour lives entirely in tokens defined three times over: a light `:root`, a
-`prefers-color-scheme: dark` block guarded so an explicit light choice still wins, and a
-`[data-theme="dark"]` block so a host toggle wins in both directions.
+Colour lives entirely in tokens, and there is now exactly one set of them: Graphite Console
+is dark-only, so the light `:root` / `prefers-color-scheme` / `[data-theme]` trio is gone.
+The page's own names (`--ink`, `--stage`, `--accent`, …) survive as **aliases** onto the
+graphite ladder, which is why all sixty-two effect rules kept working untouched — and why
+the copy buttons still hand you a self-contained snippet, resolving each alias to its value
+off the computed root.
 
 Every effect in here was checked in a real browser — rect deltas measured to three decimals,
 contrast sampled frame by frame during blend-mode transitions, `@property` values sampled
