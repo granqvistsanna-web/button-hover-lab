@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Fifty-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Sixty-two button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Fifty-eight button hover animations, actually built.">
+<meta property="og:description" content="Sixty-two button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -86,7 +86,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all thirty-five inherit it,
+     and LEAVES at the shorter one. One rule pair, and all sixty-two inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -286,9 +286,9 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">Hover studies · 58 in all</p>
+    <p class="eyebrow">Hover studies · 62 in all</p>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Fifty-eight hover animations, actually built — hover, tab and press all of them.
+    <p class="lede">Sixty-two hover animations, actually built — hover, tab and press all of them.
     A monochrome base, so each one carries any brand tone. Five house rules apply to every single one:</p>
     <div class="rules">
       <div><b>Instant response</b><span>The press lands on pointer-down, not on release.</span></div>
@@ -2389,9 +2389,196 @@
   </div>
 </section>
 
+
+<style>
+  /* ============ Section L — Argued the other way ============
+     Four mechanics taken from a hover showcase and rebuilt here only where this
+     page had not already answered better. Nine were shortlisted off the
+     reference; five went in the bin once sections H through K landed — the
+     progressive label recolour is card 37 done properly, a diagonal fill is a
+     straight-edged version of card 42's curve, and a per-character roll would
+     reinstate the split-flap that was retired on purpose.
+
+     What survived is four positions this page had not taken. Each card names
+     the card it disagrees with, which is the whole of the section. */
+
+  /* 59 Changes sides — the mark leaves its slot and takes the opposite one.
+     Cards 36 and 45 both keep the mark on one side and negotiate the space
+     around it; this argues it can cross the label outright.
+
+     The mark's travel is the label's width plus the gap, which CSS has no name
+     for: a query container would supply it, but container-type carries
+     inline-size containment and that collapses a button which hugs its own
+     label. So it is measured once, the way card 30 measures its overflow. The
+     LABEL's travel is a constant — the mark plus the gap — so it stays here.
+     Both boxes only ever translate, so the plate's width never moves. */
+  .n-cross .n-cross-row{position:relative; display:inline-flex; align-items:center; gap:8px}
+  .n-cross .n-cross-lbl,
+  .n-cross .n-cross-mark{transform:translateX(0); transition:transform var(--t-5) var(--e-quint)}
+  .n-cross .n-cross-mark{display:block}
+  /* Gated on the measure: without a real number the label would shift and the
+     mark would stand still, which is worse than doing nothing. */
+  .n-cross.n-is-set:hover .n-cross-lbl,
+  .n-cross.n-is-set:focus-visible .n-cross-lbl{transform:translateX(-22px)}   /* 14px mark + 8px gap */
+  .n-cross.n-is-set:hover .n-cross-mark,
+  .n-cross.n-is-set:focus-visible .n-cross-mark{transform:translateX(var(--n-cross-x,0px))}
+
+  /* 60 The pieces join — two plates converge into one capsule. Card 32 opens a
+     three-pixel gap between label and block and calls them two masses; this is
+     the same relationship read the other way, and the facing corners give up
+     their radius so the pair reads as a single object rather than a docking.
+     A hidden copy at the rest spacing reserves the width, so the pair closes
+     INWARD and the group's own box never moves. */
+  .n-join{padding:0; background:none; border:0; border-radius:999px}
+  .n-join .n-join-stack{display:inline-grid}
+  /* align-items:stretch, not center: a fixed 46px mark against a plate whose
+     height comes from its padding leaves a half-pixel step at the seam, and a
+     step is exactly what this card is claiming to remove. */
+  .n-join .n-join-ghost,
+  .n-join .n-join-row{grid-area:1/1; display:inline-flex; align-items:stretch; gap:7px}
+  .n-join .n-join-ghost{visibility:hidden}
+  .n-join .n-join-row{justify-self:start}
+  .n-join .n-join-plate,
+  .n-join .n-join-mark{
+    background:var(--ink); color:var(--on-ink);
+    transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint);
+  }
+  .n-join .n-join-plate{padding:15px 26px; border-radius:999px; transform:translateX(0)}
+  .n-join .n-join-mark{display:grid; place-items:center; width:46px; border-radius:999px; transform:translateX(0)}
+  /* The facing corners go to a true zero and the mark closes the exact 7px it
+     was given, so the two backgrounds meet without a seam to find. */
+  .n-join:hover .n-join-plate,
+  .n-join:focus-visible .n-join-plate{border-radius:999px 0 0 999px}
+  .n-join:hover .n-join-mark,
+  .n-join:focus-visible .n-join-mark{transform:translateX(-7px); border-radius:0 999px 999px 0}
+
+  /* 61 Ticker label — a label that fits perfectly well loops anyway. Card 30
+     moves a label only when it is genuinely clipped and holds still otherwise;
+     this is the argument against that restraint, and it earns its place by
+     being comparable with it rather than by being usable.
+
+     5.4s is nowhere on the ladder, on purpose: a rung is how long a state
+     change takes, and a loop is not a state change. For the same reason the
+     exit-one-rung-down rule has nothing to act on here — pausing IS the exit,
+     and because it pauses rather than resets, the label carries on from
+     wherever it had got to on the next pass. Two identical halves and a 50%
+     translation, so the seam never lands in view. */
+  @keyframes n-ticker-run{ to{ transform:translateX(-50%) } }
+  .n-ticker .n-ticker-clip{position:relative; display:block; overflow:hidden}
+  /* A hidden copy sets the clip to exactly the label's width, so at rest the
+     label reads whole. A clip narrower than its label would be card 30 — the
+     very thing this card is arguing with. */
+  .n-ticker .n-ticker-size{display:block; visibility:hidden; white-space:nowrap}
+  .n-ticker .n-ticker-track{
+    position:absolute; inset:0; display:flex; width:max-content;
+    transform:translateX(0);
+    animation:n-ticker-run 5.4s linear infinite;
+    animation-play-state:paused;
+  }
+  .n-ticker .n-ticker-track>span{padding-right:1.7em; white-space:nowrap}
+  .n-ticker:hover .n-ticker-track,
+  .n-ticker:focus-visible .n-ticker-track{animation-play-state:running}
+
+  /* 62 Struck through — the rule crosses the label instead of sitting under it.
+     Cards 09, 35 and 38 all keep their line below the baseline, where a line
+     under a word means emphasis; drawn through the word it means the opposite.
+     In from the left and out to the right, card 09's rule borrowed intact, so
+     it never retraces its own path.
+
+     The one card here with a use rather than an argument: withdrawing
+     something — a date now sold out, a price no longer charged. On an ordinary
+     button it promises a cancellation that never arrives. */
+  .n-strike .n-strike-lbl{position:relative}
+  .n-strike .n-strike-lbl::after{
+    content:""; position:absolute; left:-2px; right:-2px; top:52%;
+    height:1.5px; background:currentColor;
+    transform:scaleX(0); transform-origin:right;
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .n-strike:hover .n-strike-lbl::after,
+  .n-strike:focus-visible .n-strike-lbl::after{transform:scaleX(1); transform-origin:left}
+
+  @media (prefers-reduced-motion: reduce){
+    /* The global rule clamps every duration to 0.01ms, which for an infinite
+       loop is not stillness but a blur. Stop it outright instead. */
+    .n-ticker .n-ticker-track,
+    .n-ticker:hover .n-ticker-track,
+    .n-ticker:focus-visible .n-ticker-track{animation:none !important; transform:translateX(0)}
+  }
+</style>
+
+<section class="sect">
+  <h2>L — Argued the other way</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line n-cross"><span class="n-cross-row"><svg class="icon n-cross-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><span class="n-cross-lbl">Read the note</span></span></button>
+      </div>
+      <h3><span class="num">59</span>Changes sides</h3>
+      <p>The mark starts to the left of the label and ends up to its right, crossing it rather than negotiating around it — the position cards 36 and 45 both decline to take. Only the two boxes move, so the plate is the same width throughout.</p>
+      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn n-join"><span class="n-join-stack"><span class="n-join-ghost" aria-hidden="true"><span class="n-join-plate">Book the studio</span><span class="n-join-mark"></span></span><span class="n-join-row"><span class="n-join-plate">Book the studio</span><span class="n-join-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
+      </div>
+      <h3><span class="num">60</span>The pieces join</h3>
+      <p>The mark's own plate closes the gap and the two facing corners give up their radius, so what were two objects read as one. Card 32 opens exactly this gap and calls the result two masses; the width is reserved at the resting spacing, so the pair closes inward.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--solid n-ticker"><span class="n-ticker-clip"><span class="n-ticker-size" aria-hidden="true">Now booking spring</span><span class="n-ticker-track" aria-hidden="true"><span>Now booking spring</span><span>Now booking spring</span></span></span><span class="sr">Now booking spring</span></button>
+      </div>
+      <h3><span class="num">61</span>Ticker label</h3>
+      <p>A label with room to spare loops sideways anyway, and keeps its place when you leave rather than starting over. Card 30 moves a label only when it is genuinely clipped — this is that restraint argued against, and worth having mainly to be compared with it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button class="btn btn--line n-strike"><span class="n-strike-lbl">14 March · sold out</span></button>
+      </div>
+      <h3><span class="num">62</span>Struck through</h3>
+      <p>The rule is drawn through the label rather than under it: cards 09, 35 and 38 all sit below the baseline, where a line means emphasis, and through the word it means withdrawal. In from the left, out to the right. Only for something genuinely being taken away.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 53 Changes sides — the mark's travel is the label's width plus the gap, and
+  // CSS cannot name it: container-type would, but it carries inline-size
+  // containment, which collapses a button that hugs its own label. So it is
+  // measured the way card 30 measures its overflow — once now, once after the
+  // webfont lands, and again on resize. The class gate is the point of the
+  // exercise: until a real number exists the hover does nothing at all.
+  (function(){
+    document.querySelectorAll('.n-cross').forEach(function(btn){
+      var row = btn.querySelector('.n-cross-row');
+      var lbl = btn.querySelector('.n-cross-lbl');
+      if (!row || !lbl) return;
+      function measure(){
+        var w = lbl.getBoundingClientRect().width;
+        if (!w) return;
+        var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+        btn.style.setProperty('--n-cross-x', (w + gap) + 'px');
+        btn.classList.add('n-is-set');
+      }
+      measure();
+      addEventListener('resize', measure);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    });
+  })();
+</script>
+
   <footer class="foot">
     <p><b>Porting to Framer:</b> «Variant» means it builds as a hover variant straight on the canvas. «Code» means it needs a code override or a component — duplicated labels, transform-origin swaps and springs are not something variants can do.</p>
-    <p>All fifty-eight have an :active press, a visible focus state and a reduced-motion fallback. Hover is deliberately left ungated here so a tap still shows the effect on a phone — in production, put the hover rules inside <code>@media (any-hover: hover)</code> and keep <code>:active</code> outside it, so a touch tap compresses without the hover state sticking.</p>
+    <p>All sixty-two have an :active press, a visible focus state and a reduced-motion fallback. Hover is deliberately left ungated here so a tap still shows the effect on a phone — in production, put the hover rules inside <code>@media (any-hover: hover)</code> and keep <code>:active</code> outside it, so a touch tap compresses without the hover state sticking.</p>
   </footer>
 </div>
 
