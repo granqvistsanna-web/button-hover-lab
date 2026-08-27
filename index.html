@@ -2859,11 +2859,18 @@
     // token, because the token arrives from a stylesheet this page does not own
     // and may be authored in any colour syntax. getComputedStyle always hands
     // back rgb(), whatever went in.
-    function rgbOf(el){
-      var m = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+    function rgbOf(el, prop){
+      var m = getComputedStyle(el)[prop].match(/[\d.]+/g);
       return m ? [+m[0], +m[1], +m[2]] : [20, 20, 20];
     }
-    var PANEL = rgbOf(cards[0]);
+    var PANEL = rgbOf(cards[0], 'backgroundColor');
+    // White is the default primary, and it is graphite's white rather than
+    // #ffffff — the system ships --ink-hi at a shade under pure, because pure
+    // white on near-black glares. Measured off a rendered button instead of
+    // named here, so it stays correct if the ladder is ever retuned, and read
+    // BEFORE the first paint, while the root still carries no override.
+    var WHITE_RGB = rgbOf(document.querySelector('.btn'), 'color');
+    var WHITE     = toHex(WHITE_RGB);
 
     function chan(c){ c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
     function lum(c){ return .2126 * chan(c[0]) + .7152 * chan(c[1]) + .0722 * chan(c[2]); }
@@ -2931,8 +2938,11 @@
           : 'Label contrast on the panel.';
       } else {
         ['--ink', '--accent', '--on-ink', '--on-accent'].forEach(function(k){ root.removeProperty(k); });
-        readC.textContent = 'Mono';
-        readC.title = 'The page default: white as the only accent.';
+        swatch.value = WHITE;
+        readC.textContent = ratio(WHITE_RGB, PANEL).toFixed(1) + ':1';
+        readC.title = 'The default primary: ' + WHITE + ', graphite\u2019s white. '
+                    + 'It is left as an alias rather than written to the root, so a copied '
+                    + 'snippet still reads --ink-hi and follows the system it lands in.';
       }
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
@@ -2980,7 +2990,6 @@
     reset.addEventListener('click', function(){
       state = {ton:'all', framer:'all', fav:false};
       look  = {colour:'', radius:PILL};
-      swatch.value = '#ffffff';
       range.value  = PILL;
       paint();
       saveLook();

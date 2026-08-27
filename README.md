@@ -66,6 +66,12 @@ The same toolbar carries two global settings that restyle all sixty-two at once:
 element, which is also where the copy buttons resolve from, so a snippet copied with a
 primary set carries that primary rather than the default it replaced.
 
+White is the default primary, and it is graphite's white — `--ink-hi`, a shade under pure,
+because pure white on near-black glares. The toolbar measures it off a rendered button
+rather than naming it, and leaves it as an alias rather than writing it to the root, so a
+snippet copied at the default still reads `--ink-hi` and follows the system it lands in.
+Picking `#ffffff` by hand is a real choice and is treated as one.
+
 The primary re-points `--ink` and `--accent` and nothing else — no page chrome reads
 either, so the tint stops at the stage edge. A dark-only page cannot carry a dark accent:
 `--ink` colours label text as well as fills, so a chosen colour has its lightness walked up,
