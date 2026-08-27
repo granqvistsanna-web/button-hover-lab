@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Ninety-two button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Ninety-five button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Ninety-two button hover animations, actually built.">
+<meta property="og:description" content="Ninety-five button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all ninety-two effect rules keep resolving under their own names.
+     ALIAS so all ninety-five effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -105,7 +105,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all ninety-two, so the hairline under every stage
+  /* One stage height for all ninety-five, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -134,7 +134,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       ninety-two demo buttons was rendering in system-ui while the page around
+       ninety-five demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -146,7 +146,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all ninety-two inherit it,
+     and LEAVES at the shorter one. One rule pair, and all ninety-five inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -324,7 +324,7 @@
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all ninety-two studies at once. Both are written as
+     Two knobs that restyle all ninety-five studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -465,7 +465,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Ninety-two button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Ninety-five button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -4184,6 +4184,298 @@
   </div>
 </section>
 
+
+<style>
+  /* ============ Section R — After the press ============
+     Every study above answers a pointer and returns to rest. Even the two that
+     run on their own — 29's caret and 61's ticker — are idle behaviour, and 77,
+     the one loop that starts because you pointed at it, stops again the moment
+     you leave. The page has a long shelf of ways for a button to acknowledge
+     that you are there, and nothing for it to say what happened when you acted.
+
+     These three take the click instead of the hover, and none of them returns to
+     rest on your schedule: the state is the point. That also puts them outside
+     the production note in the foot — there is no hover to wrap in
+     @media (any-hover: hover), because none of the three has one.
+
+     Grayscale does real work here. A progress fill and a destructive hold are
+     exactly where a coloured system reaches for green and red, and this page has
+     no hue to reach for. So the affirmative is the inverse plate the page already
+     uses for emphasis, and the destructive is not a colour at all — it is a
+     duration you have to sit through. Card 95 is that argument.
+
+     The prefix is t-: q- is spent on section O, r- on section P and s- on
+     section Q.
+
+     Each card names the card it repeats or argues with. */
+
+  /* 93 It reports on itself — the button takes the instruction and then reports
+     on it, in place. Card 77 is the nearest thing here, a loop that starts
+     because you pointed at it; but it is ornament bound to a hover and it stops
+     when you leave. This one is bound to work: it starts on the click, it ends
+     when the work ends, and the label names which of the three states it is in
+     the whole way. No spinner, no overlay, no [disabled] grey — the control that
+     took the instruction is the control that answers, so attention never moves.
+
+     One duration, declared once. --t-run is the fill's transition AND the number
+     the script waits on, read back with getComputedStyle, so the bar cannot
+     finish early or late against the state it is reporting. Section H's argument
+     — one reading, two consumers — applied to a clock instead of a pointer.
+
+     Reduced motion shortens the run rather than removing it. The bar is
+     information, not ornament: it is the only thing on screen saying the work is
+     still going. */
+  .btn.t-report{
+    --t-run:1500ms;
+    overflow:hidden;
+    transition:transform var(--t-1) var(--e-out),
+               background-color var(--t-3) var(--e-out),
+               color var(--t-3) var(--e-out);
+  }
+  .btn.t-report .t-report-fill{
+    position:absolute; left:0; top:0; bottom:0; width:0; z-index:0;
+    background:rgba(255,255,255,.22);
+  }
+  .btn.t-report .lbl{position:relative; z-index:1}
+  .btn.t-report[data-state="busy"]{cursor:progress}
+  .btn.t-report[data-state="busy"] .t-report-fill{
+    width:100%; transition:width var(--t-run) linear;
+  }
+  .btn.t-report[data-state="done"]{
+    background:var(--ink); color:var(--on-ink); border-color:var(--ink);
+  }
+
+  /* 94 The plate becomes the mark — the plate collapses to a square and the
+     check draws itself inside it. Card 46 churns the LABEL and locks it in, and
+     stays a button the whole way; card 60 closes a gap so two objects read as
+     one. This one spends the plate itself: the button stops being a button and
+     becomes the confirmation, which is the strongest thing it can say — and the
+     reason it has to hand the width back afterwards.
+
+     The width is fixed at rest rather than hugged. A button that hugs its label
+     would drag the row around it on the way down, and the page's rule is that
+     nothing outside the button moves; cards 27, 36 and 45 all pay that same
+     price up front.
+
+     The stroke is delayed past the width. Drawn while the plate is still moving
+     the two read as one blurred event; landed first, the shape is the thing that
+     happened and the check is the thing it says.
+
+     It collapses to the mark's own width, not to a square: --btn-r is the page's
+     radius token and the toolbar owns it, so at the default pill setting this
+     lands as a disc and at 0 it lands as a square. The card is about spending the
+     plate, and it holds either way. */
+  .btn.t-mark{
+    width:196px; justify-content:center; overflow:hidden;
+    transition:transform var(--t-1) var(--e-out),
+               width var(--t-5) var(--e-quint),
+               background-color var(--t-4) var(--e-out),
+               border-color var(--t-4) var(--e-out);
+  }
+  .btn.t-mark .lbl{transition:opacity var(--t-2) var(--e-out)}
+  .btn.t-mark .t-mark-tick{
+    position:absolute; left:0; top:0; right:0; bottom:0;
+    display:grid; place-items:center;
+  }
+  .btn.t-mark .t-mark-tick path{
+    fill:none; stroke:var(--on-ink); stroke-width:1.6;
+    stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:22; stroke-dashoffset:22;
+    transition:stroke-dashoffset var(--t-4) var(--e-out) 140ms;
+  }
+  .btn.t-mark[data-state="done"]{
+    width:54px; background:var(--ink); border-color:var(--ink);
+  }
+  .btn.t-mark[data-state="done"] .lbl{opacity:0}
+  .btn.t-mark[data-state="done"] .t-mark-tick path{stroke-dashoffset:0}
+
+  /* 95 It asks you to mean it — press and hold; let go early and nothing
+     happens. Card 63 is the floor of the press, one property and nothing
+     travels, and card 25 gives the press a bottom to hit. Both answer the
+     instant of contact. This one makes the DURATION of the press the input,
+     which is the one thing the page has never asked for — and the only reason to
+     want it is a destructive action, where the friction belongs in the input
+     rather than in a dialog after it.
+
+     No hue, so no red. The commitment is the fill you have to sit through, and
+     the page's inverse pair does the work colour would have done elsewhere.
+
+     The overlay label is card 37's technique rather than a colour transition: a
+     second copy of the word inside the fill, revealed exactly as the fill's edge
+     passes it, so each glyph changes at the moment it is crossed instead of the
+     whole word fading at the midpoint. It is aria-hidden, and the real label
+     carries the name — card 26 duplicates a label the same way.
+
+     --t-hold is declared here and read by the script, so the bar and the timer
+     cannot disagree. It is deliberately NOT shortened under reduced motion: the
+     duration is the safeguard, and a safeguard is not an animation. */
+  .btn.t-hold{
+    --t-hold:900ms;
+    overflow:hidden; touch-action:none;
+  }
+  .btn.t-hold .t-hold-fill{
+    position:absolute; left:0; top:0; bottom:0; width:0; z-index:2;
+    background:var(--ink); overflow:hidden;
+    transition:width var(--t-3) var(--e-out);
+  }
+  /* Above the label, not behind it. The plate's own label stays white for the
+     part of the word the fill has not reached; the fill covers it as it passes
+     and carries the inverted copy on top, so the crossover is a hard edge
+     through the glyphs rather than two labels compositing. Behind it, the white
+     label sat on the white fill and the word washed out. */
+  .btn.t-hold .lbl{position:relative; z-index:1}
+  /* Sits at the plate's own left padding so it lands exactly under the real
+     label, and nowrap so it never reflows as the fill narrows it. */
+  .btn.t-hold .t-hold-over{
+    position:absolute; left:28px; top:50%; transform:translateY(-50%);
+    white-space:nowrap; color:var(--on-ink);
+  }
+  .btn.t-hold[data-state="holding"] .t-hold-fill{
+    width:100%; transition:width var(--t-hold) linear;
+  }
+  .btn.t-hold[data-state="done"] .t-hold-fill{width:100%; transition:none}
+
+  @media (prefers-reduced-motion: reduce){
+    /* Shortened, not removed — see the card note. */
+    .btn.t-report{--t-run:600ms}
+    .btn.t-mark{
+      transition:transform var(--t-1) var(--e-out),
+                 width var(--t-2) var(--e-out),
+                 background-color var(--t-2) var(--e-out),
+                 border-color var(--t-2) var(--e-out);
+    }
+    .btn.t-mark .t-mark-tick path{transition:stroke-dashoffset var(--t-2) var(--e-out) 60ms}
+    /* t-hold keeps its 900ms on purpose. */
+  }
+</style>
+
+<section class="sect">
+  <h2>R — After the press</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line t-report" data-state="idle"><span class="t-report-fill" aria-hidden="true"></span><span class="lbl">Publish</span></button>
+      </div>
+      <h3><span class="num">93</span>It reports on itself</h3>
+      <p>The button takes the instruction and then reports on it in place, with no spinner and no overlay. Card 77 is the only other loop that starts because you acted, but it is bound to a hover and stops when you leave; this one is bound to the work and ends when the work does.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
+        <span class="sr t-mark-live" role="status"></span>
+      </div>
+      <h3><span class="num">94</span>The plate becomes the mark</h3>
+      <p>The plate collapses to the width of the mark and the check draws itself inside it. Card 46 locks the label in and stays a button the whole way; this one spends the plate itself, so the button stops being a button and becomes the confirmation.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line t-hold" data-state="idle"><span class="t-hold-fill" aria-hidden="true"><span class="t-hold-over">Hold to delete</span></span><span class="lbl">Hold to delete</span></button>
+      </div>
+      <h3><span class="num">95</span>It asks you to mean it</h3>
+      <p>Press and hold; let go early and nothing happens. Cards 63 and 25 both answer the instant of contact, and this is the only study that makes the duration of the press the input — the friction belongs in the gesture rather than in a dialog after it.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 93 It reports on itself — CSS owns the duration; this reads it back so the
+  // bar and the state machine cannot disagree.
+  (function(){
+    document.querySelectorAll('.t-report').forEach(function(btn){
+      var lbl = btn.querySelector('.lbl');
+      var words = {idle:'Publish', busy:'Publishing', done:'Published'};
+      var timers = [];
+      function set(s){ btn.dataset.state = s; lbl.textContent = words[s]; }
+      btn.addEventListener('click', function(){
+        // Guarded rather than [disabled]: disabling a focused button drops focus
+        // to the body mid-action, and takes the label out of the accessibility
+        // tree just as it becomes the thing worth announcing.
+        if (btn.dataset.state !== 'idle') return;
+        timers.forEach(clearTimeout);
+        timers = [];
+        var run = parseFloat(getComputedStyle(btn).getPropertyValue('--t-run')) || 1500;
+        set('busy');
+        timers.push(setTimeout(function(){ set('done'); }, run));
+        timers.push(setTimeout(function(){ set('idle'); }, run + 1800));
+      });
+    });
+  })();
+
+  // 94 The plate becomes the mark — a drawn path announces nothing, so the
+  // outcome is said in text next to it.
+  (function(){
+    document.querySelectorAll('.t-mark').forEach(function(btn){
+      var live = btn.parentNode.querySelector('.t-mark-live');
+      var t = null;
+      btn.addEventListener('click', function(){
+        if (btn.dataset.state === 'done') return;
+        btn.dataset.state = 'done';
+        if (live) live.textContent = 'Added to the project';
+        clearTimeout(t);
+        t = setTimeout(function(){
+          btn.dataset.state = 'idle';
+          if (live) live.textContent = '';
+        }, 2400);
+      });
+    });
+  })();
+
+  // 95 It asks you to mean it — the hold duration comes from CSS, and the
+  // keyboard gets the same gesture as the pointer.
+  (function(){
+    document.querySelectorAll('.t-hold').forEach(function(btn){
+      var lbl = btn.querySelector('.lbl');
+      var over = btn.querySelector('.t-hold-over');
+      var timer = null, revert = null;
+      function say(text){
+        lbl.textContent = text;
+        if (over) over.textContent = text;
+      }
+      function start(){
+        if (timer || btn.dataset.state === 'done') return;
+        clearTimeout(revert);
+        var hold = parseFloat(getComputedStyle(btn).getPropertyValue('--t-hold')) || 900;
+        btn.dataset.state = 'holding';
+        timer = setTimeout(function(){
+          timer = null;
+          btn.dataset.state = 'done';
+          say('Deleted');
+          revert = setTimeout(function(){
+            btn.dataset.state = 'idle';
+            say('Hold to delete');
+          }, 1800);
+        }, hold);
+      }
+      function stop(){
+        if (!timer) return;
+        clearTimeout(timer);
+        timer = null;
+        if (btn.dataset.state === 'holding') btn.dataset.state = 'idle';
+      }
+      btn.addEventListener('pointerdown', start);
+      ['pointerup','pointercancel','pointerleave','blur'].forEach(function(ev){
+        btn.addEventListener(ev, stop);
+      });
+      // Space and Enter both fire click on a button element, and click carries no
+      // duration. keydown/keyup is the only way the gesture exists for the
+      // keyboard at all; e.repeat stops auto-repeat restarting the timer.
+      btn.addEventListener('keydown', function(e){
+        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat){ e.preventDefault(); start(); }
+      });
+      btn.addEventListener('keyup', function(e){
+        if (e.key === ' ' || e.key === 'Enter') stop();
+      });
+      btn.addEventListener('click', function(e){ e.preventDefault(); });
+    });
+  })();
+</script>
 
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
