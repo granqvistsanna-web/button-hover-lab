@@ -1,6 +1,6 @@
 [
   {
-    "num": "01",
+    "num": "07",
     "name": "Directional sweep",
     "comp": "DirectionalSweep",
     "file": "DirectionalSweep.tsx",
@@ -10,7 +10,7 @@
     "pinned": "https://framer.com/m/DirectionalSweep-dlV5mD.js@yByI5kwKgkG05sASJZwG"
   },
   {
-    "num": "02",
+    "num": "08",
     "name": "Shutter",
     "comp": "Shutter",
     "file": "Shutter.tsx",
@@ -20,7 +20,7 @@
     "pinned": "https://framer.com/m/Shutter-8E8j3M.js@B67kcCmkmwuGC9XpVDVT"
   },
   {
-    "num": "03",
+    "num": "09",
     "name": "Ink fill",
     "comp": "InkFill",
     "file": "InkFill.tsx",
@@ -30,7 +30,7 @@
     "pinned": "https://framer.com/m/InkFill-GW6yhu.js@juOdYQY48jmduT0Fw5tz"
   },
   {
-    "num": "04",
+    "num": "10",
     "name": "Sheen",
     "comp": "Sheen",
     "file": "Sheen.tsx",
@@ -40,7 +40,7 @@
     "pinned": "https://framer.com/m/Sheen-eN4I5o.js@H5yF2XtDzNvBgQWRo8dI"
   },
   {
-    "num": "05",
+    "num": "11",
     "name": "Arrow relay",
     "comp": "ArrowRelay",
     "file": "ArrowRelay.tsx",
@@ -50,7 +50,7 @@
     "pinned": "https://framer.com/m/ArrowRelay-NcEpRz.js@VvoBlEwwGQmKlOLbDgU0"
   },
   {
-    "num": "06",
+    "num": "12",
     "name": "Dot becomes arrow",
     "comp": "DotBecomesArrow",
     "file": "DotBecomesArrow.tsx",
@@ -60,17 +60,7 @@
     "pinned": "https://framer.com/m/DotBecomesArrow-78XLOF.js@Z31vWWPQYRyy1DvUokqv"
   },
   {
-    "num": "07",
-    "name": "Guillemets",
-    "comp": "Guillemets",
-    "file": "Guillemets.tsx",
-    "hash": "556ac4d47d18a851",
-    "id": "THPCAAw",
-    "url": "https://framer.com/m/Guillemets-rObXKn.js",
-    "pinned": "https://framer.com/m/Guillemets-rObXKn.js@0HHQwchjEG8egyWErSC4"
-  },
-  {
-    "num": "08",
+    "num": "13",
     "name": "Crop marks",
     "comp": "CropMarks",
     "file": "CropMarks.tsx",
@@ -80,7 +70,7 @@
     "pinned": "https://framer.com/m/CropMarks-fjWU0F.js@rwPv9IIJdqSTkGyWXhwm"
   },
   {
-    "num": "09",
+    "num": "14",
     "name": "Directional underline",
     "comp": "DirectionalUnderline",
     "file": "DirectionalUnderline.tsx",
@@ -90,167 +80,7 @@
     "pinned": "https://framer.com/m/DirectionalUnderline-IatvfH.js@KWBzF34yHApO7rD5IZ51"
   },
   {
-    "num": "10",
-    "name": "Elevation step",
-    "comp": "ElevationStep",
-    "file": "ElevationStep.tsx",
-    "hash": "ea518fd6789de865",
-    "id": "Vkcwb1a",
-    "url": "https://framer.com/m/ElevationStep-AKmCza.js",
-    "pinned": "https://framer.com/m/ElevationStep-AKmCza.js@nhRIiDi431AXA1DVwsi9"
-  },
-  {
-    "num": "11",
-    "name": "Magnetic",
-    "comp": "Magnetic",
-    "file": "Magnetic.tsx",
-    "hash": "8d86c1ae1d08cd04",
-    "id": "Fynt5Ez",
-    "url": "https://framer.com/m/Magnetic-SmTIHx.js",
-    "pinned": "https://framer.com/m/Magnetic-SmTIHx.js@Rr4okdY0TNmdAEGjSiYk"
-  },
-  {
-    "num": "12",
-    "name": "Weight wave",
-    "comp": "WeightWave",
-    "file": "WeightWave.tsx",
-    "hash": "08089bfae376f52f",
-    "id": "eq_MniK",
-    "url": "https://framer.com/m/WeightWave-w7rPq4.js",
-    "pinned": "https://framer.com/m/WeightWave-w7rPq4.js@kqHB5lrIfQJmFE6OXBz9"
-  },
-  {
-    "num": "13",
-    "name": "Drawn outline",
-    "comp": "DrawnOutline",
-    "file": "DrawnOutline.tsx",
-    "hash": "e02f8ed9b026bd3c",
-    "id": "q2li4Fz",
-    "url": "https://framer.com/m/DrawnOutline-cmxkyg.js",
-    "pinned": "https://framer.com/m/DrawnOutline-cmxkyg.js@hjPTKBGojfxzpNB6WRCo"
-  },
-  {
-    "num": "14",
-    "name": "Chamfered corner",
-    "comp": "ChamferedCorner",
-    "file": "ChamferedCorner.tsx",
-    "hash": "996a2e04667239d5",
-    "id": "jLl3Fb3",
-    "url": "https://framer.com/m/ChamferedCorner-lvjej9.js",
-    "pinned": "https://framer.com/m/ChamferedCorner-lvjej9.js@Kt7yacTHWX5j9C7P8qWx"
-  },
-  {
     "num": "15",
-    "name": "In register",
-    "comp": "InRegister",
-    "file": "InRegister.tsx",
-    "hash": "7ae7b43cba359cb8",
-    "id": "iYLueK8",
-    "url": "https://framer.com/m/InRegister-QpqTov.js",
-    "pinned": "https://framer.com/m/InRegister-QpqTov.js@uO23r4ZRh3ie9rihWsat"
-  },
-  {
-    "num": "16",
-    "name": "Counter",
-    "comp": "Counter",
-    "file": "Counter.tsx",
-    "hash": "a570df04c7ff3017",
-    "id": "toueHrX",
-    "url": "https://framer.com/m/Counter-R61N2D.js",
-    "pinned": "https://framer.com/m/Counter-R61N2D.js@lEfIDBRLjA0pXrRujnbL"
-  },
-  {
-    "num": "17",
-    "name": "Frosted glass",
-    "comp": "FrostedGlass",
-    "file": "FrostedGlass.tsx",
-    "hash": "efea4e983927068e",
-    "id": "PM9fXQu",
-    "url": "https://framer.com/m/FrostedGlass-7KQ8UZ.js",
-    "pinned": "https://framer.com/m/FrostedGlass-7KQ8UZ.js@JqeXoRMKESd7xnRbgywF"
-  },
-  {
-    "num": "18",
-    "name": "Backlight",
-    "comp": "Backlight",
-    "file": "Backlight.tsx",
-    "hash": "22aa2a876274855e",
-    "id": "eiaQCQI",
-    "url": "https://framer.com/m/Backlight-68rjpP.js",
-    "pinned": "https://framer.com/m/Backlight-68rjpP.js@e9mjUodMNog2oLg3xqnZ"
-  },
-  {
-    "num": "19",
-    "name": "The lantern",
-    "comp": "TheLantern",
-    "file": "TheLantern.tsx",
-    "hash": "2a3447f510888109",
-    "id": "HMjX6dd",
-    "url": "https://framer.com/m/TheLantern-JhIelK.js",
-    "pinned": "https://framer.com/m/TheLantern-JhIelK.js@mF1WAG87pCCRqHIfkojF"
-  },
-  {
-    "num": "20",
-    "name": "The grain settles",
-    "comp": "TheGrainSettles",
-    "file": "TheGrainSettles.tsx",
-    "hash": "054f34ab9b9576e9",
-    "id": "n1_5rQg",
-    "url": "https://framer.com/m/TheGrainSettles-qDFHdb.js",
-    "pinned": "https://framer.com/m/TheGrainSettles-qDFHdb.js@FRyI42EVSNFk38HW1EPa"
-  },
-  {
-    "num": "21",
-    "name": "Edge light",
-    "comp": "EdgeLight",
-    "file": "EdgeLight.tsx",
-    "hash": "321a5d180d287ed6",
-    "id": "UZyindW",
-    "url": "https://framer.com/m/EdgeLight-eEskv2.js",
-    "pinned": "https://framer.com/m/EdgeLight-eEskv2.js@Q83WVWGR37DSOvrAlxoF"
-  },
-  {
-    "num": "22",
-    "name": "Diagonal radius",
-    "comp": "DiagonalRadius",
-    "file": "DiagonalRadius.tsx",
-    "hash": "44435f60f10ee7d1",
-    "id": "OI9M5kz",
-    "url": "https://framer.com/m/DiagonalRadius-QprZXR.js",
-    "pinned": "https://framer.com/m/DiagonalRadius-QprZXR.js@kRli1bZ8CgTQtiDvpywL"
-  },
-  {
-    "num": "23",
-    "name": "Rule becomes frame",
-    "comp": "RuleBecomesFrame",
-    "file": "RuleBecomesFrame.tsx",
-    "hash": "692996c49d18750a",
-    "id": "DOJx75g",
-    "url": "https://framer.com/m/RuleBecomesFrame-mTkC7D.js",
-    "pinned": "https://framer.com/m/RuleBecomesFrame-mTkC7D.js@FFEsuDmhcFFF9PRxbxYH"
-  },
-  {
-    "num": "24",
-    "name": "Filling the measure",
-    "comp": "FillingTheMeasure",
-    "file": "FillingTheMeasure.tsx",
-    "hash": "777af7243baa9613",
-    "id": "om1CloS",
-    "url": "https://framer.com/m/FillingTheMeasure-LXrYgI.js",
-    "pinned": "https://framer.com/m/FillingTheMeasure-LXrYgI.js@26nzpVHcRLcRwXWhdTpl"
-  },
-  {
-    "num": "25",
-    "name": "The key",
-    "comp": "TheKey",
-    "file": "TheKey.tsx",
-    "hash": "88058048b333d8a2",
-    "id": "cViVnNy",
-    "url": "https://framer.com/m/TheKey-SCe6ZA.js",
-    "pinned": "https://framer.com/m/TheKey-SCe6ZA.js@CYJm49DC5cOsL40wymgS"
-  },
-  {
-    "num": "26",
     "name": "Label roll",
     "comp": "LabelRoll",
     "file": "LabelRoll.tsx",
@@ -260,7 +90,7 @@
     "pinned": "https://framer.com/m/LabelRoll-p0eOmG.js@UhIf9B8uoZ3go5FCsgMP"
   },
   {
-    "num": "27",
+    "num": "16",
     "name": "The second line",
     "comp": "TheSecondLine",
     "file": "TheSecondLine.tsx",
@@ -270,7 +100,7 @@
     "pinned": "https://framer.com/m/TheSecondLine-0blJk6.js@bBfRvUhxD1KA3zDXt4Ni"
   },
   {
-    "num": "28",
+    "num": "17",
     "name": "Three dots become an arrow",
     "comp": "ThreeDotsBecomeAnArrow",
     "file": "ThreeDotsBecomeAnArrow.tsx",
@@ -280,7 +110,7 @@
     "pinned": "https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js@pYhhZmwaNpEUquTzdqNM"
   },
   {
-    "num": "29",
+    "num": "18",
     "name": "The caret",
     "comp": "TheCaret",
     "file": "TheCaret.tsx",
@@ -290,237 +120,181 @@
     "pinned": "https://framer.com/m/TheCaret-wBPSsy.js@2TIfgxWeX7IRG0Aj2Vlq"
   },
   {
+    "num": "26",
+    "name": "Weight wave",
+    "comp": "WeightWave",
+    "file": "WeightWave.tsx",
+    "hash": "08089bfae376f52f",
+    "id": "eq_MniK",
+    "url": "https://framer.com/m/WeightWave-w7rPq4.js",
+    "pinned": "https://framer.com/m/WeightWave-w7rPq4.js@kqHB5lrIfQJmFE6OXBz9"
+  },
+  {
+    "num": "27",
+    "name": "Drawn outline",
+    "comp": "DrawnOutline",
+    "file": "DrawnOutline.tsx",
+    "hash": "e02f8ed9b026bd3c",
+    "id": "q2li4Fz",
+    "url": "https://framer.com/m/DrawnOutline-cmxkyg.js",
+    "pinned": "https://framer.com/m/DrawnOutline-cmxkyg.js@hjPTKBGojfxzpNB6WRCo"
+  },
+  {
+    "num": "28",
+    "name": "Chamfered corner",
+    "comp": "ChamferedCorner",
+    "file": "ChamferedCorner.tsx",
+    "hash": "996a2e04667239d5",
+    "id": "jLl3Fb3",
+    "url": "https://framer.com/m/ChamferedCorner-lvjej9.js",
+    "pinned": "https://framer.com/m/ChamferedCorner-lvjej9.js@Kt7yacTHWX5j9C7P8qWx"
+  },
+  {
+    "num": "29",
+    "name": "In register",
+    "comp": "InRegister",
+    "file": "InRegister.tsx",
+    "hash": "7ae7b43cba359cb8",
+    "id": "iYLueK8",
+    "url": "https://framer.com/m/InRegister-QpqTov.js",
+    "pinned": "https://framer.com/m/InRegister-QpqTov.js@uO23r4ZRh3ie9rihWsat"
+  },
+  {
     "num": "30",
-    "name": "Only when it doesn't fit",
-    "comp": "OnlyWhenItDoesntFit",
-    "file": "OnlyWhenItDoesntFit.tsx",
-    "hash": "7e8c00a8d80698aa",
-    "id": "aYmvJD0",
-    "url": "https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js",
-    "pinned": "https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js@sGOWzed0BCKhm6KmZ4Uu"
+    "name": "Counter",
+    "comp": "Counter",
+    "file": "Counter.tsx",
+    "hash": "a570df04c7ff3017",
+    "id": "toueHrX",
+    "url": "https://framer.com/m/Counter-R61N2D.js",
+    "pinned": "https://framer.com/m/Counter-R61N2D.js@lEfIDBRLjA0pXrRujnbL"
   },
   {
     "num": "31",
-    "name": "The plate gives, the type doesn't",
-    "comp": "ThePlateGivesTheTypeDoesnt",
-    "file": "ThePlateGivesTheTypeDoesnt.tsx",
-    "hash": "cf26e9f68ae579da",
-    "id": "Vpa0jQ7",
-    "url": "https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js",
-    "pinned": "https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js@ZeSPkSiMsRUh4qzKErlF"
+    "name": "Frosted glass",
+    "comp": "FrostedGlass",
+    "file": "FrostedGlass.tsx",
+    "hash": "efea4e983927068e",
+    "id": "PM9fXQu",
+    "url": "https://framer.com/m/FrostedGlass-7KQ8UZ.js",
+    "pinned": "https://framer.com/m/FrostedGlass-7KQ8UZ.js@JqeXoRMKESd7xnRbgywF"
   },
   {
     "num": "32",
-    "name": "Two masses",
-    "comp": "TwoMasses",
-    "file": "TwoMasses.tsx",
-    "hash": "e79f63b6b09cbfb3",
-    "id": "zgJW3fX",
-    "url": "https://framer.com/m/TwoMasses-Sb7Tcx.js",
-    "pinned": "https://framer.com/m/TwoMasses-Sb7Tcx.js@PKjPdAQFdqEHEcKTDwsi"
+    "name": "Backlight",
+    "comp": "Backlight",
+    "file": "Backlight.tsx",
+    "hash": "22aa2a876274855e",
+    "id": "eiaQCQI",
+    "url": "https://framer.com/m/Backlight-68rjpP.js",
+    "pinned": "https://framer.com/m/Backlight-68rjpP.js@e9mjUodMNog2oLg3xqnZ"
   },
   {
     "num": "33",
-    "name": "The settle",
-    "comp": "TheSettle",
-    "file": "TheSettle.tsx",
-    "hash": "8a4f4ea7c9b6b50f",
-    "id": "WdNgWoE",
-    "url": "https://framer.com/m/TheSettle-2TMnOM.js",
-    "pinned": "https://framer.com/m/TheSettle-2TMnOM.js@hjeiFsKQ8hJxdmlxlBk5"
+    "name": "The lantern",
+    "comp": "TheLantern",
+    "file": "TheLantern.tsx",
+    "hash": "2a3447f510888109",
+    "id": "HMjX6dd",
+    "url": "https://framer.com/m/TheLantern-JhIelK.js",
+    "pinned": "https://framer.com/m/TheLantern-JhIelK.js@mF1WAG87pCCRqHIfkojF"
   },
   {
     "num": "34",
-    "name": "Anticipation",
-    "comp": "Anticipation",
-    "file": "Anticipation.tsx",
-    "hash": "dd2cfb886e75129e",
-    "id": "cZJ3mqD",
-    "url": "https://framer.com/m/Anticipation-r4w6lE.js",
-    "pinned": "https://framer.com/m/Anticipation-r4w6lE.js@vykSWR2edESMpIhYm4Fz"
+    "name": "The light source flips",
+    "comp": "TheLightSourceFlips",
+    "file": "TheLightSourceFlips.tsx",
+    "hash": "18a47cc575565c14",
+    "id": "met6srx",
+    "url": "https://framer.com/m/TheLightSourceFlips-NAY7oj.js"
   },
   {
     "num": "35",
-    "name": "The rule takes the load",
-    "comp": "TheRuleTakesTheLoad",
-    "file": "TheRuleTakesTheLoad.tsx",
-    "hash": "7ac6708fca6541fe",
-    "id": "cntXHHs",
-    "url": "https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js",
-    "pinned": "https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js@oU3P95fYa4nn6hQSJAte"
+    "name": "The tube converges",
+    "comp": "TheTubeConverges",
+    "file": "TheTubeConverges.tsx",
+    "hash": "68c6f460c84ea528",
+    "id": "AQvFMC4",
+    "url": "https://framer.com/m/TheTubeConverges-Mzevog.js"
   },
   {
     "num": "36",
-    "name": "Re-spacing",
-    "comp": "ReSpacing",
-    "file": "ReSpacing.tsx",
-    "hash": "f1e5edb7c206224a",
-    "id": "blssYB4",
-    "url": "https://framer.com/m/ReSpacing-9XNknM.js",
-    "pinned": "https://framer.com/m/ReSpacing-9XNknM.js@gqFAexDDyh2T23uyS4KJ"
+    "name": "Two frames",
+    "comp": "TwoFrames",
+    "file": "TwoFrames.tsx",
+    "hash": "d9233732526e34b7",
+    "id": "IfQnVUt",
+    "url": "https://framer.com/m/TwoFrames-Xkk1by.js"
   },
   {
     "num": "37",
-    "name": "Setting the line",
-    "comp": "SettingTheLine",
-    "file": "SettingTheLine.tsx",
-    "hash": "d7852a7122f19961",
-    "id": "y8RmP0F",
-    "url": "https://framer.com/m/SettingTheLine-kEUeIM.js",
-    "pinned": "https://framer.com/m/SettingTheLine-kEUeIM.js@DoAP5GDqhNQ1A7XyOiqq"
+    "name": "It prints",
+    "comp": "ItPrints",
+    "file": "ItPrints.tsx",
+    "hash": "cf0681124a02d60d",
+    "id": "g8vMM_N",
+    "url": "https://framer.com/m/ItPrints-d0SyuT.js"
   },
   {
     "num": "38",
-    "name": "The real underline",
-    "comp": "TheRealUnderline",
-    "file": "TheRealUnderline.tsx",
-    "hash": "5609df14dbfc1734",
-    "id": "lhid7kp",
-    "url": "https://framer.com/m/TheRealUnderline-wBkGEc.js",
-    "pinned": "https://framer.com/m/TheRealUnderline-wBkGEc.js@L1Dd8srCRq4rOuy6pBXD"
+    "name": "The measure absorbs the tracking",
+    "comp": "TheMeasureAbsorbsTheTracking",
+    "file": "TheMeasureAbsorbsTheTracking.tsx",
+    "hash": "7934d6a43d48a2eb",
+    "id": "OmwfFEl",
+    "url": "https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js"
   },
   {
     "num": "39",
-    "name": "It matches your tempo",
-    "comp": "ItMatchesYourTempo",
-    "file": "ItMatchesYourTempo.tsx",
-    "hash": "963372498093d227",
-    "id": "e8OspFA",
-    "url": "https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js",
-    "pinned": "https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js@RVe5N10yR3azDqeSfBdT"
+    "name": "No direction at all",
+    "comp": "NoDirectionAtAll",
+    "file": "NoDirectionAtAll.tsx",
+    "hash": "b7b98164a4ad2c35",
+    "id": "gwWasby",
+    "url": "https://framer.com/m/NoDirectionAtAll-o7wENC.js"
   },
   {
     "num": "40",
-    "name": "The exit remembers",
-    "comp": "TheExitRemembers",
-    "file": "TheExitRemembers.tsx",
-    "hash": "2cb99c4eb8c2219b",
-    "id": "n2TDdb_",
-    "url": "https://framer.com/m/TheExitRemembers-y2VaAw.js",
-    "pinned": "https://framer.com/m/TheExitRemembers-y2VaAw.js@BgE1KaVpDk3Ivby7ugXU"
+    "name": "Diagonal radius",
+    "comp": "DiagonalRadius",
+    "file": "DiagonalRadius.tsx",
+    "hash": "44435f60f10ee7d1",
+    "id": "OI9M5kz",
+    "url": "https://framer.com/m/DiagonalRadius-QprZXR.js",
+    "pinned": "https://framer.com/m/DiagonalRadius-QprZXR.js@kRli1bZ8CgTQtiDvpywL"
   },
   {
     "num": "41",
-    "name": "Directional fill",
-    "comp": "DirectionalFill",
-    "file": "DirectionalFill.tsx",
-    "hash": "7e1b295fd7108027",
-    "id": "AJ2VL5Q",
-    "url": "https://framer.com/m/DirectionalFill-fpvcPF.js",
-    "pinned": "https://framer.com/m/DirectionalFill-fpvcPF.js@VfskxmcMAhQWG83BsbK0"
+    "name": "Filling the measure",
+    "comp": "FillingTheMeasure",
+    "file": "FillingTheMeasure.tsx",
+    "hash": "777af7243baa9613",
+    "id": "om1CloS",
+    "url": "https://framer.com/m/FillingTheMeasure-LXrYgI.js",
+    "pinned": "https://framer.com/m/FillingTheMeasure-LXrYgI.js@26nzpVHcRLcRwXWhdTpl"
   },
   {
     "num": "42",
-    "name": "The wave",
-    "comp": "TheWave",
-    "file": "TheWave.tsx",
-    "hash": "477be9a33e11b2d6",
-    "id": "XUEYMIy",
-    "url": "https://framer.com/m/TheWave-vZigVg.js",
-    "pinned": "https://framer.com/m/TheWave-vZigVg.js@cKIKqkTHJeqTxdI4d2ei"
+    "name": "Edge light",
+    "comp": "EdgeLight",
+    "file": "EdgeLight.tsx",
+    "hash": "321a5d180d287ed6",
+    "id": "UZyindW",
+    "url": "https://framer.com/m/EdgeLight-eEskv2.js",
+    "pinned": "https://framer.com/m/EdgeLight-eEskv2.js@Q83WVWGR37DSOvrAlxoF"
   },
   {
     "num": "43",
-    "name": "In one order, out another",
-    "comp": "InOneOrderOutAnother",
-    "file": "InOneOrderOutAnother.tsx",
-    "hash": "f4b4866e84fa62b5",
-    "id": "a5qaASh",
-    "url": "https://framer.com/m/InOneOrderOutAnother-18NMCZ.js",
-    "pinned": "https://framer.com/m/InOneOrderOutAnother-18NMCZ.js@2PkIywh5NWIdXplvc0oR"
+    "name": "The key",
+    "comp": "TheKey",
+    "file": "TheKey.tsx",
+    "hash": "88058048b333d8a2",
+    "id": "cViVnNy",
+    "url": "https://framer.com/m/TheKey-SCe6ZA.js",
+    "pinned": "https://framer.com/m/TheKey-SCe6ZA.js@CYJm49DC5cOsL40wymgS"
   },
   {
     "num": "44",
-    "name": "It leaves by the corner",
-    "comp": "ItLeavesByTheCorner",
-    "file": "ItLeavesByTheCorner.tsx",
-    "hash": "6b6800ab30a933c5",
-    "id": "ovJsCMy",
-    "url": "https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js",
-    "pinned": "https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js@lHu52zxnLrSvbsLWjrXS"
-  },
-  {
-    "num": "45",
-    "name": "The optical centre holds",
-    "comp": "TheOpticalCentreHolds",
-    "file": "TheOpticalCentreHolds.tsx",
-    "hash": "2c4fbb728cb2d29d",
-    "id": "afAGEhO",
-    "url": "https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js",
-    "pinned": "https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js@7RS4iMIcb7HfqooA64zo"
-  },
-  {
-    "num": "46",
-    "name": "Resolve",
-    "comp": "Resolve",
-    "file": "Resolve.tsx",
-    "hash": "611b422dda024878",
-    "id": "uQvVYfX",
-    "url": "https://framer.com/m/Resolve-QdqmRV.js",
-    "pinned": "https://framer.com/m/Resolve-QdqmRV.js@4EyAs0iknKO29XU8YGzb"
-  },
-  {
-    "num": "47",
-    "name": "The others recede",
-    "comp": "TheOthersRecede",
-    "file": "TheOthersRecede.tsx",
-    "hash": "bb0b537ccc84f742",
-    "id": "aSDDMdk",
-    "url": "https://framer.com/m/TheOthersRecede-uWvqi9.js",
-    "pinned": "https://framer.com/m/TheOthersRecede-uWvqi9.js@MmEuH66rnJBkwO2c447B"
-  },
-  {
-    "num": "48",
-    "name": "The travelling indicator",
-    "comp": "TheTravellingIndicator",
-    "file": "TheTravellingIndicator.tsx",
-    "hash": "828dd2d673c9cd49",
-    "id": "SZ8S0Wc",
-    "url": "https://framer.com/m/TheTravellingIndicator-OAAkHD.js",
-    "pinned": "https://framer.com/m/TheTravellingIndicator-OAAkHD.js@QEZ91QYy8ZNk6FKvYxVV"
-  },
-  {
-    "num": "49",
-    "name": "Conserved compression",
-    "comp": "ConservedCompression",
-    "file": "ConservedCompression.tsx",
-    "hash": "e1962eb700019201",
-    "id": "vtXfVai",
-    "url": "https://framer.com/m/ConservedCompression-qOYXER.js",
-    "pinned": "https://framer.com/m/ConservedCompression-qOYXER.js@EHm2YMMHaeKCWfWEjNe0"
-  },
-  {
-    "num": "50",
-    "name": "Repulsion",
-    "comp": "Repulsion",
-    "file": "Repulsion.tsx",
-    "hash": "a7e348a2e4d2104d",
-    "id": "nbde5rt",
-    "url": "https://framer.com/m/Repulsion-8kbI6W.js",
-    "pinned": "https://framer.com/m/Repulsion-8kbI6W.js@vSHqR7vamgixDV0gpuCb"
-  },
-  {
-    "num": "51",
-    "name": "The pair",
-    "comp": "ThePair",
-    "file": "ThePair.tsx",
-    "hash": "9a202ff15eddb9b3",
-    "id": "OXxwI1z",
-    "url": "https://framer.com/m/ThePair-XMHcLD.js",
-    "pinned": "https://framer.com/m/ThePair-XMHcLD.js@8sxzeJEQW1OK8Az6iRK9"
-  },
-  {
-    "num": "52",
-    "name": "The divider yields",
-    "comp": "TheDividerYields",
-    "file": "TheDividerYields.tsx",
-    "hash": "314d379e1cc68f24",
-    "id": "JBFT8Pv",
-    "url": "https://framer.com/m/TheDividerYields-BQHpVA.js",
-    "pinned": "https://framer.com/m/TheDividerYields-BQHpVA.js@gKGjTf6ONMJrR55JjCVc"
-  },
-  {
-    "num": "53",
     "name": "Knurling",
     "comp": "Knurling",
     "file": "Knurling.tsx",
@@ -530,7 +304,7 @@
     "pinned": "https://framer.com/m/Knurling-8R1JoN.js@lcF57aJPA8lpfKyUnnb7"
   },
   {
-    "num": "54",
+    "num": "45",
     "name": "Deboss",
     "comp": "Deboss",
     "file": "Deboss.tsx",
@@ -540,7 +314,7 @@
     "pinned": "https://framer.com/m/Deboss-n6GzCh.js@UKigmLz2yWFFL1T6A7oq"
   },
   {
-    "num": "55",
+    "num": "46",
     "name": "The line gauge",
     "comp": "TheLineGauge",
     "file": "TheLineGauge.tsx",
@@ -550,7 +324,7 @@
     "pinned": "https://framer.com/m/TheLineGauge-h9qIsP.js@inl2IY7VExyemeETqzyy"
   },
   {
-    "num": "56",
+    "num": "47",
     "name": "The data plate",
     "comp": "TheDataPlate",
     "file": "TheDataPlate.tsx",
@@ -560,7 +334,7 @@
     "pinned": "https://framer.com/m/TheDataPlate-xAARQs.js@iSULUBNiVPySc790Akt7"
   },
   {
-    "num": "57",
+    "num": "48",
     "name": "Continuous corners",
     "comp": "ContinuousCorners",
     "file": "ContinuousCorners.tsx",
@@ -570,117 +344,167 @@
     "pinned": "https://framer.com/m/ContinuousCorners-Mfkc9u.js@TyGYUM5I61jax0ta5HbV"
   },
   {
+    "num": "49",
+    "name": "Elevation step",
+    "comp": "ElevationStep",
+    "file": "ElevationStep.tsx",
+    "hash": "ea518fd6789de865",
+    "id": "Vkcwb1a",
+    "url": "https://framer.com/m/ElevationStep-AKmCza.js",
+    "pinned": "https://framer.com/m/ElevationStep-AKmCza.js@nhRIiDi431AXA1DVwsi9"
+  },
+  {
+    "num": "50",
+    "name": "Magnetic",
+    "comp": "Magnetic",
+    "file": "Magnetic.tsx",
+    "hash": "8d86c1ae1d08cd04",
+    "id": "Fynt5Ez",
+    "url": "https://framer.com/m/Magnetic-SmTIHx.js",
+    "pinned": "https://framer.com/m/Magnetic-SmTIHx.js@Rr4okdY0TNmdAEGjSiYk"
+  },
+  {
+    "num": "52",
+    "name": "Two masses",
+    "comp": "TwoMasses",
+    "file": "TwoMasses.tsx",
+    "hash": "e79f63b6b09cbfb3",
+    "id": "zgJW3fX",
+    "url": "https://framer.com/m/TwoMasses-Sb7Tcx.js",
+    "pinned": "https://framer.com/m/TwoMasses-Sb7Tcx.js@PKjPdAQFdqEHEcKTDwsi"
+  },
+  {
+    "num": "53",
+    "name": "The settle",
+    "comp": "TheSettle",
+    "file": "TheSettle.tsx",
+    "hash": "8a4f4ea7c9b6b50f",
+    "id": "WdNgWoE",
+    "url": "https://framer.com/m/TheSettle-2TMnOM.js",
+    "pinned": "https://framer.com/m/TheSettle-2TMnOM.js@hjeiFsKQ8hJxdmlxlBk5"
+  },
+  {
+    "num": "54",
+    "name": "Anticipation",
+    "comp": "Anticipation",
+    "file": "Anticipation.tsx",
+    "hash": "dd2cfb886e75129e",
+    "id": "cZJ3mqD",
+    "url": "https://framer.com/m/Anticipation-r4w6lE.js",
+    "pinned": "https://framer.com/m/Anticipation-r4w6lE.js@vykSWR2edESMpIhYm4Fz"
+  },
+  {
+    "num": "55",
+    "name": "The rule takes the load",
+    "comp": "TheRuleTakesTheLoad",
+    "file": "TheRuleTakesTheLoad.tsx",
+    "hash": "7ac6708fca6541fe",
+    "id": "cntXHHs",
+    "url": "https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js",
+    "pinned": "https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js@oU3P95fYa4nn6hQSJAte"
+  },
+  {
+    "num": "56",
+    "name": "Re-spacing",
+    "comp": "ReSpacing",
+    "file": "ReSpacing.tsx",
+    "hash": "f1e5edb7c206224a",
+    "id": "blssYB4",
+    "url": "https://framer.com/m/ReSpacing-9XNknM.js",
+    "pinned": "https://framer.com/m/ReSpacing-9XNknM.js@gqFAexDDyh2T23uyS4KJ"
+  },
+  {
+    "num": "57",
+    "name": "The real underline",
+    "comp": "TheRealUnderline",
+    "file": "TheRealUnderline.tsx",
+    "hash": "5609df14dbfc1734",
+    "id": "lhid7kp",
+    "url": "https://framer.com/m/TheRealUnderline-wBkGEc.js",
+    "pinned": "https://framer.com/m/TheRealUnderline-wBkGEc.js@L1Dd8srCRq4rOuy6pBXD"
+  },
+  {
     "num": "58",
-    "name": "The stop",
-    "comp": "TheStop",
-    "file": "TheStop.tsx",
-    "hash": "78cf539b76e2390d",
-    "id": "Hfr6svQ",
-    "url": "https://framer.com/m/TheStop-fTngvI.js",
-    "pinned": "https://framer.com/m/TheStop-fTngvI.js@V0TtNff95QQruuqnxWaV"
+    "name": "It matches your tempo",
+    "comp": "ItMatchesYourTempo",
+    "file": "ItMatchesYourTempo.tsx",
+    "hash": "963372498093d227",
+    "id": "e8OspFA",
+    "url": "https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js",
+    "pinned": "https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js@RVe5N10yR3azDqeSfBdT"
   },
   {
     "num": "59",
-    "name": "Changes sides",
-    "comp": "ChangesSides",
-    "file": "ChangesSides.tsx",
-    "hash": "b78bba90f14dfbfd",
-    "id": "uKgEoMc",
-    "url": "https://framer.com/m/ChangesSides-0nQCL2.js",
-    "pinned": "https://framer.com/m/ChangesSides-0nQCL2.js@V3q5ftJakdbluPaNSnOX"
+    "name": "The exit remembers",
+    "comp": "TheExitRemembers",
+    "file": "TheExitRemembers.tsx",
+    "hash": "2cb99c4eb8c2219b",
+    "id": "n2TDdb_",
+    "url": "https://framer.com/m/TheExitRemembers-y2VaAw.js",
+    "pinned": "https://framer.com/m/TheExitRemembers-y2VaAw.js@BgE1KaVpDk3Ivby7ugXU"
   },
   {
     "num": "60",
-    "name": "The pieces join",
-    "comp": "ThePiecesJoin",
-    "file": "ThePiecesJoin.tsx",
-    "hash": "4489f43f2168070e",
-    "id": "QjHtgzC",
-    "url": "https://framer.com/m/ThePiecesJoin-sc1diW.js",
-    "pinned": "https://framer.com/m/ThePiecesJoin-sc1diW.js@iXK5OJEFYpz0SQdaE0GY"
+    "name": "The others recede",
+    "comp": "TheOthersRecede",
+    "file": "TheOthersRecede.tsx",
+    "hash": "bb0b537ccc84f742",
+    "id": "aSDDMdk",
+    "url": "https://framer.com/m/TheOthersRecede-uWvqi9.js",
+    "pinned": "https://framer.com/m/TheOthersRecede-uWvqi9.js@MmEuH66rnJBkwO2c447B"
   },
   {
     "num": "61",
-    "name": "Ticker label",
-    "comp": "TickerLabel",
-    "file": "TickerLabel.tsx",
-    "hash": "4f05248cb05bb5ee",
-    "id": "OewVWB4",
-    "url": "https://framer.com/m/TickerLabel-1JFxFP.js",
-    "pinned": "https://framer.com/m/TickerLabel-1JFxFP.js@r3Mnnsqzur8F2HAuewL0"
+    "name": "The travelling indicator",
+    "comp": "TheTravellingIndicator",
+    "file": "TheTravellingIndicator.tsx",
+    "hash": "828dd2d673c9cd49",
+    "id": "SZ8S0Wc",
+    "url": "https://framer.com/m/TheTravellingIndicator-OAAkHD.js",
+    "pinned": "https://framer.com/m/TheTravellingIndicator-OAAkHD.js@QEZ91QYy8ZNk6FKvYxVV"
   },
   {
     "num": "62",
-    "name": "Struck through",
-    "comp": "StruckThrough",
-    "file": "StruckThrough.tsx",
-    "hash": "fcf68bac52b5c526",
-    "id": "xheoS87",
-    "url": "https://framer.com/m/StruckThrough-P16etM.js",
-    "pinned": "https://framer.com/m/StruckThrough-P16etM.js@KRK9todmXSpj9WbTT04J"
+    "name": "Conserved compression",
+    "comp": "ConservedCompression",
+    "file": "ConservedCompression.tsx",
+    "hash": "e1962eb700019201",
+    "id": "vtXfVai",
+    "url": "https://framer.com/m/ConservedCompression-qOYXER.js",
+    "pinned": "https://framer.com/m/ConservedCompression-qOYXER.js@EHm2YMMHaeKCWfWEjNe0"
   },
   {
     "num": "63",
-    "name": "Nothing but the press",
-    "comp": "NothingButThePress",
-    "file": "NothingButThePress.tsx",
-    "hash": "230aa7d6496245e6",
-    "id": "nqk502h",
-    "url": "https://framer.com/m/NothingButThePress-sHz8KT.js",
-    "pinned": "https://framer.com/m/NothingButThePress-sHz8KT.js@bM3Bxk0e85B7BvyNO9x1"
+    "name": "Repulsion",
+    "comp": "Repulsion",
+    "file": "Repulsion.tsx",
+    "hash": "a7e348a2e4d2104d",
+    "id": "nbde5rt",
+    "url": "https://framer.com/m/Repulsion-8kbI6W.js",
+    "pinned": "https://framer.com/m/Repulsion-8kbI6W.js@vSHqR7vamgixDV0gpuCb"
   },
   {
     "num": "64",
-    "name": "Overruns its measure",
-    "comp": "OverrunsItsMeasure",
-    "file": "OverrunsItsMeasure.tsx",
-    "hash": "1645dd8443063033",
-    "id": "rJxScrU",
-    "url": "https://framer.com/m/OverrunsItsMeasure-dmN6vY.js",
-    "pinned": "https://framer.com/m/OverrunsItsMeasure-dmN6vY.js@8agpgowdHAP6otX5zFG6"
+    "name": "The pair",
+    "comp": "ThePair",
+    "file": "ThePair.tsx",
+    "hash": "9a202ff15eddb9b3",
+    "id": "OXxwI1z",
+    "url": "https://framer.com/m/ThePair-XMHcLD.js",
+    "pinned": "https://framer.com/m/ThePair-XMHcLD.js@8sxzeJEQW1OK8Az6iRK9"
   },
   {
     "num": "65",
-    "name": "Too long to sit still",
-    "comp": "TooLongToSitStill",
-    "file": "TooLongToSitStill.tsx",
-    "hash": "e1c85a841eeca60a",
-    "id": "w2yOO9_",
-    "url": "https://framer.com/m/TooLongToSitStill-Bjw0f6.js",
-    "pinned": "https://framer.com/m/TooLongToSitStill-Bjw0f6.js@efXVw5TSsRgYf1wOiwS4"
+    "name": "The divider yields",
+    "comp": "TheDividerYields",
+    "file": "TheDividerYields.tsx",
+    "hash": "314d379e1cc68f24",
+    "id": "JBFT8Pv",
+    "url": "https://framer.com/m/TheDividerYields-BQHpVA.js",
+    "pinned": "https://framer.com/m/TheDividerYields-BQHpVA.js@gKGjTf6ONMJrR55JjCVc"
   },
   {
     "num": "66",
-    "name": "The plate has no direction",
-    "comp": "ThePlateHasNoDirection",
-    "file": "ThePlateHasNoDirection.tsx",
-    "hash": "6a06ad7d51b3dec4",
-    "id": "h_EyPpg",
-    "url": "https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js",
-    "pinned": "https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js@KOqQnEgbOFGCmrFGZHTh"
-  },
-  {
-    "num": "67",
-    "name": "The hatch withdraws",
-    "comp": "TheHatchWithdraws",
-    "file": "TheHatchWithdraws.tsx",
-    "hash": "6fd7094c74d01285",
-    "id": "YlxvG3f",
-    "url": "https://framer.com/m/TheHatchWithdraws-PoZMeK.js",
-    "pinned": "https://framer.com/m/TheHatchWithdraws-PoZMeK.js@e3zBBhGxa3rZxW6DBzyu"
-  },
-  {
-    "num": "68",
-    "name": "Stepped fill",
-    "comp": "SteppedFill",
-    "file": "SteppedFill.tsx",
-    "hash": "e69be2c863b0dee8",
-    "id": "A0oDXRi",
-    "url": "https://framer.com/m/SteppedFill-6Em9QG.js",
-    "pinned": "https://framer.com/m/SteppedFill-6Em9QG.js@tEN0vI20CiDZ8lJ3rnPN"
-  },
-  {
-    "num": "69",
     "name": "The pieces part",
     "comp": "ThePiecesPart",
     "file": "ThePiecesPart.tsx",
@@ -690,7 +514,7 @@
     "pinned": "https://framer.com/m/ThePiecesPart-ySk8HW.js@m0j5RYOyVGy748I5nyPQ"
   },
   {
-    "num": "70",
+    "num": "67",
     "name": "The mark walks the plate",
     "comp": "TheMarkWalksThePlate",
     "file": "TheMarkWalksThePlate.tsx",
@@ -700,7 +524,7 @@
     "pinned": "https://framer.com/m/TheMarkWalksThePlate-RYjUHt.js@fzSQY8gQ3qrT7gHUIrL3"
   },
   {
-    "num": "71",
+    "num": "68",
     "name": "They trade fill",
     "comp": "TheyTradeFill",
     "file": "TheyTradeFill.tsx",
@@ -710,7 +534,7 @@
     "pinned": "https://framer.com/m/TheyTradeFill-OyLZbP.js@UvBHEgNtTqHkzQlLyEkF"
   },
   {
-    "num": "72",
+    "num": "69",
     "name": "The arrow leaves, the plates stay",
     "comp": "TheArrowLeavesThePlatesStay",
     "file": "TheArrowLeavesThePlatesStay.tsx",
@@ -720,7 +544,7 @@
     "pinned": "https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js@zpUt8imVozCsxULt0qps"
   },
   {
-    "num": "73",
+    "num": "70",
     "name": "The mark hinges",
     "comp": "TheMarkHinges",
     "file": "TheMarkHinges.tsx",
@@ -730,7 +554,7 @@
     "pinned": "https://framer.com/m/TheMarkHinges-RXuV8I.js@yVrCdgZvNKXYArP1B3Oy"
   },
   {
-    "num": "74",
+    "num": "71",
     "name": "The mark slips behind",
     "comp": "TheMarkSlipsBehind",
     "file": "TheMarkSlipsBehind.tsx",
@@ -740,7 +564,94 @@
     "pinned": "https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js@OmNQbiGI8x3ERYnXKly7"
   },
   {
+    "num": "72",
+    "name": "It reports on itself",
+    "comp": "ItReportsOnItself",
+    "file": "ItReportsOnItself.tsx",
+    "hash": "88743932a5e79924",
+    "id": "RlpVn2r",
+    "url": "https://framer.com/m/ItReportsOnItself-UWJJzz.js"
+  },
+  {
+    "num": "73",
+    "name": "The plate becomes the mark",
+    "comp": "ThePlateBecomesTheMark",
+    "file": "ThePlateBecomesTheMark.tsx",
+    "hash": "c692588855697bab",
+    "id": "lB22RV5",
+    "url": "https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js"
+  },
+  {
+    "num": "74",
+    "name": "It asks you to mean it",
+    "comp": "ItAsksYouToMeanIt",
+    "file": "ItAsksYouToMeanIt.tsx",
+    "hash": "461fcf0b46babd3b",
+    "id": "BxrRDDA",
+    "url": "https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"
+  },
+  {
     "num": "75",
+    "name": "Directional fill",
+    "comp": "DirectionalFill",
+    "file": "DirectionalFill.tsx",
+    "hash": "7e1b295fd7108027",
+    "id": "AJ2VL5Q",
+    "url": "https://framer.com/m/DirectionalFill-fpvcPF.js",
+    "pinned": "https://framer.com/m/DirectionalFill-fpvcPF.js@VfskxmcMAhQWG83BsbK0"
+  },
+  {
+    "num": "76",
+    "name": "The wave",
+    "comp": "TheWave",
+    "file": "TheWave.tsx",
+    "hash": "477be9a33e11b2d6",
+    "id": "XUEYMIy",
+    "url": "https://framer.com/m/TheWave-vZigVg.js",
+    "pinned": "https://framer.com/m/TheWave-vZigVg.js@cKIKqkTHJeqTxdI4d2ei"
+  },
+  {
+    "num": "77",
+    "name": "In one order, out another",
+    "comp": "InOneOrderOutAnother",
+    "file": "InOneOrderOutAnother.tsx",
+    "hash": "f4b4866e84fa62b5",
+    "id": "a5qaASh",
+    "url": "https://framer.com/m/InOneOrderOutAnother-18NMCZ.js",
+    "pinned": "https://framer.com/m/InOneOrderOutAnother-18NMCZ.js@2PkIywh5NWIdXplvc0oR"
+  },
+  {
+    "num": "78",
+    "name": "It leaves by the corner",
+    "comp": "ItLeavesByTheCorner",
+    "file": "ItLeavesByTheCorner.tsx",
+    "hash": "6b6800ab30a933c5",
+    "id": "ovJsCMy",
+    "url": "https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js",
+    "pinned": "https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js@lHu52zxnLrSvbsLWjrXS"
+  },
+  {
+    "num": "79",
+    "name": "The optical centre holds",
+    "comp": "TheOpticalCentreHolds",
+    "file": "TheOpticalCentreHolds.tsx",
+    "hash": "2c4fbb728cb2d29d",
+    "id": "afAGEhO",
+    "url": "https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js",
+    "pinned": "https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js@7RS4iMIcb7HfqooA64zo"
+  },
+  {
+    "num": "80",
+    "name": "Resolve",
+    "comp": "Resolve",
+    "file": "Resolve.tsx",
+    "hash": "611b422dda024878",
+    "id": "uQvVYfX",
+    "url": "https://framer.com/m/Resolve-QdqmRV.js",
+    "pinned": "https://framer.com/m/Resolve-QdqmRV.js@4EyAs0iknKO29XU8YGzb"
+  },
+  {
+    "num": "81",
     "name": "Straightens up",
     "comp": "StraightensUp",
     "file": "StraightensUp.tsx",
@@ -750,17 +661,7 @@
     "pinned": "https://framer.com/m/StraightensUp-PMQhjy.js@89s8SrqtKx1qz9lOh6vo"
   },
   {
-    "num": "76",
-    "name": "The terminal",
-    "comp": "TheTerminal",
-    "file": "TheTerminal.tsx",
-    "hash": "1cfd3837d26dc495",
-    "id": "TdvnLzI",
-    "url": "https://framer.com/m/TheTerminal-Jan0hL.js",
-    "pinned": "https://framer.com/m/TheTerminal-Jan0hL.js@RsFImZzQVx2C9KO8lIvS"
-  },
-  {
-    "num": "77",
+    "num": "83",
     "name": "It goes to work",
     "comp": "ItGoesToWork",
     "file": "ItGoesToWork.tsx",
@@ -770,17 +671,7 @@
     "pinned": "https://framer.com/m/ItGoesToWork-UWy42D.js@wTe41oYIoCog0I8pMpDf"
   },
   {
-    "num": "78",
-    "name": "The label turns",
-    "comp": "TheLabelTurns",
-    "file": "TheLabelTurns.tsx",
-    "hash": "759ed8449a08709d",
-    "id": "jjd8IFW",
-    "url": "https://framer.com/m/TheLabelTurns-docxl4.js",
-    "pinned": "https://framer.com/m/TheLabelTurns-docxl4.js@wV4O2IzNCCSB9n0n3bMo"
-  },
-  {
-    "num": "79",
+    "num": "85",
     "name": "Nervous type",
     "comp": "NervousType",
     "file": "NervousType.tsx",
@@ -790,13 +681,213 @@
     "pinned": "https://framer.com/m/NervousType-7TInHS.js@ONNTwHbXrebbLZBJLeOJ"
   },
   {
+    "num": "86",
+    "name": "Nothing but the press",
+    "comp": "NothingButThePress",
+    "file": "NothingButThePress.tsx",
+    "hash": "230aa7d6496245e6",
+    "id": "nqk502h",
+    "url": "https://framer.com/m/NothingButThePress-sHz8KT.js",
+    "pinned": "https://framer.com/m/NothingButThePress-sHz8KT.js@bM3Bxk0e85B7BvyNO9x1"
+  },
+  {
+    "num": "87",
+    "name": "Overruns its measure",
+    "comp": "OverrunsItsMeasure",
+    "file": "OverrunsItsMeasure.tsx",
+    "hash": "1645dd8443063033",
+    "id": "rJxScrU",
+    "url": "https://framer.com/m/OverrunsItsMeasure-dmN6vY.js",
+    "pinned": "https://framer.com/m/OverrunsItsMeasure-dmN6vY.js@8agpgowdHAP6otX5zFG6"
+  },
+  {
+    "num": "88",
+    "name": "Too long to sit still",
+    "comp": "TooLongToSitStill",
+    "file": "TooLongToSitStill.tsx",
+    "hash": "e1c85a841eeca60a",
+    "id": "w2yOO9_",
+    "url": "https://framer.com/m/TooLongToSitStill-Bjw0f6.js",
+    "pinned": "https://framer.com/m/TooLongToSitStill-Bjw0f6.js@efXVw5TSsRgYf1wOiwS4"
+  },
+  {
+    "num": "89",
+    "name": "The plate has no direction",
+    "comp": "ThePlateHasNoDirection",
+    "file": "ThePlateHasNoDirection.tsx",
+    "hash": "6a06ad7d51b3dec4",
+    "id": "h_EyPpg",
+    "url": "https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js",
+    "pinned": "https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js@KOqQnEgbOFGCmrFGZHTh"
+  },
+  {
+    "num": "90",
+    "name": "The hatch withdraws",
+    "comp": "TheHatchWithdraws",
+    "file": "TheHatchWithdraws.tsx",
+    "hash": "6fd7094c74d01285",
+    "id": "YlxvG3f",
+    "url": "https://framer.com/m/TheHatchWithdraws-PoZMeK.js",
+    "pinned": "https://framer.com/m/TheHatchWithdraws-PoZMeK.js@e3zBBhGxa3rZxW6DBzyu"
+  },
+  {
+    "num": "91",
+    "name": "Stepped fill",
+    "comp": "SteppedFill",
+    "file": "SteppedFill.tsx",
+    "hash": "e69be2c863b0dee8",
+    "id": "A0oDXRi",
+    "url": "https://framer.com/m/SteppedFill-6Em9QG.js",
+    "pinned": "https://framer.com/m/SteppedFill-6Em9QG.js@tEN0vI20CiDZ8lJ3rnPN"
+  },
+  {
+    "num": "92",
+    "name": "Changes sides",
+    "comp": "ChangesSides",
+    "file": "ChangesSides.tsx",
+    "hash": "b78bba90f14dfbfd",
+    "id": "uKgEoMc",
+    "url": "https://framer.com/m/ChangesSides-0nQCL2.js",
+    "pinned": "https://framer.com/m/ChangesSides-0nQCL2.js@V3q5ftJakdbluPaNSnOX"
+  },
+  {
+    "num": "93",
+    "name": "The pieces join",
+    "comp": "ThePiecesJoin",
+    "file": "ThePiecesJoin.tsx",
+    "hash": "4489f43f2168070e",
+    "id": "QjHtgzC",
+    "url": "https://framer.com/m/ThePiecesJoin-sc1diW.js",
+    "pinned": "https://framer.com/m/ThePiecesJoin-sc1diW.js@iXK5OJEFYpz0SQdaE0GY"
+  },
+  {
+    "num": "94",
+    "name": "Ticker label",
+    "comp": "TickerLabel",
+    "file": "TickerLabel.tsx",
+    "hash": "4f05248cb05bb5ee",
+    "id": "OewVWB4",
+    "url": "https://framer.com/m/TickerLabel-1JFxFP.js",
+    "pinned": "https://framer.com/m/TickerLabel-1JFxFP.js@r3Mnnsqzur8F2HAuewL0"
+  },
+  {
+    "num": "95",
+    "name": "Struck through",
+    "comp": "StruckThrough",
+    "file": "StruckThrough.tsx",
+    "hash": "fcf68bac52b5c526",
+    "id": "xheoS87",
+    "url": "https://framer.com/m/StruckThrough-P16etM.js",
+    "pinned": "https://framer.com/m/StruckThrough-P16etM.js@KRK9todmXSpj9WbTT04J"
+  },
+  {
+    "num": "07",
+    "name": "Guillemets",
+    "comp": "Guillemets",
+    "file": "Guillemets.tsx",
+    "hash": "556ac4d47d18a851",
+    "id": "THPCAAw",
+    "url": "https://framer.com/m/Guillemets-rObXKn.js",
+    "pinned": "https://framer.com/m/Guillemets-rObXKn.js@0HHQwchjEG8egyWErSC4",
+    "retired": true
+  },
+  {
+    "num": "20",
+    "name": "The grain settles",
+    "comp": "TheGrainSettles",
+    "file": "TheGrainSettles.tsx",
+    "hash": "054f34ab9b9576e9",
+    "id": "n1_5rQg",
+    "url": "https://framer.com/m/TheGrainSettles-qDFHdb.js",
+    "pinned": "https://framer.com/m/TheGrainSettles-qDFHdb.js@FRyI42EVSNFk38HW1EPa",
+    "retired": true
+  },
+  {
+    "num": "23",
+    "name": "Rule becomes frame",
+    "comp": "RuleBecomesFrame",
+    "file": "RuleBecomesFrame.tsx",
+    "hash": "692996c49d18750a",
+    "id": "DOJx75g",
+    "url": "https://framer.com/m/RuleBecomesFrame-mTkC7D.js",
+    "pinned": "https://framer.com/m/RuleBecomesFrame-mTkC7D.js@FFEsuDmhcFFF9PRxbxYH",
+    "retired": true
+  },
+  {
+    "num": "30",
+    "name": "Only when it doesn't fit",
+    "comp": "OnlyWhenItDoesntFit",
+    "file": "OnlyWhenItDoesntFit.tsx",
+    "hash": "7e8c00a8d80698aa",
+    "id": "aYmvJD0",
+    "url": "https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js",
+    "pinned": "https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js@sGOWzed0BCKhm6KmZ4Uu",
+    "retired": true
+  },
+  {
+    "num": "31",
+    "name": "The plate gives, the type doesn't",
+    "comp": "ThePlateGivesTheTypeDoesnt",
+    "file": "ThePlateGivesTheTypeDoesnt.tsx",
+    "hash": "cf26e9f68ae579da",
+    "id": "Vpa0jQ7",
+    "url": "https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js",
+    "pinned": "https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js@ZeSPkSiMsRUh4qzKErlF",
+    "retired": true
+  },
+  {
+    "num": "37",
+    "name": "Setting the line",
+    "comp": "SettingTheLine",
+    "file": "SettingTheLine.tsx",
+    "hash": "d7852a7122f19961",
+    "id": "y8RmP0F",
+    "url": "https://framer.com/m/SettingTheLine-kEUeIM.js",
+    "pinned": "https://framer.com/m/SettingTheLine-kEUeIM.js@DoAP5GDqhNQ1A7XyOiqq",
+    "retired": true
+  },
+  {
+    "num": "58",
+    "name": "The stop",
+    "comp": "TheStop",
+    "file": "TheStop.tsx",
+    "hash": "78cf539b76e2390d",
+    "id": "Hfr6svQ",
+    "url": "https://framer.com/m/TheStop-fTngvI.js",
+    "pinned": "https://framer.com/m/TheStop-fTngvI.js@V0TtNff95QQruuqnxWaV",
+    "retired": true
+  },
+  {
+    "num": "76",
+    "name": "The terminal",
+    "comp": "TheTerminal",
+    "file": "TheTerminal.tsx",
+    "hash": "1cfd3837d26dc495",
+    "id": "TdvnLzI",
+    "url": "https://framer.com/m/TheTerminal-Jan0hL.js",
+    "pinned": "https://framer.com/m/TheTerminal-Jan0hL.js@RsFImZzQVx2C9KO8lIvS",
+    "retired": true
+  },
+  {
+    "num": "78",
+    "name": "The label turns",
+    "comp": "TheLabelTurns",
+    "file": "TheLabelTurns.tsx",
+    "hash": "759ed8449a08709d",
+    "id": "jjd8IFW",
+    "url": "https://framer.com/m/TheLabelTurns-docxl4.js",
+    "pinned": "https://framer.com/m/TheLabelTurns-docxl4.js@wV4O2IzNCCSB9n0n3bMo",
+    "retired": true
+  },
+  {
     "num": "80",
     "name": "Single storey",
     "comp": "SingleStorey",
     "file": "SingleStorey.tsx",
     "hash": "4752788caa1a1a33",
     "id": "IUpZAML",
-    "url": "https://framer.com/m/SingleStorey-z62nnB.js"
+    "url": "https://framer.com/m/SingleStorey-z62nnB.js",
+    "retired": true
   },
   {
     "num": "81",
@@ -805,7 +896,8 @@
     "file": "TellingThemApart.tsx",
     "hash": "a707d7e07a804ad6",
     "id": "cnchv7Z",
-    "url": "https://framer.com/m/TellingThemApart-8WQlW9.js"
+    "url": "https://framer.com/m/TellingThemApart-8WQlW9.js",
+    "retired": true
   },
   {
     "num": "82",
@@ -814,7 +906,8 @@
     "file": "TheFiguresChangeGauge.tsx",
     "hash": "29c11b9f6a787e4e",
     "id": "MFgwHqJ",
-    "url": "https://framer.com/m/TheFiguresChangeGauge-rRj0yw.js"
+    "url": "https://framer.com/m/TheFiguresChangeGauge-rRj0yw.js",
+    "retired": true
   },
   {
     "num": "83",
@@ -823,7 +916,8 @@
     "file": "TheFractionResolves.tsx",
     "hash": "5279468c0f0628cd",
     "id": "kEkxPhS",
-    "url": "https://framer.com/m/TheFractionResolves-jf6xlC.js"
+    "url": "https://framer.com/m/TheFractionResolves-jf6xlC.js",
+    "retired": true
   },
   {
     "num": "84",
@@ -832,7 +926,8 @@
     "file": "TheMarksFlatten.tsx",
     "hash": "016e6486fbf5609e",
     "id": "raUmUh0",
-    "url": "https://framer.com/m/TheMarksFlatten-hDjMqS.js"
+    "url": "https://framer.com/m/TheMarksFlatten-hDjMqS.js",
+    "retired": true
   },
   {
     "num": "85",
@@ -841,7 +936,8 @@
     "file": "TheNumeroSign.tsx",
     "hash": "52170693d4740acd",
     "id": "hz3_hOr",
-    "url": "https://framer.com/m/TheNumeroSign-DVQ0yF.js"
+    "url": "https://framer.com/m/TheNumeroSign-DVQ0yF.js",
+    "retired": true
   },
   {
     "num": "86",
@@ -850,87 +946,7 @@
     "file": "TrackingWasTheSwitch.tsx",
     "hash": "1c7d64dbe3d8a9a1",
     "id": "nj2PCfV",
-    "url": "https://framer.com/m/TrackingWasTheSwitch-plH7M0.js"
-  },
-  {
-    "num": "87",
-    "name": "The light source flips",
-    "comp": "TheLightSourceFlips",
-    "file": "TheLightSourceFlips.tsx",
-    "hash": "18a47cc575565c14",
-    "id": "met6srx",
-    "url": "https://framer.com/m/TheLightSourceFlips-NAY7oj.js"
-  },
-  {
-    "num": "88",
-    "name": "The tube converges",
-    "comp": "TheTubeConverges",
-    "file": "TheTubeConverges.tsx",
-    "hash": "68c6f460c84ea528",
-    "id": "AQvFMC4",
-    "url": "https://framer.com/m/TheTubeConverges-Mzevog.js"
-  },
-  {
-    "num": "89",
-    "name": "Two frames",
-    "comp": "TwoFrames",
-    "file": "TwoFrames.tsx",
-    "hash": "d9233732526e34b7",
-    "id": "IfQnVUt",
-    "url": "https://framer.com/m/TwoFrames-Xkk1by.js"
-  },
-  {
-    "num": "90",
-    "name": "It prints",
-    "comp": "ItPrints",
-    "file": "ItPrints.tsx",
-    "hash": "cf0681124a02d60d",
-    "id": "g8vMM_N",
-    "url": "https://framer.com/m/ItPrints-d0SyuT.js"
-  },
-  {
-    "num": "91",
-    "name": "The measure absorbs the tracking",
-    "comp": "TheMeasureAbsorbsTheTracking",
-    "file": "TheMeasureAbsorbsTheTracking.tsx",
-    "hash": "7934d6a43d48a2eb",
-    "id": "OmwfFEl",
-    "url": "https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js"
-  },
-  {
-    "num": "92",
-    "name": "No direction at all",
-    "comp": "NoDirectionAtAll",
-    "file": "NoDirectionAtAll.tsx",
-    "hash": "b7b98164a4ad2c35",
-    "id": "gwWasby",
-    "url": "https://framer.com/m/NoDirectionAtAll-o7wENC.js"
-  },
-  {
-    "num": "93",
-    "name": "It reports on itself",
-    "comp": "ItReportsOnItself",
-    "file": "ItReportsOnItself.tsx",
-    "hash": "88743932a5e79924",
-    "id": "RlpVn2r",
-    "url": "https://framer.com/m/ItReportsOnItself-UWJJzz.js"
-  },
-  {
-    "num": "94",
-    "name": "The plate becomes the mark",
-    "comp": "ThePlateBecomesTheMark",
-    "file": "ThePlateBecomesTheMark.tsx",
-    "hash": "c692588855697bab",
-    "id": "lB22RV5",
-    "url": "https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js"
-  },
-  {
-    "num": "95",
-    "name": "It asks you to mean it",
-    "comp": "ItAsksYouToMeanIt",
-    "file": "ItAsksYouToMeanIt.tsx",
-    "hash": "461fcf0b46babd3b",
-    "id": "BxrRDDA",
-    "url": "https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"
+    "url": "https://framer.com/m/TrackingWasTheSwitch-plH7M0.js",
+    "retired": true
   }
 ]

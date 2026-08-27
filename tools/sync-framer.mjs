@@ -191,8 +191,16 @@ for (const p of payload) {
 }
 // A file in the project that no study claims any more: reported, never
 // deleted. Its URL may already be pasted into somebody's site.
+//
+// It does have to stop claiming a card NUMBER, though. Numbers are reused the
+// moment the sections are reordered, so a retired study goes on holding, say,
+// "07" while a live one is issued the same number — and since the URL map is
+// keyed by number, whichever is written last silently takes the other's place.
+// Marking them here is what keeps the map free of that; the entry, the code
+// file and the published URL all stay exactly where they are.
 const claimed = new Set(payload.map(p => p.file))
 const orphans = (await framer.getCodeFiles()).map(f => f.name).filter(n => !claimed.has(n))
+for (const m of manifest) { if (claimed.has(m.file)) delete m.retired; else m.retired = true }
 manifest.sort((a, b) => a.num.localeCompare(b.num))
 fs.writeFileSync("/tmp/bhl-manifest.json", JSON.stringify(manifest, null, 2))
 console.log(JSON.stringify({ created, updated, skipped, orphans }))
@@ -210,7 +218,9 @@ function inject (manifest) {
   // Built as text rather than via an object literal: JS hoists integer-like
   // keys, which would print 10-79 ahead of 01-09 and make this generated block
   // needlessly hard to read in a diff.
-  const rows = [...manifest].sort((a, b) => a.num.localeCompare(b.num))
+  const rows = manifest.filter(m => !m.retired).sort((a, b) => a.num.localeCompare(b.num))
+  const dupes = rows.map(m => m.num).filter((n, i, a) => a.indexOf(n) !== i)
+  if (dupes.length) throw new Error(`two studies claim the same number: ${dupes.join(', ')}`)
   const map = "{" + rows.map(m => JSON.stringify(m.num) + ":" + JSON.stringify(m.url)).join(",") + "}"
   const html = fs.readFileSync(INDEX, 'utf8')
   const re = /(<!-- BHL:FRAMER-URLS start[^>]*-->\n<script type="application\/json" id="bhl-framer-urls">)[\s\S]*?(<\/script>)/
@@ -218,7 +228,8 @@ function inject (manifest) {
   const next = html.replace(re, (_, a, b) => a + map + b)
   if (next === html) { say('map unchanged'); return }
   fs.writeFileSync(INDEX, next)
-  say(`map written: ${rows.length} URLs`)
+  const retired = manifest.length - rows.length
+  say(`map written: ${rows.length} URLs` + (retired ? `, ${retired} retired entry/entries left out` : ''))
 }
 
 /* ---- run --------------------------------------------------------------- */
