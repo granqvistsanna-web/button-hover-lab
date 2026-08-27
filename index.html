@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Ninety-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="One hundred and eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Ninety-eight button hover animations, actually built.">
+<meta property="og:description" content="One hundred and eight button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all ninety-eight effect rules keep resolving under their own names.
+     ALIAS so all one hundred and eight effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -128,7 +128,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all ninety-eight, so the hairline under every stage
+  /* One stage height for all one hundred and eight, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -157,7 +157,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       ninety-eight demo buttons was rendering in system-ui while the page around
+       one hundred and eight demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -169,7 +169,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all ninety-eight inherit it,
+     and LEAVES at the shorter one. One rule pair, and all one hundred and eight inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -335,7 +335,7 @@
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all ninety-eight studies at once. Both are written as
+     Two knobs that restyle all one hundred and eight studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -472,7 +472,7 @@
   }
 
   /* ============ the rail ============
-     Ninety-eight studies is past the point where a filter row can hold the
+     One hundred and eight studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
      primary and radius, the two things that rewrite every card and every
      copied snippet — and everything that FINDS a card moved here: the search,
@@ -622,7 +622,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Ninety-eight button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">One hundred and eight button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -5020,7 +5020,7 @@
 
 <style>
   /* ============ Section A — The ones everyone ships ============
-     Ninety-eight studies in, and the page does not contain the button hover that
+     One hundred and eight studies in, and the page does not contain the button hover that
      is on more websites than every other effect here put together: the plate
      grows a little. Not one card scales the plate on hover — the only scale in
      any hover rule is card 84's identity, carried so its press does not drop a
@@ -5236,6 +5236,365 @@
     });
   })();
 </script>
+
+<style>
+  /* ============ Section T — Everything on a grid ============
+     Six studies that quantise. The page's vocabulary is three easing curves and
+     five durations, and every one of those curves describes a CONTINUOUS
+     position: the button is somewhere new on every frame. A bitmap display
+     cannot be somewhere new on every frame — it can only be on the grid or on
+     the next cell of it. So the timing function here is steps(), which card 38
+     already reached for once with the same reasoning: a tube warming up does
+     not ease. This section spends that argument on movement, shape and tone
+     rather than on a flicker.
+
+     Nothing below leaves the ladder. steps() takes a duration token like every
+     other transition on the page and the exit still drops one rung, so a
+     four-step arrival becomes a four-step departure that is a third quicker. */
+
+  /* 99 The fill has no edge — an ordered dither used as a transition. */
+  @property --w-dither-r{ syntax:"<length>"; inherits:false; initial-value:0px }
+  .w-dither{overflow:hidden}
+  /* Every other fill on this page is a FRONT: a straight edge (07), a curved
+     one (09), a jagged one (94). A dithered fill has no front at all. The plate
+     is there from the first step, everywhere at once, and what changes is how
+     much of each four-pixel cell it occupies — 0, 0.8, 1.6, 2.4, 3.2px of dot
+     radius, and at 3.2 the circle more than covers its own cell, so the last
+     step is solid. Four steps because four is what the tone ramp needs; a
+     fifth would be a tween wearing a costume. */
+  .w-dither::before{
+    content:""; position:absolute; inset:0; background:var(--accent);
+    --w-dither-r:0px;
+    /* Both stops on the SAME position, so the dot has no anti-aliased rim.
+       A half-pixel of feather left a visible grain on the plate at radius
+       zero — the fill was there before the hover was — and a dither with
+       soft dots is a blur pretending to be a pattern. */
+    -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 var(--w-dither-r), #0000 var(--w-dither-r));
+            mask-image:radial-gradient(circle at 50% 50%, #000 var(--w-dither-r), #0000 var(--w-dither-r));
+    -webkit-mask-size:4px 4px;  mask-size:4px 4px;
+    transition:--w-dither-r var(--t-4) steps(4,end);
+  }
+  .w-dither:hover::before,
+  .w-dither:focus-visible::before{ --w-dither-r:3.2px }
+  /* The label is NOT crossfaded. Stepping it with the plate put grey type on a
+     fifty-percent field for a third of the transition and the word disappeared;
+     holding it white loses it against the solid arrival instead. Difference
+     blending has no such middle: over the dark plate the white label stays
+     white, over the arrived white it inverts to black, and over the dot field
+     it inverts per dot — which is what a 1-bit display does to a cursor it
+     drags across a pattern, and the only reading of this card that is legible
+     on every frame. isolation:isolate keeps the blend inside the button rather
+     than letting it read the panel behind it. */
+  .w-dither{isolation:isolate}
+  .w-dither .lbl{position:relative; z-index:1;
+    color:var(--inverse-bg); mix-blend-mode:difference}
+
+  /* 100 Set on a four-pixel grid — no in-between positions. */
+  .w-grid .lbl{display:block; transition:transform var(--t-3) steps(1,end)}
+  .w-grid:hover .lbl,
+  .w-grid:focus-visible .lbl{transform:translateX(-4px)}
+  /* Twelve pixels in three jumps of four. steps(3,end) holds 0 for the first
+     third, so the mark shows four positions across the transition and not the
+     nine a 60fps tween would draw. The label makes room in ONE jump: two
+     clocks, one grid. Neither is the button itself — .btn:active owns that
+     transform, and a lift written there is lost the moment you press. */
+  .w-grid .icon{transition:transform var(--t-3) steps(3,end)}
+  .w-grid:hover .icon,
+  .w-grid:focus-visible .icon{transform:translateX(12px)}
+
+  /* 101 The corner comes off in cells — card 29's move at bitmap resolution. */
+  .w-corner{border-radius:0}
+  /* The staircase is twenty points and the rest state is the same twenty with
+     every step collapsed onto the rectangle's corner, so the two polygons
+     interpolate. It is on a ::before and not on the button for card 29's
+     reason and one more: clip-path clips the focus outline too, and the
+     keyboard state is not a corner's to take away.
+     The toolbar's radius cannot reach this card. A stepped corner and a
+     999px pill are answers to the same question and only one can be on. */
+  .w-corner::before{
+    content:""; position:absolute; inset:0; background:var(--lift-bg);
+    clip-path:polygon(100% 0, 100% 0, 100% 0, 100% 0, 100% 0,
+                      100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+                      0 100%, 0 100%, 0 100%, 0 100%, 0 100%,
+                      0 0, 0 0, 0 0, 0 0, 0 0);
+    transition:clip-path var(--t-3) steps(2,end);
+  }
+  .w-corner:hover::before,
+  .w-corner:focus-visible::before{
+    clip-path:polygon(calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
+                      100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+                      8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px),
+                      0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0);
+  }
+  .w-corner .lbl{position:relative}
+
+  /* 102 Four frames, not a tween — a sprite strip, stepped. */
+  .w-frames-win{display:block; width:14px; height:14px; overflow:hidden}
+  /* Four poses drawn side by side in one 56px sheet, and a 14px window that
+     steps across it: arrow, arrow shortened, head alone, arrow re-formed. The
+     mark is not interpolated between two states — it is KEYED, the way it
+     would be by hand, and the three intermediate positions are the only ones
+     that exist. Card 103 answers the same question at the other end: there,
+     the glyph is addressable cell by cell and the cells do interpolate. */
+  .w-frames-strip{display:block; width:56px; height:14px;
+    transition:transform var(--t-3) steps(3,end)}
+  .w-frames:hover .w-frames-strip,
+  .w-frames:focus-visible .w-frames-strip{transform:translateX(-42px)}
+
+  /* 103 It does not rotate — a plus becomes an X, one cell at a time. */
+  .w-redraw-box{display:block; position:relative; width:12px; height:12px}
+  /* Five three-pixel cells on a five-pixel pitch. At rest they read as a plus;
+     on hover, as an X. A rotation is what the rest of this page would reach
+     for and it is the wrong answer twice over — a bitmap has no angle between
+     0 and 45 degrees to pass through, and the centre cell of a plus is already
+     the centre cell of an X, so it has nowhere to go. Four cells each step one
+     place around the centre; the fifth stays put. The stagger is the house
+     26ms, in the order the pinwheel turns.
+     The cell is four pixels on a four-pixel pitch — contiguous. At three on a
+     pitch of five the plus read as five loose dots and the X's diagonal never
+     joined up: a bitmap glyph is made of touching cells, and the gap between
+     them is the one place this idiom has no tolerance. */
+  .w-redraw-cell{position:absolute; top:0; left:0; width:4px; height:4px;
+    background:currentColor; transition:transform var(--t-3) var(--e-quint)}
+  .w-redraw-n{transform:translate(4px,0)}
+  .w-redraw-w{transform:translate(0,4px);  transition-delay:var(--t-stagger)}
+  .w-redraw-c{transform:translate(4px,4px)}
+  .w-redraw-e{transform:translate(8px,4px); transition-delay:calc(var(--t-stagger) * 2)}
+  .w-redraw-s{transform:translate(4px,8px); transition-delay:calc(var(--t-stagger) * 3)}
+  .w-redraw:hover .w-redraw-n,
+  .w-redraw:focus-visible .w-redraw-n{transform:translate(8px,0)}
+  .w-redraw:hover .w-redraw-w,
+  .w-redraw:focus-visible .w-redraw-w{transform:translate(0,0)}
+  .w-redraw:hover .w-redraw-e,
+  .w-redraw:focus-visible .w-redraw-e{transform:translate(8px,8px)}
+  .w-redraw:hover .w-redraw-s,
+  .w-redraw:focus-visible .w-redraw-s{transform:translate(0,8px)}
+
+  /* 104 The same grey, a coarser grid — the tone is a pattern, and it holds. */
+  .w-pitch{overflow:hidden}
+  /* A checkerboard covers exactly half of whatever cell it is drawn in, so its
+     tone is independent of its pitch: 4px cells and 8px cells are the same
+     grey. That is the whole study. Nothing about the colour changes on hover —
+     no fill arrives, no opacity moves — and the button still visibly answers,
+     because the GRID it is made of doubles. Two steps, so you can see it land.
+     It is the quietest way this page has found to say that a tone and a
+     texture are the same object seen at two distances.
+     The squares are --line-ctl and not --ink for a reason the screen gave up
+     before any assertion did: half a field of near-white is a near-white
+     plate, and the house label vanished into it. At .36 the same fifty percent
+     composites to a dark grey the label reads on, and a tone that had to be
+     legible to make its point about tone is the right place to spend the one
+     token on this page that exists purely to clear a contrast floor. */
+  .w-pitch::before{
+    content:""; position:absolute; inset:0; background:var(--line-ctl);
+    -webkit-mask-image:conic-gradient(#000 0 25%, #0000 0 50%, #000 0 75%, #0000 0);
+            mask-image:conic-gradient(#000 0 25%, #0000 0 50%, #000 0 75%, #0000 0);
+    -webkit-mask-size:4px 4px;  mask-size:4px 4px;
+    transition:-webkit-mask-size var(--t-4) steps(2,end),
+                       mask-size var(--t-4) steps(2,end);
+  }
+  .w-pitch:hover::before,
+  .w-pitch:focus-visible::before{-webkit-mask-size:8px 8px; mask-size:8px 8px}
+  .w-pitch .lbl{position:relative; z-index:1}
+</style>
+
+<section class="sect">
+  <h2>T — Everything on a grid</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line w-dither"><span class="lbl">Render the frame</span></button>
+      </div>
+      <h3><span class="num">99</span>The fill has no edge</h3>
+      <p>The fill does not cross the plate — it is already everywhere, and thickens through four densities of a four-pixel dot field. Cards 07, 09 and 94 all move a front; an ordered dither has no front to move.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid w-grid"><span class="lbl">Advance</span><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></button>
+      </div>
+      <h3><span class="num">100</span>Set on a four-pixel grid</h3>
+      <p>The mark crosses twelve pixels in three jumps of four and the label makes room in one, so the button is never between two positions. The exact argument section L is built to deny.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn w-corner"><span class="lbl">Open the sheet</span></button>
+      </div>
+      <h3><span class="num">101</span>The corner comes off in cells</h3>
+      <p>Card 29 unfolds a chamfer along a straight diagonal; at bitmap resolution the same corner can only leave as whole cells, two of them, in two steps. The one card here the toolbar's radius cannot reach.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line w-frames"><span class="lbl">Play it back</span><span class="w-frames-win"><svg class="w-frames-strip" viewBox="0 0 56 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/><path d="M17 7h5M23 4l3 3-3 3"/><path d="M37 4l3 3-3 3"/><path d="M44 7h10M50 3l4 4-4 4"/></svg></span></button>
+      </div>
+      <h3><span class="num">102</span>Four frames, not a tween</h3>
+      <p>The mark is a four-pose sprite sheet behind a fourteen-pixel window, stepped across rather than interpolated. Cards 11, 12 and 18 all animate an arrow; this one is drawn four times and never in between.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line w-redraw"><span class="lbl">Change the mark</span><span class="w-redraw-box" aria-hidden="true"><span class="w-redraw-cell w-redraw-n"></span><span class="w-redraw-cell w-redraw-w"></span><span class="w-redraw-cell w-redraw-c"></span><span class="w-redraw-cell w-redraw-e"></span><span class="w-redraw-cell w-redraw-s"></span></span></button>
+      </div>
+      <h3><span class="num">103</span>It does not rotate</h3>
+      <p>A plus becomes an X without passing through a single angle: four cells step one place around the centre, 26ms apart, and the fifth is already where it needs to be. Card 73 hinges the mark; this one redraws it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn w-pitch"><span class="lbl">Hold the tone</span></button>
+      </div>
+      <h3><span class="num">104</span>The same grey, a coarser grid</h3>
+      <p>A checkerboard covers half its cell whatever the cell's size, so doubling the pitch changes the texture and not the tone. The plate answers you without changing colour at all.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<style>
+  /* ============ Section U — The machine had an answer ============
+     Four studies that are not inventions. A departure board, a meter movement,
+     the bevel every desktop button wore for a decade, and the dotted rectangle
+     that told you where the keyboard was — each one is a solved problem being
+     read back, and in three of the four the old answer is still the better
+     one. This is section S's argument aimed backwards rather than sideways. */
+
+  /* 105 Split-flap — the label changes the way a board changes it. */
+  .x-flap-box{display:block; position:relative; height:1.25em; perspective:240px}
+  /* Both faces are hinged on the same horizontal line through the middle of the
+     x-height, which is where a real flap is pinned. The leaving word falls away
+     from you and the arriving one comes up to meet the stop.
+     --e-back is on the arrival only, which is what its own note in the token
+     block asks for: it peaks at 1.058, so the incoming face overruns the stop
+     by two degrees and settles back onto it. Used on the exit instead, the
+     flap would swing through the plate it is pinned to. */
+  .x-flap-out,
+  .x-flap-in{display:block; line-height:1.25; backface-visibility:hidden;
+    transform-origin:50% 50%; transition:transform var(--t-4) var(--e-quint)}
+  .x-flap-in{position:absolute; inset:0; transform:rotateX(90deg)}
+  .x-flap:hover .x-flap-out,
+  .x-flap:focus-visible .x-flap-out{transform:rotateX(-90deg)}
+  .x-flap:hover .x-flap-in,
+  .x-flap:focus-visible .x-flap-in{
+    transform:rotateX(0deg);
+    transition-timing-function:var(--e-back);
+    transition-delay:var(--d-1);
+  }
+
+  /* 106 The needle swings — and comes back slower than it went. */
+  .x-needle-dial{display:block; position:relative; width:34px; height:14px}
+  .x-needle-arc{display:block; width:34px; height:14px; opacity:.45}
+  /* The one place on this page where the exit is LONGER than the enter, and it
+     is deliberate. The house rule — exit one rung down — describes an interface
+     getting out of your way. A meter movement is not an interface: the needle
+     is thrown by the signal and returned by a spring against damping, so it
+     goes out fast and comes back slow. 300ms out on --e-back, which overruns
+     the reading by a couple of degrees the way a real movement overshoots, and
+     450ms home on the settling curve. Written as a literal because the ladder
+     has no rung above --t-5 and inventing one for a single study would be
+     worse than saying so here. */
+  .x-needle-arm{position:absolute; left:50%; bottom:1px; width:1px; height:10px;
+    margin-left:-.5px; background:currentColor; transform-origin:50% 100%;
+    transform:rotate(-34deg);
+    transition:transform 450ms var(--e-quint)}
+  .x-needle:hover .x-needle-arm,
+  .x-needle:focus-visible .x-needle-arm{
+    transform:rotate(30deg);
+    transition:transform var(--t-4) var(--e-back);
+  }
+
+  /* 107 Outset, then inset — the only state it has is pressed. */
+  .x-bevel{
+    /* A bevel is two light sources on four edges and it needs corners to put
+       them on, so this card sets its own radius and does not follow the
+       toolbar — the same admission card 101 makes for the same reason. */
+    border-radius:2px;
+    background:var(--bg-2); color:var(--ink-hi);
+    border:2px solid;
+    border-color:var(--ink-low) var(--bg-3) var(--bg-3) var(--ink-low);
+    padding:13px 26px;
+    /* Not a shorthand being lazy: this card's whole claim is that the state
+       change took zero milliseconds and was still legible. Every other study
+       here spends between 83 and 450 of them. */
+    transition:none;
+  }
+  /* Nothing on hover, on purpose. The pointer had no state of its own when this
+     was designed, and card 89 already holds the floor for how little a HOVER
+     can do — this is the floor one axis over. */
+  .x-bevel:active{
+    border-color:var(--bg-3) var(--ink-low) var(--ink-low) var(--bg-3);
+    transform:none;
+  }
+  .x-bevel:active .lbl{transform:translate(1px,1px)}
+
+  /* 108 The dotted rectangle — the state the other 107 never show you. */
+  /* Added to the house outline, never instead of it: a 1px dotted line at
+     --ink measures well under the 3:1 a focus indicator owes, and the ring the
+     page already draws is what carries that. What the dotted rect adds is the
+     thing the outline lost when it moved outside the plate — a mark ON the
+     control saying the keyboard is here, which is what it meant in 1995.
+     steps(1) because a focus indicator that fades in has, for part of its
+     fade, failed to indicate focus. */
+  .x-dotted::after{
+    content:""; position:absolute; inset:4px; pointer-events:none;
+    border:1px dotted var(--ink);
+    border-radius:calc(var(--btn-r) - 4px);
+    opacity:0; transition:opacity var(--t-1) steps(1,end);
+  }
+  .x-dotted:focus-visible::after{opacity:1}
+  .x-dotted .lbl{position:relative}
+</style>
+
+<section class="sect">
+  <h2>U — The machine had an answer</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid x-flap"><span class="x-flap-box"><span class="x-flap-out" aria-hidden="true">Book a slot</span><span class="x-flap-in" aria-hidden="true">Confirmed</span></span><span class="sr">Book a slot</span></button>
+      </div>
+      <h3><span class="num">105</span>Split-flap</h3>
+      <p>The label is pinned through its own middle and the two words trade places over the hinge, the arriving one overrunning the stop by two degrees. Cards 16 and 21 slide a label past; a board turns it over.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line x-needle"><span class="lbl">Check the level</span><span class="x-needle-dial" aria-hidden="true"><svg class="x-needle-arc" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 12.5a15 15 0 0 1 28 0"/></svg><span class="x-needle-arm"></span></span></button>
+      </div>
+      <h3><span class="num">106</span>The needle swings</h3>
+      <p>Thrown across the dial in 300ms and returned in 450 — the only study here whose exit is slower than its entrance, because a meter movement is not getting out of your way, it is being dragged back by a spring.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn x-bevel"><span class="lbl">OK</span></button>
+      </div>
+      <h3><span class="num">107</span>Outset, then inset</h3>
+      <p>Two light sources, four edges, and the pair swapping the instant you press. No hover state at all and no transition anywhere — and it still reports what it is doing faster than anything else on this page.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line x-dotted"><span class="lbl">Tab to this one</span></button>
+      </div>
+      <h3><span class="num">108</span>The dotted rectangle</h3>
+      <p>A hairline dotted rect inside the plate, on the keyboard and only on the keyboard. Added to the house focus ring rather than replacing it — the ring carries the contrast, the rect carries the meaning it had when it sat on the control itself.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
 
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
