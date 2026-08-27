@@ -119,6 +119,33 @@ frost, a bevel — has no outline version at all. A study that offers only the o
 it ships in renders no control, and that absence is the honest signal: the study
 is surface-locked, rather than nobody having looked.
 
+Family B is built *around* a fill, so it is the family that had to answer what
+the other versions even mean. Two rules came out of it, and the rest of the page
+follows them:
+
+- **On a fill, the arriving plate is the inverse.** An `--ink` sweep across an
+  `--ink` plate is invisible. The arriving surface becomes `--on-ink` and the
+  label returns to `--ink` — the inverse pair the page already uses wherever it
+  has to say *swapped* without a hue. That plate needs a boundary of its own:
+  `--on-ink` on a `--bg-1` panel measures 1.06:1, so a `--line-ctl` hairline goes
+  on the plate, bringing it to 3.12:1 and costing no layout.
+- **On a link, a fill becomes a rule.** There is no plate to fill, so the
+  mechanism moves to the only surface a link has — a 1.5px rule along the bottom,
+  entering and leaving on the geometry the fill used. Where the fill's geometry
+  has no rule equivalent there is *no link version*: the shutter opens on the
+  vertical and a rule has no vertical to open on, and the ink fill grows a circle
+  a link's box would clip to nothing.
+
+The sweep's link version lands on the same mechanism as the directional
+underline, and that is not a duplicate to apologise for — it is the family's own
+argument arriving. The sweep and the underline were always the same gesture on
+two different surfaces.
+
+One thing the copy does that is worth knowing: the snippet carries the effect's
+**whole** version set, not only the one on screen. The markup is the version you
+are looking at, so it works as pasted, and the other versions are a class swap
+away rather than a second visit.
+
 Two things the switch owes the page, and both are load-bearing:
 
 - **It is not a hover.** The swap runs one frame with transitions and idle loops
