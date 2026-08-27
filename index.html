@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eighty-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Ninety-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Eighty-eight button hover animations, actually built.">
+<meta property="og:description" content="Ninety-four button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all eighty-eight effect rules keep resolving under their own names.
+     ALIAS so all ninety-four effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -105,7 +105,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all eighty-eight, so the hairline under every stage
+  /* One stage height for all ninety-four, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -134,7 +134,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       eighty-eight demo buttons was rendering in system-ui while the page around
+       ninety-four demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -146,7 +146,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all eighty-eight inherit it,
+     and LEAVES at the shorter one. One rule pair, and all ninety-four inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -324,7 +324,7 @@
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all eighty-eight studies at once. Both are written as
+     Two knobs that restyle all ninety-four studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -465,7 +465,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Eighty-eight button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Ninety-four button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -4223,6 +4223,328 @@
   })();
 </script>
 
+<style>
+  /* ============ Section R — The label, letter by letter ============
+     One gesture, six positions on it. The page has come at this twice and
+     stopped short both times: card 26 rolls the label up as ONE block and hands
+     over to a duplicate, and card 43 staggers three whole children rather than
+     a word's characters. It has split a label before — 46 scrambles the
+     characters, 79 tilts them, 12 drives weight through them — but every one of
+     those changes each character IN PLACE. Nothing here has ever staggered a
+     character's POSITION, which is the one thing anybody means by «text
+     animation on hover». This section does that, and then argues about what the
+     split is worth, because per-character motion is the effect most likely on
+     this page to read as a gimmick and saying so once in CSS is worth more than
+     saying it in a note.
+
+     Card 12 splits at the gesture, in script, so the DOM stays whole until it
+     is needed. These six split in the MARKUP, which is what keeps them CSS-only
+     and what lets the Copy buttons hand over something that works — a runtime
+     split would arrive in Framer as a label that never animates.
+
+     What every card here shares:
+     · The unit index is authored as --i on an nth-child rule, never as an
+       inline style. The Copy machinery strips every style attribute off its
+       clone, so an inline index would work on this page and arrive dead in the
+       snippet.
+     · The delay is calc(var(--i) * var(--t-stagger)), and --t-stagger is the
+       house 26ms. It is set in BOTH states, which is card 43's insight: the
+       rest-state delay IS the exit delay. Left in the hover rule alone, the
+       letters leave in formation and only arrive in sequence, which reads as a
+       broken effect rather than a quiet one.
+     · Splitting a label costs the kerning between every pair, because kerning
+       does not cross an element boundary. Measured on these six labels: 0.69px
+       to 3.50px per label split by character, and 0.02px to 0.05px split by
+       WORD — kerning pairs do not cross a space, so card 92's granularity is
+       free where card 89's is not. It is paid at REST as well as on hover, so
+       nothing moves while the effect runs; the label is simply a hair wider
+       than the same string set as one run, for as long as it is on the page.
+     · The visible units are aria-hidden and the accessible name comes from one
+       .sr copy, as cards 46 and 79 do. Twelve one-character spans would
+       otherwise be announced one at a time.
+
+     The prefix is u-: t- is spent on «After the press» next door and s- on the
+     section before it. r- went out with a withdrawn section and is not being
+     reused, so the ledger still reads as a history rather than a lookup. */
+
+  /* 80 The roll, letter by letter — card 26's gesture, resolved. Each character
+     is its own two-row column: the letter you can see leaves through the top of
+     its box while its duplicate arrives from the bottom of the same box, and
+     the columns start 26ms apart. Nothing is revealed and nothing is hidden —
+     the label is replaced by an identical label, which is the only way a roll
+     can be layout-stable without reserving space.
+     vertical-align:bottom is not decoration. An inline-block with overflow
+     hidden takes its BASELINE from its bottom margin edge, so ten of them in a
+     row sit a whole descender lower than the text around them and the label
+     drops off its own baseline the moment the effect is added. Card 26 never
+     met this because its mask is a block.
+     The box is 1.25em, matching card 26's track, so a descender has somewhere
+     to be — at 1em the y in «touch» is clipped flat while it travels. The
+     height has to be DECLARED: overflow:hidden does not shrink an inline-block
+     to one row, and without it the wrapper is the full two rows tall and the
+     plate stands 22px over the house height.
+     The split costs 0.99px of kerning across this label, paid in both states,
+     and the 1.25em box makes the plate 3.75px taller than a card whose label is
+     one run — constant, not on hover, and card 26 already pays it. On --t-4 with a 26ms step: ten characters means the last column
+     starts 234ms after the first, and at the --t-5 rung the tail of the
+     word would still be arriving after the pointer had left. */
+  .u-roll .u-roll-c{display:inline-block; overflow:hidden; vertical-align:bottom;
+    height:1.25em; line-height:1.25}
+  .u-roll .u-roll-i{display:block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-quint) calc(var(--i) * var(--t-stagger));
+  }
+  .u-roll .u-roll-i > span{display:block; line-height:1.25}
+  .u-roll:hover .u-roll-i,
+  .u-roll:focus-visible .u-roll-i{transform:translateY(-50%) rotate(0.001deg)}
+  .u-roll .u-roll-c:nth-child(1){--i:0}
+  .u-roll .u-roll-c:nth-child(2){--i:1}
+  .u-roll .u-roll-c:nth-child(3){--i:2}
+  .u-roll .u-roll-c:nth-child(4){--i:3}
+  .u-roll .u-roll-c:nth-child(5){--i:4}
+  .u-roll .u-roll-c:nth-child(6){--i:5}
+  .u-roll .u-roll-c:nth-child(7){--i:6}
+  .u-roll .u-roll-c:nth-child(8){--i:7}
+  .u-roll .u-roll-c:nth-child(9){--i:8}
+  .u-roll .u-roll-c:nth-child(10){--i:9}
+
+  /* 81 A lift, not a roll — the same stagger with nothing masked, nothing
+     duplicated and nowhere for a descender to be clipped: each character lifts
+     3px and comes back. It is here as the argument that card 89 is usually the
+     wrong choice. A roll replaces the label, so it needs a mask, a duplicate,
+     a fixed box and a line-height that fits the deepest descender in whatever
+     copy the client eventually writes; this needs a transform and an index.
+     3px, not more. The travel has to stay under the distance between the
+     baseline and the cap line or the word comes apart into ten objects — which
+     is the failure mode this whole section is about. */
+  .u-lift .u-lift-c{display:inline-block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out) calc(var(--i) * var(--t-stagger));
+  }
+  .u-lift:hover .u-lift-c,
+  .u-lift:focus-visible .u-lift-c{transform:translateY(-3px) rotate(0.001deg)}
+  .u-lift .u-lift-c:nth-child(1){--i:0}
+  .u-lift .u-lift-c:nth-child(2){--i:1}
+  .u-lift .u-lift-c:nth-child(3){--i:2}
+  .u-lift .u-lift-c:nth-child(4){--i:3}
+  .u-lift .u-lift-c:nth-child(5){--i:4}
+  .u-lift .u-lift-c:nth-child(6){--i:5}
+  .u-lift .u-lift-c:nth-child(7){--i:6}
+  .u-lift .u-lift-c:nth-child(8){--i:7}
+  .u-lift .u-lift-c:nth-child(9){--i:8}
+  .u-lift .u-lift-c:nth-child(10){--i:9}
+
+  /* 82 It lands past its mark — the bounce, and the one card on the page that
+     wants to be read as one. Card 33 samples an underdamped spring and then
+     tunes the second lobe down to 0.43% precisely SO THAT it never reads as a
+     bounce; this keeps the lobe. The curve overshoots to 1.34 and settles
+     through one visible return, so a 4px lift arrives 1.4px past its mark and
+     comes back.
+     Two things keep it usable rather than childish. The overshoot is a fraction
+     of a pixel more than card 33 allows itself, not a fraction of the travel —
+     at 4px the eye reads the RETURN, not the distance. And the stagger is 26ms
+     against a 300ms rung, so the letters overlap heavily and the word bounces
+     as a word; at 60ms it becomes ten separate bounces and looks like a
+     children's app. That is the whole difference between this and the thing
+     nobody wants on a button.
+     Still one plain transition, so it reverses from wherever it has got to. */
+  .u-land .u-land-c{display:inline-block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-out) calc(var(--i) * var(--t-stagger));
+  }
+  .u-land:hover .u-land-c,
+  .u-land:focus-visible .u-land-c{
+    transform:translateY(-4px) rotate(0.001deg);
+    /* damping ratio .38, omega 15 rad/s, sampled at 24 steps: one 34% overshoot
+       and one 6% return, where card 33 keeps 16% and 0.43%. */
+    transition-timing-function:linear(0 0%, 0.1868 4.17%, 0.5462 8.33%, 0.8892 12.5%,
+      1.1394 16.67%, 1.2827 20.83%, 1.3378 25%, 1.3311 29.17%, 1.2857 33.33%, 1.2205 37.5%,
+      1.1509 41.67%, 1.0876 45.83%, 1.0374 50%, 1.0022 54.17%, 0.9812 58.33%, 0.9714 62.5%,
+      0.9694 66.67%, 0.9723 70.83%, 0.9778 75%, 0.9843 79.17%, 0.9905 83.33%, 0.9955 87.5%,
+      0.999 91.67%, 1.0009 95.83%, 1 100%);
+  }
+  .u-land .u-land-c:nth-child(1){--i:0}
+  .u-land .u-land-c:nth-child(2){--i:1}
+  .u-land .u-land-c:nth-child(3){--i:2}
+  .u-land .u-land-c:nth-child(4){--i:3}
+  .u-land .u-land-c:nth-child(5){--i:4}
+  .u-land .u-land-c:nth-child(6){--i:5}
+  .u-land .u-land-c:nth-child(7){--i:6}
+  .u-land .u-land-c:nth-child(8){--i:7}
+  .u-land .u-land-c:nth-child(9){--i:8}
+
+  /* 83 Word by word — the same roll with the unit changed, and the card that
+     answers «who would use this». Four words on a 300ms rung with a 26ms step
+     is a CTA reading itself out; twenty-one characters is a wave passing over a
+     button. The mechanism is identical and only the granularity moved, which is
+     the argument: on real copy the granularity IS the design decision.
+     The wrappers are words, so a space between them stays a real space in the
+     inline formatting context and the line can still break — a per-character
+     split cannot wrap at all, and a long label in a narrow column overflows
+     instead of breaking. Card 65 is what happens next. */
+  .u-words .u-words-c{display:inline-block; overflow:hidden; vertical-align:bottom;
+    height:1.25em; line-height:1.25}
+  .u-words .u-words-i{display:block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-quint) calc(var(--i) * var(--t-stagger));
+  }
+  .u-words .u-words-i > span{display:block; line-height:1.25}
+  .u-words:hover .u-words-i,
+  .u-words:focus-visible .u-words-i{transform:translateY(-50%) rotate(0.001deg)}
+  .u-words .u-words-c:nth-child(1){--i:0}
+  .u-words .u-words-c:nth-child(2){--i:1}
+  .u-words .u-words-c:nth-child(3){--i:2}
+  .u-words .u-words-c:nth-child(4){--i:3}
+
+  /* 84 From the middle out — the same lift, ordered by distance from the
+     label's centre instead of by reading order. Both ends move last and the
+     word breathes from the middle, which reads as ONE object under the pointer
+     where left-to-right reads as a queue being served.
+     The index is not the position, it is |position − centre| rounded, authored
+     per character. Thirteen characters is odd, so one letter holds index 0 and
+     moves alone, and the two ends arrive 156ms after it — against the 234ms
+     card 90 needs to reach the end of ten letters. Ordering by distance rather
+     than by reading order buys back a third of the span, which is why this is
+     the card that can afford the full 26ms step. */
+  .u-centre .u-centre-c{display:inline-block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out) calc(var(--i) * var(--t-stagger));
+  }
+  .u-centre:hover .u-centre-c,
+  .u-centre:focus-visible .u-centre-c{transform:translateY(-3px) rotate(0.001deg)}
+  .u-centre .u-centre-c:nth-child(1){--i:6}
+  .u-centre .u-centre-c:nth-child(2){--i:5}
+  .u-centre .u-centre-c:nth-child(3){--i:4}
+  .u-centre .u-centre-c:nth-child(4){--i:3}
+  .u-centre .u-centre-c:nth-child(5){--i:2}
+  .u-centre .u-centre-c:nth-child(6){--i:1}
+  .u-centre .u-centre-c:nth-child(7){--i:0}
+  .u-centre .u-centre-c:nth-child(8){--i:1}
+  .u-centre .u-centre-c:nth-child(9){--i:2}
+  .u-centre .u-centre-c:nth-child(10){--i:3}
+  .u-centre .u-centre-c:nth-child(11){--i:4}
+  .u-centre .u-centre-c:nth-child(12){--i:5}
+  .u-centre .u-centre-c:nth-child(13){--i:6}
+
+  /* 85 It starts where you entered — the stagger runs away from the pointer.
+     Enter from the left and it goes left to right; enter from the right and it
+     reverses. Card 01 does this for a fill and card 44 for an exit; neither has
+     done it to a label's characters, and a variant cannot do it at all because
+     the entry side is not a state.
+     Every character carries BOTH indices, --i and --j, authored on the same
+     nth-child rule, so the script has no arithmetic to do and no styles to
+     write: it sets one attribute on the button and CSS picks the column. That
+     also means the keyboard gets the default order for free — focus has no
+     entry side, the attribute is never set, and --i is what remains.
+     The read is on pointerenter, against the button's own centre rather than
+     the viewport's, and it is one getBoundingClientRect per enter.
+     Ten characters, not the seventeen this label started as: at 26ms a
+     fifteen-letter word puts 364ms between the first column and the last, and
+     the direction stops being legible as one gesture — you watch a queue
+     instead. The step is the house 26ms; the LABEL is what has to give. */
+  .u-side .u-side-c{display:inline-block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out) calc(var(--i) * var(--t-stagger));
+  }
+  .u-side[data-u-side="r"] .u-side-c{
+    transition-delay:calc(var(--j) * var(--t-stagger));
+  }
+  .u-side:hover .u-side-c,
+  .u-side:focus-visible .u-side-c{transform:translateY(-3px) rotate(0.001deg)}
+  .u-side .u-side-c:nth-child(1){--i:0; --j:9}
+  .u-side .u-side-c:nth-child(2){--i:1; --j:8}
+  .u-side .u-side-c:nth-child(3){--i:2; --j:7}
+  .u-side .u-side-c:nth-child(4){--i:3; --j:6}
+  .u-side .u-side-c:nth-child(5){--i:4; --j:5}
+  .u-side .u-side-c:nth-child(6){--i:5; --j:4}
+  .u-side .u-side-c:nth-child(7){--i:6; --j:3}
+  .u-side .u-side-c:nth-child(8){--i:7; --j:2}
+  .u-side .u-side-c:nth-child(9){--i:8; --j:1}
+  .u-side .u-side-c:nth-child(10){--i:9; --j:0}
+
+  @media (prefers-reduced-motion: reduce){
+    /* The global clamp zeroes every delay, which is exactly right here: a
+       stagger IS a sequence of delays, so it collapses to the whole label
+       moving at once, and every card still answers a hover. Card 82 is the one
+       that needs saying out loud — its overshoot is in the timing function, and
+       a .01ms duration lands on the end value, so the bounce does not survive
+       as a flicker. Nothing to add, and this comment is the record that it was
+       checked rather than assumed. */
+    .u-land:hover .u-land-c,
+    .u-land:focus-visible .u-land-c{transition-timing-function:linear !important}
+  }
+</style>
+
+<section class="sect">
+  <h2>R — The label, letter by letter</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line u-roll"><span class="lbl"><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>G</span><span>G</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>e</span><span>e</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>i</span><span>i</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>n</span><span>n</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>o</span><span>o</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>u</span><span>u</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>c</span><span>c</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>h</span><span>h</span></span></span></span><span class="sr">Get in touch</span></button>
+      </div>
+      <h3><span class="num">89</span>The roll, letter by letter</h3>
+      <p>Card 26's gesture resolved per character: each letter leaves through the top of its own box while its duplicate arrives from the bottom, 26ms apart. Nothing is revealed and nothing is reserved — an identical label replaces the one that left.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid u-lift"><span class="lbl"><span class="u-lift-c" aria-hidden="true">S</span><span class="u-lift-c" aria-hidden="true">e</span><span class="u-lift-c" aria-hidden="true">e</span> <span class="u-lift-c" aria-hidden="true">a</span><span class="u-lift-c" aria-hidden="true">l</span><span class="u-lift-c" aria-hidden="true">l</span> <span class="u-lift-c" aria-hidden="true">w</span><span class="u-lift-c" aria-hidden="true">o</span><span class="u-lift-c" aria-hidden="true">r</span><span class="u-lift-c" aria-hidden="true">k</span></span><span class="sr">See all work</span></button>
+      </div>
+      <h3><span class="num">90</span>A lift, not a roll</h3>
+      <p>The same stagger with nothing masked and nothing duplicated: each character lifts 3px and returns. Here as the argument that card 89 is usually the wrong choice — a roll needs a mask, a duplicate and a box deep enough for whatever copy the client writes later.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line u-land"><span class="lbl"><span class="u-land-c" aria-hidden="true">B</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">k</span> <span class="u-land-c" aria-hidden="true">a</span> <span class="u-land-c" aria-hidden="true">c</span><span class="u-land-c" aria-hidden="true">a</span><span class="u-land-c" aria-hidden="true">l</span><span class="u-land-c" aria-hidden="true">l</span></span><span class="sr">Book a call</span></button>
+      </div>
+      <h3><span class="num">91</span>It lands past its mark</h3>
+      <p>The bounce, and the one card here that wants to read as one — card 33 tunes its overshoot down precisely so it doesn't. What keeps it usable is that the letters overlap: 26ms against a 300ms rung bounces the word, where 60ms would bounce nine letters.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid u-words"><span class="lbl"><span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>Start</span><span>Start</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>your</span><span>your</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>free</span><span>free</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>trial</span><span>trial</span></span></span></span><span class="sr">Start your free trial</span></button>
+      </div>
+      <h3><span class="num">92</span>Word by word</h3>
+      <p>The same roll with the unit changed, and the answer to who would actually ship this. Four words reading themselves out is a CTA; twenty-one characters is a wave passing over a button. Only the granularity moved.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line u-centre"><span class="lbl"><span class="u-centre-c" aria-hidden="true">R</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">a</span><span class="u-centre-c" aria-hidden="true">d</span> <span class="u-centre-c" aria-hidden="true">t</span><span class="u-centre-c" aria-hidden="true">h</span><span class="u-centre-c" aria-hidden="true">e</span> <span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">p</span><span class="u-centre-c" aria-hidden="true">o</span><span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">t</span></span><span class="sr">Read the report</span></button>
+      </div>
+      <h3><span class="num">93</span>From the middle out</h3>
+      <p>The same lift ordered by distance from the label's centre rather than by reading order. Both ends move last, so the word breathes from the middle as one object instead of reading as a queue being served.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid u-side"><span class="lbl"><span class="u-side-c" aria-hidden="true">O</span><span class="u-side-c" aria-hidden="true">p</span><span class="u-side-c" aria-hidden="true">e</span><span class="u-side-c" aria-hidden="true">n</span> <span class="u-side-c" aria-hidden="true">t</span><span class="u-side-c" aria-hidden="true">h</span><span class="u-side-c" aria-hidden="true">e</span> <span class="u-side-c" aria-hidden="true">m</span><span class="u-side-c" aria-hidden="true">a</span><span class="u-side-c" aria-hidden="true">p</span></span><span class="sr">Open the map</span></button>
+      </div>
+      <h3><span class="num">94</span>It starts where you entered</h3>
+      <p>Enter from the left and the stagger runs left to right; enter from the right and it reverses. Every character carries both indices, so the script sets one attribute and writes no styles — and the keyboard keeps the default order for free.</p>
+      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 85 It starts where you entered — one attribute per enter; CSS owns the rest.
+  document.querySelectorAll('.u-side').forEach(function(b){
+    b.addEventListener('pointerenter', function(e){
+      var r = b.getBoundingClientRect();
+      b.dataset.uSide = (e.clientX - r.left) > r.width / 2 ? 'r' : 'l';
+    });
+  });
+</script>
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
