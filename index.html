@@ -3,20 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Sixty-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Seventy-five button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Sixty-four button hover animations, actually built.">
+<meta property="og:description" content="Seventy-five button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
+<!-- Graphite Console tokens, inlined as a fallback FIRST so the page still
+     renders if the linked sheet does not arrive; the link follows and wins
+     whenever it does. Keep the two in step. -->
+<style>
+  :root{
+    --bg-0:#0f0f0f; --bg-1:#171717; --bg-2:#222222; --bg-3:#2e2e2e; --bg-4:#3a3a3a;
+    --hairline:rgba(255,255,255,.08);
+    --ink-hi:#f2f2f2; --ink-mid:#b3b3b3; --ink-low:#8a8a8a; --ink-faint:#5f5f5f;
+    --inverse-bg:#ffffff; --inverse-ink:#101010;
+    --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:999px;
+    --row-h:48px; --gap-row:10px; --pad-control:16px; --pad-panel:20px; --gap-section:32px;
+    --font-ui:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"Geist Mono",ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --ease:cubic-bezier(.25,.1,.25,1); --t-fast:120ms; --t-med:180ms;
+  }
+</style>
 <link rel="stylesheet" href="https://granqvistsanna-web.github.io/graphite-console/tokens.css">
 <style>
   /* ============================================================
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all sixty-four effect rules keep resolving under their own names.
+     ALIAS so all seventy-five effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -58,8 +74,6 @@
   .wrap{max-width:1060px; margin:0 auto; padding:72px 28px 120px}
 
   /* ============ header ============ */
-  .eyebrow{font-size:11px; font-weight:600; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--ink-low)}
   h1{color:var(--ink-hi); font-size:clamp(34px,5vw,52px); font-weight:700;
     letter-spacing:-.02em; line-height:1.05; margin:14px 0 16px; text-wrap:balance}
   .lede{max-width:62ch; font-size:16px; color:var(--ink-mid)}
@@ -87,7 +101,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all sixty-four, so the hairline under every stage
+  /* One stage height for all seventy-five, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -116,7 +130,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       sixty-four demo buttons was rendering in system-ui while the page around
+       seventy-five demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:999px;
@@ -128,7 +142,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all sixty-four inherit it,
+     and LEAVES at the shorter one. One rule pair, and all seventy-five inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -142,10 +156,16 @@
 
   /* 26 Textrull */
   .roll .track{display:block; overflow:hidden; height:1.25em}
-  .roll .inner{display:block; transition:transform var(--t-5) var(--e-quint)}
+  /* An explicit rest transform, as section J argues for: an element transformed
+     in BOTH states keeps one rasterisation the whole way, so the type does not
+     visibly change weight the frame it starts to move. The hair of rotation is
+     momo's version of the same trick — it survives the engine folding an exact
+     identity back to none. */
+  .roll .inner{display:block; transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-5) var(--e-quint)}
   .roll .inner span{display:block; line-height:1.25}
   .roll:hover .inner,
-  .roll:focus-visible .inner{transform:translateY(-50%)}
+  .roll:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg)}
 
   /* 01 Riktad svep */
   .sweep{overflow:hidden}
@@ -237,12 +257,16 @@
      2px rise stays — it is what makes the step read as height and not just as
      a colour change — but no shadow does the work, because on a near-black
      stage a black shadow is nothing at all. */
+  /* One function list across all three states — translate, rotate, scale, in that
+     order — so no pair falls back to interpolating matrices, and the label is
+     transformed at rest too so its rasterisation never switches mid-lift. */
   .lift{background:var(--bg-2); border:1px solid var(--line);
+    transform:translateY(0) rotate(0.001deg) scale(1);
     transition:transform var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
   .lift:hover,
-  .lift:focus-visible{transform:translateY(-2px); background:var(--bg-3);
+  .lift:focus-visible{transform:translateY(-2px) rotate(0.001deg) scale(1); background:var(--bg-3);
     border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
-  .lift:active{transform:translateY(0) scale(.98); background:var(--bg-4); transition-duration:var(--t-1)}
+  .lift:active{transform:translateY(0) rotate(0.001deg) scale(.98); background:var(--bg-4); transition-duration:var(--t-1)}
 
   /* 11 Magnetisk */
   .magnet{will-change:transform}
@@ -370,13 +394,13 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Sixty-four button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Seventy-five button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
       <p><b>interruptible</b> turns from wherever it is</p>
       <p><b>asymmetric</b> exit one rung down</p>
-      <p><b>reduced-motion</b> colour and opacity only</p>
+      <p><b>reduced-motion</b> end state, no travel</p>
       <p><b>durations</b> 83 / 133 / 200 / 300 / 450 ms</p>
     </div>
   </header>
@@ -661,7 +685,10 @@
 <script>
   // 12 Weight wave — exponential smoothing per character (critically damped feel, interruptible at any moment)
   (function(){
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Asked at the gesture rather than at load, so the setting can be turned on
+    // mid-visit. The split itself is harmless either way: the fragments are
+    // aria-hidden and the .sr copy carries the accessible name.
+    var rm = matchMedia('(prefers-reduced-motion: reduce)');
     document.querySelectorAll('.e-wave').forEach(function(btn){
       var live = btn.querySelector('.e-wave-live');
       if (!live) return;
@@ -674,10 +701,37 @@
         var s = document.createElement('span');
         s.textContent = ch;
         live.appendChild(s);
-        letters.push({el:s, w:BASE, t:BASE});
+        letters.push({el:s, w:BASE, t:BASE, c:0});
       });
+      // The letter centres, measured at REST and cached. Read per event they were
+      // one getBoundingClientRect per character per pointermove — a forced layout
+      // each, hundreds a second on a fast trackpad — and read off letters this
+      // very effect is re-weighting, so the wave measured a layout it was itself
+      // distorting and the peak chased its own advance widths.
+      function measure(){
+        letters.forEach(function(L){
+          var r = L.el.getBoundingClientRect();
+          L.c = r.left + r.width/2;
+        });
+      }
+      measure();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+      addEventListener('resize', measure, {passive:true});
+      // Re-measured only with the letters back at BASE, so the cache can never
+      // record a layout the effect has distorted.
+      btn.addEventListener('pointerenter', function(){ if (raf === null && px === null) measure(); });
+
+      function retarget(){
+        letters.forEach(function(L){
+          if (px === null){ L.t = BASE; return; }
+          var d = Math.abs(px - L.c);
+          var f = Math.max(0, 1 - d/R);
+          L.t = BASE + (PEAK - BASE) * f * f;
+        });
+      }
       function frame(){
-        var moving = false;
+        retarget();                 // once a frame, off the cache — so the move
+        var moving = false;         // handler now does no work at all
         letters.forEach(function(L){
           L.w += (L.t - L.w) * .18;
           if (Math.abs(L.t - L.w) > .4){ moving = true; } else { L.w = L.t; }
@@ -686,18 +740,9 @@
         });
         raf = moving ? requestAnimationFrame(frame) : null;
       }
-      function retarget(){
-        letters.forEach(function(L){
-          if (px === null){ L.t = BASE; return; }
-          var r = L.el.getBoundingClientRect();
-          var d = Math.abs(px - (r.left + r.width/2));
-          var f = Math.max(0, 1 - d/R);
-          L.t = BASE + (PEAK - BASE) * f * f;
-        });
-        if (raf === null) raf = requestAnimationFrame(frame);
-      }
-      btn.addEventListener('pointermove', function(e){ px = e.clientX; retarget(); });
-      btn.addEventListener('pointerleave', function(){ px = null; retarget(); });
+      function kick(){ if (raf === null) raf = requestAnimationFrame(frame); }
+      btn.addEventListener('pointermove', function(e){ px = rm.matches ? null : e.clientX; kick(); });
+      btn.addEventListener('pointerleave', function(){ px = null; kick(); });
     });
   })();
 
@@ -1191,7 +1236,7 @@
   // constant SPEED regardless of how long it is. A fixed rung would crawl on a
   // long label and race on a short one.
   (function(){
-    var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var rm = matchMedia('(prefers-reduced-motion: reduce)');
     document.querySelectorAll('.h-marq').forEach(function(btn){
       var clip = btn.querySelector('.h-marq-clip');
       var txt = btn.querySelector('.h-marq-txt');
@@ -1203,8 +1248,10 @@
       mark();
       addEventListener('resize', mark);
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(mark);
-      if (reduced) return;
       function go(){
+        // Asked at the gesture, not at load, so the setting can be turned on
+        // mid-visit. The clip marker above still runs either way.
+        if (rm.matches) return;
         var d = overflow();
         if (d <= 1) return;
         txt.style.transitionDuration = Math.min(600, 160 + d * 2.2) + 'ms';
@@ -1549,7 +1596,6 @@
     var ADV = 6;                                      // px
     var GAIN = 0.19, VCAP = 350;                      // tuned for a ~2.5px peak
     document.querySelectorAll('.i-throw').forEach(function(btn){
-      if (reduced.matches) return;                    // CSS carries the end state instead
       var mark = btn.querySelector('.i-throw-mark');
       if (!mark) return;
       var x = 0, v = 0, target = 0, raf = null, t0 = 0;
@@ -1574,7 +1620,17 @@
         }
         raf = requestAnimationFrame(step);
       }
-      function run(){ if (raf === null){ t0 = 0; raf = requestAnimationFrame(step); } }
+      // One choke point for all four handlers. Reduced motion is asked here, at
+      // the gesture, rather than once at load — clearing the inline transform
+      // hands the card back to the CSS end state instead of freezing it mid-throw.
+      function run(){
+        if (reduced.matches){
+          if (raf !== null){ cancelAnimationFrame(raf); raf = null; }
+          x = 0; v = 0; t0 = 0; mark.style.transform = '';
+          return;
+        }
+        if (raf === null){ t0 = 0; raf = requestAnimationFrame(step); }
+      }
 
       // Pointer and keyboard both own this mark, so each has to yield to the
       // other or they fight: clicking the button and sliding away used to pull
@@ -2652,10 +2708,11 @@
      reveal. */
   .o-over{overflow:hidden}
   .o-over .o-over-row{position:relative; display:inline-block; white-space:nowrap;
+    transform:translateX(0) rotate(0.001deg);
     transition:transform var(--t-4) var(--e-quint)}
   .o-over .o-over-dup{position:absolute; left:100%; top:0; padding-left:.5em;
     opacity:0; transition:opacity var(--t-2) ease}
-  .o-over:hover .o-over-row,.o-over:focus-visible .o-over-row{transform:translateX(-20px)}
+  .o-over:hover .o-over-row,.o-over:focus-visible .o-over-row{transform:translateX(-20px) rotate(0.001deg)}
   .o-over:hover .o-over-dup,.o-over:focus-visible .o-over-dup{opacity:1}
 
   /* 65 Too long to sit still — the label does not fit and loops sideways so it
@@ -2835,6 +2892,421 @@
   </div>
 </section>
 
+<style>
+  /* ============ Section N — The pair, other than joining ============
+     Card 60 built the only two-mass button on the page: a label plate and a
+     46px mark plate holding an arrow, seven pixels apart, addressable
+     separately. It then spent its whole hover closing that gap. Closing it is
+     the least interesting thing that anatomy can do, so these six keep 60's
+     construction exactly and do something else with it.
+
+     The five base declarations are repeated per card rather than hoisted to a
+     shared `.p-pair`, because the copy buttons key on every class inside the
+     button: one shared `.p-mark` and each of these six would collect the other
+     five's rules into its own snippet, which is the reason `.lbl` and `.icon`
+     are house classes. Six copies of five lines is the cheaper mistake.
+
+     align-items:stretch and not center, for 60's reason: a fixed-width mark
+     against a plate sized by its own padding leaves a half-pixel step at the
+     seam, and the seam is what all six of these are about.
+
+     None of them reserves width the way 60's hidden copy does, because none of
+     them changes it — every state below is a transform or a colour, so the row
+     alone holds the box and a ghost would have nothing to guard against. */
+
+  /* 69 The pieces part — card 60 read backwards. Rest IS 60's hover state: the
+     mark has already closed the seven pixels and the two facing corners are
+     square, so the pair arrives as one capsule and the hover takes it apart.
+     Same two properties, same rung, opposite argument. */
+  .p-part{padding:0; background:none; border:0; border-radius:999px}
+  .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-part .p-part-plate,
+  .p-part .p-part-mark{background:var(--ink); color:var(--on-ink);
+    transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
+  .p-part .p-part-plate{padding:15px 26px; border-radius:999px 0 0 999px}
+  .p-part .p-part-mark{display:grid; place-items:center; width:46px;
+    border-radius:0 999px 999px 0; transform:translateX(-7px)}
+  .p-part:hover .p-part-plate,
+  .p-part:focus-visible .p-part-plate{border-radius:999px}
+  .p-part:hover .p-part-mark,
+  .p-part:focus-visible .p-part-mark{border-radius:999px; transform:translateX(0)}
+
+  /* 70 The mark walks the plate — the only travel here that CSS cannot name. A
+     translation of -100% is the mark's OWN width; crossing the label plate
+     needs the plate's width, which lives on a sibling. Measured the way cards
+     59 and 30 measure theirs, and gated on the class for the same reason:
+     until a real number exists the hover does nothing rather than something
+     wrong. The z-order is what makes it a crossing and not a swap. */
+  .p-walk{padding:0; background:none; border:0; border-radius:999px}
+  .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-walk .p-walk-plate,
+  .p-walk .p-walk-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-walk .p-walk-plate{padding:15px 26px; position:relative; z-index:0}
+  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px;
+    position:relative; z-index:1; transform:translateX(0);
+    transition:transform var(--t-5) var(--e-quint)}
+  .p-walk.p-is-set:hover .p-walk-mark,
+  .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
+
+  /* 71 They trade fill — card 60 with the travel removed. Neither piece moves,
+     and the boundary is an inset shadow rather than a border, so nothing
+     reflows the moment a fill leaves. --line-ctl and not --line: this is a
+     control boundary and has to clear 3:1, which is card 31's note. Both rest
+     states name a shadow — one of them transparent — so there is always
+     something for the hover value to interpolate from. */
+  .p-trade{padding:0; background:none; border:0; border-radius:999px}
+  .p-trade .p-trade-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-trade .p-trade-plate,
+  .p-trade .p-trade-mark{border-radius:999px;
+    transition:background-color var(--t-3) var(--e-out), color var(--t-3) var(--e-out),
+      box-shadow var(--t-3) var(--e-out)}
+  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--on-ink);
+    box-shadow:inset 0 0 0 1px transparent}
+  .p-trade .p-trade-mark{display:grid; place-items:center; width:46px;
+    background:none; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line-ctl)}
+  .p-trade:hover .p-trade-plate,
+  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink);
+    box-shadow:inset 0 0 0 1px var(--line-ctl)}
+  .p-trade:hover .p-trade-mark,
+  .p-trade:focus-visible .p-trade-mark{background:var(--ink); color:var(--on-ink);
+    box-shadow:inset 0 0 0 1px transparent}
+
+  /* 72 The arrow leaves, the plates stay — the two masses hold perfectly still
+     and the mark becomes a window. Both arrows sit in one grid cell and the
+     mark clips them; the delays swap between the states so the incoming arrow
+     follows the outgoing one on the way in AND on the way out, rather than the
+     two crossing in the middle. */
+  .p-cycle{padding:0; background:none; border:0; border-radius:999px}
+  .p-cycle .p-cycle-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-cycle .p-cycle-plate,
+  .p-cycle .p-cycle-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-cycle .p-cycle-plate{padding:15px 26px}
+  .p-cycle .p-cycle-mark{display:grid; place-items:center; width:46px; overflow:hidden}
+  .p-cycle .p-cycle-cyc{display:grid; width:100%; justify-items:center}
+  .p-cycle .p-cycle-cyc>.icon{grid-area:1/1; transition:transform var(--t-4) var(--e-quint)}
+  .p-cycle .p-cycle-cyc>.icon:first-child{transform:translateX(0); transition-delay:var(--d-1)}
+  .p-cycle .p-cycle-cyc>.icon:last-child{transform:translateX(-230%); transition-delay:0s}
+  .p-cycle:hover .p-cycle-cyc>.icon:first-child,
+  .p-cycle:focus-visible .p-cycle-cyc>.icon:first-child{transform:translateX(230%); transition-delay:0s}
+  .p-cycle:hover .p-cycle-cyc>.icon:last-child,
+  .p-cycle:focus-visible .p-cycle-cyc>.icon:last-child{transform:translateX(0); transition-delay:var(--d-1)}
+
+  /* 73 The mark hinges — the only card on the page that leaves the plane.
+     transform-origin sits on the seam edge, so the mark pivots about the line
+     card 60 spends its hover erasing. backface-visibility because a
+     34-degree tip on a 46px plate is close enough to the edge to flicker
+     without it. */
+  .p-hinge{padding:0; background:none; border:0; border-radius:999px}
+  .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:7px; perspective:520px}
+  .p-hinge .p-hinge-plate,
+  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-hinge .p-hinge-plate{padding:15px 26px}
+  .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
+    transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
+    transition:transform var(--t-4) var(--e-quint)}
+  .p-hinge:hover .p-hinge-mark,
+  .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg)}
+
+  /* 74 The mark slips behind — here -100% IS enough, because the mark only has
+     to clear its own width plus the gap to be gone behind the plate. The
+     z-order is the whole effect; without it the mark simply overlaps. */
+  .p-slip{padding:0; background:none; border:0; border-radius:999px}
+  .p-slip .p-slip-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-slip .p-slip-plate,
+  .p-slip .p-slip-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-slip .p-slip-plate{padding:15px 26px; position:relative; z-index:1}
+  .p-slip .p-slip-mark{display:grid; place-items:center; width:46px;
+    position:relative; z-index:0; transform:translateX(0);
+    transition:transform var(--t-5) var(--e-quint)}
+  .p-slip:hover .p-slip-mark,
+  .p-slip:focus-visible .p-slip-mark{transform:translateX(calc(-100% - 7px))}
+</style>
+
+<section class="sect">
+  <h2>N — The pair, other than joining</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-part"><span class="p-part-row"><span class="p-part-plate">Start the brief</span><span class="p-part-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">69</span>The pieces part</h3>
+      <p>Card 60 read backwards: this one arrives joined and comes apart. The same seven pixels and the same two corners, arguing for separation rather than for one object.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-walk"><span class="p-walk-row"><span class="p-walk-plate">Send the file</span><span class="p-walk-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">70</span>The mark walks the plate</h3>
+      <p>The mark crosses the whole label and docks at the far end, occluding it on the way. Card 59 walks a bare icon across a label inside one border; this is one solid mass crossing another, and the distance has to be measured.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-trade"><span class="p-trade-row"><span class="p-trade-plate">Open the archive</span><span class="p-trade-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">71</span>They trade fill</h3>
+      <p>Card 60 with the travel taken out. Neither piece moves; the plate gives up its fill and the mark takes it, so the pair changes which half is speaking without changing its shape.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate">Take the tour</span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
+      </div>
+      <h3><span class="num">72</span>The arrow leaves, the plates stay</h3>
+      <p>The pair becomes a frame and only its contents move — the arrow exits the mark's right edge and a second one enters from the left, clipped by the plate it sits in. The two masses hold perfectly still.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-hinge"><span class="p-hinge-row"><span class="p-hinge-plate">Book a call</span><span class="p-hinge-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">73</span>The mark hinges</h3>
+      <p>It pivots on the seam instead of sliding along it, so it reads as hardware fixed to the plate rather than as a second object beside it. The one study here that leaves the plane.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-slip"><span class="p-slip-row"><span class="p-slip-plate">Read the case</span><span class="p-slip-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">74</span>The mark slips behind</h3>
+      <p>The mark clears its own width plus the gap and is gone under the label plate, so the pair reduces to one mass and the sign disappears exactly when you are about to act. The position the rest of the page refuses, built so there is something to point at while refusing it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 70 The mark walks the plate — the travel is the label plate's width plus
+  // the row gap, and it lives on a sibling, so CSS has no way to name it.
+  // Measured on the same schedule as 59 and 30: once now, once after the
+  // webfont lands, and again on resize behind a rAF guard.
+  (function(){
+    document.querySelectorAll('.p-walk').forEach(function(btn){
+      var row   = btn.querySelector('.p-walk-row');
+      var plate = btn.querySelector('.p-walk-plate');
+      if (!row || !plate) return;
+      function measure(){
+        var w = plate.getBoundingClientRect().width;
+        if (!w) return;
+        var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+        btn.style.setProperty('--p-walk-x', -(w + gap) + 'px');
+        btn.classList.add('p-is-set');
+      }
+      measure();
+      var raf = null;
+      addEventListener('resize', function(){
+        if (raf !== null) return;
+        raf = requestAnimationFrame(function(){ raf = null; measure(); });
+      });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    });
+  })();
+</script>
+
+<style>
+  /* ============ Section O — The third showcase ============
+     A third pass off the showcase sets. Section L shortlisted nine off a
+     reference and binned five of them as duplicates; section M built all six
+     of its batch knowing five were repeats, on the argument that a specimen
+     page earns nothing by asserting a duplicate exists — the two sit side by
+     side and the near-miss is the argument. This section is the residue of
+     both passes: the mechanisms in the sets that no card here answers at all.
+
+     Five survived that test, and three of them turn in the plane of the page,
+     which is the thing this page had almost never done. It turns a MARK — card
+     44's, out of the page along its own diagonal; card 28's ellipsis dots into
+     the arrow's strokes; and, since section N, card 73's mark hinging on the
+     seam, which is a rotateY and so not in the plane at all. It had never
+     turned the plate itself, never turned a whole label, and never turned a
+     single letter. It had also never let a loop run as the hover STATE: the
+     two loops it has are idle behaviours that were already going before you
+     arrived. Those are all positions, and this section takes the other side.
+
+     The prefix is q-: section M spent n- and o-, and section N spent p-.
+
+     Each card names the card it repeats or argues with. */
+
+  /* 75 Straightens up — the plate rests at an angle and the hover corrects it.
+     Every other card on this page treats rest as the settled state and hover
+     as the departure from it. This inverts that: the resting state is the one
+     that reads as wrong, and pointing at the button is what puts it right.
+     Card 63 is the floor of the same economy — one property, nothing travels —
+     pointed the other way.
+     The press has to carry the rotation with it. .btn:active sets a bare
+     scale, and transform is ONE property, so a press would otherwise drop the
+     tilt and the button would jump straight. One function list in all three
+     states, rotate then scale, so no pair falls back to interpolating
+     matrices. */
+  .btn.q-true{
+    transform:rotate(-2.5deg) scale(1);
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .btn.q-true:hover,
+  .btn.q-true:focus-visible{transform:rotate(0.001deg) scale(1)}
+  .btn.q-true:active{transform:rotate(0.001deg) scale(.97); transition-duration:var(--t-1)}
+
+  /* 76 The terminal — a tab extrudes from the top edge, the way a battery
+     terminal or a keycap stem stands off the body it belongs to. Section K
+     borrows from objects, but always INTO the plate: card 53 mills grooves
+     into it, 54 sinks the type below it, 25 stands it on a hard bottom edge.
+     This is the first card that adds material outside the plate's outline.
+     The tab is a pseudo-element on the button rather than a sibling: it is the
+     same ink as the plate, so it has to inherit the plate's own colour to read
+     as part of it. It grows from behind the top edge, so the join is never
+     visible. Height and not scaleY, because a scaled tab carries its corner
+     radius with it and arrives as a squashed pill instead of a stem. */
+  .btn.q-tab::before{
+    content:""; position:absolute; left:50%; bottom:100%;
+    width:26px; height:0; margin-left:-13px;
+    background:var(--ink); border-radius:4px 4px 0 0;
+    transition:height var(--t-3) var(--e-out);
+  }
+  .btn.q-tab:hover::before,
+  .btn.q-tab:focus-visible::before{height:7px}
+
+  /* 77 It goes to work — the mark turns a quarter and a dashed ring runs
+     around it. This is the page's first loop used as the hover STATE. Cards 29
+     and 61 both loop, but a caret blinking and a ticker running are idle
+     behaviours that were already going before you arrived; this one starts
+     because you pointed at it, and what it says is that the thing is working.
+     2.4s is off the ladder, on purpose, the way 61's 5.4s and 65's 5s are: a
+     rung is how long a state takes to ARRIVE, and a loop is not arriving.
+     pathLength:56 is what makes the dashes come out even — the real
+     circumference is 56.55, so a 3+4 pattern would leave a visible seam where
+     the eighth dash meets the first. Normalising the path to 56 divides by 7
+     exactly. */
+  .q-spin .q-spin-slot{position:relative; display:block; width:20px; height:20px}
+  .q-spin .q-spin-mark{
+    position:absolute; inset:0; margin:auto; width:14px; height:14px;
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .q-spin .q-spin-ring{position:absolute; inset:0; display:block; opacity:0;
+    transition:opacity var(--t-2) ease}
+  .q-spin:hover .q-spin-mark,
+  .q-spin:focus-visible .q-spin-mark{transform:rotate(90deg)}
+  .q-spin:hover .q-spin-ring,
+  .q-spin:focus-visible .q-spin-ring{opacity:1; animation:q-ring-turn 2.4s linear infinite}
+  @keyframes q-ring-turn{to{transform:rotate(360deg)}}
+
+  /* 78 The label turns — the whole word rotates around the plate's centre and
+     keeps going. Card 26 rolls the label and hands over to a duplicate; card
+     65 loops one that genuinely does not fit. Both of those keep the type
+     readable at the ends of the movement. This one does not, and the card is
+     here on exactly that point: it is the loudest thing on the page, and the
+     only one that makes its own label unreadable for as long as you point at
+     it. A specimen page should own its worst idea as clearly as its best.
+     6s is off the ladder for the reason 61, 65 and 77 are. */
+  .q-turn .q-turn-lbl{display:inline-block; transform:rotate(0.001deg)}
+  .q-turn:hover .q-turn-lbl,
+  .q-turn:focus-visible .q-turn-lbl{animation:q-orbit 6s linear infinite}
+  @keyframes q-orbit{to{transform:rotate(360deg)}}
+
+  /* 79 Nervous type — every letter tilts on its own timing, so the word never
+     settles while you are pointing at it. Card 12 also works letter by letter,
+     but it moves WEIGHT, and only where the pointer actually is; this moves
+     geometry, everywhere at once, and asks for no pointer position at all.
+     The tilt is not random and cannot be: CSS has no randomness. The angles
+     and the start offsets are a fixed set of seven, sized so the pattern does
+     not repeat inside a label of normal length. It READS as random, which is
+     the only claim the card makes — the honest description of the mechanism is
+     seven values on a cycle.
+     The visible letters are aria-hidden and an .sr copy carries the accessible
+     name, the way card 46 does. Eleven one-character spans would otherwise be
+     announced one at a time. */
+  .q-jitter .q-jitter-l{display:inline-block; transform:rotate(0.001deg)}
+  .q-jitter .q-jitter-l:nth-child(7n+1){--q-a:-5deg;   animation-delay:-.05s}
+  .q-jitter .q-jitter-l:nth-child(7n+2){--q-a:4.5deg;  animation-delay:-.31s}
+  .q-jitter .q-jitter-l:nth-child(7n+3){--q-a:-3deg;   animation-delay:-.17s}
+  .q-jitter .q-jitter-l:nth-child(7n+4){--q-a:6deg;    animation-delay:-.44s}
+  .q-jitter .q-jitter-l:nth-child(7n+5){--q-a:-6.5deg; animation-delay:-.09s}
+  .q-jitter .q-jitter-l:nth-child(7n+6){--q-a:3.5deg;  animation-delay:-.38s}
+  .q-jitter .q-jitter-l:nth-child(7n+7){--q-a:-4deg;   animation-delay:-.23s}
+  /* .62s is off the ladder for the same reason the other loops here are. */
+  .q-jitter:hover .q-jitter-l,
+  .q-jitter:focus-visible .q-jitter-l{animation:q-waver .62s ease-in-out infinite alternate}
+  @keyframes q-waver{to{transform:rotate(var(--q-a,4deg))}}
+
+  @media (prefers-reduced-motion: reduce){
+    /* Three loops in this section, and the global clamp turns a loop into a
+       blur rather than into stillness, so each is stopped outright. Card 29 is
+       the precedent for what happens next: the end state remains, the motion
+       does not. So the mark stays turned and the ring stays visible; the label
+       takes a single static angle instead of orbiting; and the letters hold
+       the tilt they were going to waver around, which is the hand-drawn look
+       the card is about, just standing still. Every card here still answers a
+       hover — none of them goes inert. */
+    .q-spin:hover .q-spin-ring,
+    .q-spin:focus-visible .q-spin-ring{animation:none !important; opacity:1}
+    .q-turn .q-turn-lbl{animation:none !important}
+    .q-turn:hover .q-turn-lbl,
+    .q-turn:focus-visible .q-turn-lbl{animation:none !important; transform:rotate(-8deg)}
+    .q-jitter .q-jitter-l{animation:none !important}
+    .q-jitter:hover .q-jitter-l,
+    .q-jitter:focus-visible .q-jitter-l{animation:none !important;
+      transform:rotate(var(--q-a,4deg))}
+  }
+</style>
+
+<section class="sect">
+  <h2>O — The third showcase</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line q-true"><span class="lbl">Send the file</span></button>
+      </div>
+      <h3><span class="num">75</span>Straightens up</h3>
+      <p>The plate rests at an angle and the hover puts it right. Every other card treats rest as the settled state; this one makes rest the state that reads as wrong, so the button is the thing being corrected.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid q-tab"><span class="lbl">Press to start</span></button>
+      </div>
+      <h3><span class="num">76</span>The terminal</h3>
+      <p>A tab extrudes from the top edge, like a battery terminal or a keycap stem. Cards 53, 54 and 25 all borrow from objects by working into the plate; this is the first that adds material outside its outline.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
+      </div>
+      <h3><span class="num">77</span>It goes to work</h3>
+      <p>The mark turns a quarter and a dashed ring runs around it. Cards 29 and 61 loop as idle behaviour, already going before you arrived; this is the first loop that starts because you pointed at it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid q-turn"><span class="lbl q-turn-lbl">Spin it up</span></button>
+      </div>
+      <h3><span class="num">78</span>The label turns</h3>
+      <p>The word rotates around the plate's centre and keeps going. Cards 26 and 65 both move the label but keep it readable at the ends; this one does not, and it is here on that point — the page should own its loudest idea.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line q-jitter"><span aria-hidden="true"><span class="q-jitter-l">S</span><span class="q-jitter-l">k</span><span class="q-jitter-l">e</span><span class="q-jitter-l">t</span><span class="q-jitter-l">c</span><span class="q-jitter-l">h</span> <span class="q-jitter-l">i</span><span class="q-jitter-l">t</span> <span class="q-jitter-l">o</span><span class="q-jitter-l">u</span><span class="q-jitter-l">t</span></span><span class="sr">Sketch it out</span></button>
+      </div>
+      <h3><span class="num">79</span>Nervous type</h3>
+      <p>Every letter tilts on its own timing, so the word never settles. Card 12 also works letter by letter, but it moves weight and only where the pointer is; this moves geometry everywhere at once, and reads as hand-drawn.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
@@ -2854,11 +3326,24 @@
   });
 
   // 11 Magnetic — critically damped spring (k=170, c≈2√k), interruptible with velocity preserved
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  (function(){
+    var rm = matchMedia('(prefers-reduced-motion: reduce)');
     document.querySelectorAll('.magnet').forEach(function(btn){
       var lbl = btn.querySelector('.m-lbl');
       var x=0, y=0, vx=0, vy=0, tx=0, ty=0, raf=null, last=null;
       var k=170, c=26;
+      // The RESTING rect, cached. Read inside the move handler it would carry the
+      // displacement this effect is applying, so the button chases its own centre:
+      // x = .22(p - c - x) settles at .22/1.22, an attraction 18% weaker than the
+      // number says, with a forced layout on every event to pay for it. Measured
+      // with the transform undone, so a re-entry mid-spring still reads rest.
+      var rest = null;
+      function measure(){
+        var t = btn.style.transform;
+        btn.style.transform = '';
+        rest = btn.getBoundingClientRect();
+        btn.style.transform = t;
+      }
       function paint(){
         btn.style.transform = 'translate(' + x + 'px,' + y + 'px)';
         lbl.style.transform = 'translate(' + (x*.5) + 'px,' + (y*.5) + 'px)';
@@ -2879,15 +3364,26 @@
         else paint();
       }
       function start(){ if(!raf){ last=null; raf=requestAnimationFrame(tick); } }
+      function home(){
+        if (raf){ cancelAnimationFrame(raf); raf=null; }
+        x=y=vx=vy=tx=ty=0; last=null;
+        btn.style.transform=''; lbl.style.transform='';
+      }
+      addEventListener('resize', function(){ rest=null; }, {passive:true});
+      addEventListener('scroll', function(){ rest=null; }, {passive:true});
+      btn.addEventListener('pointerenter', measure);
       btn.addEventListener('pointermove', function(e){
-        var r = btn.getBoundingClientRect();
-        tx = Math.max(-8, Math.min(8, (e.clientX - r.left - r.width/2) * .22));
-        ty = Math.max(-6, Math.min(6, (e.clientY - r.top - r.height/2) * .3));
+        // Asked at the gesture, not at load: turning the setting on mid-visit
+        // stands the effect down here rather than on the next reload.
+        if (rm.matches){ home(); return; }
+        if (!rest) measure();
+        tx = Math.max(-8, Math.min(8, (e.clientX - rest.left - rest.width/2) * .22));
+        ty = Math.max(-6, Math.min(6, (e.clientY - rest.top - rest.height/2) * .3));
         start();
       });
       btn.addEventListener('pointerleave', function(){ tx=0; ty=0; start(); });
     });
-  }
+  })();
 </script>
 
 <script>
