@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Ninety-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Eighty-nine button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Ninety-four button hover animations, actually built.">
+<meta property="og:description" content="Eighty-nine button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all ninety-four effect rules keep resolving under their own names.
+     ALIAS so all eighty-nine effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -48,8 +48,14 @@
        and measures 1.63:1 on bg-1, which is not a boundary. .36 gives 3.36:1 on
        bg-1 and 3.29:1 on bg-0, restoring the 3.16:1 the old dark theme had. */
     --line-ctl:rgba(255,255,255,.36);
-    /* The inverse pair IS the accent — no hue anywhere on the page. */
-    --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
+    /* No hue anywhere on the page, and --accent tracks --ink rather than being
+       the inverse surface it used to be. The toolbar's hover swatch says AUTO
+       means «the same as the primary», and at the default setting that has to
+       be TRUE: --inverse-bg is #ffffff, --ink-hi is #f2f2f2, and the two idioms
+       for «a white plate» sat thirteen units apart. Graphite ships its white a
+       shade under pure on purpose — pure white on near-black glares — so the
+       arriving plate follows the resting one down to it. */
+    --accent:var(--ink); --on-accent:var(--inverse-ink);
     --on-ink:var(--inverse-ink);
     --shadow-rgb:0,0,0;
     /* The button radius, as one token the whole page reads. It is here in the
@@ -128,7 +134,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all ninety-four, so the hairline under every stage
+  /* One stage height for all eighty-nine, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -157,7 +163,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       ninety-four demo buttons was rendering in system-ui while the page around
+       eighty-nine demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -169,7 +175,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all ninety-four inherit it,
+     and LEAVES at the shorter one. One rule pair, and all eighty-nine inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -196,12 +202,12 @@
 
   /* 01 Riktad svep */
   .sweep{overflow:hidden}
-  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
+  .sweep::before{content:""; position:absolute; inset:0; background:var(--accent); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
   .sweep:hover::before,
   .sweep:focus-visible::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .sweep:hover .lbl,
-  .sweep:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .sweep:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-2)}
 
   /* 02 Slutare */
   .shutter{overflow:hidden}
@@ -214,18 +220,18 @@
 
   /* 03 Ink fill */
   .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
-  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
+  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--accent); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
   .inkfill:hover::before,
   .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
   .inkfill:hover .lbl,
-  .inkfill:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .inkfill:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-2)}
 
   /* 04 Sheen */
   .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
-  .sheen:focus-visible{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
-  .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
+  .sheen:focus-visible{background:color-mix(in srgb,var(--accent) 90%,var(--bg))}
+  .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-accent) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
   .sheen:hover::after,
   .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
   .sheen .lbl{position:relative}
@@ -247,14 +253,6 @@
   .dotm:focus-visible .d{transform:translateX(190%); opacity:0}
   .dotm:hover .ar,
   .dotm:focus-visible .ar{transform:translateX(0)}
-
-  /* 07 Guillemeter */
-  .guil{gap:8px}
-  .guil .g{display:inline-block; width:.55em; color:var(--accent); opacity:0; transition:transform var(--t-4) var(--e-quint),opacity var(--t-3) ease}
-  .guil .g--l{transform:translateX(9px)}
-  .guil .g--r{transform:translateX(-9px)}
-  .guil:hover .g,
-  .guil:focus-visible .g{opacity:1; transform:translateX(0)}
 
   /* 08 Crop marks */
   .corners{font:500 11.5px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; border-radius:0; padding:15px 24px}
@@ -294,7 +292,7 @@
     transition:transform var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
   .lift:hover,
   .lift:focus-visible{transform:translateY(-2px) rotate(0.001deg) scale(1); background:var(--bg-3);
-    border-color:color-mix(in srgb,var(--ink) 22%,var(--line-ctl))}
+    border-color:color-mix(in srgb,var(--accent) 22%,var(--line-ctl))}
   .lift:active{transform:translateY(0) rotate(0.001deg) scale(.98); background:var(--bg-4); transition-duration:var(--t-1)}
 
   /* 11 Magnetisk */
@@ -304,9 +302,9 @@
      is why this is the one card whose focus state is not its hover state. */
   .magnet{will-change:transform; transition:transform var(--t-1) var(--e-out), background var(--t-3) ease}
   .magnet .m-lbl{display:inline-block; will-change:transform}
-  .magnet:focus-visible{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+  .magnet:focus-visible{background:color-mix(in srgb,var(--accent) 88%,var(--bg))}
   @media (prefers-reduced-motion: reduce){
-    .magnet:hover{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+    .magnet:hover{background:color-mix(in srgb,var(--accent) 88%,var(--bg))}
   }
 
   /* ============ footer ============ */
@@ -328,14 +326,14 @@
        than leaving the single effect that ignores the preference. */
     .f-glas .f-glas-yta{-webkit-backdrop-filter:none !important; backdrop-filter:none !important}
     .f-glas:hover .f-glas-yta,
-    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink) 13%, transparent)}
+    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--accent) 13%, transparent)}
   }
   .tools-row{display:flex; align-items:center; gap:10px}
   .tools-lbl{font-size:11px; font-weight:600; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all ninety-four studies at once. Both are written as
+     Two knobs that restyle all eighty-nine studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -412,6 +410,11 @@
     .tools-sep{display:none}
     .set-range{flex:1; min-width:0; max-width:150px}
     .set-swatch{margin-left:auto}
+    .adv:not([hidden]){gap:8px; padding:11px 13px}
+    /* margin-left:auto on the swatch would push Auto and the readout off the
+       end of the row, so the gap goes in front of the pair instead. */
+    .adv .set-swatch{margin-left:0}
+    .adv .tools-row>.set-swatch{margin-left:auto}
   }
 
   .spec .stage{position:relative}
@@ -472,7 +475,7 @@
   }
 
   /* ============ the rail ============
-     Ninety-five studies is past the point where a filter row can hold the
+     Eighty-nine studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
      primary and radius, the two things that rewrite every card and every
      copied snippet — and everything that FINDS a card moved here: the search,
@@ -523,12 +526,16 @@
     appearance:none; width:13px; height:13px; flex:none; margin:0;
     border:1px solid var(--line-ctl); border-radius:3px; background:none;
   }
-  .rail-list input:checked{background:var(--accent); border-color:var(--accent)}
+  /* --ink-hi and --inverse-ink, NOT --ink/--on-accent. This is page chrome, and
+     the toolbar's promise is that a set colour stops at the stage edge. Reading
+     the accent here meant a hover colour tinted the rail's own checkboxes — the
+     one place the tint had leaked out of the studies. */
+  .rail-list input:checked{background:var(--ink-hi); border-color:var(--ink-hi)}
   /* The tick is drawn with a border rather than a glyph: at 13px a check
      character sits off-centre in every face, and the two edges scale. */
   .rail-list input:checked::after{
     content:""; display:block; width:7px; height:3.5px; margin:1.5px 0 0 1px;
-    border-left:1.5px solid var(--on-accent); border-bottom:1.5px solid var(--on-accent);
+    border-left:1.5px solid var(--inverse-ink); border-bottom:1.5px solid var(--inverse-ink);
     transform:rotate(-45deg);
   }
   .rail-list input:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
@@ -571,6 +578,40 @@
   .rail-toggle:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .rail-toggle::after{content:"▾"; font-size:11px; color:var(--ink-low)}
   .rail-toggle[aria-expanded="true"]::after{content:"▴"}
+
+  /* ---- Advanced ------------------------------------------------------
+     A second panel rather than two more rows in the toolbar: Primary and
+     Radius are what most visits want, and a five-swatch bar reads as a
+     control surface instead of two knobs. Sibling of .tools and not a child,
+     for the same reason .rail is: the toolbar is sticky, and a panel that
+     grows inside a sticky bar pushes the studies down as it opens.
+
+     The pair it exposes was already in the token model. --ink and --accent
+     have always been two tokens; they were simply written the same value.
+     What was missing was the DISCIPLINE — the repoint pass this panel shipped
+     with put every arriving surface on --accent and left every resting one on
+     --ink, so the second swatch has something to mean. */
+  .adv{display:none}
+  .adv:not([hidden]){
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px 22px;
+    margin:10px 0 -6px; padding:11px 13px;
+    border-radius:var(--r-md);
+    background:var(--bg-1); border:1px solid var(--hairline);
+  }
+  /* Reveals itself only once there is something to revert. A permanent Auto
+     next to a swatch that IS on auto is a button that does nothing. */
+  .set-auto{
+    font:400 11.5px/1 var(--font-ui); color:var(--ink-low);
+    background:none; border:0; padding:4px 6px; margin:0 -6px 0 -4px;
+    border-radius:var(--r-xs); cursor:pointer;
+  }
+  .set-auto:hover{color:var(--ink-hi); background:var(--bg-3)}
+  .set-auto:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
+  .adv-note{
+    flex-basis:100%; margin:0; max-width:74ch;
+    font:400 11.5px/1.7 var(--mono); color:var(--ink-low);
+  }
+  .adv-note b{font-weight:500; color:var(--ink-mid)}
   /* A jump has to clear the sticky toolbar, and the browser's own idea of the
      top of a section is the top of its box. */
   .sect{scroll-margin-top:120px}
@@ -622,7 +663,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Ninety-four button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Eighty-nine button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -648,8 +689,42 @@
       <span class="set-read" data-read="radius"></span>
     </div>
     <div class="tools-row">
+      <button type="button" class="rail-toggle adv-toggle" aria-expanded="false"
+              aria-controls="adv">Advanced</button>
+    </div>
+    <div class="tools-row">
       <button type="button" class="rail-toggle" aria-expanded="false">Find &amp; filter</button>
     </div>
+  </div>
+
+  <div class="adv" id="adv" hidden role="group" aria-label="Advanced colour">
+    <div class="tools-row">
+      <span class="tools-lbl">Hover</span>
+      <input class="set-swatch" type="color" data-set="hover"
+             aria-label="Hover colour: the fill, plate or rule a hover brings in"
+             aria-describedby="set-hover-read">
+      <button type="button" class="set-auto" data-auto="hover" hidden>Auto</button>
+      <span class="set-read" id="set-hover-read" data-read="hover" aria-live="polite"></span>
+    </div>
+    <div class="tools-row">
+      <span class="tools-lbl">Label</span>
+      <input class="set-swatch" type="color" data-set="text"
+             aria-label="Label colour on a filled button; the arrow follows it"
+             aria-describedby="set-text-read">
+      <button type="button" class="set-auto" data-auto="text" hidden>Auto</button>
+      <span class="set-read" id="set-text-read" data-read="text" aria-live="polite"></span>
+    </div>
+    <p class="adv-note">
+      <b>Hover</b> is what a hover brings IN, so the primary keeps the resting
+      state to itself. On auto it follows the primary, which is what this page
+      did before the pair was split. It is fitted to 4.5:1 on the panel the same
+      way the primary is, because half these effects colour label text with it.
+      <b>Label</b> is the text on a filled button, and the arrow is
+      <code>currentColor</code> in all forty-seven icons, so it follows without a
+      swatch of its own. On auto it is whichever of black or white the fill can
+      carry; set by hand it is left exactly where you put it and the reading
+      tells you what it cost.
+    </p>
   </div>
 
   <nav class="rail" id="rail" hidden aria-label="Find a study">
@@ -751,14 +826,6 @@
         <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
       </article>
 
-      <article class="spec">
-        <div class="stage">
-          <button type="button" class="btn btn--text guil"><span class="g g--l" aria-hidden="true">«</span>What we offer<span class="g g--r" aria-hidden="true">»</span></button>
-        </div>
-        <h3><span class="num">07</span>Guillemets</h3>
-        <p>« » slide in and frame the label.</p>
-        <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-      </article>
 
       <article class="spec">
         <div class="stage">
@@ -882,12 +949,12 @@
      Butt stays anyway: it is what makes the head and tail abut cleanly when the
      line closes. The pen character is not lost — the nib below is the round end,
      and it is the one you actually watch. */
-  .e-draw .e-draw-ink{stroke:var(--ink); stroke-width:1.5; stroke-linecap:butt;
+  .e-draw .e-draw-ink{stroke:var(--accent); stroke-width:1.5; stroke-linecap:butt;
     stroke-dasharray:41 41; stroke-dashoffset:var(--draw)}
   /* rect.e-draw-nib, not .e-draw-nib: the shared rect rule below is 0-2-1 and this
      was 0-2-0, so this element's whole transition list lost the cascade and the
      opacity half of it never ran at all. Matching the rect makes it 0-3-1. */
-  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink); stroke-width:2.5; stroke-linecap:round;
+  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--accent); stroke-width:2.5; stroke-linecap:round;
     stroke-dasharray:2 80; stroke-dashoffset:calc(var(--draw) - 41); opacity:0;
     transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0), opacity var(--t-5) linear}
   /* 0s, not a duration: a pen is at full weight the moment it touches down. The
@@ -917,9 +984,14 @@
   }
   .e-chamfer .lbl{position:relative}
 
-  /* 15 In register — an out-of-register accent frame slides into place */
+  /* 15 In register — an out-of-register frame slides into place.
+     --ink and NOT --accent, though it was --accent until the hover colour got
+     its own swatch. The frame is ON SCREEN before you hover — the hover only
+     moves it — and the whole promise of that swatch is that it colours what a
+     hover BRINGS IN. An offset frame already sitting there in the hover colour
+     would be the one thing on the page contradicting its own control. */
   .e-reg::before{
-    content:""; position:absolute; inset:-1px; border:1px solid var(--accent);
+    content:""; position:absolute; inset:-1px; border:1px solid var(--ink);
     border-radius:inherit; pointer-events:none;
     transform:translate(5px,5px);
     transition:transform var(--t-4) var(--e-quint);
@@ -1115,7 +1187,7 @@
     transition:border-color var(--t-5) var(--e-out), transform var(--t-1) var(--e-out) }
   .f-glas .f-glas-yta{
     position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    background-color:color-mix(in srgb, var(--ink) 0%, transparent);
+    background-color:color-mix(in srgb, var(--accent) 0%, transparent);
     box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 0%, transparent);
     -webkit-backdrop-filter:blur(0px) saturate(1);
     backdrop-filter:blur(0px) saturate(1);
@@ -1123,9 +1195,9 @@
                background-color var(--t-5) var(--e-out), box-shadow var(--t-5) var(--e-out);
   }
   .f-glas .lbl{ position:relative }
-  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink) 22%, var(--line)) }
+  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--accent) 22%, var(--line)) }
   .f-glas:hover .f-glas-yta, .f-glas:focus-visible .f-glas-yta{
-    background-color:color-mix(in srgb, var(--ink) 7%, transparent);
+    background-color:color-mix(in srgb, var(--accent) 7%, transparent);
     box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 65%, transparent);
     -webkit-backdrop-filter:blur(9px) saturate(1.06);
     backdrop-filter:blur(9px) saturate(1.06);
@@ -1158,90 +1230,6 @@
   .f-lykta .lbl{ position:relative }
   .f-lykta:hover, .f-lykta:focus-visible{ border-color:color-mix(in srgb, var(--f-lys) 34%, transparent) }
   .f-lykta:hover::before, .f-lykta:focus-visible::before{ opacity:1 }
-
-  /* 20 The grain settles — a coarse screen tightens into a finely calibrated surface */
-  .f-korn{ background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden }
-  .f-korn .f-korn-yta{
-    position:absolute; inset:0; pointer-events:none; color:var(--ink); opacity:.42;
-    background-image:
-      radial-gradient(circle at 50% 50%, currentColor 0 .5px, transparent .75px),
-      radial-gradient(circle at 50% 50%, currentColor 0 .5px, transparent .75px);
-    background-size:3.2px 3.2px, 5.1px 5.1px;
-    background-position:0 0, 1.3px .7px;
-    transform:scale(1.8); transform-origin:50% 50%;
-    transition:transform var(--t-5) var(--e-quint), opacity var(--t-5) var(--e-out);
-  }
-  .f-korn .lbl{ position:relative }
-  .f-korn:hover .f-korn-yta, .f-korn:focus-visible .f-korn-yta{ transform:scale(1); opacity:.2 }
-
-  /* 21 Edge light — an accent streak runs one lap around the hairline. THE LAP
-     PARKS; IT DOES NOT REWIND. The exit fades the streak out where it stands
-     and resets its position 0s later on a delay equal to that fade, so the
-     reset happens with nothing on screen. That also fixes the interrupted case:
-     leave at six o'clock and the streak dies at six o'clock instead of snapping
-     back round the plate on the way out.
-
-     It used to run on a conic-gradient turned by a registered angle, and the
-     measurement is why it no longer does. A CONIC GRADIENT SWEEPS ANGLE, AND A
-     LAP IS ARC. On this plate — 203 x 47, so a 460px outline whose two caps are
-     32% of it — a degree of angle buys 0.205px of outline at the middle of the
-     top edge and 2.37px at the caps. That is an 11.6x speed range in a single
-     lap: at a tenth of the way through, the light had covered 3.7% of the edge;
-     between a sixth and a third of the way through it covered a quarter of it.
-     The head deformed by the same factor, 3px long at twelve and 13px at the
-     ends. It read as a smudge that stalled and then bolted, and no amount of
-     tuning the stops fixes it, because the primitive is measuring the wrong
-     thing.
-
-     offset-path travels the OUTLINE. The lamp is one small element on
-     `offset-path:border-box` with offset-distance driven 0% -> 100%, which is
-     constant arc speed by construction and a constant-length head with it.
-     offset-rotate:auto keeps it tangent, and offset-anchor:100% 50% puts its
-     bright end on the path so the comet trails rather than leads. The head is
-     12px: a straight chord on the 23.5px cap radius, which is a 0.54px sagitta,
-     so it hugs the curve. At 22px that error is 2.7px and the streak visibly
-     lifts off the corner — the length is a geometry budget, not a taste.
-
-     There is no magic number for where the lap starts. A coord-box path begins
-     at the top-left shoulder, where the cap meets the straight edge, and runs
-     clockwise; 0% and 100% are therefore the same point at any plate width, so
-     the streak parks exactly where it set off and the card needs no fraction
-     computed for this label's measure. Card 78 leans on the same congruence for
-     its exit.
-
-     --e-quint, not --e-out, for the lap: the streak has to leave the shoulder at
-     speed and settle into it, which is what parking means. The light comes up on
-     --t-2 rather than --t-3 — at 200ms it was still fading in a fifth of the way
-     through its own lap.
-
-     Where offset-path cannot take a coord box, the lamp is not shown at all and
-     the hover is carried by the hairline going lighter, which every state here
-     does anyway. Card 35 makes the same trade for animating `d`: the mechanism
-     is progressive, the answer to the hover is not. */
-  .f-kant{
-    background:var(--lift-bg); border:1px solid var(--line-ctl);
-    transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
-  }
-  .f-kant .lbl{ position:relative; z-index:1 }
-  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink) 24%, var(--line)) }
-  .f-kant .f-kant-lamp{ display:none }
-  @supports (offset-path: border-box){
-    .f-kant .f-kant-lamp{
-      display:block; position:absolute; width:12px; height:2px; border-radius:1px;
-      pointer-events:none; opacity:0; z-index:3;
-      background:linear-gradient(90deg, transparent,
-        color-mix(in srgb, var(--accent) 30%, transparent) 50%, var(--accent));
-      offset-path:border-box; offset-rotate:auto; offset-anchor:100% 50%;
-      offset-distance:0%;
-      /* rest — and so the EXIT: hold position, fade the light, reset unseen */
-      transition:opacity var(--t-2) var(--e-out), offset-distance 0s linear var(--t-2);
-    }
-    .f-kant:hover .f-kant-lamp, .f-kant:focus-visible .f-kant-lamp{
-      opacity:1; offset-distance:100%;
-      /* hover — and so the ENTER: the light is up in --t-2, the lap runs full rung */
-      transition:opacity var(--t-2) var(--e-out), offset-distance var(--t-5) var(--e-quint);
-    }
-  }
 
   /* Reduced motion: the end state must still read as "hover" — the light becomes an even lift */
   @media (prefers-reduced-motion: reduce){
@@ -1284,23 +1272,7 @@
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn f-korn"><i class="f-korn-yta" aria-hidden="true"></i><span class="lbl">Follow the work</span></button>
-      </div>
-      <h3><span class="num">20</span>The grain settles</h3>
-        <p>At rest a coarse grain lies over the surface; on hover the screen tightens into a quiet, finely calibrated finish.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-    </article>
 
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
-      </div>
-      <h3><span class="num">21</span>Edge light</h3>
-        <p>A narrow accent streak lights up and runs one lap of the edge at constant speed, parking where it set off and leaving the hairline a shade lighter. It travels the outline rather than an angle — a conic gradient would cross the caps 11.6 times faster than the flanks.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
 
   </div>
 </section>
@@ -1334,6 +1306,117 @@
 
 <style>
   /* ============ Section F — The plate and its geometry ============ */
+
+  /* 21 Edge light — an accent streak runs one lap around the hairline. THE LAP
+     PARKS; IT DOES NOT REWIND. The exit fades the streak out where it stands
+     and resets its position 0s later on a delay equal to that fade, so the
+     reset happens with nothing on screen. That also fixes the interrupted case:
+     leave at six o'clock and the streak dies at six o'clock instead of snapping
+     back round the plate on the way out.
+
+     IT SITS IN F AND NOT IN E, where it was written. Section E is about
+     material — glass, a light behind the plate, a lamp carried across it — and
+     this card never touches the surface at all. Every pixel it moves is on the
+     border box, which is what `offset-path:border-box` means and what the whole
+     conic-gradient argument below is about. Card 24 spends its argument on the
+     same outline from the other side: it grows the plate out to the hairline,
+     this runs a light along it. They belong on the same row.
+
+     It used to run on a conic-gradient turned by a registered angle, and the
+     measurement is why it no longer does. A CONIC GRADIENT SWEEPS ANGLE, AND A
+     LAP IS ARC. On this plate — 203 x 47, so a 460px outline whose two caps are
+     32% of it — a degree of angle buys 0.205px of outline at the middle of the
+     top edge and 2.37px at the caps. That is an 11.6x speed range in a single
+     lap: at a tenth of the way through, the light had covered 3.7% of the edge;
+     between a sixth and a third of the way through it covered a quarter of it.
+     The head deformed by the same factor, 3px long at twelve and 13px at the
+     ends. It read as a smudge that stalled and then bolted, and no amount of
+     tuning the stops fixes it, because the primitive is measuring the wrong
+     thing.
+
+     offset-path travels the OUTLINE. The lamp is one small element on
+     `offset-path:border-box` with offset-distance driven 0% -> 100%, which is
+     constant arc speed by construction and a constant-length head with it.
+     offset-rotate:auto keeps it tangent, and offset-anchor:100% 50% puts its
+     bright end on the path so the comet trails rather than leads.
+
+     THE HEAD IS 10px, and it was 12. A straight chord on the 23.5px cap radius
+     stands off the curve by its sagitta: 0.54px at 10, 0.78px at 12, 2.73px at
+     22, where the streak visibly lifts off the corner. So the length was always
+     a geometry budget rather than a taste, and two pixels of it were the
+     cheapest thing this card had left to give up — the figure the note has
+     always quoted, 0.54px, is finally the one the CSS draws.
+
+     Quieter in the same pass, and in the gradient rather than in the opacity,
+     because opacity is the channel the exit uses: the head tops out at 76% of
+     the accent against 100%, the midpoint at 22% against 30%, and the bar is
+     1.5px rather than 2px. A 2px lamp on a 1px hairline is an object riding the
+     edge. At 1.5px it is the edge itself lighting up, which is the thing the
+     card is named for.
+
+     There is no magic number for where the lap starts. A coord-box path begins
+     at the top-left shoulder, where the cap meets the straight edge, and runs
+     clockwise; 0% and 100% are therefore the same point at any plate width, so
+     the streak parks exactly where it set off and the card needs no fraction
+     computed for this label's measure. Card 78 leans on the same congruence for
+     its exit.
+
+     THE PRESS PUTS THE LIGHT OUT. A travelling light asks to be followed, and a
+     press is not something you follow — it is the instant the answer stops
+     being in question. So the lamp is cut on --t-1, the one rung the page never
+     remaps because a press has to read as instant, and the hairline states the
+     accent undiluted instead: --line at rest, a quarter of the accent mixed
+     into it on hover, the accent itself under the finger. That is the only
+     place on this card where the colour arrives at full strength, and it is
+     what buys the quiet lap — the press is loud, so the hover does not have to
+     be. Only the opacity is cut, never the travel: the lap runs on underneath a
+     dark lamp, so letting go mid-press brings the light back where it would
+     have been rather than where it was left.
+
+     --e-quint, not --e-out, for the lap: the streak has to leave the shoulder at
+     speed and settle into it, which is what parking means. The light comes up on
+     --t-2 rather than --t-3 — at 200ms it was still fading in a fifth of the way
+     through its own lap.
+
+     Where offset-path cannot take a coord box, the lamp is not shown at all and
+     the hover is carried by the hairline going lighter, which every state here
+     does anyway. Card 35 makes the same trade for animating `d`: the mechanism
+     is progressive, the answer to the hover is not. */
+  .g-kant{
+    background:var(--lift-bg); border:1px solid var(--line-ctl);
+    transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
+  }
+  .g-kant .lbl{ position:relative; z-index:1 }
+  .g-kant:hover, .g-kant:focus-visible{ border-color:color-mix(in srgb, var(--accent) 24%, var(--line)) }
+  /* .btn carried, so the press beats the hover pair's (0,2,0) — card 31's note. */
+  .btn.g-kant:active{ border-color:var(--accent); transition-duration:var(--t-1) }
+  .g-kant .g-kant-lamp{ display:none }
+  @supports (offset-path: border-box){
+    .g-kant .g-kant-lamp{
+      display:block; position:absolute; width:10px; height:1.5px; border-radius:1px;
+      pointer-events:none; opacity:0; z-index:3;
+      background:linear-gradient(90deg, transparent,
+        color-mix(in srgb, var(--accent) 22%, transparent) 50%,
+        color-mix(in srgb, var(--accent) 76%, transparent));
+      offset-path:border-box; offset-rotate:auto; offset-anchor:100% 50%;
+      offset-distance:0%;
+      /* rest — and so the EXIT: hold position, fade the light, reset unseen */
+      transition:opacity var(--t-2) var(--e-out), offset-distance 0s linear var(--t-2);
+    }
+    .g-kant:hover .g-kant-lamp, .g-kant:focus-visible .g-kant-lamp{
+      opacity:1; offset-distance:100%;
+      /* hover — and so the ENTER: the light is up in --t-2, the lap runs full rung */
+      transition:opacity var(--t-2) var(--e-out), offset-distance var(--t-5) var(--e-quint);
+    }
+    /* The press: opacity only. offset-distance stays in the list at its hover
+       timing, because dropping a property out of transition-property mid-travel
+       cancels that transition and snaps the value to its target — the lamp would
+       jump to the shoulder inside the 83ms it is still visible for. */
+    .btn.g-kant:active .g-kant-lamp{
+      opacity:0;
+      transition:opacity var(--t-1) var(--e-out), offset-distance var(--t-5) var(--e-quint);
+    }
+  }
 
   /* 22 Diagonal radius — the capsule releases two opposite corners */
   .g-radius{
@@ -1396,13 +1479,13 @@
   }
   .g-key:hover,
   .g-key:focus-visible{
-    border-color:color-mix(in srgb,var(--ink) 32%,var(--line));
-    box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 34%,var(--line));
+    border-color:color-mix(in srgb,var(--accent) 32%,var(--line));
+    box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 34%,var(--line));
   }
   .btn.g-key:active{
     transform:translateY(2px);
     background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
-    box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 34%,var(--line)),
+    box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 34%,var(--line)),
                inset 0 2px 3px rgba(var(--shadow-rgb),.2);
   }
 </style>
@@ -1410,6 +1493,15 @@
 <section class="sect">
   <h2>F — The plate and its geometry</h2>
   <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn g-kant"><i class="g-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
+      </div>
+      <h3><span class="num">21</span>Edge light</h3>
+        <p>A narrow accent streak lights up and runs one lap of the edge at constant speed, parking where it set off and leaving the hairline a shade lighter. The press puts the light out and states the accent on the outline instead. It travels the outline rather than an angle — a conic gradient would cross the caps 11.6 times faster than the flanks.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
 
     <article class="spec">
       <div class="stage">
@@ -1676,7 +1768,7 @@
   }
   .i-give .i-give-lbl{display:inline-block; transform:scale(1); transition:transform var(--t-3) var(--e-out)}
   /* .btn.i-give above is (0,2,0), so the hover has to carry .btn too or it loses. */
-  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink) 40%,var(--line-ctl))}
+  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--accent) 40%,var(--line-ctl))}
   .btn.i-give:active{transition-duration:var(--t-1)}
   .btn.i-give:active .i-give-lbl{transform:scale(1.030928); transition-duration:var(--t-1)}
 
@@ -1783,7 +1875,7 @@
     d:path("M0 2 Q60 2 120 2");
     transition:d var(--t-4) var(--e-quint);
   }
-  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--ink)}
+  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--accent)}
   .i-beam:hover .i-beam-rule path, .i-beam:focus-visible .i-beam-rule path{
     d:path("M0 2 Q60 12 120 2");
   }
@@ -1823,7 +1915,7 @@
   .i-rule:hover .i-rule-lbl, .i-rule:focus-visible .i-rule-lbl{
     text-decoration-thickness:2px;
     text-underline-offset:.12em;
-    text-decoration-color:var(--ink);
+    text-decoration-color:var(--accent);
   }
 
   /* 39 It matches your tempo — the carrier is deliberately the plainest thing
@@ -1835,11 +1927,11 @@
      in between. */
   .btn.i-tempo{
     --i-rung:var(--t-4);
-    background-color:color-mix(in srgb,var(--ink) 0%,transparent);
+    background-color:color-mix(in srgb,var(--accent) 0%,transparent);
     transition:background-color var(--i-rung) var(--e-out),
                color var(--i-rung) var(--e-out), transform var(--t-1) var(--e-out);
   }
-  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink); color:var(--on-ink)}
+  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--accent); color:var(--on-accent)}
 
   /* 40 The exit remembers — the return home is handed the pointer's exit
      velocity and settled by a critically damped spring (omega 20 rad/s), so a
@@ -2124,7 +2216,7 @@
   .btn.j-dir{overflow:hidden}
   .j-dir .j-dir-tile{
     position:absolute; inset:0; pointer-events:none;
-    background:var(--ink);
+    background:var(--accent);
     --j-x:0%; --j-y:100%;
     transform:translate(var(--j-x), var(--j-y));
     transition:transform var(--t-5) var(--e-quint);
@@ -2135,7 +2227,7 @@
      change; the tile's duration less the colour's puts the label back to ink
      exactly as the last of the fill leaves the frame. */
   .j-dir .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
-  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-1)}
+  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-1)}
 
   /* 42 The wave — the fill rises with a curved leading edge that flattens as it
      lands, so it reads as liquid finding its level rather than a rectangle
@@ -2151,7 +2243,7 @@
   .btn.j-wave{overflow:hidden}
   .j-wave .j-wave-fill{
     position:absolute; left:-12%; right:-12%; bottom:0; height:100%;
-    pointer-events:none; background:var(--ink);
+    pointer-events:none; background:var(--accent);
     border-radius:56% 44% 0% 0% / 34% 34% 0% 0%;
     transform:translateY(100%);
     transition:transform var(--t-5) var(--e-quint), border-radius var(--t-5) var(--e-out) var(--d-2);
@@ -2162,7 +2254,7 @@
   }
   /* Same rule as 41: the colour lands as the fill clears, not after it. */
   .j-wave .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
-  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-2)}
 
   /* 43 In one order, out another — the one thing a gesture variant cannot do at
      all: its exit is always its entrance played backwards. Here the rest-state
@@ -2236,7 +2328,7 @@
     border-radius:6px; padding:16px 24px;
   }
   .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
-  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink)}
+  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--accent)}
 </style>
 
 <section class="sect">
@@ -2548,16 +2640,16 @@
   }
   .k-pair .k-pair-a{background-color:var(--ink); color:var(--on-ink)}
   .k-pair .k-pair-b{
-    background-color:color-mix(in srgb,var(--ink) 0%,transparent);
+    background-color:color-mix(in srgb,var(--accent) 0%,transparent);
     color:var(--ink); border-color:var(--line-ctl);
   }
-  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--accent) 90%,var(--bg))}
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-a{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
     color:var(--ink); border-color:var(--line-ctl);
   }
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-b{
-    background-color:var(--ink); color:var(--on-ink); border-color:transparent;
+    background-color:var(--accent); color:var(--on-accent); border-color:transparent;
   }
 
   /* 52 The divider yields — the two hairlines touching the hovered segment
@@ -2577,7 +2669,7 @@
     background:var(--line-ctl);
     transition:opacity var(--t-3) ease;
   }
-  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 7%,transparent)}
+  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--accent) 7%,transparent)}
   .k-div .k-div-i:is(:hover,:focus-visible)::before,
   .k-div .k-div-i:is(:hover,:focus-visible) + .k-div-i::before{opacity:0}
 </style>
@@ -2715,14 +2807,14 @@
   }
   .l-knurl .l-knurl-grip{
     position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    color:var(--ink); opacity:0;
+    color:var(--accent); opacity:0;
     background-image:repeating-linear-gradient(72deg, currentColor 0 1px, transparent 1px 6px);
     -webkit-mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
     mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
     transition:opacity var(--t-4) var(--e-out);
   }
   .l-knurl .lbl{position:relative}
-  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--accent) 38%,var(--line-ctl))}
   .l-knurl:hover .l-knurl-grip, .l-knurl:focus-visible .l-knurl-grip{opacity:.17}
 
   /* 54 Deboss — a letterpress impression, or a stamped nameplate. The exact
@@ -2736,7 +2828,7 @@
     background:var(--lift-bg); border:1px solid var(--line-ctl);
     transition:border-color var(--t-3) ease;
   }
-  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--accent) 38%,var(--line-ctl))}
   .l-deboss .l-deboss-lbl{
     display:inline-block;
     text-shadow:0 -1px 0 transparent, 0 1px 0 transparent;
@@ -2744,7 +2836,7 @@
   }
   .btn.l-deboss:active{transform:scale(1)}
   .btn.l-deboss:active .l-deboss-lbl{
-    color:color-mix(in srgb,var(--ink) 70%,var(--lift-bg));
+    color:color-mix(in srgb,var(--accent) 70%,var(--lift-bg));
     /* The shadow does most of the work and the highlight is a bonus. That was
        written when a light mode existed and the highlight collapsed in it —
        --l-lys and --lift-bg landed five values apart, so a plate that was
@@ -2774,7 +2866,7 @@
     transition:clip-path var(--t-5) var(--e-quint), color var(--t-3) ease;
   }
   .l-gauge:hover .l-gauge-rule, .l-gauge:focus-visible .l-gauge-rule{
-    clip-path:inset(0 0 0 0); color:var(--ink);
+    clip-path:inset(0 0 0 0); color:var(--accent);
   }
 
   /* 56 The data plate — the small engraved plate on a machine, and the first
@@ -2795,7 +2887,7 @@
     position-area:top center; margin-bottom:8px;
     position-try-fallbacks:flip-block;
     font:500 10px/1 var(--mono); letter-spacing:.1em;
-    color:var(--on-ink); background:var(--ink);
+    color:var(--on-accent); background:var(--accent);
     padding:5px 7px; border-radius:5px; pointer-events:none;
     display:none; opacity:0;
     transition:opacity var(--t-2) var(--e-out), display var(--t-2) allow-discrete;
@@ -2825,30 +2917,7 @@
   }
   .btn.l-corner:hover, .btn.l-corner:focus-visible{
     corner-shape:superellipse(5);
-    background-color:color-mix(in srgb,var(--ink) 88%,var(--bg));
-  }
-  /* 58 The stop — a mechanical end-stop, and the one card on this page that
-     travels on `linear`. Everything else eases out, because everything else is
-     settling; a thing that runs into a stop does not settle, it arrives at
-     speed and is stopped. The wall then acknowledges the contact, and the
-     delay on that flash is the travel's OWN duration, which is exactly what
-     the house rule about choreographed delays is for. */
-  .l-stop .l-stop-track{position:relative; display:block; width:26px; height:10px}
-  .l-stop .l-stop-mark{
-    position:absolute; top:4px; left:0; width:10px; height:2px;
-    background:currentColor; border-radius:1px;
-    transform:translateX(0);
-    transition:transform var(--t-3) linear;
-  }
-  .l-stop .l-stop-wall{
-    position:absolute; right:0; top:0; bottom:0; width:1.5px;
-    background:currentColor; border-radius:1px; opacity:.3;
-    transition:opacity var(--t-2) ease;
-  }
-  /* 26 track − 10 mark − 1.5 wall = 14.5, so the mark's edge meets the wall's */
-  .l-stop:hover .l-stop-mark, .l-stop:focus-visible .l-stop-mark{transform:translateX(14.5px)}
-  .l-stop:hover .l-stop-wall, .l-stop:focus-visible .l-stop-wall{
-    opacity:1; transition-delay:var(--t-3); transition-duration:var(--t-1);
+    background-color:color-mix(in srgb,var(--accent) 88%,var(--bg));
   }
 </style>
 
@@ -2904,16 +2973,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-<article class="spec">
-      <div class="stage">
-        <button class="btn btn--line l-stop">Advance the roll
-          <span class="l-stop-track" aria-hidden="true"><i class="l-stop-mark"></i><i class="l-stop-wall"></i></span>
-        </button>
-      </div>
-      <h3><span class="num">58</span>The stop</h3>
-      <p>The mark runs at a constant speed and is stopped dead by the wall, which brightens at the instant of contact.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
 
   </div>
 </section>
@@ -2962,20 +3021,41 @@
      fifth of the distance in the same time is a drift, and it was the first
      thing the eye was given. It is card 61's point about a loop applied to a
      pair: this is judged on SPEED, not on duration. The label is on --t-3 now,
-     which is 110px/s, and it arrives while the mark is still crossing — so the
-     stated order is something you can see rather than a 50ms delay you cannot.
-     The mark keeps --t-5 and stays the last thing moving in both directions,
-     which is the right subject for a card about the mark changing sides.
+     which is 110px/s, and it parks while the mark is still crossing. The mark
+     keeps --t-5 and stays the last thing moving in both directions, which is
+     the right subject for a card about the mark changing sides.
 
-     WHAT THE STAGGER DOES NOT FIX: the arrow passes over the label's glyphs,
-     14px of full overlap for about 200ms on the way in — a little longer than
-     before, because a label that parks early stops retreating from the mark. That is intrinsic to
-     crossing a bare label — the label stepping aside 22px does not clear a
-     107px path, it only shifts it — so the delays change the ORDER and never
-     the overlap. Card 70 crosses two solid masses and can put the travelling
-     one in front with a z-index; there is no plate to hide behind here, and
-     dipping the mark's opacity mid-travel would need a keyframe for what is
-     supposed to be one transition. It is left visible and named instead.
+     WHAT THE STAGGER COULD NOT FIX, AND WHAT DOES: the arrow used to pass over
+     the label's glyphs, 14px of full overlap for about 200ms on the way in.
+     That is intrinsic to crossing a bare label — the label stepping aside 22px
+     does not clear a 107px path, it only shifts it — so the delays could change
+     the ORDER and never the overlap. Card 70 crosses two solid masses and can
+     put the travelling one in front with a z-index; there is no plate to hide
+     behind here. So the mark is not hidden behind anything: it is not drawn.
+     It goes out in its own slot, crosses dark, and is lit again as it settles
+     into the other one, and what you follow is the pair of slots rather than
+     the thing between them.
+
+     TWO STACKED COPIES OF THE GLYPH, because the dip is out-then-in on one
+     property and a transition cannot do that — the objection the version before
+     this one raised against a keyframe still stands, and this is the way round
+     it that keeps every state a transition. One layer owns the departure and
+     the other the arrival; both ride the same travelling wrapper, so they are
+     never in two places and there is nothing to keep in sync. Each fade is
+     --t-1, the press rung, which is the only one short enough to beat the
+     curve: --e-quint puts the mark past the middle of the label inside a fifth
+     of its own time, so a --t-2 fade would still be visible over the type it
+     was supposed to clear.
+
+     The arrival is held to --t-4 and the return to the same token one rung
+     down, which is 93% and 97% of the way home under quint — far enough that
+     the glyph lights up in its slot rather than over the label, close enough
+     that a few pixels of travel are left to see. THE ORDER SURVIVES THE
+     DISAPPEARANCE, which was the risk: on the way in the label vacates and the
+     slot it leaves fills afterwards; on the way out the mark goes dark first
+     and the label is home before it comes back. The stagger is now read off two
+     slots emptying and filling instead of off a thing crossing, and it is the
+     same claim either way.
 
      The gap here stays 8px and off --pair-gap on purpose: that token is the
      label-plate-and-46px-circle spacing of card 60 and section N, and this is
@@ -2984,10 +3064,16 @@
   .n-cross .n-cross-lbl,
   .n-cross .n-cross-mark{transform:translateX(0)}
   .n-cross .n-cross-lbl{transition:transform var(--t-3) var(--e-quint)}
-  .n-cross .n-cross-mark{display:block; transition:transform var(--t-5) var(--e-quint)}
+  .n-cross .n-cross-mark{position:relative; display:block; width:14px; height:14px;
+    transition:transform var(--t-5) var(--e-quint)}
+  .n-cross .n-cross-glyph{position:absolute; inset:0}
   /* rest — the exit: the mark comes home, then the label follows it back */
   .n-cross .n-cross-mark{transition-delay:0s}
   .n-cross .n-cross-lbl{transition-delay:var(--d-1)}
+  /* rest — the exit again: the arrival layer goes dark as the mark breaks away,
+     the departure layer is lit again once it is nearly home. */
+  .n-cross .n-cross-glyph--go{opacity:1; transition:opacity var(--t-1) var(--e-out) var(--t-4)}
+  .n-cross .n-cross-glyph--land{opacity:0; transition:opacity var(--t-1) var(--e-out)}
   /* Gated on the measure: without a real number the label would shift and the
      mark would stand still, which is worse than doing nothing. */
   /* hover — the entrance: the label vacates, then the mark crosses */
@@ -2995,6 +3081,13 @@
   .n-cross.n-is-set:focus-visible .n-cross-lbl{transform:translateX(-22px); transition-delay:0s}   /* 14px mark + 8px gap */
   .n-cross.n-is-set:hover .n-cross-mark,
   .n-cross.n-is-set:focus-visible .n-cross-mark{transform:translateX(var(--n-cross-x,0px)); transition-delay:var(--d-1)}
+  /* hover — the entrance: out at once in the slot it is leaving, lit again in
+     the slot it is taking. Gated on the measure with everything else: without a
+     real number the mark would go dark in place and never come back. */
+  .n-cross.n-is-set:hover .n-cross-glyph--go,
+  .n-cross.n-is-set:focus-visible .n-cross-glyph--go{opacity:0; transition-delay:0s}
+  .n-cross.n-is-set:hover .n-cross-glyph--land,
+  .n-cross.n-is-set:focus-visible .n-cross-glyph--land{opacity:1; transition-delay:var(--t-4)}
 
   /* 60 The pieces join — two plates converge into one capsule. Card 32 opens a
      three-pixel gap between label and block and calls them two masses; this is
@@ -3088,10 +3181,10 @@
 
     <article class="spec">
       <div class="stage">
-        <button type="button" class="btn btn--line n-cross"><span class="n-cross-row"><svg class="icon n-cross-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><span class="n-cross-lbl">Read the note</span></span></button>
+        <button type="button" class="btn btn--line n-cross"><span class="n-cross-row"><span class="n-cross-mark" aria-hidden="true"><svg class="icon n-cross-glyph n-cross-glyph--go" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon n-cross-glyph n-cross-glyph--land" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span><span class="n-cross-lbl">Read the note</span></span></button>
       </div>
       <h3><span class="num">59</span>Changes sides</h3>
-      <p>The mark starts to the left of the label and ends up to its right, crossing it rather than negotiating around it — the position cards 36 and 45 both decline to take.</p>
+      <p>The mark starts to the left of the label and ends up to its right, crossing it rather than negotiating around it — the position cards 36 and 45 both decline to take. It goes out in the slot it leaves and is lit again in the slot it takes, so it crosses the label without ever being drawn over it.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3187,7 +3280,7 @@
      only boundary of an interactive thing below 3:1. Quiet has to mean low
      contrast, not no contrast. */
   .o-quiet{border-color:var(--muted); transition:border-color var(--t-2) ease}
-  .o-quiet:hover,.o-quiet:focus-visible{border-color:var(--ink)}
+  .o-quiet:hover,.o-quiet:focus-visible{border-color:var(--accent)}
 
   /* 64 Overruns its measure — a second copy of the label sits just outside the
      right edge and the row slides far enough to prove it is there. Card 27
@@ -3510,7 +3603,7 @@
   .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink);
     box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .p-trade:hover .p-trade-mark,
-  .p-trade:focus-visible .p-trade-mark{background:var(--ink); color:var(--on-ink);
+  .p-trade:focus-visible .p-trade-mark{background:var(--accent); color:var(--on-accent);
     box-shadow:inset 0 0 0 1px transparent}
 
   /* 72 The arrow leaves, the plates stay — the two masses hold perfectly still
@@ -3806,7 +3899,7 @@
   .btn.q-riser::before,
   .btn.q-riser::after{
     content:""; position:absolute; top:100%; width:26px; height:0;
-    background:var(--ink); border-radius:0 0 3px 3px;
+    background:var(--accent); border-radius:0 0 3px 3px;
     transition:height var(--t-3) var(--e-out);
   }
   .btn.q-riser::before{left:17%}
@@ -4053,7 +4146,20 @@
      The scanlines are a repeating gradient on a pseudo-element ABOVE the
      label, which is the only stacking order that works: a scanline that the
      type sits on top of is a texture on an empty plate, and the whole point
-     is that the lines cross the glyphs. 5.6s for one period is off the ladder
+     is that the lines cross the glyphs.
+
+     THEY CROSS THE GLYPHS; THEY DO NOT CUT THEM. The line was 72% of --bg-0
+     over a 1px band in every 3, which leaves a white stroke at 28% of itself
+     where it is crossed — every letter sawn into three pieces, and the hover
+     ending up harder to read than the rest state it is supposed to be fixing.
+     That inverts the card: convergence is the argument, and an argument you
+     have to squint through is lost whatever it proves. At 45% the crossed rows
+     hold a little over half their luminance, which still reads as a line
+     across the type from a foot away and as type at any distance at all.
+     The glow was raised in the same pass, 7px to 9px and 55% to 62%: with the
+     lines lighter there is room for the tube to look powered rather than
+     merely misconverged, and the two changes are one decision — a screen that
+     is doing its job is bright first and striped second. 5.6s for one period is off the ladder
      for the reason 61, 65 and 77 are — a rung is how long a state takes to
      ARRIVE, and a loop is not arriving. The drift is exactly one 3px period,
      so the loop has no seam.
@@ -4074,14 +4180,14 @@
   }
   .btn.s-crt:hover .lbl,
   .btn.s-crt:focus-visible .lbl{
-    text-shadow:0 0 7px color-mix(in srgb,var(--ink) 55%,transparent);
+    text-shadow:0 0 9px color-mix(in srgb,var(--accent) 62%,transparent);
     animation:s-crt-strike var(--t-4) steps(1,end) 1;
   }
   .btn.s-crt::after{
     content:""; position:absolute; inset:-3px 0; z-index:2; opacity:0;
     pointer-events:none;
     background:repeating-linear-gradient(to bottom,
-      transparent 0 2px, color-mix(in srgb,var(--bg-0) 72%,transparent) 2px 3px);
+      transparent 0 2px, color-mix(in srgb,var(--bg-0) 45%,transparent) 2px 3px);
     transition:opacity var(--t-3) ease;
   }
   .btn.s-crt:hover::after,
@@ -4110,9 +4216,17 @@
      the border away exactly at the steps, which is the only part of the
      outline worth having. So the outer shape IS the hairline and the inner
      one, inset a pixel, is the fill.
-     The specular is two hard gradient bars in the fill's own background
-     rather than a third layer. It costs nothing, it is clipped to the stair
-     for free, and swapping the whole background is what a frame swap is. */
+     THE HOVER FRAME IS THE ACCENT FLAT, and it used to carry a specular: two
+     hard gradient bars in the fill's own background, an L in the top-left
+     corner, the way a sprite sheet paints light on a plate. On a sprite forty
+     pixels tall that reads as light. At this size it read as a hook — a
+     fifteen-pixel mark sitting a glyph's width ahead of a label it had nothing
+     to do with, on the one card whose whole subject is that the frames differ.
+     The swap is already the loudest event on the page: plate, type and stair
+     all change at once, in one paint, with no interpolation to soften it.
+     Something that emphatic does not need a highlight to be legible, and the
+     third frame — the press, which was always flat ink — is the proof, because
+     nobody ever asked what that one was missing. */
   .btn.s-sprite{
     background:none; border:0; border-radius:0; transition:none;
     font:500 13px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
@@ -4140,15 +4254,9 @@
   }
   .btn.s-sprite .lbl{position:relative; z-index:1}
   .btn.s-sprite:hover,
-  .btn.s-sprite:focus-visible{color:var(--on-ink)}
-  /* An L of two hard bars, the way a sprite sheet draws a specular: no
-     gradient, no blur, four pixels thick. */
+  .btn.s-sprite:focus-visible{color:var(--on-accent)}
   .btn.s-sprite:hover::after,
-  .btn.s-sprite:focus-visible::after{
-    background:linear-gradient(var(--on-ink),var(--on-ink)) 10px 10px/4px 15px no-repeat,
-               linear-gradient(var(--on-ink),var(--on-ink)) 10px 10px/15px 4px no-repeat,
-               var(--ink);
-  }
+  .btn.s-sprite:focus-visible::after{background:var(--accent)}
   .btn.s-sprite:active{transform:none}
   .btn.s-sprite:active::after{background:var(--ink-mid)}
 
@@ -4278,7 +4386,7 @@
         <button type="button" class="btn s-crt"><span class="lbl">Open console</span></button>
       </div>
       <h3><span class="num">81</span>The tube converges</h3>
-      <p>Two grey ghosts either side of every stroke pull into register, the phosphor blooms, and scanlines drift across the type. The idiom splits the strokes into red and cyan; with no colour to split, the split is grey and the movement runs the other way.</p>
+      <p>Two grey ghosts either side of every stroke pull into register and the phosphor blooms, with scanlines drifting over the type light enough that converging is what you notice. The idiom splits the strokes into red and cyan; with no colour to split, the split is grey and the movement runs the other way.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -4287,7 +4395,7 @@
         <button type="button" class="btn s-sprite"><span class="lbl">Insert coin</span></button>
       </div>
       <h3><span class="num">82</span>Two frames</h3>
-      <p>Rest, hover and press are three sprite frames and the swap between them is the whole effect. It is the only study here with no transition, and it is on the page as the argument against the page's own second rule.</p>
+      <p>Rest, hover and press are three flat sprite frames and the swap between them is the whole effect — plate, type and stair changing in one paint. It is the only study here with no transition, and it is on the page as the argument against the page's own second rule.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -5173,18 +5281,36 @@
     }
 
 
-    // ---- Global settings: primary and radius ---------------------------
+    // ---- Global settings: primary, hover, label and radius --------------
     // Written as inline custom properties on the root element. That is not
     // decoration: the Copy buttons resolve their alias chains against the
     // computed root, so anything set here travels into the copied snippet and
     // the page never hands out CSS that contradicts what is on screen.
+    //
+    // Four tokens, and which one a study reads is a statement about WHEN the
+    // colour appears, not about which effect it belongs to:
+    //   --ink        the resting state — a solid fill, a border, a label
+    //   --accent     what a hover brings in — the plate, the wipe, the rule
+    //   --on-ink     a label sitting on the resting fill
+    //   --on-accent  a label sitting on the arriving one
+    // Hover and label are both OPTIONAL. Empty means auto, and auto is exactly
+    // what the page did before the pair was split: --accent tracks --ink, and
+    // the on-colours are whichever of black or white the fill beneath can
+    // carry. Nothing set at all writes NOTHING to the root, so a copied
+    // snippet still reads --ink-hi and follows the system it lands in.
     var SET_KEY = 'knapplabbet-utseende';
     var PILL    = 28;                       // the top of the slider IS the pill
+    var adv     = document.getElementById('adv');
+    var advBtn  = tools.querySelector('.adv-toggle');
     var swatch  = tools.querySelector('.set-swatch');
     var range   = tools.querySelector('.set-range');
     var readC   = tools.querySelector('[data-read="colour"]');
     var readR   = tools.querySelector('[data-read="radius"]');
-    var look    = {colour:'', radius:PILL};  // '' — the page's own monochrome
+    var swHover = adv.querySelector('[data-set="hover"]');
+    var swText  = adv.querySelector('[data-set="text"]');
+    var readH   = adv.querySelector('[data-read="hover"]');
+    var readT   = adv.querySelector('[data-read="text"]');
+    var look    = {colour:'', hover:'', text:'', radius:PILL};
 
     // The panel colour is read off a rendered card rather than off the --bg-1
     // token, because the token arrives from a stylesheet this page does not own
@@ -5255,26 +5381,78 @@
       return ratio(rgb, [0, 0, 0]) >= ratio(rgb, [255, 255, 255]) ? '#000000' : '#ffffff';
     }
 
+    // A set() that removes rather than writing '' — an empty custom property
+    // still SHADOWS the stylesheet alias, so writing '' would strand --accent
+    // resolving to nothing instead of falling back to --inverse-bg.
+    function tok(root, prop, value){
+      if (value) root.setProperty(prop, value); else root.removeProperty(prop);
+    }
     function paint(){
       var root = document.documentElement.style;
-      if (look.colour){
-        var f = fit(look.colour);
-        root.setProperty('--ink', f.hex);
-        root.setProperty('--accent', f.hex);
-        root.setProperty('--on-ink', onTop(f.rgb));
-        root.setProperty('--on-accent', onTop(f.rgb));
-        readC.innerHTML = f.ratio.toFixed(1) + ':1' + (f.moved ? ' <b>↑</b>' : '');
-        readC.title = f.moved
-          ? 'Lightened to ' + f.hex + ' so the label clears 4.5:1 on the panel. A dark page cannot carry a dark accent.'
+      var pri  = look.colour ? fit(look.colour) : null;
+      // Auto hover IS the primary. Not a copy of the value — the same fitted
+      // object, so the two can never drift by a rounding step.
+      var hov  = look.hover  ? fit(look.hover)  : pri;
+
+      tok(root, '--ink',    pri && pri.hex);
+      tok(root, '--accent', hov && hov.hex);
+
+      // ---- Primary readout
+      if (pri){
+        readC.innerHTML = pri.ratio.toFixed(1) + ':1' + (pri.moved ? ' <b>↑</b>' : '');
+        readC.title = pri.moved
+          ? 'Lightened to ' + pri.hex + ' so the label clears 4.5:1 on the panel. A dark page cannot carry a dark accent.'
           : 'Label contrast on the panel.';
       } else {
-        ['--ink', '--accent', '--on-ink', '--on-accent'].forEach(function(k){ root.removeProperty(k); });
         swatch.value = WHITE;
         readC.textContent = ratio(WHITE_RGB, PANEL).toFixed(1) + ':1';
         readC.title = 'The default primary: ' + WHITE + ', graphite\u2019s white. '
                     + 'It is left as an alias rather than written to the root, so a copied '
                     + 'snippet still reads --ink-hi and follows the system it lands in.';
       }
+
+      // ---- Hover readout. Fitted like the primary, and for the same reason:
+      // ten studies colour LABEL TEXT with --accent rather than filling with
+      // it, so a dark hover colour would put those labels under AA.
+      if (look.hover){
+        readH.innerHTML = hov.ratio.toFixed(1) + ':1' + (hov.moved ? ' <b>↑</b>' : '');
+        readH.title = hov.moved
+          ? 'Lightened to ' + hov.hex + ' so the studies that tint label text with it clear 4.5:1 on the panel.'
+          : 'Contrast on the panel, for the studies that tint label text rather than fill with it.';
+      } else {
+        swHover.value = pri ? pri.hex : WHITE;
+        readH.textContent = 'Auto';
+        readH.title = 'Following the primary, which is what the page did before '
+                    + '--ink and --accent were given separate jobs.';
+      }
+
+      // ---- Label on a fill. Unlike the two above this one is NOT corrected.
+      // The fit exists because --ink and --accent land on the panel whether you
+      // meant them to or not; a label colour is only ever on a fill you also
+      // chose, so the honest move is to measure it and say so rather than to
+      // walk it somewhere you did not ask for.
+      var inkRgb = pri ? pri.rgb : WHITE_RGB;
+      var accRgb = hov ? hov.rgb : WHITE_RGB;
+      if (look.text){
+        tok(root, '--on-ink', look.text);
+        tok(root, '--on-accent', look.text);
+        var txt  = toRgb(look.text);
+        var wr   = Math.min(ratio(txt, inkRgb), ratio(txt, accRgb));
+        readT.innerHTML = wr.toFixed(1) + ':1' + (wr < 4.5 ? ' <b>↓</b>' : '');
+        readT.title = (wr < 4.5 ? 'Under AA. ' : '')
+                    + 'The worse of the label on the primary and the label on the hover colour. '
+                    + 'Left where you put it, not corrected.';
+      } else {
+        tok(root, '--on-ink',    pri && onTop(pri.rgb));
+        tok(root, '--on-accent', hov && onTop(hov.rgb));
+        swText.value = onTop(inkRgb);
+        readT.textContent = 'Auto';
+        readT.title = 'Black or white, whichever the fill beneath can carry. '
+                    + 'The arrow is currentColor in every icon, so it follows the label.';
+      }
+      adv.querySelector('[data-auto="hover"]').hidden = !look.hover;
+      adv.querySelector('[data-auto="text"]').hidden  = !look.text;
+
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
       range.setAttribute('aria-valuetext', readR.textContent);
@@ -5282,15 +5460,43 @@
     function saveLook(){
       try { localStorage.setItem(SET_KEY, JSON.stringify(look)); } catch(e){}
     }
+    // A stored object from before the pair was split carries colour and radius
+    // and nothing else, and reads back clean: the two new keys simply stay ''.
     try {
       var stored = JSON.parse(localStorage.getItem(SET_KEY));
       if (stored && typeof stored === 'object'){
-        if (typeof stored.colour === 'string' && /^#[0-9a-f]{6}$/i.test(stored.colour)) look.colour = stored.colour;
+        ['colour', 'hover', 'text'].forEach(function(k){
+          if (typeof stored[k] === 'string' && /^#[0-9a-f]{6}$/i.test(stored[k])) look[k] = stored[k];
+        });
         if (typeof stored.radius === 'number' && stored.radius >= 0 && stored.radius <= PILL) look.radius = stored.radius;
       }
     } catch(e){}
-    if (look.colour) swatch.value = look.colour;
+    if (look.colour) swatch.value  = look.colour;
+    if (look.hover)  swHover.value = look.hover;
+    if (look.text)   swText.value  = look.text;
     range.value = look.radius;
+
+    // The panel opens itself when something in it is already set, so a stored
+    // hover colour is never a change with no visible cause for it.
+    if (look.hover || look.text){
+      adv.hidden = false;
+      advBtn.setAttribute('aria-expanded', 'true');
+    }
+    advBtn.addEventListener('click', function(){
+      var open = advBtn.getAttribute('aria-expanded') !== 'true';
+      advBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      adv.hidden = !open;
+    });
+    [[swHover, 'hover'], [swText, 'text']].forEach(function(pair){
+      pair[0].addEventListener('input', function(){
+        look[pair[1]] = pair[0].value; paint(); saveLook();
+      });
+    });
+    adv.addEventListener('click', function(e){
+      var b = e.target.closest('.set-auto');
+      if (!b) return;
+      look[b.dataset.auto] = ''; paint(); saveLook();
+    });
 
     swatch.addEventListener('input', function(){
       look.colour = swatch.value; paint(); saveLook(); apply();
@@ -5309,7 +5515,7 @@
       state = {fav:false, q:'', changes:[], answers:[]};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
-      look  = {colour:'', radius:PILL};
+      look  = {colour:'', hover:'', text:'', radius:PILL};
       range.value  = PILL;
       paint();
       saveLook();
@@ -6178,16 +6384,17 @@
     // generated into this page by tools/sync-framer.mjs; it is read lazily so
     // it does not matter where in the document that block ends up.
     //
-    // Eleven numbers are deliberately ABSENT from the map. Two are the retired
-    // studies. The other nine were reworked in the same pass that wrote this
-    // note, so their published modules still serve the effect the page used to
-    // show — card 76's URL is still named TheTerminal and still grows a 7px tab.
-    // A stale module is worse than no module: the fallback below copies the real
-    // code file and says so out loud, whereas a wrong URL hands over something
-    // that silently contradicts the demo it was copied from. Run
-    // tools/sync-framer.mjs to republish those nine and the map fills itself
-    // back in. Never delete the Framer code files they point at — somebody may
-    // have pasted one already.
+    // Eighteen of the cards on the page are deliberately ABSENT from the map,
+    // and every one of them was reworked after its module was published, so the
+    // module still serves the effect the page used to show — card 76's URL is
+    // still named TheTerminal and still grows a 7px tab, and 59's still walks
+    // its arrow over the label it now crosses dark. A stale module is worse than
+    // no module: the fallback below copies the real code file and says so out
+    // loud, whereas a wrong URL hands over something that silently contradicts
+    // the demo it was copied from. Run tools/sync-framer.mjs to republish them
+    // and the map fills itself back in. Never delete the Framer code files they
+    // point at — somebody may have pasted one already, and that goes for the
+    // retired studies too, whose keys are dropped here but whose files stay.
     //
     // The URL is deliberately the versionless form. Framer resolves it at
     // paste time and pins the instance to whatever version it found, so a
@@ -6270,7 +6477,7 @@
 </script>
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/DirectionalSweep-dlV5mD.js","02":"https://framer.com/m/Shutter-8E8j3M.js","03":"https://framer.com/m/InkFill-GW6yhu.js","04":"https://framer.com/m/Sheen-eN4I5o.js","05":"https://framer.com/m/ArrowRelay-NcEpRz.js","06":"https://framer.com/m/DotBecomesArrow-78XLOF.js","07":"https://framer.com/m/Guillemets-rObXKn.js","08":"https://framer.com/m/CropMarks-fjWU0F.js","09":"https://framer.com/m/DirectionalUnderline-IatvfH.js","10":"https://framer.com/m/ElevationStep-AKmCza.js","11":"https://framer.com/m/Magnetic-SmTIHx.js","12":"https://framer.com/m/WeightWave-w7rPq4.js","13":"https://framer.com/m/DrawnOutline-cmxkyg.js","14":"https://framer.com/m/ChamferedCorner-lvjej9.js","15":"https://framer.com/m/InRegister-QpqTov.js","16":"https://framer.com/m/Counter-R61N2D.js","17":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","18":"https://framer.com/m/Backlight-68rjpP.js","19":"https://framer.com/m/TheLantern-JhIelK.js","20":"https://framer.com/m/TheGrainSettles-qDFHdb.js","22":"https://framer.com/m/DiagonalRadius-QprZXR.js","25":"https://framer.com/m/TheKey-SCe6ZA.js","26":"https://framer.com/m/LabelRoll-p0eOmG.js","27":"https://framer.com/m/TheSecondLine-0blJk6.js","28":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","29":"https://framer.com/m/TheCaret-wBPSsy.js","30":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","31":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","32":"https://framer.com/m/TwoMasses-Sb7Tcx.js","35":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","36":"https://framer.com/m/ReSpacing-9XNknM.js","38":"https://framer.com/m/TheRealUnderline-wBkGEc.js","39":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","41":"https://framer.com/m/DirectionalFill-fpvcPF.js","42":"https://framer.com/m/TheWave-vZigVg.js","43":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","44":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","45":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","46":"https://framer.com/m/Resolve-QdqmRV.js","47":"https://framer.com/m/TheOthersRecede-uWvqi9.js","48":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","49":"https://framer.com/m/ConservedCompression-qOYXER.js","50":"https://framer.com/m/Repulsion-8kbI6W.js","51":"https://framer.com/m/ThePair-XMHcLD.js","52":"https://framer.com/m/TheDividerYields-BQHpVA.js","53":"https://framer.com/m/Knurling-8R1JoN.js","54":"https://framer.com/m/Deboss-n6GzCh.js","55":"https://framer.com/m/TheLineGauge-h9qIsP.js","56":"https://framer.com/m/TheDataPlate-xAARQs.js","57":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","58":"https://framer.com/m/TheStop-fTngvI.js","59":"https://framer.com/m/ChangesSides-0nQCL2.js","60":"https://framer.com/m/ThePiecesJoin-sc1diW.js","61":"https://framer.com/m/TickerLabel-1JFxFP.js","62":"https://framer.com/m/StruckThrough-P16etM.js","63":"https://framer.com/m/NothingButThePress-sHz8KT.js","64":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","65":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","66":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","67":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","69":"https://framer.com/m/ThePiecesPart-ySk8HW.js","71":"https://framer.com/m/TheyTradeFill-OyLZbP.js","72":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","73":"https://framer.com/m/TheMarkHinges-RXuV8I.js","74":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","75":"https://framer.com/m/StraightensUp-PMQhjy.js","77":"https://framer.com/m/ItGoesToWork-UWy42D.js","79":"https://framer.com/m/NervousType-7TInHS.js","80":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","81":"https://framer.com/m/TheTubeConverges-Mzevog.js","82":"https://framer.com/m/TwoFrames-Xkk1by.js","83":"https://framer.com/m/ItPrints-d0SyuT.js","84":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","85":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","86":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","87":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","88":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/DirectionalSweep-dlV5mD.js","02":"https://framer.com/m/Shutter-8E8j3M.js","03":"https://framer.com/m/InkFill-GW6yhu.js","04":"https://framer.com/m/Sheen-eN4I5o.js","05":"https://framer.com/m/ArrowRelay-NcEpRz.js","06":"https://framer.com/m/DotBecomesArrow-78XLOF.js","08":"https://framer.com/m/CropMarks-fjWU0F.js","09":"https://framer.com/m/DirectionalUnderline-IatvfH.js","10":"https://framer.com/m/ElevationStep-AKmCza.js","11":"https://framer.com/m/Magnetic-SmTIHx.js","12":"https://framer.com/m/WeightWave-w7rPq4.js","13":"https://framer.com/m/DrawnOutline-cmxkyg.js","14":"https://framer.com/m/ChamferedCorner-lvjej9.js","15":"https://framer.com/m/InRegister-QpqTov.js","16":"https://framer.com/m/Counter-R61N2D.js","17":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","18":"https://framer.com/m/Backlight-68rjpP.js","19":"https://framer.com/m/TheLantern-JhIelK.js","22":"https://framer.com/m/DiagonalRadius-QprZXR.js","25":"https://framer.com/m/TheKey-SCe6ZA.js","26":"https://framer.com/m/LabelRoll-p0eOmG.js","27":"https://framer.com/m/TheSecondLine-0blJk6.js","28":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","29":"https://framer.com/m/TheCaret-wBPSsy.js","30":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","31":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","32":"https://framer.com/m/TwoMasses-Sb7Tcx.js","35":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","36":"https://framer.com/m/ReSpacing-9XNknM.js","38":"https://framer.com/m/TheRealUnderline-wBkGEc.js","39":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","41":"https://framer.com/m/DirectionalFill-fpvcPF.js","42":"https://framer.com/m/TheWave-vZigVg.js","43":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","44":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","45":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","46":"https://framer.com/m/Resolve-QdqmRV.js","47":"https://framer.com/m/TheOthersRecede-uWvqi9.js","48":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","49":"https://framer.com/m/ConservedCompression-qOYXER.js","50":"https://framer.com/m/Repulsion-8kbI6W.js","51":"https://framer.com/m/ThePair-XMHcLD.js","52":"https://framer.com/m/TheDividerYields-BQHpVA.js","53":"https://framer.com/m/Knurling-8R1JoN.js","54":"https://framer.com/m/Deboss-n6GzCh.js","55":"https://framer.com/m/TheLineGauge-h9qIsP.js","56":"https://framer.com/m/TheDataPlate-xAARQs.js","57":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","60":"https://framer.com/m/ThePiecesJoin-sc1diW.js","61":"https://framer.com/m/TickerLabel-1JFxFP.js","62":"https://framer.com/m/StruckThrough-P16etM.js","63":"https://framer.com/m/NothingButThePress-sHz8KT.js","64":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","65":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","66":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","67":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","69":"https://framer.com/m/ThePiecesPart-ySk8HW.js","71":"https://framer.com/m/TheyTradeFill-OyLZbP.js","72":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","73":"https://framer.com/m/TheMarkHinges-RXuV8I.js","74":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","75":"https://framer.com/m/StraightensUp-PMQhjy.js","77":"https://framer.com/m/ItGoesToWork-UWy42D.js","79":"https://framer.com/m/NervousType-7TInHS.js","80":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","83":"https://framer.com/m/ItPrints-d0SyuT.js","84":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","85":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","86":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","87":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","88":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 
 </body>

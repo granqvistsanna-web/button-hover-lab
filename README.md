@@ -1,6 +1,6 @@
 # Button Hover Lab
 
-Sixty-four button hover animations, actually built. Hover, tab and press all of them.
+Eighty-nine button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -16,7 +16,7 @@ script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the sixty-four obeys all five:
+Every one of the eighty-nine obeys all five:
 
 | | |
 |---|---|
@@ -24,7 +24,7 @@ Every one of the sixty-four obeys all five:
 | **Interruptible** | Hover out halfway and the animation turns smoothly from wherever it is — no waiting for it to finish. |
 | **In one way, out another** | The exit takes its own path — and its own clock, one rung down the ladder. |
 | **Reduced motion** | Everything falls back to plain colour and opacity changes. |
-| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the sixty-four effects; the toolbar chrome runs on the design system's own `--t-fast`. |
+| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the eighty-nine effects; the toolbar chrome runs on the design system's own `--t-fast`. |
 
 And, without exception: no layout shift — every button's own box stays identical to three
 decimals, and in the group cards the row does too, the one deliberate exception being
@@ -38,11 +38,11 @@ cards run a *loop* rather than a transition, and those are listed as exceptions 
 | | |
 |---|---|
 | **A** The fill tells you | directional sweep, shutter, ink fill, sheen |
-| **B** The sign points | arrow relay, dot becomes arrow, guillemets, crop marks, directional underline |
+| **B** The sign points | arrow relay, dot becomes arrow, crop marks, directional underline |
 | **C** You feel the physics | elevation step, magnetic |
 | **D** The challengers | weight wave, drawn outline, chamfered corner, in register, counter |
-| **E** Light and material | frosted glass, backlight, the lantern, the grain settles, edge light |
-| **F** The plate and its geometry | diagonal radius, filling the measure, the key |
+| **E** Light and material | frosted glass, backlight, the lantern |
+| **F** The plate and its geometry | edge light, diagonal radius, filling the measure, the key |
 | **G** The word and the mark | label roll, the second line, three dots become an arrow, the caret, only when it doesn't fit |
 | **H** Mass, lag and resistance | the plate gives, the type doesn't, two masses, anticipation, the rule takes the load, re-spacing, the real underline, it matches your tempo, the exit remembers |
 | **I** The studio idioms | directional fill, the wave, in one order, out another, it leaves by the corner, the optical centre holds, resolve |
@@ -75,10 +75,11 @@ pair.
 Filter by intensity or by how it ports, and star the ones worth keeping — the shortlist
 persists in your browser.
 
-The same toolbar carries two global settings that restyle all sixty-two at once: a
-**primary** and a **button radius**. Both are written as custom properties on the root
-element, which is also where the copy buttons resolve from, so a snippet copied with a
-primary set carries that primary rather than the default it replaced.
+The same toolbar carries the global settings that restyle all eighty-nine at once: a
+**primary** and a **button radius**, with a **hover colour** and a **label colour** behind
+Advanced. All four are written as custom properties on the root element, which is also
+where the copy buttons resolve from, so a snippet copied with a colour set carries that
+colour rather than the default it replaced.
 
 White is the default primary, and it is graphite's white — `--ink-hi`, a shade under pure,
 because pure white on near-black glares. The toolbar measures it off a rendered button
@@ -86,11 +87,39 @@ rather than naming it, and leaves it as an alias rather than writing it to the r
 snippet copied at the default still reads `--ink-hi` and follows the system it lands in.
 Picking `#ffffff` by hand is a real choice and is treated as one.
 
-The primary re-points `--ink` and `--accent` and nothing else — no page chrome reads
-either, so the tint stops at the stage edge. A dark-only page cannot carry a dark accent:
-`--ink` colours label text as well as fills, so a chosen colour has its lightness walked up,
-hue and saturation intact, until the label clears 4.5:1 on the panel. The toolbar prints the
-measured ratio and marks it `↑` when the colour had to move.
+The four settings re-point `--ink`, `--accent`, `--on-ink` and `--on-accent` and nothing
+else — no page chrome reads any of them, so the tint stops at the stage edge.
+
+Which token a study reads is a statement about **when** the colour appears, not about which
+effect owns it:
+
+| token | when |
+|---|---|
+| `--ink` | the resting state — a solid fill, a border, a label on the panel |
+| `--accent` | what a hover brings in — the plate, the wipe, the rule, the tint |
+| `--on-ink` | a label sitting on the resting fill |
+| `--on-accent` | a label sitting on the arriving one |
+
+`--ink` and `--accent` were always two tokens; until the split they were simply written the
+same value, and the studies used them interchangeably — an arriving plate was as likely to
+read `--ink` as `--accent`. The repoint put every arriving surface on `--accent` and left
+every resting one on `--ink`, so the second swatch has something to mean. Thirty-two studies
+respond to it. Fifty-seven change no colour at all on hover — they move, scale, clip or
+stagger, and there is nothing there for a hover colour to do. The remaining three change a
+colour on hover for reasons that are deliberately not the accent: 19's lantern rim is
+section E's *material* light, 24 fades a border to transparent, and 80's bevel is the
+grayscale ladder catching a flipped light source.
+
+A dark-only page cannot carry a dark accent. `--ink` and `--accent` both colour label text
+as well as fills, so each has its lightness walked up, hue and saturation intact, until the
+label clears 4.5:1 on the panel. The toolbar prints the measured ratio and marks it `↑` when
+the colour had to move.
+
+The label colour is **not** corrected, and the asymmetry is deliberate. The primary and the
+hover colour land on the panel whether you meant them to or not; a label colour is only ever
+on a fill you also chose. So it is measured against the worse of the two fills, reported,
+marked `↓` under AA, and otherwise left exactly where you put it. The arrow needs no swatch
+— it is `currentColor` in all forty-seven icons and follows the label for free.
 
 Radius is deliberately partial. Six studies fix or animate their own corner — 09, 13, 14,
 22, 23 and the text variant — and there the radius *is* the effect, so the setting leaves
@@ -201,7 +230,7 @@ reading, and the edge the pointer crossed.
 Colour lives entirely in tokens, and there is now exactly one set of them: Graphite Console
 is dark-only, so the light `:root` / `prefers-color-scheme` / `[data-theme]` trio is gone.
 The page's own names (`--ink`, `--stage`, `--accent`, …) survive as **aliases** onto the
-graphite ladder, which is why all sixty-four effect rules kept working untouched — and why
+graphite ladder, which is why all the effect rules kept working untouched — and why
 the copy buttons still hand you a self-contained snippet, resolving each alias to its value
 off the computed root.
 
