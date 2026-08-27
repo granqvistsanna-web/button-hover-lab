@@ -95,6 +95,16 @@ the mark: `--ink` and `--accent` together. **Hover** is whatever arrives when yo
 something. Set all three the same and the page behaves exactly as it did when there was one
 swatch.
 
+Text means the label everywhere, filled plates included. Cards 01 and 02 are both
+`btn--solid`, and so are every plate and mark study, where the label has to contrast with the
+fill it sits on rather than with the card behind it — so the chosen colour is re-fitted
+against that fill and written to `--ink-on-fill`. One amber therefore reads as full amber on
+a dark card and as a dark amber on a pale plate: the hue is yours, the lightness is whatever
+keeps it legible. With no text colour chosen, that token stays the computed black-or-white it
+has always been. The fit walks lightness in **either** direction for exactly this reason — a
+label on a near-white accent has to go down, and the one-way walk the single-primary toolbar
+used would have sent it to white on white.
+
 Unset is not "follow another swatch" — it leaves the authored alias standing, and the aliases
 are deliberately uneven. `--ink-text` is pinned to `--ink-hi`, so the label does not drift
 when only the accent is picked. `--ink-hover` is pinned to `--ink`, so hover *does* follow

@@ -65,6 +65,15 @@
     --ink-text:var(--ink);          /* the label, at rest                  */
     --ink-hover:var(--ink);         /* the colour that arrives on hover    */
     --on-ink-hover:var(--on-ink);   /* the label once that colour is under it */
+    /* The label on a FILLED plate — cards 01 and 02 are both btn--solid, and
+       every plate and mark study lands here too. It cannot simply read
+       --ink-text: a label sitting on the accent has to contrast with the
+       accent, not with the card behind it. So the toolbar re-fits the chosen
+       text colour against the fill and writes the result here, and when no
+       text colour is chosen this stays the computed black-or-white it always
+       was. Note --on-ink is NOT that label: it doubles as a plain dark fill in
+       cards 31 and 44's inverting pairs, which is why this needs its own name. */
+    --ink-on-fill:var(--on-ink);
     --shadow-rgb:0,0,0;
     /* The button radius, as one token the whole page reads. It is here in the
        alias block rather than inline on .btn so the toolbar has one property to
@@ -189,7 +198,7 @@
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
-  .btn--solid{background:var(--ink); color:var(--on-ink)}
+  .btn--solid{background:var(--ink); color:var(--ink-on-fill)}
   .btn--line{border:1px solid var(--ink)}
   .btn--text{padding:8px 4px; border-radius:2px}
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
@@ -215,7 +224,7 @@
   .sweep:focus-visible::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .sweep:hover .lbl,
-  .sweep:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .sweep:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-2)}
 
   /* 08 Slutare */
   .shutter{overflow:hidden}
@@ -224,7 +233,7 @@
   .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .shutter:hover .lbl,
-  .shutter:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-1)}
+  .shutter:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-1)}
 
   /* 09 Ink fill */
   .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
@@ -233,10 +242,10 @@
   .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
   .inkfill:hover .lbl,
-  .inkfill:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .inkfill:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-2)}
 
   /* 10 Sheen */
-  .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  .sheen{background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
   .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
@@ -978,7 +987,7 @@
   .e-draw:focus-visible{--draw:0.5}
 
   /* 28 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
-  .e-chamfer{border-radius:0; color:var(--on-ink)}
+  .e-chamfer{border-radius:0; color:var(--ink-on-fill)}
   .e-chamfer::before{
     content:""; position:absolute; inset:0; background:var(--ink);
     clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -1510,7 +1519,7 @@ document.addEventListener("DOMContentLoaded", function () {
      is not emphasis at rest — a rest state is a picture, and that one was
      lopsided. The gesture gives up 5px and gains 2px in the other axis, which
      is a smaller movement in a straighter line. */
-  .g-measure{padding:17px 34px; color:var(--on-ink)}
+  .g-measure{padding:17px 34px; color:var(--ink-on-fill)}
   .g-measure .g-measure-trim{
     position:absolute; inset:0; border:1px solid var(--line);
     border-radius:inherit; pointer-events:none;
@@ -2239,7 +2248,7 @@ document.addEventListener("DOMContentLoaded", function () {
      change; the tile's duration less the colour's puts the label back to ink
      exactly as the last of the fill leaves the frame. */
   .j-dir .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
-  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-1)}
+  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-1)}
 
   /* 76 The wave — the fill rises with a curved leading edge that flattens as it
      lands, so it reads as liquid finding its level rather than a rectangle
@@ -2266,7 +2275,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   /* Same rule as 78: the colour lands as the fill clears, not after it. */
   .j-wave .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
-  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-2)}
 
   /* 77 In one order, out another — the one thing a gesture variant cannot do at
      all: its exit is always its entrance played backwards. Here the rest-state
@@ -2615,7 +2624,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:background-color var(--t-3) ease, color var(--t-3) ease, border-color var(--t-3) ease,
                transform var(--t-1) var(--e-out);
   }
-  .k-pair .k-pair-a{background-color:var(--ink); color:var(--on-ink)}
+  .k-pair .k-pair-a{background-color:var(--ink); color:var(--ink-on-fill)}
   .k-pair .k-pair-b{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
     color:var(--ink-text); border-color:var(--line-ctl);
@@ -2626,7 +2635,7 @@ document.addEventListener("DOMContentLoaded", function () {
     color:var(--ink-text); border-color:var(--line-ctl);
   }
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-b{
-    background-color:var(--ink); color:var(--on-ink); border-color:transparent;
+    background-color:var(--ink-hover); color:var(--on-ink-hover); border-color:transparent;
   }
 
   /* 65 The divider yields — the two hairlines touching the hovered segment
@@ -2832,7 +2841,7 @@ document.addEventListener("DOMContentLoaded", function () {
     position-area:top center; margin-bottom:8px;
     position-try-fallbacks:flip-block;
     font:500 10px/1 var(--mono); letter-spacing:.1em;
-    color:var(--on-ink); background:var(--ink);
+    color:var(--ink-on-fill); background:var(--ink);
     padding:5px 7px; border-radius:5px; pointer-events:none;
     display:none; opacity:0;
     transition:opacity var(--t-2) var(--e-out), display var(--t-2) allow-discrete;
@@ -3020,7 +3029,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .n-join .n-join-row{justify-self:start}
   .n-join .n-join-plate,
   .n-join .n-join-mark{
-    background:var(--ink); color:var(--on-ink);
+    background:var(--ink); color:var(--ink-on-fill);
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint);
   }
   .n-join .n-join-plate{padding:15px 26px; border-radius:999px; transform:translateX(0)}
@@ -3407,7 +3416,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-step:hover .o-step-fill span:nth-child(6),
   .o-step:focus-visible .o-step-fill span:nth-child(6){transition-delay:calc(var(--t-stagger) * 5)}
   .o-step:hover .lbl,
-  .o-step:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--t-3)}
+  .o-step:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--t-3)}
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
      card would still arrive in sequence with nothing animating between the
      steps — six jumps instead of one. These are the delays this section adds,
@@ -3548,7 +3557,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-part{padding:0; background:none; border:0; border-radius:999px}
   .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-part .p-part-plate,
-  .p-part .p-part-mark{background:var(--ink); color:var(--on-ink);
+  .p-part .p-part-mark{background:var(--ink); color:var(--ink-on-fill);
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
   .p-part .p-part-plate{padding:15px 26px; border-radius:999px 0 0 999px}
   .p-part .p-part-mark{display:grid; place-items:center; width:46px;
@@ -3578,7 +3587,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-walk{padding:0; background:none; border:0; border-radius:999px}
   .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-walk .p-walk-plate,
-  .p-walk .p-walk-mark{background:var(--ink); color:var(--on-ink); border-radius:999px;
+  .p-walk .p-walk-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px;
     position:relative; transform:translateX(0);
     transition:transform var(--t-5) var(--e-quint)}
   .p-walk .p-walk-plate{padding:15px 26px; z-index:0}
@@ -3600,7 +3609,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-trade .p-trade-mark{border-radius:999px;
     transition:background-color var(--t-3) var(--e-out), color var(--t-3) var(--e-out),
       box-shadow var(--t-3) var(--e-out)}
-  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--on-ink);
+  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--ink-on-fill);
     box-shadow:inset 0 0 0 1px transparent}
   .p-trade .p-trade-mark{display:grid; place-items:center; width:46px;
     background:none; color:var(--ink-text); box-shadow:inset 0 0 0 1px var(--line-ctl)}
@@ -3640,7 +3649,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-cycle{padding:0; background:none; border:0; border-radius:999px}
   .p-cycle .p-cycle-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-cycle .p-cycle-plate,
-  .p-cycle .p-cycle-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-cycle .p-cycle-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
   .p-cycle .p-cycle-plate{padding:15px 26px}
   .p-cycle .p-cycle-mark{display:grid; place-items:center; width:46px; overflow:hidden}
   .p-cycle .p-cycle-cyc{display:grid; width:100%; justify-items:center}
@@ -3682,7 +3691,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-hinge{padding:0; background:none; border:0; border-radius:999px}
   .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
   .p-hinge .p-hinge-plate,
-  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
   .p-hinge .p-hinge-plate{padding:15px 26px}
   .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
     transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
@@ -3697,7 +3706,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-slip{padding:0; background:none; border:0; border-radius:999px}
   .p-slip .p-slip-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-slip .p-slip-plate,
-  .p-slip .p-slip-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-slip .p-slip-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
   .p-slip .p-slip-plate{padding:15px 26px; position:relative; z-index:1}
   .p-slip .p-slip-mark{display:grid; place-items:center; width:46px;
     position:relative; z-index:0; transform:translateX(0);
@@ -4246,7 +4255,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.s-sprite .lbl{position:relative; z-index:1}
   .btn.s-sprite:hover,
-  .btn.s-sprite:focus-visible{color:var(--on-ink)}
+  .btn.s-sprite:focus-visible{color:var(--on-ink-hover)}
   .btn.s-sprite:hover::after,
   .btn.s-sprite:focus-visible::after{background:var(--ink-hover)}
   .btn.s-sprite:active{transform:none}
@@ -4504,7 +4513,7 @@ document.addEventListener("DOMContentLoaded", function () {
     width:100%; transition:width var(--t-run) linear;
   }
   .btn.t-report[data-state="done"]{
-    background:var(--ink); color:var(--on-ink); border-color:var(--ink);
+    background:var(--ink); color:var(--ink-on-fill); border-color:var(--ink);
   }
 
   /* 73 The plate becomes the mark — the plate collapses to a square and the
@@ -4592,7 +4601,7 @@ document.addEventListener("DOMContentLoaded", function () {
      label, and nowrap so it never reflows as the fill narrows it. */
   .btn.t-hold .t-hold-over{
     position:absolute; left:28px; top:50%; transform:translateY(-50%);
-    white-space:nowrap; color:var(--on-ink);
+    white-space:nowrap; color:var(--ink-on-fill);
   }
   .btn.t-hold[data-state="holding"] .t-hold-fill{
     width:100%; transition:width var(--t-hold) linear;
@@ -5960,13 +5969,13 @@ document.addEventListener("DOMContentLoaded", function () {
     //         behind a label. One token reaching text by a route this pass
     //         cannot see is enough to make the stricter floor the honest one.
     //   set   the tokens the role writes.
-    //   on    the tokens for whatever sits ON that colour. Computed from the
-    //         fitted result, never picked: text on a fill is a consequence of
-    //         the fill, not a decision the reader should have to make.
+    //   set   the tokens the role writes directly. The label-on-a-fill tokens
+    //         are NOT here: they depend on the text colour and on the fill at
+    //         once, so paint() derives them after all three have been fitted.
     var ROLES = [
       {key:'text',   min:4.5, set:['--ink-text']},
-      {key:'accent', min:4.5, set:['--ink', '--accent'], on:['--on-ink', '--on-accent']},
-      {key:'hover',  min:3,   set:['--ink-hover'],       on:['--on-ink-hover']}
+      {key:'accent', min:4.5, set:['--ink', '--accent']},
+      {key:'hover',  min:3,   set:['--ink-hover']}
     ];
     // '' — unset, meaning the page's own monochrome. Unset is not «follow
     // another swatch»: leaving the token off the root lets the authored alias
@@ -6014,20 +6023,43 @@ document.addEventListener("DOMContentLoaded", function () {
             : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
       return [(t[0] + m) * 255, (t[1] + m) * 255, (t[2] + m) * 255];
     }
-    // A dark-only page cannot take a dark colour in any of the three roles: a
-    // navy label goes under AA on the panel, a navy fill disappears into it.
-    // Hue and saturation are kept and lightness is walked up until the role
-    // clears its own floor — at worst that lands on white, which is where the
-    // page started. The caption says when it moved, so the fit is never silent.
-    function fit(hex, min){
-      var hsl = toHsl(toRgb(hex)), rgb = toRgb(hex), moved = false;
-      while (ratio(rgb, PANEL) < min && hsl[2] < 1){
-        hsl[2] = Math.min(1, hsl[2] + .01);
-        rgb = fromHsl(hsl[0], hsl[1], hsl[2]);
-        moved = true;
+    // Hue and saturation are kept and lightness is walked until the colour
+    // clears its floor against whatever it is sitting on. BOTH directions are
+    // tried and the smaller move wins, because this now fits against fills as
+    // well as against the card: on the dark panel the only way out is up, but
+    // a label on a near-white accent has to go DOWN, and a one-way walk would
+    // send it to white on white. Whichever direction is chosen, the caption
+    // says it moved, so the fit is never silent.
+    function fitOn(hex, min, bg){
+      var base = toRgb(hex);
+      if (ratio(base, bg) >= min){
+        return {rgb: base, hex: toHex(base), moved: false, ratio: ratio(base, bg)};
       }
-      return {rgb: rgb, hex: toHex(rgb), moved: moved, ratio: ratio(rgb, PANEL)};
+      var hsl = toHsl(base), best = null;
+      [1, -1].forEach(function(dir){
+        var l = hsl[2];
+        for (var i = 0; i < 100; i++){
+          l += dir * .01;
+          if (l < 0 || l > 1) break;
+          var rgb = fromHsl(hsl[0], hsl[1], l);
+          if (ratio(rgb, bg) >= min){
+            var d = Math.abs(l - hsl[2]);
+            if (!best || d < best.d) best = {rgb: rgb, d: d};
+            break;
+          }
+        }
+      });
+      // Neither direction clears it, which on a mid-grey background can happen
+      // at 4.5:1 for any hue. Take the extreme that gets closest — black or
+      // white — rather than leaving something illegible on screen.
+      if (!best){
+        var w = [255, 255, 255], b = [0, 0, 0];
+        best = {rgb: ratio(w, bg) >= ratio(b, bg) ? w : b};
+      }
+      return {rgb: best.rgb, hex: toHex(best.rgb), moved: true, ratio: ratio(best.rgb, bg)};
     }
+    // The card is what the three swatches are fitted against.
+    function fit(hex, min){ return fitOn(hex, min, PANEL); }
     // Text ON a fitted colour. The fit above guarantees the colour is lighter
     // than the panel, so this resolves to black in practice — it is computed
     // anyway rather than assumed, because the guarantee lives in another
@@ -6039,21 +6071,44 @@ document.addEventListener("DOMContentLoaded", function () {
     function paint(){
       var root = document.documentElement.style;
       var textRatio = null, moved = 0;
+
+      // Pass one: fit each swatch against the card, independently of the others.
+      var fitted = {};
+      ROLES.forEach(function(r){ fitted[r.key] = look[r.key] ? fit(look[r.key], r.min) : null; });
+
+      // What a label actually sits on. Unset falls through the same alias chain
+      // the stylesheet uses — hover follows the accent, the accent follows the
+      // page's own white — so these are the real backgrounds either way.
+      var accentRgb = fitted.accent ? fitted.accent.rgb : WHITE_RGB;
+      var hoverRgb  = fitted.hover  ? fitted.hover.rgb  : accentRgb;
+
+      // The label ON a fill. With no text colour chosen this is the computed
+      // black-or-white it always was. With one chosen it is that colour
+      // re-fitted against the fill, because a reader who picks a label colour
+      // means the label — not «the label except on the filled ones». Cards 01
+      // and 02 are both solid, so anything else makes the swatch look broken
+      // on the first two studies on the page.
+      function labelOn(rgb){
+        return fitted.text ? fitOn(look.text, 4.5, rgb).hex : onTop(rgb);
+      }
+
+      // Pass two: write. Each token is written only while something it depends
+      // on is set, so an untouched toolbar still leaves every alias standing.
+      var anyColour = !!(fitted.text || fitted.accent || fitted.hover);
       ROLES.forEach(function(r){
         var cap = caps[r.key], sw = swatches[r.key], label = cap.getAttribute('data-label');
-        if (look[r.key]){
-          var f = fit(look[r.key], r.min);
+        var f = fitted[r.key];
+        if (f){
           r.set.forEach(function(p){ root.setProperty(p, f.hex); });
-          (r.on || []).forEach(function(p){ root.setProperty(p, onTop(f.rgb)); });
           cap.innerHTML = label + (f.moved ? ' <b>↑</b>' : '');
           cap.title = f.moved
-            ? label + ' lightened to ' + f.hex + ', so it clears ' + r.min
+            ? label + ' moved to ' + f.hex + ', so it clears ' + r.min
               + ':1 on the card. A dark page cannot carry a dark colour.'
             : label + ': ' + f.ratio.toFixed(1) + ':1 on the card.';
           if (f.moved) moved++;
           if (r.key === 'text') textRatio = f.ratio;
         } else {
-          r.set.concat(r.on || []).forEach(function(p){ root.removeProperty(p); });
+          r.set.forEach(function(p){ root.removeProperty(p); });
           sw.value  = WHITE;
           cap.textContent = label;
           cap.title = label + ' is unset: ' + WHITE + ', graphite’s white. It is left as '
@@ -6061,6 +6116,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     + 'reads the system token and follows the system it lands in.';
         }
       });
+      if (anyColour){
+        root.setProperty('--on-ink',      labelOn(accentRgb));
+        root.setProperty('--on-accent',   labelOn(accentRgb));
+        root.setProperty('--ink-on-fill', labelOn(accentRgb));
+        root.setProperty('--on-ink-hover', labelOn(hoverRgb));
+      } else {
+        ['--on-ink', '--on-accent', '--ink-on-fill', '--on-ink-hover']
+          .forEach(function(p){ root.removeProperty(p); });
+      }
       // One number, and it is the label's, because the label is the only one
       // of the three that can put a reader below AA. The fills report
       // themselves in their own captions.
