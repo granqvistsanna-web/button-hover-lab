@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Seventy-nine button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Ninety-two button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Seventy-nine button hover animations, actually built.">
+<meta property="og:description" content="Ninety-two button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all seventy-nine effect rules keep resolving under their own names.
+     ALIAS so all ninety-two effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -105,7 +105,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all seventy-nine, so the hairline under every stage
+  /* One stage height for all ninety-two, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -134,7 +134,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       seventy-nine demo buttons was rendering in system-ui while the page around
+       ninety-two demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -146,7 +146,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all seventy-nine inherit it,
+     and LEAVES at the shorter one. One rule pair, and all ninety-two inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -324,7 +324,7 @@
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all seventy-nine studies at once. Both are written as
+     Two knobs that restyle all ninety-two studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -465,7 +465,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Seventy-nine button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Ninety-two button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -3587,6 +3587,604 @@
   </div>
 </section>
 
+<style>
+  /* ============ Section P — Set, not drawn ============
+     Every card up to here draws something: over the type, under it, around it,
+     or beside it. The type itself has never changed. This section changes
+     nothing but the type, and the mechanism is one property the page had not
+     used once before now — font-feature-settings, with its font-variant-*
+     shorthands.
+
+     The constraint that shapes the whole section: a feature is a SWITCH. It
+     cannot be interpolated, there is no half-substituted glyph, and no
+     transition on any property will tween one. So every effect here lands in a
+     single frame, and what keeps that from reading as a glitch is that the
+     metric change it causes is paid for by a property that IS continuous —
+     tracking. Card 36 conserves its measure by feeding one registered length
+     into two opposing metrics; this section conserves it by making the tracking
+     pay for a substitution that cannot be tweened. Same ambition, and each
+     card carries its own arithmetic.
+
+     What Geist actually has, read off GeistVariable.woff2 rather than assumed:
+     case, dlig, frac, liga, numr/dnom, ordn, pnum, sinf, subs, sups, tnum and
+     ss01–ss11. What it has NOT got is smcp and c2sc, so there is no small-caps
+     card, and onum, so there is no oldstyle-figures card. Those were the two
+     ideas this section started from, and reading the table first is the only
+     reason they were not built on features that do not exist. Of the rest:
+     dlig knits A_I and U_I and nothing else; ss04, ss06, ss07 and ss08 change
+     R, G, the arrows and the diacritics too quietly to be a specimen at 15px;
+     and ss11 is contextual and did not fire on any string tried here.
+
+     Every correction below was SOLVED BY MEASUREMENT, not by arithmetic on
+     glyph widths. letter-spacing is applied once per character, and a
+     substituted string can have fewer characters than the source, so the
+     number of slots the correction gets divided into is not knowable up front.
+     Card 85 is where that bites, and it bites by 0.83px.
+
+     The prefix is r-: sections M and N spent n- through p-, and O spent q-.
+     Framer has no canvas control for OpenType features and no way to switch one
+     on a hover state, so every card here routes through an override.
+
+     Reduced motion needs nothing from this section, and it is the only section
+     on the page that can say so. The global clamp makes transitions instant;
+     the substitution was already instant, and the correction lands with it. */
+
+  /* 80 Single storey — the a changes shape and the word stays where it was.
+     ss02 draws it as one bowl and a stem instead of two storeys: a different
+     letter to read, the same word to lay out. It is the plainest statement of
+     what this section is for — nothing moves, nothing is drawn, nothing fades,
+     one glyph is replaced by another.
+     ss02 runs +2.17px over this label. The tracking gives back 0.0091em, which
+     is 0.14px per character slot across sixteen of them, and the label lands
+     within two hundredths of a pixel of where it started. It is authored as a
+     calc() so both halves stay legible in the source: the house tracking, and
+     what the substitution cost. */
+  .btn.r-storey .lbl{
+    font-feature-settings:"ss02" 0;
+    letter-spacing:.005em;                    /* restated so it has a from-value */
+    transition:letter-spacing var(--t-3) var(--e-out);
+  }
+  .btn.r-storey:hover .lbl,
+  .btn.r-storey:focus-visible .lbl{
+    font-feature-settings:"ss02" 1;
+    letter-spacing:calc(.005em - .0091em);
+  }
+
+  /* 81 Telling them apart — the capital I takes serifs, the l takes a tail and
+     the zero takes a slash, all in one declaration (ss05, ss03, ss09). This is
+     the one card on the page where pointing at a button ADDS information
+     rather than decoration: at rest the label is set in the letterforms the
+     brand chose, and on hover in the ones you can tell apart.
+     Whether that is a good idea is the argument, and the card exists to make it
+     arguable rather than to recommend it: legibility that arrives on hover is
+     legibility a touch device never gets, and the honest version of this effect
+     sets ss05 and ss09 permanently and animates nothing.
+     +2.09px, paid back with 0.0074em. */
+  .btn.r-clear .lbl{
+    font-feature-settings:"ss05" 0, "ss03" 0, "ss09" 0;
+    letter-spacing:.005em;
+    transition:letter-spacing var(--t-3) var(--e-out);
+  }
+  .btn.r-clear:hover .lbl,
+  .btn.r-clear:focus-visible .lbl{
+    font-feature-settings:"ss05" 1, "ss03" 1, "ss09" 1;
+    letter-spacing:calc(.005em - .0074em);
+  }
+
+  /* 82 The figures change gauge — proportional at rest, tabular on hover, and
+     the label is 5.44px wider for it. The one card in the section that does
+     NOT correct itself, because the re-measure IS the effect: tabular figures
+     are all one width so that columns of them line up, and width is what they
+     pay for it with. Cards 24, 30 and 64 are the page's other studies of a
+     label that changes its measure; this is the only one where the width comes
+     from the figures rather than from the words.
+     The plate grows with the label, which the house style otherwise forbids —
+     inline-flex, so the padding holds and the boundary moves. It is 5px on a
+     centred stage and it would be a reflow in a row of controls. Anywhere near
+     a layout: set the figures tabular and leave them there. */
+  .btn.r-gauge .lbl{font-variant-numeric:proportional-nums}
+  .btn.r-gauge:hover .lbl,
+  .btn.r-gauge:focus-visible .lbl{font-variant-numeric:tabular-nums}
+
+  /* 83 The fraction resolves — 1/2, three characters, becomes ½, one glyph, and
+     the label loses 9.83px in the substitution. The biggest metric change in
+     the section, and so the largest correction: 0.0468em, which is 0.70px per
+     slot, and the point at which the technique stops hiding as correction and
+     starts showing as tracking. That is the card. A specimen page should show
+     where its own method runs out.
+     frac needs a real solidus between real figures — it maps slash → fraction
+     and the digits either side to numr and dnom, so «1 / 2» with spaces gets
+     nothing at all. */
+  .btn.r-frac .lbl{
+    font-variant-numeric:normal;
+    letter-spacing:.005em;
+    transition:letter-spacing var(--t-3) var(--e-out);
+  }
+  .btn.r-frac:hover .lbl,
+  .btn.r-frac:focus-visible .lbl{
+    font-variant-numeric:diagonal-fractions;
+    letter-spacing:calc(.005em + .0468em);
+  }
+
+  /* 84 The marks flatten — ss10 swaps the parentheses, brackets, braces and
+     guillemets for flat-sided alternates that stand upright beside caps instead
+     of curving away from them. Card 07 animates a pair of guillemets in from
+     either side of the label; this changes what a guillemet IS, and never moves
+     it.
+     No correction here, on purpose. ss10 takes 0.52px OFF a 125px label, which
+     is four hundredths of a pixel per character slot — below anything worth
+     writing a rule for. The section's method has a floor, and correcting a
+     twentieth of a pixel would be theatre. Card 63 is the page's floor for the
+     same reason: the least that still answers. */
+  .btn.r-marks .lbl{font-feature-settings:"ss10" 0}
+  .btn.r-marks:hover .lbl,
+  .btn.r-marks:focus-visible .lbl{font-feature-settings:"ss10" 1}
+
+  /* 85 The numero sign — «No.» becomes №, three characters replaced by one, and
+     the correction cannot be worked out from the label. Every other card here
+     divides its metric change by the characters in the source string; this one
+     renders TWELVE letter-spacing slots where the source has fourteen, because
+     two characters left. 0.0322em was solved by measuring the rendered label
+     and iterating; the arithmetic that looks right gives 0.0276em and lands
+     0.83px short. Nothing on the page reveals that but a measurement.
+     ordn is contextual — the substitution in the table is N, o, period, so a
+     lower-case «no.» gets nothing, which is correct: the numero sign is a
+     capital form. */
+  .btn.r-ordn .lbl{
+    font-feature-settings:"ordn" 0;
+    letter-spacing:.005em;
+    transition:letter-spacing var(--t-3) var(--e-out);
+  }
+  .btn.r-ordn:hover .lbl,
+  .btn.r-ordn:focus-visible .lbl{
+    font-feature-settings:"ordn" 1;
+    letter-spacing:calc(.005em + .0322em);
+  }
+
+  /* 86 Tracking was the switch — at rest this label spells its arrow out in two
+     characters; on hover the tracking closes to zero, the arrow knits into one
+     glyph, and «fi» in «file» closes up in the same frame. No feature is
+     switched here at all. Chrome disables ligature substitution whenever
+     letter-spacing is anything other than zero — measured on this font, not
+     assumed — and .btn has set letter-spacing:.005em since the first card, so
+     every button on this page has had its ligatures off all along and this is
+     the only place it is visible. The CSS Text spec permits that suppression
+     rather than requiring it, so this is also the one card on the page whose
+     effect is engine-dependent by design.
+     It inverts the section: everywhere else the tracking pays for a
+     substitution, and here the tracking IS the substitution. Which leaves
+     word-spacing to pay — 0.775px off each of the three spaces. Stepped, not
+     eased: the +2.33px arrives in one frame, at the instant the tracking
+     reaches exactly zero, so an eased correction would tighten the label for
+     200ms and then let it jump anyway.
+     Geist's liga table also carries <-, --> and <->; none of them can fire at
+     the house tracking either. */
+  .btn.r-knit .lbl{
+    letter-spacing:.005em; word-spacing:0;
+    transition:letter-spacing var(--t-3) var(--e-out),
+               word-spacing var(--t-3) steps(1, end);
+  }
+  .btn.r-knit:hover .lbl,
+  .btn.r-knit:focus-visible .lbl{letter-spacing:0; word-spacing:-.775px}
+</style>
+
+<section class="sect">
+  <h2>P — Set, not drawn</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line r-storey"><span class="lbl">Save and archive</span></button>
+      </div>
+      <h3><span class="num">80</span>Single storey</h3>
+      <p>The a changes shape and the word stays exactly where it was — one bowl and a stem instead of two storeys. The plainest form of what this section does: nothing moves and nothing is drawn, one glyph is replaced by another.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid r-clear"><span class="lbl">Install 1,024 files</span></button>
+      </div>
+      <h3><span class="num">81</span>Telling them apart</h3>
+      <p>The capital I takes serifs, the l takes a tail and the zero takes a slash. The one card where hover adds information rather than decoration — which is also the argument against it, since a touch device never gets it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line r-gauge"><span class="lbl">See all 1,041</span></button>
+      </div>
+      <h3><span class="num">82</span>The figures change gauge</h3>
+      <p>Proportional figures at rest, tabular on hover, and the label is 5.4px wider for it. The only card here that does not correct itself: the re-measure is the effect, because alignment is what tabular figures buy with width.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid r-frac"><span class="lbl">Book a 1/2 day</span></button>
+      </div>
+      <h3><span class="num">83</span>The fraction resolves</h3>
+      <p>Three characters become one glyph and the label loses 9.8px. The biggest change in the section and the largest correction with it, which is where the method stops hiding as correction and starts showing as tracking.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line r-marks"><span class="lbl">Read «the notes»</span></button>
+      </div>
+      <h3><span class="num">84</span>The marks flatten</h3>
+      <p>The parentheses and guillemets swap for flat-sided alternates that stand upright beside caps. Card 07 moves a pair of guillemets in from the sides; this changes what a guillemet is and never moves it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid r-ordn"><span class="lbl">No. 12 in line</span></button>
+      </div>
+      <h3><span class="num">85</span>The numero sign</h3>
+      <p>No. becomes №, three characters replaced by one. The correction cannot be derived from the label: two characters leave, so the tracking is divided into twelve slots where the source string has fourteen.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line r-knit"><span class="lbl">Ship the file -&gt;</span></button>
+      </div>
+      <h3><span class="num">86</span>Tracking was the switch</h3>
+      <p>The tracking closes to zero and the arrow knits itself out of the label's own punctuation, with fi closing up in the same frame. No feature is switched: Chrome turns ligatures off whenever letter-spacing is not zero, and .btn has always set .005em.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<style>
+  /* ============ Section Q — From a brief of eleven ============
+     Eleven interactions arrived as a brief, split into a retro half and a
+     subtle half. Five of them are not here, and the reasons are worth more
+     than the cards would have been:
+
+     — a light wash sweeping diagonally across a solid plate is card 04.
+     — an icon nudging right while the label holds still is cards 05 and 36,
+       and 36 is the stronger of the two: it takes the travel back out of the
+       padding, so the plate does not grow while the mark moves.
+     — a soft shadow lift with no travel: this page has no box-shadow, and the
+       reason is at the head of section H. A black shadow on a near-black
+       stage is nothing at all, so elevation is stated as lightness instead.
+     — a small hue shift on hover: there is no hue. --accent IS white.
+     — a neon pulse: cards 18, 19 and 21 are already a glow that breathes, and
+       the thing that would have told this one apart is the colour the page
+       does not have.
+
+     Six were left. Four are period idioms — a bevel, a tube, a sprite, a
+     print head — brought over as MECHANISMS and not as palettes: the era
+     supplies the behaviour, graphite supplies the ink. Two are things the
+     page had never done at all, which is the part of any brief worth having.
+     One of those two lands next door to section P, which had just spent seven
+     cards on the type: 91 moves the tracking as its effect where card 86
+     moves it as a switch. The note there does the accounting.
+
+     The prefix is s-: section P spent r-.
+
+     Two of these own their border radius and ignore the toolbar's radius
+     knob. A bevel needs four unequal edges meeting at a mitre and a pill has
+     no mitre; a stair-stepped corner is not a radius either. Both say so in
+     their own note. */
+
+  /* 87 The light source flips — the plate is drawn as if lit from the top
+     left, and pressing it moves the light to the bottom right. Nothing about
+     the geometry travels: the four edges are in exactly the same places in
+     both states, and only the illumination changes sides. That is the whole
+     claim. Card 25 has a hard bottom edge that compresses under the press and
+     card 63 is the floor of the same economy, a hairline and nothing else;
+     neither of them moves the light.
+     The house press is a scale, and a scaled bevel softens its own mitres
+     while the border widths stay put, so it is cancelled here. What moves
+     instead is the LABEL, one pixel down and right — which is what the era's
+     own toolkit did: the face stays where it is and the content sinks into
+     it.
+     The lit edge is the control boundary, so it is --ink-low and not
+     --ink-faint: 5.19:1 on the panel against --ink-faint's 2.81:1, which is
+     under the 3:1 a boundary owes. That is card 31's argument and the reason
+     --line-ctl exists at all. */
+  .btn.s-bevel{
+    background:var(--bg-3); color:var(--ink-hi);
+    border:2px solid; border-radius:0; padding:13px 26px;
+    border-color:var(--ink-low) var(--bg-0) var(--bg-0) var(--ink-low);
+    transition:border-color var(--t-2) ease;
+  }
+  .btn.s-bevel .lbl{display:block; transform:translate(0,0);
+    transition:transform var(--t-1) var(--e-out)}
+  .btn.s-bevel:hover,
+  .btn.s-bevel:focus-visible{border-top-color:var(--ink-mid); border-left-color:var(--ink-mid)}
+  .btn.s-bevel:active{
+    transform:none;
+    border-color:var(--bg-0) var(--ink-low) var(--ink-low) var(--bg-0);
+    transition-duration:var(--t-1);
+  }
+  .btn.s-bevel:active .lbl{transform:translate(1px,1px)}
+
+  /* 88 The tube converges — mono type on a black plate, misconverged at rest
+     and pulling into register when you point at it. The idiom this comes from
+     splits the strokes into red and cyan; there is no colour here to split,
+     so the split is two grey ghosts either side of the stroke — and the
+     movement runs the other way. The source added the aberration ON hover;
+     this page's habit, since card 75, is to let rest be the state that reads
+     as wrong and make the hover the thing that fixes it.
+     The scanlines are a repeating gradient on a pseudo-element ABOVE the
+     label, which is the only stacking order that works: a scanline that the
+     type sits on top of is a texture on an empty plate, and the whole point
+     is that the lines cross the glyphs. 5.6s for one period is off the ladder
+     for the reason 61, 65 and 77 are — a rung is how long a state takes to
+     ARRIVE, and a loop is not arriving. The drift is exactly one 3px period,
+     so the loop has no seam.
+     The flicker is one pass of a stepped keyframe rather than a transition. A
+     tube warming up does not ease, and steps() is what makes it read as a
+     tube instead of as a fade.
+     Square, because a bezel is not a radius. */
+  .btn.s-crt{
+    background:var(--bg-0); color:var(--ink-hi);
+    border:1px solid var(--line-ctl); border-radius:0; overflow:hidden;
+    font:500 13px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+    padding:15px 24px;
+  }
+  .btn.s-crt .lbl{position:relative; z-index:1;
+    text-shadow:-1.2px 0 0 color-mix(in srgb,var(--ink) 34%,transparent),
+                 1.2px 0 0 color-mix(in srgb,var(--ink) 34%,transparent);
+    transition:text-shadow var(--t-4) var(--e-out);
+  }
+  .btn.s-crt:hover .lbl,
+  .btn.s-crt:focus-visible .lbl{
+    text-shadow:0 0 7px color-mix(in srgb,var(--ink) 55%,transparent);
+    animation:s-crt-strike var(--t-4) steps(1,end) 1;
+  }
+  .btn.s-crt::after{
+    content:""; position:absolute; inset:-3px 0; z-index:2; opacity:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(to bottom,
+      transparent 0 2px, color-mix(in srgb,var(--bg-0) 72%,transparent) 2px 3px);
+    transition:opacity var(--t-3) ease;
+  }
+  .btn.s-crt:hover::after,
+  .btn.s-crt:focus-visible::after{opacity:1; animation:s-crt-drift 5.6s linear infinite}
+  @keyframes s-crt-strike{0%{opacity:.3} 22%{opacity:1} 40%{opacity:.45} 64%{opacity:1}}
+  @keyframes s-crt-drift{to{transform:translateY(3px)}}
+
+  /* 89 Two frames — the only study on this page with no transition at all.
+     Everything else here interpolates, and the second house rule is that an
+     interpolation can be caught and turned from wherever it happens to be. A
+     sprite cannot be caught: there is a rest frame, a hover frame and a press
+     frame, and the swap between them IS the effect. It is here as the
+     argument against that rule, the way section L's cards are against theirs
+     — interruptible is a property of movement, and this does not move.
+     The corner is a two-step stair cut with clip-path rather than a radius,
+     because the machines this comes from had no radius. They had a pixel
+     grid, and a curve on a pixel grid is a staircase.
+     The stair is on a pseudo-element and not on the button, and that is an
+     access decision rather than a drawing one: clip-path clips the focus ring
+     too, so a button that carries its own clip cannot show one. The plate is
+     a pseudo-element, the button stays unclipped, and the house focus ring
+     survives unchanged.
+     Two stacked stair shapes and not one: bg-2 measures 1.32:1 against the
+     panel, which is not a control boundary, and every other filled plate here
+     answers that with a --line-ctl hairline. A border cannot: clip-path cuts
+     the border away exactly at the steps, which is the only part of the
+     outline worth having. So the outer shape IS the hairline and the inner
+     one, inset a pixel, is the fill.
+     The specular is two hard gradient bars in the fill's own background
+     rather than a third layer. It costs nothing, it is clipped to the stair
+     for free, and swapping the whole background is what a frame swap is. */
+  .btn.s-sprite{
+    background:none; border:0; border-radius:0; transition:none;
+    font:500 13px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+    padding:16px 26px;
+  }
+  .btn.s-sprite::before{
+    content:""; position:absolute; inset:0; background:var(--line-ctl);
+    clip-path:polygon(
+      10px 0, calc(100% - 10px) 0, calc(100% - 10px) 5px, calc(100% - 5px) 5px,
+      calc(100% - 5px) 10px, 100% 10px, 100% calc(100% - 10px),
+      calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px),
+      calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) 100%, 10px 100%,
+      10px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 10px),
+      0 calc(100% - 10px), 0 10px, 5px 10px, 5px 5px, 10px 5px);
+  }
+  .btn.s-sprite::after{
+    content:""; position:absolute; inset:1px; background:var(--bg-2);
+    clip-path:polygon(
+      10px 0, calc(100% - 10px) 0, calc(100% - 10px) 5px, calc(100% - 5px) 5px,
+      calc(100% - 5px) 10px, 100% 10px, 100% calc(100% - 10px),
+      calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px),
+      calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) 100%, 10px 100%,
+      10px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 10px),
+      0 calc(100% - 10px), 0 10px, 5px 10px, 5px 5px, 10px 5px);
+  }
+  .btn.s-sprite .lbl{position:relative; z-index:1}
+  .btn.s-sprite:hover,
+  .btn.s-sprite:focus-visible{color:var(--on-ink)}
+  /* An L of two hard bars, the way a sprite sheet draws a specular: no
+     gradient, no blur, four pixels thick. */
+  .btn.s-sprite:hover::after,
+  .btn.s-sprite:focus-visible::after{
+    background:linear-gradient(var(--on-ink),var(--on-ink)) 10px 10px/4px 15px no-repeat,
+               linear-gradient(var(--on-ink),var(--on-ink)) 10px 10px/15px 4px no-repeat,
+               var(--ink);
+  }
+  .btn.s-sprite:active{transform:none}
+  .btn.s-sprite:active::after{background:var(--ink-mid)}
+
+  /* 90 It prints — the label arrives one glyph at a time, each snapping from
+     bled ink to sharp with nothing in between, on a fixed 26ms beat. Card 37
+     is this same event made continuous: a hard edge travels through the word
+     and every glyph changes colour mid-stroke. This one is quantised. A glyph
+     is either printed or it is not, and the beat is a print head rather than
+     an easing curve.
+     --t-stagger is the page's own token, used here as a rhythm and not as a
+     one-off offset: eleven glyphs at 26ms is 286ms of printing, inside the
+     longest rung, so it does not read as slow.
+     Two clocks per glyph. Opacity and blur step at the beat; a 2px drop eases
+     in over the same delay, with `both` fill so the letter waits raised and
+     faint until its turn and then lands as if struck. Leaving, the delays are
+     gone and the whole word clears at once — printing is sequential, erasing
+     is not.
+     The visible letters are aria-hidden and an .sr copy carries the
+     accessible name, the way 79 and 46 do. */
+  .s-print{font:500 13px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase}
+  .s-print .s-print-l{
+    display:inline-block; opacity:.3; filter:blur(.4px);
+    transition:opacity var(--t-1) steps(1,end), filter var(--t-1) steps(1,end);
+  }
+  .s-print .s-print-l:nth-child(1){--s-i:0}
+  .s-print .s-print-l:nth-child(2){--s-i:1}
+  .s-print .s-print-l:nth-child(3){--s-i:2}
+  .s-print .s-print-l:nth-child(4){--s-i:3}
+  .s-print .s-print-l:nth-child(5){--s-i:4}
+  .s-print .s-print-l:nth-child(6){--s-i:5}
+  .s-print .s-print-l:nth-child(7){--s-i:6}
+  .s-print .s-print-l:nth-child(8){--s-i:7}
+  .s-print .s-print-l:nth-child(9){--s-i:8}
+  .s-print .s-print-l:nth-child(10){--s-i:9}
+  .s-print .s-print-l:nth-child(11){--s-i:10}
+  .s-print:hover .s-print-l,
+  .s-print:focus-visible .s-print-l{
+    opacity:1; filter:blur(0);
+    transition-delay:calc(var(--s-i) * var(--t-stagger));
+    animation:s-print-hit var(--t-2) var(--e-out) calc(var(--s-i) * var(--t-stagger)) 1 both;
+  }
+  @keyframes s-print-hit{from{transform:translateY(-2px)} to{transform:translateY(0)}}
+
+  /* 91 The measure absorbs the tracking — the label opens up by 1.5px a
+     letter and the plate does not get one pixel wider. Section P moves
+     tracking too, in the other direction and for another purpose: card 86
+     CLOSES it to zero so the ligatures can fire, which makes the tracking
+     there a switch rather than the effect. This is the tracking AS the
+     effect, which the page had not run before, and for a good reason — done
+     plainly it grows the button, and a control that changes size on hover is
+     the thing the page's third rule exists to prevent.
+     So it is card 36's conservation moved from the gap to the glyphs, and the
+     opposite bookkeeping to section P's: there the tracking pays for a
+     substitution, here the padding pays for the tracking. One registered
+     length feeds two opposing metrics — the tracking takes (n-1) x --s-tr
+     across the word and the horizontal padding gives back exactly half of
+     that on each side. Registered, because a plain custom property is a
+     string to the interpolator and would snap.
+     n-1 and not n: the browser adds tracking after EVERY character including
+     the last, and the negative margin on the label takes that trailing space
+     back out. Measured without it, the plate grows by 1.5px — one whole rung
+     — and the word sits 0.75px left of its own centre, which is card 45's
+     complaint exactly. */
+  @property --s-tr{syntax:"<length>"; inherits:true; initial-value:0px}
+  .btn.s-track{
+    --s-tr:0px; --s-n:10;
+    letter-spacing:var(--s-tr);
+    padding-inline:calc(28px - (var(--s-n) - 1) * var(--s-tr) / 2);
+    transition:--s-tr var(--t-5) var(--e-quint), transform var(--t-1) var(--e-out);
+  }
+  .btn.s-track .lbl{margin-right:calc(-1 * var(--s-tr))}
+  .btn.s-track:hover,
+  .btn.s-track:focus-visible{--s-tr:1.5px}
+
+  /* 92 No direction at all — the rule grows from the centre of the word and
+     retreats to it. Card 09 is the other answer: it flips its transform
+     origin between enter and exit, so the underline arrives from the left and
+     leaves to the right, and it reads as something travelling THROUGH the
+     label. This one has no direction to read, and so it reads as the label
+     being underlined rather than as a thing passing by.
+     That symmetry costs it the house asymmetry rule as a shape — enter and
+     exit are the same movement mirrored — so the asymmetry is left where it
+     still works, in the time: the exit is one rung shorter, which every card
+     here inherits from the base pair.
+     It is also the only underline in the set you can build on a Framer canvas
+     without an override, and for the same reason: two variants and a
+     transition can do a symmetric scale. They cannot swap a transform origin
+     halfway. */
+  .btn.s-mid .lbl{position:relative}
+  .btn.s-mid .lbl::after{
+    content:""; position:absolute; left:0; right:0; bottom:-4px; height:1.5px;
+    background:currentColor; transform:scaleX(0); transform-origin:center;
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .btn.s-mid:hover .lbl::after,
+  .btn.s-mid:focus-visible .lbl::after{transform:scaleX(1)}
+
+  @media (prefers-reduced-motion: reduce){
+    /* Three animations in this section, and the global clamp turns each of
+       them into a flicker rather than into stillness — a 0.01ms loop is still
+       a loop. Each is stopped outright and left at the state the hover was
+       taking it to. 89 needs nothing: a swap with no transition is already
+       what reduced motion asks for, which is the one place its argument and
+       the rule agree. */
+    .btn.s-crt:hover .lbl,
+    .btn.s-crt:focus-visible .lbl{animation:none !important}
+    .btn.s-crt:hover::after,
+    .btn.s-crt:focus-visible::after{animation:none !important}
+    .s-print:hover .s-print-l,
+    .s-print:focus-visible .s-print-l{animation:none !important; transition-delay:0ms !important}
+  }
+</style>
+
+<section class="sect">
+  <h2>Q — From a brief of eleven</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn s-bevel"><span class="lbl">Save changes</span></button>
+      </div>
+      <h3><span class="num">87</span>The light source flips</h3>
+      <p>The plate is lit from the top left, and pressing it moves the light to the bottom right. Nothing travels — the four edges stay exactly where they are. Cards 25 and 63 are also press-only, but neither of them moves the light.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn s-crt"><span class="lbl">Open console</span></button>
+      </div>
+      <h3><span class="num">88</span>The tube converges</h3>
+      <p>Two grey ghosts either side of every stroke pull into register, the phosphor blooms, and scanlines drift across the type. The idiom splits the strokes into red and cyan; with no colour to split, the split is grey and the movement runs the other way.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn s-sprite"><span class="lbl">Insert coin</span></button>
+      </div>
+      <h3><span class="num">89</span>Two frames</h3>
+      <p>Rest, hover and press are three sprite frames and the swap between them is the whole effect. It is the only study here with no transition, and it is on the page as the argument against the page's own second rule.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line s-print"><span aria-hidden="true"><span class="s-print-l">P</span><span class="s-print-l">r</span><span class="s-print-l">i</span><span class="s-print-l">n</span><span class="s-print-l">t</span> <span class="s-print-l">t</span><span class="s-print-l">i</span><span class="s-print-l">c</span><span class="s-print-l">k</span><span class="s-print-l">e</span><span class="s-print-l">t</span></span><span class="sr">Print ticket</span></button>
+      </div>
+      <h3><span class="num">90</span>It prints</h3>
+      <p>The label arrives one glyph at a time on a fixed 26ms beat, each snapping from bled ink to sharp with nothing in between. Card 37 is the same event made continuous; this one is quantised, and the beat is a print head rather than a curve.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line s-track"><span class="lbl">Learn more</span></button>
+      </div>
+      <h3><span class="num">91</span>The measure absorbs the tracking</h3>
+      <p>The word opens up by a pixel and a half a letter and the plate does not get any wider — the padding gives back exactly what the tracking takes. Card 86 moves tracking the other way, as a switch for the ligatures; here it is the effect, and card 36 does the same accounting for the gap.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--text s-mid"><span class="lbl">Read the note</span></button>
+      </div>
+      <h3><span class="num">92</span>No direction at all</h3>
+      <p>The rule grows from the centre of the word and retreats to it. Card 09 flips its origin so the underline arrives from one side and leaves by the other; with no direction to read, this one reads as the label being underlined rather than as something passing through.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
@@ -4373,7 +4971,15 @@
       // Framer and do nothing, so it is dropped and the header says why.
       var label = p.label;
       if (label){
-        var lit = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // p.label came off textContent; markup is SERIALIZED html. Any of & < >
+        // is escaped on one side and not the other — and not consistently, since
+        // the serializer escapes > in text but leaves it alone in an attribute.
+        // Card 86's «Ship the file ->» matched nothing and lost its property
+        // control in silence, so the literal accepts either form of all three.
+        var lit = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                       .replace(/&/g, '(?:&|&amp;)')
+                       .replace(/</g, '(?:<|&lt;)')
+                       .replace(/>/g, '(?:>|&gt;)');
         var swapped = markup.replace(new RegExp('="' + lit + '"', 'g'), '={label}')
                             .replace(new RegExp('>\\s*' + lit + '\\s*<', 'g'), '>{label}<');
         if (swapped === markup) label = ''; else markup = swapped;
