@@ -333,18 +333,6 @@
   .tools-row{display:flex; align-items:center; gap:10px}
   .tools-lbl{font-size:11px; font-weight:600; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
-  /* Segmented control, graphite recipe: bg-2 track, selected is one ladder
-     step up with brighter ink. No caps, no mono — the label is just a label. */
-  .seg{display:flex; gap:2px; padding:3px; border-radius:var(--r-sm);
-    background:var(--bg-2)}
-  .seg-b{
-    font:500 13.5px/1 var(--font-ui); color:var(--ink-low);
-    background:none; border:0; border-radius:6px; padding:7px 11px; cursor:pointer;
-    transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
-  }
-  .seg-b:hover{color:var(--ink-mid)}
-  .seg-b[aria-checked="true"]{background:var(--bg-3); color:var(--ink-hi)}
-  .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
      Two knobs that restyle all ninety-four studies at once. Both are written as
@@ -469,7 +457,7 @@
      scrolled into view by Tab — and especially by Shift-Tab, going up — can land
      completely underneath it. scroll-margin-top keeps the browser's own
      scroll-into-view clear of it. */
-  .btn,.fav,.copy,.seg-b,.fav-only,.tools-reset{scroll-margin-top:160px}
+  .btn,.fav,.copy,.fav-only,.tools-reset{scroll-margin-top:160px}
   .spec[hidden],.sect[hidden]{display:none}
   .tools-empty{margin-top:28px; padding:26px; border-radius:var(--r-md);
     border:1px dashed rgba(255,255,255,.22); text-align:center;
@@ -524,12 +512,6 @@
   }
   .rail-q::placeholder{color:var(--ink-faint)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
-  /* The rail is a column, so the label sits above its control rather than
-     beside it. The rows keep their .tools-row class and their existing
-     wiring — only the axis turns. */
-  .rail .tools-row{flex-direction:column; align-items:stretch; gap:6px}
-  .rail .seg{width:100%}
-  .rail .seg-b{flex:1}
   .rail-list{list-style:none; display:flex; flex-direction:column; gap:1px}
   .rail-list label{
     display:flex; align-items:center; gap:8px;
@@ -680,22 +662,6 @@
       <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
       <span class="tools-count" aria-live="polite"></span>
       <button type="button" class="tools-reset" hidden>Reset</button>
-    </div>
-    <div class="tools-row rail-grp">
-      <span class="tools-lbl" id="seg-lbl-ton">Intensity</span>
-      <div class="seg" data-axis="ton" role="radiogroup" aria-labelledby="seg-lbl-ton">
-        <button type="button" class="seg-b" role="radio" data-val="all" aria-checked="true" tabindex="0">All</button>
-        <button type="button" class="seg-b" role="radio" data-val="Subtle" aria-checked="false" tabindex="-1">Subtle</button>
-        <button type="button" class="seg-b" role="radio" data-val="Bold" aria-checked="false" tabindex="-1">Bold</button>
-      </div>
-    </div>
-    <div class="tools-row rail-grp">
-      <span class="tools-lbl" id="seg-lbl-framer">In Framer</span>
-      <div class="seg" data-axis="framer" role="radiogroup" aria-labelledby="seg-lbl-framer">
-        <button type="button" class="seg-b" role="radio" data-val="all" aria-checked="true" tabindex="0">All</button>
-        <button type="button" class="seg-b" role="radio" data-val="Variant" aria-checked="false" tabindex="-1">Variant</button>
-        <button type="button" class="seg-b" role="radio" data-val="Code" aria-checked="false" tabindex="-1">Code</button>
-      </div>
     </div>
     <div class="rail-grp" data-facet="changes">
       <span class="rail-lbl">What changes</span>
@@ -5009,7 +4975,7 @@
     var countEl = document.querySelector('.tools-count');
     var favBtn  = document.querySelector('.fav-only');
     var reset   = document.querySelector('.tools-reset');
-    var state   = {ton:'all', framer:'all', fav:false, q:'', changes:[], answers:[]};
+    var state   = {fav:false, q:'', changes:[], answers:[]};
 
     function load(){
       // `|| []` only catches null. Anything else valid JSON — an object, a
@@ -5032,11 +4998,6 @@
     var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.85-4.25 4.15 1 5.9-5.25-2.75-5.25 2.75 1-5.9L3.5 9.75l5.9-.85z" stroke-linejoin="round"/></svg>';
 
     cards.forEach(function(card){
-      var chips = [].slice.call(card.querySelectorAll('.chip')).map(function(c){ return c.textContent.trim(); });
-      var joined = chips.join(' ');
-      card.dataset.ton    = /Bold/i.test(joined) ? 'Bold' : 'Subtle';
-      card.dataset.framer = /Code in Framer/i.test(joined) ? 'Code' : 'Variant';
-
       var num  = (card.querySelector('.num') || {}).textContent || '';
       var name = (card.querySelector('h3') || {}).textContent || '';
       var id   = num.trim();
@@ -5087,26 +5048,10 @@
       countEl.textContent = shown === cards.length
         ? cards.length + ' studies'
         : shown + ' of ' + cards.length;
-      var filtered = state.ton !== 'all' || state.framer !== 'all' || state.fav
-                  || state.q || state.changes.length || state.answers.length
+      var filtered = state.fav || state.q || state.changes.length || state.answers.length
                   || look.colour || look.radius !== PILL;
       reset.hidden = !filtered;
       paintRail();
-    }
-
-    // The options on an axis are mutually exclusive, so each group is a
-    // radiogroup rather than three independent toggles: ONE tab stop for the
-    // group, arrows move between the options, and the selected option is the
-    // one that carries tabindex 0.
-    function checkSeg(seg, b, moveFocus){
-      seg.querySelectorAll('.seg-b').forEach(function(x){
-        var on = x === b;
-        x.setAttribute('aria-checked', on ? 'true' : 'false');
-        x.tabIndex = on ? 0 : -1;
-      });
-      if (moveFocus) b.focus();
-      state[seg.dataset.axis] = b.dataset.val;
-      apply();
     }
 
 
@@ -5236,27 +5181,6 @@
       look.radius = +range.value; paint(); saveLook(); apply();
     });
 
-    document.querySelectorAll('.seg').forEach(function(seg){
-      seg.addEventListener('click', function(e){
-        var b = e.target.closest('.seg-b');
-        if (b) checkSeg(seg, b, false);
-      });
-      seg.addEventListener('keydown', function(e){
-        var opts = [].slice.call(seg.querySelectorAll('.seg-b'));
-        var i = opts.indexOf(e.target.closest('.seg-b'));
-        if (i < 0) return;
-        var step = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1}[e.key];
-        if (step){
-          e.preventDefault();
-          checkSeg(seg, opts[(i + step + opts.length) % opts.length], true);
-        } else if (e.key === 'Home'){
-          e.preventDefault(); checkSeg(seg, opts[0], true);
-        } else if (e.key === 'End'){
-          e.preventDefault(); checkSeg(seg, opts[opts.length - 1], true);
-        }
-      });
-    });
-
     favBtn.addEventListener('click', function(){
       state.fav = favBtn.getAttribute('aria-pressed') !== 'true';
       favBtn.setAttribute('aria-pressed', state.fav ? 'true' : 'false');
@@ -5264,20 +5188,13 @@
     });
 
     reset.addEventListener('click', function(){
-      state = {ton:'all', framer:'all', fav:false, q:'', changes:[], answers:[]};
+      state = {fav:false, q:'', changes:[], answers:[]};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
       look  = {colour:'', radius:PILL};
       range.value  = PILL;
       paint();
       saveLook();
-      document.querySelectorAll('.seg').forEach(function(seg){
-        seg.querySelectorAll('.seg-b').forEach(function(x){
-          var on = x.dataset.val === 'all';
-          x.setAttribute('aria-checked', on ? 'true' : 'false');
-          x.tabIndex = on ? 0 : -1;
-        });
-      });
       favBtn.setAttribute('aria-pressed', 'false');
       apply();
     });
@@ -5418,8 +5335,6 @@
     // are an OR — ticking «it moves» and «it fades» asks for either, which is
     // what a reader means by it — and the groups are an AND with each other.
     function passes(card, skip){
-      if (state.ton !== 'all' && card.dataset.ton !== state.ton) return false;
-      if (state.framer !== 'all' && card.dataset.framer !== state.framer) return false;
       if (state.fav && favs.indexOf(card.dataset.id) < 0) return false;
       if (state.q && card.dataset.hay.indexOf(state.q) < 0
                   && card.dataset.id.indexOf(state.q) < 0) return false;
