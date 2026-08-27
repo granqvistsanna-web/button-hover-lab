@@ -33,55 +33,40 @@ transition longer than 450 ms, a visible focus state, every string at AA contras
 and a clean accessible name even where the label is split into per-character spans. Three
 cards run a *loop* rather than a transition, and those are listed as exceptions below.
 
-## The twenty-one families
+## The eight groups
+
+Each group names the part of the button that performs, because that is what you already know
+before you arrive: a text link has no fill to move, a button with no icon cannot relay an
+arrow, and an effect that reads the row needs a row to put it in.
 
 | | |
 |---|---|
-| **A** The ones everyone ships | the small grow, the small shrink, it grows from where you came in, the bloom, lit from within, it breathes, until you arrive |
-| **B** The fill tells you | directional sweep, shutter, ink fill, sheen |
-| **C** The sign points | arrow relay, dot becomes arrow, crop marks, directional underline |
-| **D** The word and the mark | label roll, the second line, three dots become an arrow, the caret, only when it doesn't fit |
-| **E** The label, letter by letter | the roll, letter by letter, a lift, not a roll, it lands past its mark, word by word, from the middle out, in no particular order |
-| **F** The challengers | weight wave, drawn outline, chamfered corner, in register, counter |
-| **G** Light and material | frosted glass, backlight, the lantern |
-| **H** From a brief of eleven | the light source flips, the tube converges, two frames, it prints, the measure absorbs the tracking, no direction at all |
-| **I** The plate and its geometry | diagonal radius, filling the measure, edge light, the key |
-| **J** Borrowed from objects | knurling, deboss, the line gauge, the data plate, continuous corners |
-| **K** You feel the physics | elevation step, magnetic |
-| **L** Mass, lag and resistance | the plate gives, the type doesn't, two masses, the settle, anticipation, the rule takes the load, re-spacing, the real underline, it matches your tempo, the exit remembers |
-| **M** In company | the others recede, the travelling indicator, conserved compression, repulsion, the pair, the divider yields |
-| **N** The pair, other than joining | the pieces part, the mark walks the plate, they trade fill, the arrow leaves, the plates stay, the mark hinges, the mark slips behind |
-| **O** After the press | it reports on itself, the plate becomes the mark, it asks you to mean it |
-| **P** The studio idioms | directional fill, the wave, in one order, out another, it leaves by the corner, the optical centre holds, resolve |
-| **Q** The third showcase | straightens up, the riser, it goes to work, one full turn, nervous type |
-| **R** The second showcase | nothing but the press, overruns its measure, too long to sit still, the plate has no direction, the hatch withdraws, stepped fill |
-| **S** Argued the other way | changes sides, the pieces join, ticker label, struck through |
-| **T** Everything on a grid | the fill has no edge, set on a four-pixel grid, the corner comes off in cells, four frames, not a tween, it does not rotate, the same grey, a coarser grid |
-| **U** The machine had an answer | split-flap, the needle swings, outset, then inset, the dotted rectangle |
+| **Whole button** | it lifts, scales, leans, settles, or answers a press |
+| **Fill** | a fill arrives or leaves |
+| **Border, corner and rule** | an outline draws, a radius changes, a rule moves |
+| **Label** | the word moves as one unit |
+| **Label, per character** | the word is split and the parts move separately |
+| **Icon** | an arrow, dot, caret, needle or dash does the work |
+| **Material and light** | the button looks like a thing — glass, metal, letterpress, grain |
+| **Buttons in a row** | siblings react to the one you are on |
 
-**Mass, lag and resistance** treats the button as an object
-with weight — parts of it arrive at different times, it resists, it settles rather than
-stops, and it answers at the tempo you approached it with. **The studio idioms** rebuilds the
-agency vocabulary — direction-aware fills, liquid wipes, resolve-from-noise labels — to this
-page's rules rather than to theirs. **In company** is the first family where a button knows
-its siblings exist: the row receding so one item can lead, an indicator travelling, a group
-conserving its width as one item gains. **Borrowed from objects** takes its references from
-outside the browser entirely — a knurled camera dial, a letterpress impression, a printer's
-line gauge, a machine's data plate, a milled chassis — and two of them were not buildable at
-all when the rest of the page was written.
+They replaced twenty-one lettered sections, which recorded where each study was written
+rather than what it does. Half of those names were provenance — *the challengers*, *from a
+brief of eleven*, *the third showcase*, *argued the other way* — which is the author's
+business and not the reader's. The rest overlapped: someone hunting a fill sweep had to check
+four sections before they could be sure they had seen them all.
 
-The last two families both came off hover showcases, and both are mostly arguments with
-cards that already existed. **Argued the other way** keeps only the positions this page had
-not taken, and names the card each one disagrees with. **The second showcase** is the more
-honest of the two about its own redundancy: five of its six were already answered here and
-are built anyway, because a specimen page earns nothing by asserting a duplicate exists —
-the near-miss sitting next to the original is the argument. Only the stepped fill is a
-mechanism the page did not have. Every one of the six arrived described by its colour, and
-none of that survived: there is no hue here, so each colour swap is rebuilt as the inverse
-pair.
+The numbers did not move with the cards. Forty-odd studies cite each other by bare number in
+their own prose, so a number is a catalogue entry and not a position, and a group runs 07, 78,
+92 without apology.
 
-Filter by intensity or by how it ports, and star the ones worth keeping — the shortlist
-persists in your browser.
+The cut is `tools/regroup.mjs`, and it is re-runnable. It is keyed on **title** rather than
+number, because the numbering gets resequenced and the titles do not. A card whose title is
+not in the map stops the run rather than being dropped or filed under a guess, so the page
+cannot quietly lose a study the next time it runs.
+
+Search, the derived facets and the starred shortlist do the rest of the narrowing — and the
+shortlist persists in your browser.
 
 The same toolbar carries two global settings that restyle all one hundred and five at once: a
 **primary** and a **button radius**. Both are written as custom properties on the root
