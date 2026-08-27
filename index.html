@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="One hundred and thirteen button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="One hundred and fourteen button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="One hundred and thirteen button hover animations, actually built.">
+<meta property="og:description" content="One hundred and fourteen button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -6188,8 +6188,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <style>
   /* ============ Section W — Borrowed from the galleries ============
-     Five studies taken from the hundred-button galleries that everyone lands on
-     first. Each one has a real idea inside it and a cost the gallery never
+     Six studies. Five are taken from the hundred-button galleries that everyone
+     lands on first; the sixth, card 117, is the only one whose source actually
+     ships — a checkout button with a shop attached, quoted by mechanism with
+     its hue left to the toolbar. Each one has a real idea inside it and a cost the gallery never
      states, because a gallery is a shop window and this is a specimen page. The
      idea is kept; the cost is paid or the card says why it is not.
 
@@ -6439,6 +6441,60 @@ document.addEventListener("DOMContentLoaded", function () {
     .btn.z-stack:focus-visible,
     .btn.z-stack:active{transform:none}
   }
+
+  /* 117 The shadow doesn't move — Gumroad's button, quoted rather than
+     hard-coded. The plate slides up-left four pixels while its shadow grows
+     down-right by the same four, on the same rung and the same curve, so the
+     two cancel frame by frame: the shadow holds the plate's rest footprint
+     exactly, at every instant of the transition. It is not cast, it is
+     VACATED — the plate slides off its own seat, and pressing sets it back in.
+     The source ties the pair together with transition:all .14s ease-out, and
+     all is the one thing it gets structurally right: the lock between the two
+     numbers IS the effect — let them drift and the shadow starts to travel.
+     But all also arms colour, border and padding, so the lock is kept here by
+     writing the same two tokens twice instead. Its 140ms is half a frame off
+     this page's second rung, and its ease-out is --e-out give or take a
+     control point.
+     The seat is not black. Gumroad draws its shadow in the page ink, and a
+     #000 seat measures 1.17:1 on this stage — card 116's argument about
+     absences of light, holding here too. So the seat takes the ladder: --bg-4,
+     a step down from the face and a step up from the stage, which is card
+     114's rule for a surface that faces away. One box-shadow, drawn at the
+     plate's own radius, so the toolbar's radius slider never unseats it.
+     The hue is the toolbar's job, not this card's: feed the Primary control
+     #ff90e8 and the original reassembles itself — pink plate, computed black
+     label — without this stylesheet naming a colour the page has never
+     allowed. The rest-side shadow is already there at offset zero, hidden
+     under the plate, so the enter interpolates offsets only and no colour ever
+     fades. */
+  .btn.z-gum{
+    border:1px solid var(--on-ink);
+    transform:translate(0,0);
+    box-shadow:0 0 0 var(--bg-4);
+    transition:transform var(--t-2) var(--e-out), box-shadow var(--t-2) var(--e-out);
+  }
+  .btn.z-gum:hover,
+  .btn.z-gum:focus-visible{
+    transform:translate(-4px,-4px);
+    box-shadow:4px 4px 0 var(--bg-4);
+  }
+  /* The press does not scale — a plate at .97 no longer fits the seat it is
+     being set back into, and the slivers would show all round. It goes home
+     whole, at the instant rung. */
+  .btn.z-gum:active{
+    transform:translate(0,0);
+    box-shadow:0 0 0 var(--bg-4);
+    transition-duration:var(--t-1);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .btn.z-gum,
+    .btn.z-gum:hover,
+    .btn.z-gum:focus-visible,
+    .btn.z-gum:active{transform:none; transition:none}
+    .btn.z-gum:hover,
+    .btn.z-gum:focus-visible{box-shadow:4px 4px 0 var(--bg-4)}
+    .btn.z-gum:active{box-shadow:0 0 0 var(--bg-4)}
+  }
 </style>
 
 <section class="sect">
@@ -6488,6 +6544,15 @@ document.addEventListener("DOMContentLoaded", function () {
       <h3><span class="num">116</span>It was a stack all along</h3>
       <p>The plate lifts and three more fan out beneath it. They are plates and not shadow — three steps of the same grayscale, drawn by one property at the plate's own radius, so depth is still stated as lightness.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid z-gum"><span class="lbl">I want this</span></button>
+      </div>
+      <h3><span class="num">117</span>The shadow doesn't move</h3>
+      <p>Gumroad's checkout button, quoted in graphite. The plate slides up-left four pixels while its shadow grows down-right by the same four on the same rung, so the two cancel frame by frame: the shadow never moves — it is the seat the plate slid off, and pressing sets the plate back into it. The source locks that pair with transition:all, which is structurally right and pays by arming every property it never names; here the lock is the same two tokens written twice, and its 140ms is half a frame off this page's second rung. The seat is not black — card 116 already said why an absence of light cannot be drawn here — so it takes the ladder, below the face and above the stage. The pink is the toolbar's job: feed the Primary control #ff90e8 and the original reassembles itself, computed black label and all.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
   </div>
