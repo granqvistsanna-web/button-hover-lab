@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Sixty-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Sixty-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Sixty-four button hover animations, actually built.">
+<meta property="og:description" content="Sixty-eight button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -16,7 +16,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all sixty-four effect rules keep resolving under their own names.
+     ALIAS so all sixty-eight effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -91,7 +91,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all sixty-four, so the hairline under every stage
+  /* One stage height for all sixty-eight, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -132,7 +132,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all sixty-four inherit it,
+     and LEAVES at the shorter one. One rule pair, and all sixty-eight inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -298,7 +298,7 @@
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all sixty-two studies at once. Both are written as
+     Two knobs that restyle all sixty-eight studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -439,7 +439,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Sixty-four button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Sixty-eight button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -1031,6 +1031,38 @@
   }
   .g-radius:hover,
   .g-radius:focus-visible{border-radius:5px 26px 5px 26px}
+  /* 23 Rule becomes frame — one line, two jobs (clip-path + radius) */
+  .g-frame{padding:14px 26px}
+  .g-frame .g-frame-ring{
+    position:absolute; inset:0; pointer-events:none;
+    border:1.5px solid color-mix(in srgb,var(--ink) 62%,transparent);
+    /* 0, not 3px: at rest only a 1.5px band of this box is visible, and a 3px
+       corner arc bites into both ends of what has to read as a straight rule. */
+    border-radius:0px;
+    clip-path:inset(calc(100% - 1.5px) 22% 0% 22%);
+    /* TWO movements, not one, and this is the fix. Run together they landed on
+       top of each other in the first 150ms of a 450ms transition and the card
+       read as a snap. Now the frame rises, THEN the corners soften; on the way
+       out the corners sharpen first and the frame drops after. Each delay is the
+       other movement's own duration — enter 500ms, exit 333ms. */
+    transition:clip-path var(--t-4) var(--e-quint) var(--t-3),
+               border-radius var(--t-3) var(--e-quint) 0s,
+               border-color var(--t-4) ease 0s;
+  }
+  .g-frame:hover .g-frame-ring,
+  .g-frame:focus-visible .g-frame-ring{
+    clip-path:inset(0% 0% 0% 0%);
+    /* 22px, not 999px. The ring is 43px tall — 14px padding, a 15px line box,
+       14px padding — so anything over 21.5px clamps to 21.5px. Interpolating to
+       999px passed 309px at 30ms, which means it reached its visual maximum
+       about two milliseconds in: the rule snapped into a pill before it had
+       begun to rise. 22px is a hair over half, so it still reads as a full pill
+       and only the last two per cent of the travel is clamped. */
+    border-radius:22px;
+    border-color:var(--ink);
+    transition-delay:0s, var(--t-4), 0s;
+  }
+  .g-frame .lbl{position:relative}
 
   /* 24 Filling the measure — the plate grows out to its reserved measure.
      Deliberately quieter than it was, in three places. The reserve is 3px/10px
@@ -1092,6 +1124,18 @@
       <h3><span class="num">22</span>Diagonal radius</h3>
         <p>The capsule keeps two corners and draws the other two in, so the plate changes body without moving.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+<article class="spec">
+      <div class="stage">
+        <button class="btn g-frame">
+          <span class="g-frame-ring" aria-hidden="true"></span>
+          <span class="lbl">How we work</span>
+        </button>
+      </div>
+      <h3><span class="num">23</span>Rule becomes frame</h3>
+        <p>At rest it is a line under the label; on hover it rises along the sides and closes into a full frame.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
     <article class="spec">
@@ -1363,6 +1407,26 @@
   }
   .i-mass:hover .i-mass-lbl, .i-mass:focus-visible .i-mass-lbl,
   .i-mass:hover .i-mass-block, .i-mass:focus-visible .i-mass-block{transform:translateX(3px)}
+  /* 33 The settle — a critically-underdamped spring (damping ratio .50,
+     omega 12 rad/s) sampled to a linear() curve: one 16.3% overshoot, second
+     lobe 0.43% so it never reads as a bounce. Still one plain transition, so it
+     reverses from wherever it has got to. The slot is 14px and the dash 10px,
+     so a 2.28px overshoot lands inside it — nothing is clipped. */
+  .i-settle .i-settle-slot{position:relative; display:block; width:14px; height:1.5px; overflow:hidden}
+  .i-settle .i-settle-dash{
+    position:absolute; top:0; left:0; width:10px; height:1.5px;
+    background:currentColor; border-radius:1px;
+    transform:translateX(-14px);
+    transition:transform var(--t-4) var(--e-out);
+  }
+  .i-settle:hover .i-settle-dash, .i-settle:focus-visible .i-settle-dash{
+    transform:translateX(0);
+    transition-timing-function:linear(0 0%, 0.1044 4.17%, 0.3403 8.33%, 0.6105 12.5%,
+      0.8494 16.67%, 1.0234 20.83%, 1.1244 25%, 1.1616 29.17%, 1.1531 33.33%, 1.1184 37.5%,
+      1.0746 41.67%, 1.0336 45.83%, 1.0023 50%, 0.9828 54.17%, 0.9744 58.33%, 0.9742 62.5%,
+      0.979 66.67%, 0.986 70.83%, 0.9929 75%, 0.9985 79.17%, 1.0022 83.33%, 1.004 87.5%,
+      1.0043 91.67%, 1.0037 95.83%, 1 100%);
+  }
 
   /* 34 Anticipation — a wind-up, which is the half of a spring a plain CSS
      easing can actually express. The curve dips to -0.205 at 21% of the
@@ -1431,6 +1495,22 @@
     transition:--i-gap var(--t-4) var(--e-quint), transform var(--t-1) var(--e-out);
   }
   .btn.i-space:hover, .btn.i-space:focus-visible{--i-gap:7px}
+  /* 37 Setting the line — a hard edge travels through the label, so each glyph
+     changes colour mid-stroke. Two copies at the SAME weight, so the metrics
+     are identical and no ghost sizer is needed; both are aria-hidden and a
+     clean single string sits in .sr. On a bordered plate: as bare text the
+     muted rest state reads as disabled copy rather than as a control. --muted
+     on the stage measures 4.96:1 light and 4.63:1 dark, so the rest label
+     clears 4.5:1 in both themes. */
+  .i-set .i-set-stack{display:inline-grid; justify-items:start}
+  .i-set .i-set-base, .i-set .i-set-top{grid-area:1/1; white-space:nowrap; font-weight:500}
+  .i-set .i-set-base{color:var(--muted)}
+  .i-set .i-set-top{
+    color:var(--ink);
+    clip-path:inset(0 100% 0 0);
+    transition:clip-path var(--t-5) var(--e-quint);
+  }
+  .i-set:hover .i-set-top, .i-set:focus-visible .i-set-top{clip-path:inset(0 0 0 0)}
 
   /* 38 The real underline — the browser's own decoration, not a pseudo-element,
      which is the whole point: skip-ink keeps clean gaps around the descenders
@@ -1514,6 +1594,15 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
+<article class="spec">
+      <div class="stage">
+        <button class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-dash"></i></span>See the schedule</button>
+      </div>
+      <h3><span class="num">33</span>The settle</h3>
+      <p>The dash slides into its reserved slot on a damped spring written as a linear() easing curve — one sixteen-per-cent overshoot and no second bounce.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
     <article class="spec">
       <div class="stage">
         <button type="button" class="btn btn--solid i-anti">Continue
@@ -1551,6 +1640,21 @@
       <h3><span class="num">36</span>Re-spacing</h3>
       <p>The gap between label and mark opens by exactly what the right padding gives up, so the mark travels out toward the trim while the measure stays identical to the pixel.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+<article class="spec">
+      <div class="stage">
+        <button class="btn btn--line i-set">
+          <span class="i-set-stack">
+            <span class="i-set-base" aria-hidden="true">Read the method</span>
+            <span class="i-set-top" aria-hidden="true">Read the method</span>
+            <span class="sr">Read the method</span>
+          </span>
+        </button>
+      </div>
+      <h3><span class="num">37</span>Setting the line</h3>
+      <p>A hard edge travels through the label and every glyph changes colour mid-stroke, as a line of type being set rather than a fill passing behind it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec">
@@ -2431,6 +2535,29 @@
     corner-shape:superellipse(5);
     background-color:color-mix(in srgb,var(--ink) 88%,var(--bg));
   }
+  /* 58 The stop — a mechanical end-stop, and the one card on this page that
+     travels on `linear`. Everything else eases out, because everything else is
+     settling; a thing that runs into a stop does not settle, it arrives at
+     speed and is stopped. The wall then acknowledges the contact, and the
+     delay on that flash is the travel's OWN duration, which is exactly what
+     the house rule about choreographed delays is for. */
+  .l-stop .l-stop-track{position:relative; display:block; width:26px; height:10px}
+  .l-stop .l-stop-mark{
+    position:absolute; top:4px; left:0; width:10px; height:2px;
+    background:currentColor; border-radius:1px;
+    transform:translateX(0);
+    transition:transform var(--t-3) linear;
+  }
+  .l-stop .l-stop-wall{
+    position:absolute; right:0; top:0; bottom:0; width:1.5px;
+    background:currentColor; border-radius:1px; opacity:.3;
+    transition:opacity var(--t-2) ease;
+  }
+  /* 26 track − 10 mark − 1.5 wall = 14.5, so the mark's edge meets the wall's */
+  .l-stop:hover .l-stop-mark, .l-stop:focus-visible .l-stop-mark{transform:translateX(14.5px)}
+  .l-stop:hover .l-stop-wall, .l-stop:focus-visible .l-stop-wall{
+    opacity:1; transition-delay:var(--t-3); transition-duration:var(--t-1);
+  }
 </style>
 
 <section class="sect l-mat">
@@ -2482,6 +2609,17 @@
       </div>
       <h3><span class="num">57</span>Continuous corners</h3>
       <p>The corner's curvature changes while its radius stays exactly where it was.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+<article class="spec">
+      <div class="stage">
+        <button class="btn btn--line l-stop">Advance the roll
+          <span class="l-stop-track" aria-hidden="true"><i class="l-stop-mark"></i><i class="l-stop-wall"></i></span>
+        </button>
+      </div>
+      <h3><span class="num">58</span>The stop</h3>
+      <p>The mark runs at a constant speed and is stopped dead by the wall, which brightens at the instant of contact.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
