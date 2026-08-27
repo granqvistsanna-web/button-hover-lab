@@ -1,6 +1,6 @@
 # Button Hover Lab
 
-Sixty-two button hover animations, actually built. Hover, tab and press all of them.
+Sixty-four button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -16,7 +16,7 @@ script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the sixty-two obeys all five:
+Every one of the sixty-four obeys all five:
 
 | | |
 |---|---|
@@ -24,14 +24,16 @@ Every one of the sixty-two obeys all five:
 | **Interruptible** | Hover out halfway and the animation turns smoothly from wherever it is — no waiting for it to finish. |
 | **In one way, out another** | The exit takes its own path — and its own clock, one rung down the ladder. |
 | **Reduced motion** | Everything falls back to plain colour and opacity changes. |
-| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. |
+| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the sixty-four effects; the toolbar chrome runs on the design system's own `--t-fast`. |
 
-And, without exception: no layout shift (the button's own box and its parent's stay
-identical to three decimals), nothing longer than 600 ms, a visible focus state, every
-string at AA contrast or better, and a clean accessible name even where the label is split
-into per-character spans.
+And, without exception: no layout shift — every button's own box stays identical to three
+decimals, and in the group cards the row does too, the one deliberate exception being
+*Conserved compression*, where items trade width precisely so the row does not move. No
+transition longer than 450 ms, a visible focus state, every string at AA contrast or better,
+and a clean accessible name even where the label is split into per-character spans. Three
+cards run a *loop* rather than a transition, and those are listed as exceptions below.
 
-## The eleven families
+## The thirteen families
 
 | | |
 |---|---|
@@ -40,14 +42,16 @@ into per-character spans.
 | **C** You feel the physics | elevation step, magnetic |
 | **D** The challengers | weight wave, drawn outline, chamfered corner, in register, counter |
 | **E** Light and material | frosted glass, backlight, the lantern, the grain settles, edge light |
-| **F** The plate and its geometry | diagonal radius, rule becomes frame, filling the measure, the key |
+| **F** The plate and its geometry | diagonal radius, filling the measure, the key |
 | **G** The word and the mark | label roll, the second line, three dots become an arrow, the caret, only when it doesn't fit |
-| **H** Mass, lag and resistance | the plate gives, the type doesn't, two masses, the settle, anticipation, the rule takes the load, re-spacing, setting the line, the real underline, it matches your tempo, the exit remembers |
+| **H** Mass, lag and resistance | the plate gives, the type doesn't, two masses, anticipation, the rule takes the load, re-spacing, the real underline, it matches your tempo, the exit remembers |
 | **I** The studio idioms | directional fill, the wave, in one order, out another, it leaves by the corner, the optical centre holds, resolve |
 | **J** In company | the others recede, the travelling indicator, conserved compression, repulsion, the pair, the divider yields |
-| **K** Borrowed from objects | knurling, deboss, the line gauge, the data plate, continuous corners, the stop |
+| **K** Borrowed from objects | knurling, deboss, the line gauge, the data plate, continuous corners |
+| **L** Argued the other way | changes sides, the pieces join, ticker label, struck through |
+| **M** The second showcase | nothing but the press, overruns its measure, too long to sit still, the plate has no direction, the hatch withdraws, stepped fill |
 
-The last four are the newest. **Mass, lag and resistance** treats the button as an object
+**Mass, lag and resistance** treats the button as an object
 with weight — parts of it arrive at different times, it resists, it settles rather than
 stops, and it answers at the tempo you approached it with. **The studio idioms** rebuilds the
 agency vocabulary — direction-aware fills, liquid wipes, resolve-from-noise labels — to this
@@ -55,8 +59,18 @@ page's rules rather than to theirs. **In company** is the first family where a b
 its siblings exist: the row receding so one item can lead, an indicator travelling, a group
 conserving its width as one item gains. **Borrowed from objects** takes its references from
 outside the browser entirely — a knurled camera dial, a letterpress impression, a printer's
-line gauge, a machine's data plate, a milled chassis, a mechanical end-stop — and two of the
-six were not buildable at all when the rest of the page was written.
+line gauge, a machine's data plate, a milled chassis — and two of them were not buildable at
+all when the rest of the page was written.
+
+The last two families both came off hover showcases, and both are mostly arguments with
+cards that already existed. **Argued the other way** keeps only the positions this page had
+not taken, and names the card each one disagrees with. **The second showcase** is the more
+honest of the two about its own redundancy: five of its six were already answered here and
+are built anyway, because a specimen page earns nothing by asserting a duplicate exists —
+the near-miss sitting next to the original is the argument. Only the stepped fill is a
+mechanism the page did not have. Every one of the six arrived described by its colour, and
+none of that survived: there is no hue here, so each colour swap is rebuilt as the inverse
+pair.
 
 Filter by intensity or by how it ports, and star the ones worth keeping — the shortlist
 persists in your browser.
@@ -83,8 +97,11 @@ they would read the short rung in both directions and lose the asymmetry entirel
 captures the full ladder into its own aliases — it is not a `.btn`, so it still sees the root
 values — and hands them back to every button in the row while any one of them is hovered.
 
-Three documented exceptions. The caret blinks on a 1.1 s loop, which is a rhythm and not a
-transition. The overflow marquee travels in proportion to the distance clipped
+Five documented exceptions. Three of them are loops, which are rhythms and not transitions,
+so the ladder does not apply and the 450 ms ceiling does not either: the caret blinks on
+1.1 s, *Ticker label* runs 5.4 s, and *Too long to sit still* runs 5 s. A loop is judged on
+its speed rather than its duration — long enough that the eye is not chased, slow enough to
+be read. The overflow marquee travels in proportion to the distance clipped
 (160 ms + 2.2 ms/px, capped at 600) so the label moves at a constant *speed*; a fixed rung
 would crawl on a long label and race on a short one. And two cards carry easings shaped like
 springs rather than curves — one a `linear()` sampled from a damped oscillator, one a
@@ -118,14 +135,15 @@ page and the extraction has to make up the difference:
 - A section's init script moves into a `useEffect`, **scoped to the instance**, so two of them
   on one page never bind each other's nodes. Only that card's chunk comes along, unless the
   block shares state between cards, in which case it arrives whole.
-- The face is Geist with a `system-ui` fallback. Add the font to the Framer project or
-  change the family — the component cannot bring a webfont with it.
+- The face arrives as a resolved stack under `--font-ui`, so the component stands up on its
+  own in system fonts. Add the real webfont to the Framer project for the intended face, or
+  point the token at your own — a component cannot bring a webfont with it.
 
 ## Notes on the build
 
 Single file, no dependencies, no build step. One linked stylesheet — the Graphite Console
 tokens, which carry self-hosted Geist and Geist Mono — and everything else is CSS, with
-small vanilla-JS loops in 10 of the 62 cards, only
+small vanilla-JS loops in 11 of the 64 cards, only
 where CSS genuinely cannot reach — a critically damped spring, a pointer-driven gradient, a
 per-character weight ripple, an overflow measurement, a velocity handoff, a pointer-speed
 reading, and the edge the pointer crossed.
@@ -133,7 +151,7 @@ reading, and the edge the pointer crossed.
 Colour lives entirely in tokens, and there is now exactly one set of them: Graphite Console
 is dark-only, so the light `:root` / `prefers-color-scheme` / `[data-theme]` trio is gone.
 The page's own names (`--ink`, `--stage`, `--accent`, …) survive as **aliases** onto the
-graphite ladder, which is why all sixty-two effect rules kept working untouched — and why
+graphite ladder, which is why all sixty-four effect rules kept working untouched — and why
 the copy buttons still hand you a self-contained snippet, resolving each alias to its value
 off the computed root.
 
