@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Ninety-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Ninety-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Ninety-four button hover animations, actually built.">
+<meta property="og:description" content="Ninety-eight button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all ninety-four effect rules keep resolving under their own names.
+     ALIAS so all ninety-eight effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -128,7 +128,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all ninety-four, so the hairline under every stage
+  /* One stage height for all ninety-eight, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -157,7 +157,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       ninety-four demo buttons was rendering in system-ui while the page around
+       ninety-eight demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -169,7 +169,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all ninety-four inherit it,
+     and LEAVES at the shorter one. One rule pair, and all ninety-eight inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -335,7 +335,7 @@
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all ninety-four studies at once. Both are written as
+     Two knobs that restyle all ninety-eight studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -472,7 +472,7 @@
   }
 
   /* ============ the rail ============
-     Ninety-five studies is past the point where a filter row can hold the
+     Ninety-eight studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
      primary and radius, the two things that rewrite every card and every
      copied snippet — and everything that FINDS a card moved here: the search,
@@ -622,7 +622,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Ninety-four button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Ninety-eight button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -4999,6 +4999,243 @@
 
   </div>
 </section>
+
+<style>
+  /* ============ Section S — The ones everyone ships ============
+     Ninety-eight studies in, and the page does not contain the button hover that
+     is on more websites than every other effect here put together: the plate
+     grows a little. Not one card scales the plate on hover — the only scale in
+     any hover rule is card 75's identity, carried so its press does not drop a
+     rotation. The exotica arrived first and the floor was never laid.
+
+     So: the two everyone reaches for, one upgrade to them, and the light this
+     page has never made. On the light — cards 17, 18, 19 and 21 all light the
+     plate from INSIDE it, under the surface or along its own edge. None of them
+     lets light leave. On a page with no hue, a bloom outside the plate is the
+     only «brighter» there is, which is why the three light cards here all spend
+     it outward rather than adding a colour the system does not have.
+
+     Two things every card here has to answer, because the basics are where the
+     costs actually bite:
+
+     · A scaled plate moves EVERY edge, so it cannot sit in a tight row without
+       overlapping its neighbours. Card 96 is the version that never does.
+     · The house press is scale(.97). A hover that grows to 1.02 leaves the press
+       five percent to travel, and the two compose rather than replace each
+       other — every card here writes one function list in all three states, as
+       card 75 had to.
+     · Type re-rasterises when a transform starts unless the element is already
+       transformed at rest. Every rest state here carries rotate(0.001deg) for
+       the reason section J gives.
+
+     The prefix is v-: r- is retired, s- went to «From a brief of eleven», t- to
+     «After the press» and u- to «The label, letter by letter». */
+
+  /* 95 The small grow — scale(1.02), and nothing else at all. The most-shipped
+     button hover there is, and the page's first. It is here without irony: it
+     works because it is proportional to nothing, needs no measurement and no
+     structure, and reads on any plate at any size.
+     What it costs is a row. Two percent of a 180px plate is 3.6px, spent 1.8px
+     off each end, so the button silently eats into whatever sits beside it —
+     which is why the pair below exists. The press composes rather than
+     replaces: scale(.99) is the grow giving most of itself back, not the house
+     .97 arriving from nowhere. */
+  .btn.v-grow{
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .btn.v-grow:hover,
+  .btn.v-grow:focus-visible{transform:scale(1.02) rotate(0.001deg)}
+  .btn.v-grow:active{transform:scale(.99) rotate(0.001deg); transition-duration:var(--t-1)}
+
+  /* 96 The small shrink — the same gesture inverted, on the same label, and the
+     one you can actually put in a row. It never crosses its own boundary, so a
+     toolbar of these cannot overlap; and it leaves the press somewhere to go,
+     which the grow does not — at 1.02 the press has to travel five percent to
+     reach .97, and at .98 it travels two.
+     The argument against it is that receding on approach reads as withdrawal on
+     a plate that is asking to be pressed. Both are here, on one label, so the
+     comparison is the card rather than an opinion in a note. */
+  .btn.v-shrink{
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .btn.v-shrink:hover,
+  .btn.v-shrink:focus-visible{transform:scale(.98) rotate(0.001deg)}
+  .btn.v-shrink:active{transform:scale(.96) rotate(0.001deg); transition-duration:var(--t-1)}
+
+  /* 97 It grows from where you came in — the same 1.02, with the origin taken
+     from the pointer instead of the centre, so the plate swells away from the
+     edge you crossed rather than symmetrically. Card 03 reads the entry point
+     to place a fill and card 01 reads the entry EDGE for a direction; this is
+     the same reading spent on a transform-origin, which is the cheapest place
+     it has ever been put.
+     The keyboard has no entry point, so focus falls back to the centre and the
+     card becomes card 95 — correct rather than clever, and the same fallback
+     cards 45 and 101 use. */
+  .btn.v-from{
+    --ox:50%; --oy:50%;
+    transform-origin:var(--ox) var(--oy);
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .btn.v-from:hover,
+  .btn.v-from:focus-visible{transform:scale(1.02) rotate(0.001deg)}
+  .btn.v-from:active{transform:scale(.99) rotate(0.001deg); transition-duration:var(--t-1)}
+
+  /* 98 The bloom — the first light on this page that leaves the plate. Cards 17,
+     18, 19 and 21 all work inside the boundary: a blur under the surface, a
+     glow behind the label, a lamp carried across the material, a streak running
+     the edge. This one spends its light outward, which on a page with one
+     grayscale is the only way to say «brighter» without inventing a hue.
+     box-shadow and not filter:drop-shadow, because a shadow is not laid out:
+     the plate can bloom 24px in every direction without moving a pixel of
+     anything around it. The spread stays low and the alpha lower — .18 white at
+     24px reads as light on bg-1 and as haze at .30. */
+  .btn.v-bloom{
+    box-shadow:0 0 0 0 rgba(255,255,255,0);
+    transition:box-shadow var(--t-4) var(--e-out), border-color var(--t-3) ease;
+  }
+  .btn.v-bloom:hover,
+  .btn.v-bloom:focus-visible{
+    box-shadow:0 0 24px 2px rgba(255,255,255,.18);
+    border-color:var(--ink);
+  }
+
+  /* 99 Lit from within — the press fills the plate with its own light instead of
+     pushing it down. Card 54 sinks the type into the material and card 25 gives
+     the plate a hard edge to land on; both answer the press with DEPTH. This
+     answers it with energy, which is the other thing a physical control does
+     when you close it — an inset bloom, brightest at the boundary, so the plate
+     reads as lit rather than as moved.
+     It is the one card here that spends its whole effect on :active. The hover
+     only arms it: a hairline that brightens, so the plate says it is live
+     before it says it is pressed. */
+  .btn.v-inner{
+    box-shadow:inset 0 0 0 0 rgba(255,255,255,0);
+    transition:box-shadow var(--t-2) var(--e-out), border-color var(--t-3) ease;
+  }
+  .btn.v-inner:hover,
+  .btn.v-inner:focus-visible{border-color:var(--ink)}
+  .btn.v-inner:active{
+    box-shadow:inset 0 0 18px 0 rgba(255,255,255,.30);
+    transition-duration:var(--t-1);
+  }
+
+  /* 100 It breathes, until you arrive — a slow bloom in and out at REST, which
+     stops the moment you point at it. Cards 29 and 61 loop as idle behaviour
+     and carry on regardless; card 77's loop starts on hover and says work is
+     happening. This one is the third position: the loop is the attention it is
+     asking for, so hovering is the proof it worked and the reason to stop.
+     4.2s is off the ladder for the reason 61, 65 and 77 are: a rung is how long
+     a state takes to ARRIVE, and a loop is not arriving. The bloom is card 98's
+     shadow at half strength, because an idle animation that matches a hover
+     leaves the hover nothing to say.
+     Reduced motion stops it outright rather than clamping it — a 0.01ms loop is
+     a flicker, not stillness — and the plate keeps the lit end of the breath,
+     so the live state is still legible standing still. Card 29 is the precedent. */
+  .btn.v-live{
+    box-shadow:0 0 0 0 rgba(255,255,255,0);
+    animation:v-breathe 4.2s var(--ease) infinite;
+    transition:box-shadow var(--t-3) var(--e-out);
+  }
+  @keyframes v-breathe{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
+    50%    {box-shadow:0 0 16px 1px rgba(255,255,255,.10)}
+  }
+  .btn.v-live:hover,
+  .btn.v-live:focus-visible{
+    animation:none;
+    box-shadow:0 0 24px 2px rgba(255,255,255,.18);
+    border-color:var(--ink);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .btn.v-live{animation:none !important; box-shadow:0 0 16px 1px rgba(255,255,255,.10)}
+  }
+</style>
+
+<section class="sect">
+  <h2>S — The ones everyone ships</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid v-grow"><span class="lbl">See the plan</span></button>
+      </div>
+      <h3><span class="num">95</span>The small grow</h3>
+      <p>Two percent, and nothing else. The most-shipped button hover there is, and the page's first — it needs no measurement and no structure, which is exactly why everyone reaches for it. What it costs is the row it sits in.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid v-shrink"><span class="lbl">See the plan</span></button>
+      </div>
+      <h3><span class="num">96</span>The small shrink</h3>
+      <p>The same gesture inverted, on the same label. It never crosses its own boundary, so a row of these cannot overlap, and it leaves the press somewhere to go — the argument against it is that receding on approach reads as withdrawal.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line v-from"><span class="lbl">Point at it</span></button>
+      </div>
+      <h3><span class="num">97</span>It grows from where you came in</h3>
+      <p>The same two percent with the origin taken from the pointer rather than the centre, so the plate swells away from the edge you crossed. Card 03 reads the entry point to place a fill; this spends the same reading on a transform-origin.</p>
+      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line v-bloom"><span class="lbl">Go live</span></button>
+      </div>
+      <h3><span class="num">98</span>The bloom</h3>
+      <p>The first light on this page that leaves the plate. Cards 17, 18, 19 and 21 all work inside the boundary; this spends its light outward, which on one grayscale is the only way to say brighter without inventing a hue.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--solid v-inner"><span class="lbl">Press to arm</span></button>
+      </div>
+      <h3><span class="num">99</span>Lit from within</h3>
+      <p>The press fills the plate with its own light instead of pushing it down. Cards 54 and 25 both answer the press with depth; this answers it with energy, which is the other thing a physical control does when you close it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line v-live"><span class="lbl">Recording</span></button>
+      </div>
+      <h3><span class="num">100</span>It breathes, until you arrive</h3>
+      <p>A slow bloom at rest that stops the moment you point at it. Cards 29 and 61 loop regardless and card 77 loops because you pointed; this is the third position — the loop is the attention it wants, so hovering is the proof it worked.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 97 It grows from where you came in — the entry point becomes the origin.
+  // Card 03 does the same reading for a fill; this spends it on transform-origin,
+  // which costs nothing at all: no layer, no measurement, one property.
+  (function(){
+    document.querySelectorAll('.v-from').forEach(function(btn){
+      function set(e){
+        var r = btn.getBoundingClientRect();
+        btn.style.setProperty('--ox', (((e.clientX - r.left) / r.width) * 100) + '%');
+        btn.style.setProperty('--oy', (((e.clientY - r.top) / r.height) * 100) + '%');
+      }
+      btn.addEventListener('pointerenter', set);
+      // The keyboard crosses no edge, so focus grows from the centre and the
+      // card becomes card 95 — the same fallback card 45 takes.
+      btn.addEventListener('focus', function(){
+        btn.style.setProperty('--ox', '50%');
+        btn.style.setProperty('--oy', '50%');
+      });
+    });
+  })();
+</script>
 
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
