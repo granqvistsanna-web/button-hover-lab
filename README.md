@@ -90,6 +90,50 @@ Radius is deliberately partial. Six studies fix or animate their own corner — 
 them alone. Every other card's overlays already say `border-radius: inherit` and follow for
 free.
 
+## The four versions
+
+A study is a mechanism, not a button, and the same mechanism has to survive being
+a **fill**, an **outline** and a **link** — and has to survive a label four times
+longer than the one it was designed against. Each card carries a switch at the
+foot of its stage for exactly that, and the toolbar carries the same control for
+all of them at once.
+
+Length is a separate axis rather than a fourth position, and that is the whole
+design. A long label on an *outline* is where these mechanisms actually break — a
+marquee measures a different overflow, tracking has a different measure to
+absorb, a row that conserves its width has different arithmetic — and a flat
+four-position control can only ever show a long label on the version the study
+happens to ship in.
+
+None of it is a new layer. `.btn--solid`, `.btn--line` and `.btn--text` were
+already on the page and the copy machinery already knew them by name, so
+switching version is a class swap: **the CSS copy hands you the version you are
+looking at**, with that treatment's rule and no other, because it clones the live
+button. Copy the outline and you get `btn--line` and the one rule that defines
+it; copy the fill and you get `btn--solid` and its rule instead.
+
+A version is offered only where the **mechanism survives it**, and that is a
+judgement per study rather than a setting. An effect that lights a plate has
+nothing to light as a link. An effect that *is* the surface — knurling, deboss,
+frost, a bevel — has no outline version at all. A study that offers only the one
+it ships in renders no control, and that absence is the honest signal: the study
+is surface-locked, rather than nobody having looked.
+
+Two things the switch owes the page, and both are load-bearing:
+
+- **It is not a hover.** The swap runs one frame with transitions and idle loops
+  off, so a plate *arrives* in its new version instead of animating into it —
+  without that, pressing Outline fires card 04's bloom and restarts card 06's
+  breath, and the control reads as the effect.
+- **The box does not move.** Every version was measured at rest and on hover, and
+  the layout box is identical in all of them. The stage does not move either:
+  the switch is pinned inside it rather than added as a row beneath, because the
+  stage is a fixed 172px so that every hairline on the page lands on one line.
+
+The long label wraps rather than clips — at the tightest column it goes to two
+lines and stays inside the stage — which is itself worth seeing, because a
+two-line button is what a long label actually produces in a real layout.
+
 ## The timing system
 
 Five durations and two curves, and one rule for asymmetry: **the exit is one rung down the
