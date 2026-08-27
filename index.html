@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Sixty-eight button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Seventy-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Sixty-eight button hover animations, actually built.">
+<meta property="og:description" content="Seventy-four button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -16,7 +16,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all sixty-eight effect rules keep resolving under their own names.
+     ALIAS so all seventy-four effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -91,7 +91,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all sixty-eight, so the hairline under every stage
+  /* One stage height for all seventy-four, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -120,7 +120,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       sixty-eight demo buttons was rendering in system-ui while the page around
+       seventy-four demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -132,7 +132,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all sixty-eight inherit it,
+     and LEAVES at the shorter one. One rule pair, and all seventy-four inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -298,7 +298,7 @@
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all sixty-eight studies at once. Both are written as
+     Two knobs that restyle all seventy-four studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -439,7 +439,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">Sixty-eight button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Seventy-four button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -3063,6 +3063,225 @@
 
   </div>
 </section>
+
+<style>
+  /* ============ Section N — The pair, other than joining ============
+     Card 60 built the only two-mass button on the page: a label plate and a
+     46px mark plate holding an arrow, seven pixels apart, addressable
+     separately. It then spent its whole hover closing that gap. Closing it is
+     the least interesting thing that anatomy can do, so these six keep 60's
+     construction exactly and do something else with it.
+
+     The five base declarations are repeated per card rather than hoisted to a
+     shared `.p-pair`, because the copy buttons key on every class inside the
+     button: one shared `.p-mark` and each of these six would collect the other
+     five's rules into its own snippet, which is the reason `.lbl` and `.icon`
+     are house classes. Six copies of five lines is the cheaper mistake.
+
+     align-items:stretch and not center, for 60's reason: a fixed-width mark
+     against a plate sized by its own padding leaves a half-pixel step at the
+     seam, and the seam is what all six of these are about.
+
+     None of them reserves width the way 60's hidden copy does, because none of
+     them changes it — every state below is a transform or a colour, so the row
+     alone holds the box and a ghost would have nothing to guard against. */
+
+  /* 69 The pieces part — card 60 read backwards. Rest IS 60's hover state: the
+     mark has already closed the seven pixels and the two facing corners are
+     square, so the pair arrives as one capsule and the hover takes it apart.
+     Same two properties, same rung, opposite argument. */
+  .p-part{padding:0; background:none; border:0; border-radius:999px}
+  .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-part .p-part-plate,
+  .p-part .p-part-mark{background:var(--ink); color:var(--on-ink);
+    transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
+  .p-part .p-part-plate{padding:15px 26px; border-radius:999px 0 0 999px}
+  .p-part .p-part-mark{display:grid; place-items:center; width:46px;
+    border-radius:0 999px 999px 0; transform:translateX(-7px)}
+  .p-part:hover .p-part-plate,
+  .p-part:focus-visible .p-part-plate{border-radius:999px}
+  .p-part:hover .p-part-mark,
+  .p-part:focus-visible .p-part-mark{border-radius:999px; transform:translateX(0)}
+
+  /* 70 The mark walks the plate — the only travel here that CSS cannot name. A
+     translation of -100% is the mark's OWN width; crossing the label plate
+     needs the plate's width, which lives on a sibling. Measured the way cards
+     59 and 30 measure theirs, and gated on the class for the same reason:
+     until a real number exists the hover does nothing rather than something
+     wrong. The z-order is what makes it a crossing and not a swap. */
+  .p-walk{padding:0; background:none; border:0; border-radius:999px}
+  .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-walk .p-walk-plate,
+  .p-walk .p-walk-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-walk .p-walk-plate{padding:15px 26px; position:relative; z-index:0}
+  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px;
+    position:relative; z-index:1; transform:translateX(0);
+    transition:transform var(--t-5) var(--e-quint)}
+  .p-walk.p-is-set:hover .p-walk-mark,
+  .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
+
+  /* 71 They trade fill — card 60 with the travel removed. Neither piece moves,
+     and the boundary is an inset shadow rather than a border, so nothing
+     reflows the moment a fill leaves. --line-ctl and not --line: this is a
+     control boundary and has to clear 3:1, which is card 31's note. Both rest
+     states name a shadow — one of them transparent — so there is always
+     something for the hover value to interpolate from. */
+  .p-trade{padding:0; background:none; border:0; border-radius:999px}
+  .p-trade .p-trade-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-trade .p-trade-plate,
+  .p-trade .p-trade-mark{border-radius:999px;
+    transition:background-color var(--t-3) var(--e-out), color var(--t-3) var(--e-out),
+      box-shadow var(--t-3) var(--e-out)}
+  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--on-ink);
+    box-shadow:inset 0 0 0 1px transparent}
+  .p-trade .p-trade-mark{display:grid; place-items:center; width:46px;
+    background:none; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line-ctl)}
+  .p-trade:hover .p-trade-plate,
+  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink);
+    box-shadow:inset 0 0 0 1px var(--line-ctl)}
+  .p-trade:hover .p-trade-mark,
+  .p-trade:focus-visible .p-trade-mark{background:var(--ink); color:var(--on-ink);
+    box-shadow:inset 0 0 0 1px transparent}
+
+  /* 72 The arrow leaves, the plates stay — the two masses hold perfectly still
+     and the mark becomes a window. Both arrows sit in one grid cell and the
+     mark clips them; the delays swap between the states so the incoming arrow
+     follows the outgoing one on the way in AND on the way out, rather than the
+     two crossing in the middle. */
+  .p-cycle{padding:0; background:none; border:0; border-radius:999px}
+  .p-cycle .p-cycle-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-cycle .p-cycle-plate,
+  .p-cycle .p-cycle-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-cycle .p-cycle-plate{padding:15px 26px}
+  .p-cycle .p-cycle-mark{display:grid; place-items:center; width:46px; overflow:hidden}
+  .p-cycle .p-cycle-cyc{display:grid; width:100%; justify-items:center}
+  .p-cycle .p-cycle-cyc>.icon{grid-area:1/1; transition:transform var(--t-4) var(--e-quint)}
+  .p-cycle .p-cycle-cyc>.icon:first-child{transform:translateX(0); transition-delay:var(--d-1)}
+  .p-cycle .p-cycle-cyc>.icon:last-child{transform:translateX(-230%); transition-delay:0s}
+  .p-cycle:hover .p-cycle-cyc>.icon:first-child,
+  .p-cycle:focus-visible .p-cycle-cyc>.icon:first-child{transform:translateX(230%); transition-delay:0s}
+  .p-cycle:hover .p-cycle-cyc>.icon:last-child,
+  .p-cycle:focus-visible .p-cycle-cyc>.icon:last-child{transform:translateX(0); transition-delay:var(--d-1)}
+
+  /* 73 The mark hinges — the only card on the page that leaves the plane.
+     transform-origin sits on the seam edge, so the mark pivots about the line
+     card 60 spends its hover erasing. backface-visibility because a
+     34-degree tip on a 46px plate is close enough to the edge to flicker
+     without it. */
+  .p-hinge{padding:0; background:none; border:0; border-radius:999px}
+  .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:7px; perspective:520px}
+  .p-hinge .p-hinge-plate,
+  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-hinge .p-hinge-plate{padding:15px 26px}
+  .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
+    transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
+    transition:transform var(--t-4) var(--e-quint)}
+  .p-hinge:hover .p-hinge-mark,
+  .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg)}
+
+  /* 74 The mark slips behind — here -100% IS enough, because the mark only has
+     to clear its own width plus the gap to be gone behind the plate. The
+     z-order is the whole effect; without it the mark simply overlaps. */
+  .p-slip{padding:0; background:none; border:0; border-radius:999px}
+  .p-slip .p-slip-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-slip .p-slip-plate,
+  .p-slip .p-slip-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-slip .p-slip-plate{padding:15px 26px; position:relative; z-index:1}
+  .p-slip .p-slip-mark{display:grid; place-items:center; width:46px;
+    position:relative; z-index:0; transform:translateX(0);
+    transition:transform var(--t-5) var(--e-quint)}
+  .p-slip:hover .p-slip-mark,
+  .p-slip:focus-visible .p-slip-mark{transform:translateX(calc(-100% - 7px))}
+</style>
+
+<section class="sect">
+  <h2>N — The pair, other than joining</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-part"><span class="p-part-row"><span class="p-part-plate">Start the brief</span><span class="p-part-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">69</span>The pieces part</h3>
+      <p>Card 60 read backwards: this one arrives joined and comes apart. The same seven pixels and the same two corners, arguing for separation rather than for one object.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-walk"><span class="p-walk-row"><span class="p-walk-plate">Send the file</span><span class="p-walk-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">70</span>The mark walks the plate</h3>
+      <p>The mark crosses the whole label and docks at the far end, occluding it on the way. Card 59 walks a bare icon across a label inside one border; this is one solid mass crossing another, and the distance has to be measured.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-trade"><span class="p-trade-row"><span class="p-trade-plate">Open the archive</span><span class="p-trade-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">71</span>They trade fill</h3>
+      <p>Card 60 with the travel taken out. Neither piece moves; the plate gives up its fill and the mark takes it, so the pair changes which half is speaking without changing its shape.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate">Take the tour</span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
+      </div>
+      <h3><span class="num">72</span>The arrow leaves, the plates stay</h3>
+      <p>The pair becomes a frame and only its contents move — the arrow exits the mark's right edge and a second one enters from the left, clipped by the plate it sits in. The two masses hold perfectly still.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-hinge"><span class="p-hinge-row"><span class="p-hinge-plate">Book a call</span><span class="p-hinge-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">73</span>The mark hinges</h3>
+      <p>It pivots on the seam instead of sliding along it, so it reads as hardware fixed to the plate rather than as a second object beside it. The one study here that leaves the plane.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn p-slip"><span class="p-slip-row"><span class="p-slip-plate">Read the case</span><span class="p-slip-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
+      </div>
+      <h3><span class="num">74</span>The mark slips behind</h3>
+      <p>The mark clears its own width plus the gap and is gone under the label plate, so the pair reduces to one mass and the sign disappears exactly when you are about to act. The position the rest of the page refuses, built so there is something to point at while refusing it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 70 The mark walks the plate — the travel is the label plate's width plus
+  // the row gap, and it lives on a sibling, so CSS has no way to name it.
+  // Measured on the same schedule as 59 and 30: once now, once after the
+  // webfont lands, and again on resize behind a rAF guard.
+  (function(){
+    document.querySelectorAll('.p-walk').forEach(function(btn){
+      var row   = btn.querySelector('.p-walk-row');
+      var plate = btn.querySelector('.p-walk-plate');
+      if (!row || !plate) return;
+      function measure(){
+        var w = plate.getBoundingClientRect().width;
+        if (!w) return;
+        var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+        btn.style.setProperty('--p-walk-x', -(w + gap) + 'px');
+        btn.classList.add('p-is-set');
+      }
+      measure();
+      var raf = null;
+      addEventListener('resize', function(){
+        if (raf !== null) return;
+        raf = requestAnimationFrame(function(){ raf = null; measure(); });
+      });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    });
+  })();
+</script>
 
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
