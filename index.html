@@ -1360,7 +1360,7 @@
 
     <article class="spec">
           <div class="stage">
-            <button class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-stop"></i><i class="i-settle-dash"></i></span>See the schedule</button>
+            <button type="button" class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-stop"></i><i class="i-settle-dash"></i></span>See the schedule</button>
           </div>
           <h3><span class="num">53</span>The settle</h3>
           <p>The bar slides into its slot on a damped spring written as a linear() easing curve, overruns the hairline stop by four pixels and settles back flush against it — one overshoot, no second bounce.</p>
@@ -4671,7 +4671,11 @@ document.addEventListener("DOMContentLoaded", function () {
     fill:none; stroke:var(--on-ink); stroke-width:1.6;
     stroke-linecap:round; stroke-linejoin:round;
     stroke-dasharray:22; stroke-dashoffset:22;
-    transition:stroke-dashoffset var(--t-4) var(--e-out) 140ms;
+    /* The delay holds the tick back until the label has gone and the plate has
+       begun to close. Written as a token rather than the bare 140ms it was:
+       inside .btn the ladder is shifted one rung down, so --t-3 resolves to
+       133ms here — the same beat, now on the ladder instead of beside it. */
+    transition:stroke-dashoffset var(--t-4) var(--e-out) var(--t-3);
   }
   .btn.t-mark[data-state="done"]{
     width:54px; background:var(--ink); border-color:var(--ink);
@@ -5809,8 +5813,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // white on near-black glares. Measured off a rendered button instead of
     // named here, so it stays correct if the ladder is ever retuned, and read
     // BEFORE the first paint, while the root still carries no override.
-    var WHITE_RGB = rgbOf(document.querySelector('.btn'), 'color');
+    //
+    // Ask for the TOKEN, not for whatever element happens to be first. This
+    // read used to be rgbOf(document.querySelector('.btn'), 'color'), which
+    // silently coupled the default to DOM order: once the reorder put a
+    // btn--solid first, its `color` was --on-ink — near-black. The swatch
+    // opened on #101010, the readout claimed 1.1:1 instead of 16:1, and the
+    // input handed that value straight back, repainting all 105 studies grey
+    // the moment the picker was opened and closed again. A probe that asks for
+    // var(--ink) and nothing else cannot be broken by reordering or by a
+    // variant change.
+    var probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink)';
+    document.body.appendChild(probe);
+    var WHITE_RGB = rgbOf(probe, 'color');
     var WHITE     = toHex(WHITE_RGB);
+    probe.remove();
+    // The inverse ink, kept only to recognise the value the bug above wrote
+    // into storage, so an affected visitor is not stuck grey forever.
+    var BAD_COLOUR = getComputedStyle(document.documentElement)
+                       .getPropertyValue('--on-ink').trim().toLowerCase();
 
     function chan(c){ c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
     function lum(c){ return .2126 * chan(c[0]) + .7152 * chan(c[1]) + .0722 * chan(c[2]); }
@@ -5894,7 +5916,12 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       var stored = JSON.parse(localStorage.getItem(SET_KEY));
       if (stored && typeof stored === 'object'){
-        if (typeof stored.colour === 'string' && /^#[0-9a-f]{6}$/i.test(stored.colour)) look.colour = stored.colour;
+        // An override equal to the default is not an override — and neither is
+        // the inverse ink the swatch used to seed itself with, which nobody
+        // could have meant and which only ever rendered as fitted grey.
+        if (typeof stored.colour === 'string' && /^#[0-9a-f]{6}$/i.test(stored.colour)
+            && stored.colour.toLowerCase() !== WHITE.toLowerCase()
+            && stored.colour.toLowerCase() !== BAD_COLOUR) look.colour = stored.colour;
         if (typeof stored.radius === 'number' && stored.radius >= 0 && stored.radius <= PILL) look.radius = stored.radius;
       }
     } catch(e){}
@@ -5902,7 +5929,13 @@ document.addEventListener("DOMContentLoaded", function () {
     range.value = look.radius;
 
     swatch.addEventListener('input', function(){
-      look.colour = swatch.value; paint(); saveLook(); apply();
+      // Choosing the default is a way back to it, not an override to store: the
+      // page keeps --ink as an alias so a copied snippet still reads --ink-hi.
+      // It also makes opening the picker and closing it a no-op, which is what
+      // a visitor who changed nothing expects.
+      var v = swatch.value.toLowerCase();
+      look.colour = (v === WHITE.toLowerCase()) ? '' : swatch.value;
+      paint(); saveLook(); apply();
     });
     range.addEventListener('input', function(){
       look.radius = +range.value; paint(); saveLook(); apply();
