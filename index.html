@@ -301,6 +301,80 @@
   .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
   .sheen .lbl{position:relative}
 
+  /* ---- Family B in its other versions ---------------------------------
+     This family is built AROUND a fill, so it is the one that has to answer
+     what the other versions even mean. Two rules came out of it, and the rest
+     of the page follows them:
+
+     · ON A FILL, THE ARRIVING PLATE IS THE INVERSE. A --ink sweep across an
+       --ink plate is invisible. The arriving surface becomes --on-ink and the
+       label returns to --ink, which is the inverse pair the page already uses
+       everywhere it has to say «swapped» without a hue.
+     · ON A LINK, A FILL BECOMES A RULE. There is no plate to fill, so the
+       mechanism moves to the only surface a link has — a 1.5px rule along the
+       bottom, entering and leaving on the same geometry the fill did. Where the
+       fill's geometry has no rule equivalent, THERE IS NO LINK VERSION: card 08
+       opens on the vertical and a rule has no vertical to open on, and card 09
+       grows a circle that a link's box would clip to nothing.
+
+     Card 07's link version lands on the same mechanism as card 15's directional
+     underline, and that is not a duplicate to be apologised for — it is the
+     family's own argument arriving: the sweep and the underline were always the
+     same gesture on two different surfaces. */
+
+  /* The arriving plate on a FILL button needs a boundary, and that is this
+     page's own argument rather than a new one: --line-ctl exists because a
+     control boundary has to clear 3:1, and --on-ink arriving on a --bg-1 panel
+     measures 1.07:1 — the plate does not read as switched, it reads as gone.
+     An inset hairline costs no layout, so the box is still identical to three
+     decimals in both states.
+     It goes on the PLATE and not on the button: an inset shadow on the button
+     paints under its own ::before, so the arriving plate covers it and the
+     hairline never appears — measured at 1.06:1 with the rule in place, which
+     is how it was caught. border-radius:inherit is what keeps it on the pill
+     rather than cutting its corners against overflow:hidden.
+     Card 09 needs none of it: its own --line-ctl border sits over the white
+     plate it keeps underneath, so the dark circle arrives inside a ring that
+     already measures 16.7:1. */
+  .sweep.btn--solid::before,
+  .shutter.btn--solid::before{
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
+
+  /* 07 in fill and link */
+  .sweep.btn--solid::before{background:var(--on-ink)}
+  .sweep.btn--solid:hover .lbl,
+  .sweep.btn--solid:focus-visible .lbl{color:var(--ink)}
+  /* inset:0 becomes a rule on the bottom edge. The transform-origin flip above
+     is untouched, so it still enters left and leaves right. */
+  .sweep.btn--text::before{top:auto; bottom:0; height:1.5px; background:var(--ink)}
+  .sweep.btn--text:hover .lbl,
+  .sweep.btn--text:focus-visible .lbl{color:var(--ink); transition-delay:0s}
+
+  /* 08 in fill */
+  .shutter.btn--solid::before{background:var(--on-ink)}
+  .shutter.btn--solid:hover .lbl,
+  .shutter.btn--solid:focus-visible .lbl{color:var(--ink)}
+
+  /* 09 in fill. The --line-ctl hairline it draws for itself is a white at .36
+     and disappears against a white plate, which is correct rather than a loss:
+     a filled button does not need a boundary drawn on top of its own. */
+  .inkfill.btn--solid::before{background:var(--on-ink)}
+  .inkfill.btn--solid:hover .lbl,
+  .inkfill.btn--solid:focus-visible .lbl{color:var(--ink)}
+
+  /* 10 in outline. The sheen is a light crossing a DARK surface, so on a
+     transparent plate both halves invert: the streak is --ink rather than
+     --on-ink, and the hover's surface shift becomes a tint arriving instead of
+     a plate darkening. */
+  .sheen.btn--line{background:none; color:var(--ink)}
+  .sheen.btn--line:hover,
+  .sheen.btn--line:focus-visible{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+  .sheen.btn--line::after{
+    background:linear-gradient(100deg,transparent,
+               color-mix(in srgb,var(--ink) 26%,transparent),transparent);
+  }
+
   /* 11 Pilstafett */
   .relay .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .relay .a1{transition:transform var(--t-4) var(--e-quint)}
@@ -5377,6 +5451,21 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.v-inner.btn--line{border-color:var(--line-ctl)}
   .btn.v-inner.btn--line:hover,
   .btn.v-inner.btn--line:focus-visible{border-color:var(--ink)}
+  /* And the fill version inverts, because a white plate cannot be lit brighter:
+     --ink IS the plate, and an inset white glow on it measures four units. So
+     the arm is the same statement — «the edge is live» — in the only ink the
+     plate can carry, and the press then FLIPS it: the groove goes out and the
+     light floods in. Both rules carry .btn--solid so they outrank the shared
+     :active below, which would otherwise win on specificity and swallow the
+     press. */
+  .btn.v-inner.btn--solid:hover,
+  .btn.v-inner.btn--solid:focus-visible{
+    box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--on-ink) 20%, transparent);
+  }
+  .btn.v-inner.btn--solid:active{
+    box-shadow:inset 0 0 18px 0 color-mix(in srgb, var(--on-ink) 24%, transparent);
+    transition-duration:var(--t-1);
+  }
   .btn.v-inner:active{
     box-shadow:inset 0 0 18px 0 rgba(255,255,255,.30);
     transition-duration:var(--t-1);
