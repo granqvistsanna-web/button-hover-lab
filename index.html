@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A hundred and one button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Ninety-four button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="A hundred and one button hover animations, actually built.">
+<meta property="og:description" content="Ninety-four button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all a hundred and one effect rules keep resolving under their own names.
+     ALIAS so all ninety-four effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -105,7 +105,7 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
-  /* One stage height for all a hundred and one, so the hairline under every stage
+  /* One stage height for all ninety-four, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -134,7 +134,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       a hundred and one demo buttons was rendering in system-ui while the page around
+       ninety-four demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
@@ -146,7 +146,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all a hundred and one inherit it,
+     and LEAVES at the shorter one. One rule pair, and all ninety-four inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -324,7 +324,7 @@
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all a hundred and one studies at once. Both are written as
+     Two knobs that restyle all ninety-four studies at once. Both are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -465,7 +465,7 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">A hundred and one button hover animations, actually built. <strong>Hover, tab and press
+    <p class="lede">Ninety-four button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
     <div class="rules">
       <p><b>instant</b> press on pointer-down</p>
@@ -3610,258 +3610,7 @@
 </section>
 
 <style>
-  /* ============ Section P — Set, not drawn ============
-     Every card up to here draws something: over the type, under it, around it,
-     or beside it. The type itself has never changed. This section changes
-     nothing but the type, and the mechanism is one property the page had not
-     used once before now — font-feature-settings, with its font-variant-*
-     shorthands.
-
-     The constraint that shapes the whole section: a feature is a SWITCH. It
-     cannot be interpolated, there is no half-substituted glyph, and no
-     transition on any property will tween one. So every effect here lands in a
-     single frame, and what keeps that from reading as a glitch is that the
-     metric change it causes is paid for by a property that IS continuous —
-     tracking. Card 36 conserves its measure by feeding one registered length
-     into two opposing metrics; this section conserves it by making the tracking
-     pay for a substitution that cannot be tweened. Same ambition, and each
-     card carries its own arithmetic.
-
-     What Geist actually has, read off GeistVariable.woff2 rather than assumed:
-     case, dlig, frac, liga, numr/dnom, ordn, pnum, sinf, subs, sups, tnum and
-     ss01–ss11. What it has NOT got is smcp and c2sc, so there is no small-caps
-     card, and onum, so there is no oldstyle-figures card. Those were the two
-     ideas this section started from, and reading the table first is the only
-     reason they were not built on features that do not exist. Of the rest:
-     dlig knits A_I and U_I and nothing else; ss04, ss06, ss07 and ss08 change
-     R, G, the arrows and the diacritics too quietly to be a specimen at 15px;
-     and ss11 is contextual and did not fire on any string tried here.
-
-     Every correction below was SOLVED BY MEASUREMENT, not by arithmetic on
-     glyph widths. letter-spacing is applied once per character, and a
-     substituted string can have fewer characters than the source, so the
-     number of slots the correction gets divided into is not knowable up front.
-     Card 85 is where that bites, and it bites by 0.83px.
-
-     The prefix is r-: sections M and N spent n- through p-, and O spent q-.
-     Framer has no canvas control for OpenType features and no way to switch one
-     on a hover state, so every card here routes through an override.
-
-     Reduced motion needs nothing from this section, and it is the only section
-     on the page that can say so. The global clamp makes transitions instant;
-     the substitution was already instant, and the correction lands with it. */
-
-  /* 80 Single storey — the a changes shape and the word stays where it was.
-     ss02 draws it as one bowl and a stem instead of two storeys: a different
-     letter to read, the same word to lay out. It is the plainest statement of
-     what this section is for — nothing moves, nothing is drawn, nothing fades,
-     one glyph is replaced by another.
-     ss02 runs +2.17px over this label. The tracking gives back 0.0091em, which
-     is 0.14px per character slot across sixteen of them, and the label lands
-     within two hundredths of a pixel of where it started. It is authored as a
-     calc() so both halves stay legible in the source: the house tracking, and
-     what the substitution cost. */
-  .btn.r-storey .lbl{
-    font-feature-settings:"ss02" 0;
-    letter-spacing:.005em;                    /* restated so it has a from-value */
-    transition:letter-spacing var(--t-3) var(--e-out);
-  }
-  .btn.r-storey:hover .lbl,
-  .btn.r-storey:focus-visible .lbl{
-    font-feature-settings:"ss02" 1;
-    letter-spacing:calc(.005em - .0091em);
-  }
-
-  /* 81 Telling them apart — the capital I takes serifs, the l takes a tail and
-     the zero takes a slash, all in one declaration (ss05, ss03, ss09). This is
-     the one card on the page where pointing at a button ADDS information
-     rather than decoration: at rest the label is set in the letterforms the
-     brand chose, and on hover in the ones you can tell apart.
-     Whether that is a good idea is the argument, and the card exists to make it
-     arguable rather than to recommend it: legibility that arrives on hover is
-     legibility a touch device never gets, and the honest version of this effect
-     sets ss05 and ss09 permanently and animates nothing.
-     +2.09px, paid back with 0.0074em. */
-  .btn.r-clear .lbl{
-    font-feature-settings:"ss05" 0, "ss03" 0, "ss09" 0;
-    letter-spacing:.005em;
-    transition:letter-spacing var(--t-3) var(--e-out);
-  }
-  .btn.r-clear:hover .lbl,
-  .btn.r-clear:focus-visible .lbl{
-    font-feature-settings:"ss05" 1, "ss03" 1, "ss09" 1;
-    letter-spacing:calc(.005em - .0074em);
-  }
-
-  /* 82 The figures change gauge — proportional at rest, tabular on hover, and
-     the label is 5.44px wider for it. The one card in the section that does
-     NOT correct itself, because the re-measure IS the effect: tabular figures
-     are all one width so that columns of them line up, and width is what they
-     pay for it with. Cards 24, 30 and 64 are the page's other studies of a
-     label that changes its measure; this is the only one where the width comes
-     from the figures rather than from the words.
-     The plate grows with the label, which the house style otherwise forbids —
-     inline-flex, so the padding holds and the boundary moves. It is 5px on a
-     centred stage and it would be a reflow in a row of controls. Anywhere near
-     a layout: set the figures tabular and leave them there. */
-  .btn.r-gauge .lbl{font-variant-numeric:proportional-nums}
-  .btn.r-gauge:hover .lbl,
-  .btn.r-gauge:focus-visible .lbl{font-variant-numeric:tabular-nums}
-
-  /* 83 The fraction resolves — 1/2, three characters, becomes ½, one glyph, and
-     the label loses 9.83px in the substitution. The biggest metric change in
-     the section, and so the largest correction: 0.0468em, which is 0.70px per
-     slot, and the point at which the technique stops hiding as correction and
-     starts showing as tracking. That is the card. A specimen page should show
-     where its own method runs out.
-     frac needs a real solidus between real figures — it maps slash → fraction
-     and the digits either side to numr and dnom, so «1 / 2» with spaces gets
-     nothing at all. */
-  .btn.r-frac .lbl{
-    font-variant-numeric:normal;
-    letter-spacing:.005em;
-    transition:letter-spacing var(--t-3) var(--e-out);
-  }
-  .btn.r-frac:hover .lbl,
-  .btn.r-frac:focus-visible .lbl{
-    font-variant-numeric:diagonal-fractions;
-    letter-spacing:calc(.005em + .0468em);
-  }
-
-  /* 84 The marks flatten — ss10 swaps the parentheses, brackets, braces and
-     guillemets for flat-sided alternates that stand upright beside caps instead
-     of curving away from them. Card 07 animates a pair of guillemets in from
-     either side of the label; this changes what a guillemet IS, and never moves
-     it.
-     No correction here, on purpose. ss10 takes 0.52px OFF a 125px label, which
-     is four hundredths of a pixel per character slot — below anything worth
-     writing a rule for. The section's method has a floor, and correcting a
-     twentieth of a pixel would be theatre. Card 63 is the page's floor for the
-     same reason: the least that still answers. */
-  .btn.r-marks .lbl{font-feature-settings:"ss10" 0}
-  .btn.r-marks:hover .lbl,
-  .btn.r-marks:focus-visible .lbl{font-feature-settings:"ss10" 1}
-
-  /* 85 The numero sign — «No.» becomes №, three characters replaced by one, and
-     the correction cannot be worked out from the label. Every other card here
-     divides its metric change by the characters in the source string; this one
-     renders TWELVE letter-spacing slots where the source has fourteen, because
-     two characters left. 0.0322em was solved by measuring the rendered label
-     and iterating; the arithmetic that looks right gives 0.0276em and lands
-     0.83px short. Nothing on the page reveals that but a measurement.
-     ordn is contextual — the substitution in the table is N, o, period, so a
-     lower-case «no.» gets nothing, which is correct: the numero sign is a
-     capital form. */
-  .btn.r-ordn .lbl{
-    font-feature-settings:"ordn" 0;
-    letter-spacing:.005em;
-    transition:letter-spacing var(--t-3) var(--e-out);
-  }
-  .btn.r-ordn:hover .lbl,
-  .btn.r-ordn:focus-visible .lbl{
-    font-feature-settings:"ordn" 1;
-    letter-spacing:calc(.005em + .0322em);
-  }
-
-  /* 86 Tracking was the switch — at rest this label spells its arrow out in two
-     characters; on hover the tracking closes to zero, the arrow knits into one
-     glyph, and «fi» in «file» closes up in the same frame. No feature is
-     switched here at all. Chrome disables ligature substitution whenever
-     letter-spacing is anything other than zero — measured on this font, not
-     assumed — and .btn has set letter-spacing:.005em since the first card, so
-     every button on this page has had its ligatures off all along and this is
-     the only place it is visible. The CSS Text spec permits that suppression
-     rather than requiring it, so this is also the one card on the page whose
-     effect is engine-dependent by design.
-     It inverts the section: everywhere else the tracking pays for a
-     substitution, and here the tracking IS the substitution. Which leaves
-     word-spacing to pay — 0.775px off each of the three spaces. Stepped, not
-     eased: the +2.33px arrives in one frame, at the instant the tracking
-     reaches exactly zero, so an eased correction would tighten the label for
-     200ms and then let it jump anyway.
-     Geist's liga table also carries <-, --> and <->; none of them can fire at
-     the house tracking either. */
-  .btn.r-knit .lbl{
-    letter-spacing:.005em; word-spacing:0;
-    transition:letter-spacing var(--t-3) var(--e-out),
-               word-spacing var(--t-3) steps(1, end);
-  }
-  .btn.r-knit:hover .lbl,
-  .btn.r-knit:focus-visible .lbl{letter-spacing:0; word-spacing:-.775px}
-</style>
-
-<section class="sect">
-  <h2>P — Set, not drawn</h2>
-  <div class="grid">
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--line r-storey"><span class="lbl">Save and archive</span></button>
-      </div>
-      <h3><span class="num">80</span>Single storey</h3>
-      <p>The a changes shape and the word stays exactly where it was — one bowl and a stem instead of two storeys. The plainest form of what this section does: nothing moves and nothing is drawn, one glyph is replaced by another.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--solid r-clear"><span class="lbl">Install 1,024 files</span></button>
-      </div>
-      <h3><span class="num">81</span>Telling them apart</h3>
-      <p>The capital I takes serifs, the l takes a tail and the zero takes a slash. The one card where hover adds information rather than decoration — which is also the argument against it, since a touch device never gets it.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--line r-gauge"><span class="lbl">See all 1,041</span></button>
-      </div>
-      <h3><span class="num">82</span>The figures change gauge</h3>
-      <p>Proportional figures at rest, tabular on hover, and the label is 5.4px wider for it. The only card here that does not correct itself: the re-measure is the effect, because alignment is what tabular figures buy with width.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--solid r-frac"><span class="lbl">Book a 1/2 day</span></button>
-      </div>
-      <h3><span class="num">83</span>The fraction resolves</h3>
-      <p>Three characters become one glyph and the label loses 9.8px. The biggest change in the section and the largest correction with it, which is where the method stops hiding as correction and starts showing as tracking.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--line r-marks"><span class="lbl">Read «the notes»</span></button>
-      </div>
-      <h3><span class="num">84</span>The marks flatten</h3>
-      <p>The parentheses and guillemets swap for flat-sided alternates that stand upright beside caps. Card 07 moves a pair of guillemets in from the sides; this changes what a guillemet is and never moves it.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--solid r-ordn"><span class="lbl">No. 12 in line</span></button>
-      </div>
-      <h3><span class="num">85</span>The numero sign</h3>
-      <p>No. becomes №, three characters replaced by one. The correction cannot be derived from the label: two characters leave, so the tracking is divided into twelve slots where the source string has fourteen.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec">
-      <div class="stage">
-        <button type="button" class="btn btn--line r-knit"><span class="lbl">Ship the file -&gt;</span></button>
-      </div>
-      <h3><span class="num">86</span>Tracking was the switch</h3>
-      <p>The tracking closes to zero and the arrow knits itself out of the label's own punctuation, with fi closing up in the same frame. No feature is switched: Chrome turns ligatures off whenever letter-spacing is not zero, and .btn has always set .005em.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-  </div>
-</section>
-
-<style>
-  /* ============ Section Q — From a brief of eleven ============
+  /* ============ Section P — From a brief of eleven ============
      Eleven interactions arrived as a brief, split into a retro half and a
      subtle half. Five of them are not here, and the reasons are worth more
      than the cards would have been:
@@ -3882,18 +3631,17 @@
      print head — brought over as MECHANISMS and not as palettes: the era
      supplies the behaviour, graphite supplies the ink. Two are things the
      page had never done at all, which is the part of any brief worth having.
-     One of those two lands next door to section P, which had just spent seven
-     cards on the type: 91 moves the tracking as its effect where card 86
-     moves it as a switch. The note there does the accounting.
+     One of those two moves the tracking AS the effect rather than as a means to
+     something else, and its own note does the accounting.
 
-     The prefix is s-: section P spent r-.
+     The prefix is s-. Sections M through O spent n- through q-, and r- is unused.
 
      Two of these own their border radius and ignore the toolbar's radius
      knob. A bevel needs four unequal edges meeting at a mitre and a pill has
      no mitre; a stair-stepped corner is not a radius either. Both say so in
      their own note. */
 
-  /* 87 The light source flips — the plate is drawn as if lit from the top
+  /* 80 The light source flips — the plate is drawn as if lit from the top
      left, and pressing it moves the light to the bottom right. Nothing about
      the geometry travels: the four edges are in exactly the same places in
      both states, and only the illumination changes sides. That is the whole
@@ -3926,7 +3674,7 @@
   }
   .btn.s-bevel:active .lbl{transform:translate(1px,1px)}
 
-  /* 88 The tube converges — mono type on a black plate, misconverged at rest
+  /* 81 The tube converges — mono type on a black plate, misconverged at rest
      and pulling into register when you point at it. The idiom this comes from
      splits the strokes into red and cyan; there is no colour here to split,
      so the split is two grey ghosts either side of the stroke — and the
@@ -3972,7 +3720,7 @@
   @keyframes s-crt-strike{0%{opacity:.3} 22%{opacity:1} 40%{opacity:.45} 64%{opacity:1}}
   @keyframes s-crt-drift{to{transform:translateY(3px)}}
 
-  /* 89 Two frames — the only study on this page with no transition at all.
+  /* 82 Two frames — the only study on this page with no transition at all.
      Everything else here interpolates, and the second house rule is that an
      interpolation can be caught and turned from wherever it happens to be. A
      sprite cannot be caught: there is a rest frame, a hover frame and a press
@@ -4035,7 +3783,7 @@
   .btn.s-sprite:active{transform:none}
   .btn.s-sprite:active::after{background:var(--ink-mid)}
 
-  /* 90 It prints — the label arrives one glyph at a time, each snapping from
+  /* 83 It prints — the label arrives one glyph at a time, each snapping from
      bled ink to sharp with nothing in between, on a fixed 26ms beat. Card 37
      is this same event made continuous: a hard edge travels through the word
      and every glyph changes colour mid-stroke. This one is quantised. A glyph
@@ -4075,17 +3823,14 @@
   }
   @keyframes s-print-hit{from{transform:translateY(-2px)} to{transform:translateY(0)}}
 
-  /* 91 The measure absorbs the tracking — the label opens up by 1.5px a
-     letter and the plate does not get one pixel wider. Section P moves
-     tracking too, in the other direction and for another purpose: card 86
-     CLOSES it to zero so the ligatures can fire, which makes the tracking
-     there a switch rather than the effect. This is the tracking AS the
-     effect, which the page had not run before, and for a good reason — done
+  /* 84 The measure absorbs the tracking — the label opens up by 1.5px a
+     letter and the plate does not get one pixel wider. This is the tracking AS the
+     effect rather than as a means to something else, which the page had not
+     run before, and for a good reason — done
      plainly it grows the button, and a control that changes size on hover is
      the thing the page's third rule exists to prevent.
-     So it is card 36's conservation moved from the gap to the glyphs, and the
-     opposite bookkeeping to section P's: there the tracking pays for a
-     substitution, here the padding pays for the tracking. One registered
+     So it is card 36's conservation moved from the gap to the glyphs: here the
+     padding pays for the tracking. One registered
      length feeds two opposing metrics — the tracking takes (n-1) x --s-tr
      across the word and the horizontal padding gives back exactly half of
      that on each side. Registered, because a plain custom property is a
@@ -4106,7 +3851,7 @@
   .btn.s-track:hover,
   .btn.s-track:focus-visible{--s-tr:1.5px}
 
-  /* 92 No direction at all — the rule grows from the centre of the word and
+  /* 85 No direction at all — the rule grows from the centre of the word and
      retreats to it. Card 09 is the other answer: it flips its transform
      origin between enter and exit, so the underline arrives from the left and
      leaves to the right, and it reads as something travelling THROUGH the
@@ -4146,14 +3891,14 @@
 </style>
 
 <section class="sect">
-  <h2>Q — From a brief of eleven</h2>
+  <h2>P — From a brief of eleven</h2>
   <div class="grid">
 
     <article class="spec">
       <div class="stage">
         <button type="button" class="btn s-bevel"><span class="lbl">Save changes</span></button>
       </div>
-      <h3><span class="num">87</span>The light source flips</h3>
+      <h3><span class="num">80</span>The light source flips</h3>
       <p>The plate is lit from the top left, and pressing it moves the light to the bottom right. Nothing travels — the four edges stay exactly where they are. Cards 25 and 63 are also press-only, but neither of them moves the light.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -4162,7 +3907,7 @@
       <div class="stage">
         <button type="button" class="btn s-crt"><span class="lbl">Open console</span></button>
       </div>
-      <h3><span class="num">88</span>The tube converges</h3>
+      <h3><span class="num">81</span>The tube converges</h3>
       <p>Two grey ghosts either side of every stroke pull into register, the phosphor blooms, and scanlines drift across the type. The idiom splits the strokes into red and cyan; with no colour to split, the split is grey and the movement runs the other way.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4171,7 +3916,7 @@
       <div class="stage">
         <button type="button" class="btn s-sprite"><span class="lbl">Insert coin</span></button>
       </div>
-      <h3><span class="num">89</span>Two frames</h3>
+      <h3><span class="num">82</span>Two frames</h3>
       <p>Rest, hover and press are three sprite frames and the swap between them is the whole effect. It is the only study here with no transition, and it is on the page as the argument against the page's own second rule.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4180,7 +3925,7 @@
       <div class="stage">
         <button type="button" class="btn btn--line s-print"><span aria-hidden="true"><span class="s-print-l">P</span><span class="s-print-l">r</span><span class="s-print-l">i</span><span class="s-print-l">n</span><span class="s-print-l">t</span> <span class="s-print-l">t</span><span class="s-print-l">i</span><span class="s-print-l">c</span><span class="s-print-l">k</span><span class="s-print-l">e</span><span class="s-print-l">t</span></span><span class="sr">Print ticket</span></button>
       </div>
-      <h3><span class="num">90</span>It prints</h3>
+      <h3><span class="num">83</span>It prints</h3>
       <p>The label arrives one glyph at a time on a fixed 26ms beat, each snapping from bled ink to sharp with nothing in between. Card 37 is the same event made continuous; this one is quantised, and the beat is a print head rather than a curve.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4189,8 +3934,8 @@
       <div class="stage">
         <button type="button" class="btn btn--line s-track"><span class="lbl">Learn more</span></button>
       </div>
-      <h3><span class="num">91</span>The measure absorbs the tracking</h3>
-      <p>The word opens up by a pixel and a half a letter and the plate does not get any wider — the padding gives back exactly what the tracking takes. Card 86 moves tracking the other way, as a switch for the ligatures; here it is the effect, and card 36 does the same accounting for the gap.</p>
+      <h3><span class="num">84</span>The measure absorbs the tracking</h3>
+      <p>The word opens up by a pixel and a half a letter and the plate does not get any wider — the padding gives back exactly what the tracking takes. Here the tracking is the effect rather than a means to something else, and card 36 does the same accounting for the gap.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -4198,7 +3943,7 @@
       <div class="stage">
         <button type="button" class="btn btn--text s-mid"><span class="lbl">Read the note</span></button>
       </div>
-      <h3><span class="num">92</span>No direction at all</h3>
+      <h3><span class="num">85</span>No direction at all</h3>
       <p>The rule grows from the centre of the word and retreats to it. Card 09 flips its origin so the underline arrives from one side and leaves by the other; with no direction to read, this one reads as the label being underlined rather than as something passing through.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -4208,7 +3953,7 @@
 
 
 <style>
-  /* ============ Section R — After the press ============
+  /* ============ Section Q — After the press ============
      Every study above answers a pointer and returns to rest. Even the two that
      run on their own — 29's caret and 61's ticker — are idle behaviour, and 77,
      the one loop that starts because you pointed at it, stops again the moment
@@ -4224,14 +3969,15 @@
      exactly where a coloured system reaches for green and red, and this page has
      no hue to reach for. So the affirmative is the inverse plate the page already
      uses for emphasis, and the destructive is not a colour at all — it is a
-     duration you have to sit through. Card 95 is that argument.
+     duration you have to sit through. Card 88 is that argument.
 
-     The prefix is t-: q- is spent on section O, r- on section P and s- on
-     section Q.
+     The prefix is t-: q- is spent on section O and s- on the section before
+     this one. r- went out with a section that was withdrawn, and reusing a
+     retired prefix would only make the ledger lie.
 
      Each card names the card it repeats or argues with. */
 
-  /* 93 It reports on itself — the button takes the instruction and then reports
+  /* 86 It reports on itself — the button takes the instruction and then reports
      on it, in place. Card 77 is the nearest thing here, a loop that starts
      because you pointed at it; but it is ornament bound to a hover and it stops
      when you leave. This one is bound to work: it starts on the click, it ends
@@ -4267,7 +4013,7 @@
     background:var(--ink); color:var(--on-ink); border-color:var(--ink);
   }
 
-  /* 94 The plate becomes the mark — the plate collapses to a square and the
+  /* 87 The plate becomes the mark — the plate collapses to a square and the
      check draws itself inside it. Card 46 churns the LABEL and locks it in, and
      stays a button the whole way; card 60 closes a gap so two objects read as
      one. This one spends the plate itself: the button stops being a button and
@@ -4311,7 +4057,7 @@
   .btn.t-mark[data-state="done"] .lbl{opacity:0}
   .btn.t-mark[data-state="done"] .t-mark-tick path{stroke-dashoffset:0}
 
-  /* 95 It asks you to mean it — press and hold; let go early and nothing
+  /* 88 It asks you to mean it — press and hold; let go early and nothing
      happens. Card 63 is the floor of the press, one property and nothing
      travels, and card 25 gives the press a bottom to hit. Both answer the
      instant of contact. This one makes the DURATION of the press the input,
@@ -4372,14 +4118,14 @@
 </style>
 
 <section class="sect">
-  <h2>R — After the press</h2>
+  <h2>Q — After the press</h2>
   <div class="grid">
 
     <article class="spec">
       <div class="stage">
         <button type="button" class="btn btn--line t-report" data-state="idle"><span class="t-report-fill" aria-hidden="true"></span><span class="lbl">Publish</span></button>
       </div>
-      <h3><span class="num">93</span>It reports on itself</h3>
+      <h3><span class="num">86</span>It reports on itself</h3>
       <p>The button takes the instruction and then reports on it in place, with no spinner and no overlay. Card 77 is the only other loop that starts because you acted, but it is bound to a hover and stops when you leave; this one is bound to the work and ends when the work does.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4389,7 +4135,7 @@
         <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
         <span class="sr t-mark-live" role="status"></span>
       </div>
-      <h3><span class="num">94</span>The plate becomes the mark</h3>
+      <h3><span class="num">87</span>The plate becomes the mark</h3>
       <p>The plate collapses to the width of the mark and the check draws itself inside it. Card 46 locks the label in and stays a button the whole way; this one spends the plate itself, so the button stops being a button and becomes the confirmation.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4398,7 +4144,7 @@
       <div class="stage">
         <button type="button" class="btn btn--line t-hold" data-state="idle"><span class="t-hold-fill" aria-hidden="true"><span class="t-hold-over">Hold to delete</span></span><span class="lbl">Hold to delete</span></button>
       </div>
-      <h3><span class="num">95</span>It asks you to mean it</h3>
+      <h3><span class="num">88</span>It asks you to mean it</h3>
       <p>Press and hold; let go early and nothing happens. Cards 63 and 25 both answer the instant of contact, and this is the only study that makes the duration of the press the input — the friction belongs in the gesture rather than in a dialog after it.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4500,7 +4246,7 @@
 </script>
 
 <style>
-  /* ============ Section S — The label, letter by letter ============
+  /* ============ Section R — The label, letter by letter ============
      One gesture, six positions on it. The page has come at this twice and
      stopped short both times: card 26 rolls the label up as ONE block and hands
      over to a duplicate, and card 43 staggers three whole children rather than
@@ -4531,19 +4277,17 @@
      · Splitting a label costs the kerning between every pair, because kerning
        does not cross an element boundary. Measured on these six labels: 0.69px
        to 3.50px per label split by character, and 0.02px to 0.05px split by
-       WORD — kerning pairs do not cross a space, so card 99's granularity is
-       free where card 96's is not. It is paid at REST as well as on hover, so
+       WORD — kerning pairs do not cross a space, so card 92's granularity is
+       free where card 89's is not. It is paid at REST as well as on hover, so
        nothing moves while the effect runs; the label is simply a hair wider
        than the same string set as one run, for as long as it is on the page.
      · The visible units are aria-hidden and the accessible name comes from one
        .sr copy, as cards 46 and 79 do. Twelve one-character spans would
        otherwise be announced one at a time.
 
-     The prefix is u-. Sections M–O spent n- through q-, P spent r-, Q spent s-,
-     and R — three studies that answer a click, which landed while this branch
-     was in QA — spent t-. This section was authored as R with its cards
-     numbered from 93; the letter, the numbers and the prefix were all moved on
-     merge, and nothing else about it changed. */
+     The prefix is u-: t- is spent on «After the press» next door and s- on the
+     section before it. r- went out with a withdrawn section and is not being
+     reused, so the ledger still reads as a history rather than a lookup. */
 
   /* 80 The roll, letter by letter — card 26's gesture, resolved. Each character
      is its own two-row column: the letter you can see leaves through the top of
@@ -4588,7 +4332,7 @@
 
   /* 81 A lift, not a roll — the same stagger with nothing masked, nothing
      duplicated and nowhere for a descender to be clipped: each character lifts
-     3px and comes back. It is here as the argument that card 96 is usually the
+     3px and comes back. It is here as the argument that card 89 is usually the
      wrong choice. A roll replaces the label, so it needs a mask, a duplicate,
      a fixed box and a line-height that fits the deepest descender in whatever
      copy the client eventually writes; this needs a transform and an index.
@@ -4681,7 +4425,7 @@
      The index is not the position, it is |position − centre| rounded, authored
      per character. Thirteen characters is odd, so one letter holds index 0 and
      moves alone, and the two ends arrive 156ms after it — against the 234ms
-     card 97 needs to reach the end of ten letters. Ordering by distance rather
+     card 90 needs to reach the end of ten letters. Ordering by distance rather
      than by reading order buys back a third of the span, which is why this is
      the card that can afford the full 26ms step. */
   .u-centre .u-centre-c{display:inline-block;
@@ -4754,14 +4498,14 @@
 </style>
 
 <section class="sect">
-  <h2>S — The label, letter by letter</h2>
+  <h2>R — The label, letter by letter</h2>
   <div class="grid">
 
     <article class="spec">
       <div class="stage">
         <button type="button" class="btn btn--line u-roll"><span class="lbl"><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>G</span><span>G</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>e</span><span>e</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>i</span><span>i</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>n</span><span>n</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>o</span><span>o</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>u</span><span>u</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>c</span><span>c</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>h</span><span>h</span></span></span></span><span class="sr">Get in touch</span></button>
       </div>
-      <h3><span class="num">96</span>The roll, letter by letter</h3>
+      <h3><span class="num">89</span>The roll, letter by letter</h3>
       <p>Card 26's gesture resolved per character: each letter leaves through the top of its own box while its duplicate arrives from the bottom, 26ms apart. Nothing is revealed and nothing is reserved — an identical label replaces the one that left.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4770,8 +4514,8 @@
       <div class="stage">
         <button type="button" class="btn btn--solid u-lift"><span class="lbl"><span class="u-lift-c" aria-hidden="true">S</span><span class="u-lift-c" aria-hidden="true">e</span><span class="u-lift-c" aria-hidden="true">e</span> <span class="u-lift-c" aria-hidden="true">a</span><span class="u-lift-c" aria-hidden="true">l</span><span class="u-lift-c" aria-hidden="true">l</span> <span class="u-lift-c" aria-hidden="true">w</span><span class="u-lift-c" aria-hidden="true">o</span><span class="u-lift-c" aria-hidden="true">r</span><span class="u-lift-c" aria-hidden="true">k</span></span><span class="sr">See all work</span></button>
       </div>
-      <h3><span class="num">97</span>A lift, not a roll</h3>
-      <p>The same stagger with nothing masked and nothing duplicated: each character lifts 3px and returns. Here as the argument that card 96 is usually the wrong choice — a roll needs a mask, a duplicate and a box deep enough for whatever copy the client writes later.</p>
+      <h3><span class="num">90</span>A lift, not a roll</h3>
+      <p>The same stagger with nothing masked and nothing duplicated: each character lifts 3px and returns. Here as the argument that card 89 is usually the wrong choice — a roll needs a mask, a duplicate and a box deep enough for whatever copy the client writes later.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -4779,7 +4523,7 @@
       <div class="stage">
         <button type="button" class="btn btn--line u-land"><span class="lbl"><span class="u-land-c" aria-hidden="true">B</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">k</span> <span class="u-land-c" aria-hidden="true">a</span> <span class="u-land-c" aria-hidden="true">c</span><span class="u-land-c" aria-hidden="true">a</span><span class="u-land-c" aria-hidden="true">l</span><span class="u-land-c" aria-hidden="true">l</span></span><span class="sr">Book a call</span></button>
       </div>
-      <h3><span class="num">98</span>It lands past its mark</h3>
+      <h3><span class="num">91</span>It lands past its mark</h3>
       <p>The bounce, and the one card here that wants to read as one — card 33 tunes its overshoot down precisely so it doesn't. What keeps it usable is that the letters overlap: 26ms against a 300ms rung bounces the word, where 60ms would bounce nine letters.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -4788,7 +4532,7 @@
       <div class="stage">
         <button type="button" class="btn btn--solid u-words"><span class="lbl"><span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>Start</span><span>Start</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>your</span><span>your</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>free</span><span>free</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>trial</span><span>trial</span></span></span></span><span class="sr">Start your free trial</span></button>
       </div>
-      <h3><span class="num">99</span>Word by word</h3>
+      <h3><span class="num">92</span>Word by word</h3>
       <p>The same roll with the unit changed, and the answer to who would actually ship this. Four words reading themselves out is a CTA; twenty-one characters is a wave passing over a button. Only the granularity moved.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -4797,7 +4541,7 @@
       <div class="stage">
         <button type="button" class="btn btn--line u-centre"><span class="lbl"><span class="u-centre-c" aria-hidden="true">R</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">a</span><span class="u-centre-c" aria-hidden="true">d</span> <span class="u-centre-c" aria-hidden="true">t</span><span class="u-centre-c" aria-hidden="true">h</span><span class="u-centre-c" aria-hidden="true">e</span> <span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">p</span><span class="u-centre-c" aria-hidden="true">o</span><span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">t</span></span><span class="sr">Read the report</span></button>
       </div>
-      <h3><span class="num">100</span>From the middle out</h3>
+      <h3><span class="num">93</span>From the middle out</h3>
       <p>The same lift ordered by distance from the label's centre rather than by reading order. Both ends move last, so the word breathes from the middle as one object instead of reading as a queue being served.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -4806,7 +4550,7 @@
       <div class="stage">
         <button type="button" class="btn btn--solid u-side"><span class="lbl"><span class="u-side-c" aria-hidden="true">O</span><span class="u-side-c" aria-hidden="true">p</span><span class="u-side-c" aria-hidden="true">e</span><span class="u-side-c" aria-hidden="true">n</span> <span class="u-side-c" aria-hidden="true">t</span><span class="u-side-c" aria-hidden="true">h</span><span class="u-side-c" aria-hidden="true">e</span> <span class="u-side-c" aria-hidden="true">m</span><span class="u-side-c" aria-hidden="true">a</span><span class="u-side-c" aria-hidden="true">p</span></span><span class="sr">Open the map</span></button>
       </div>
-      <h3><span class="num">101</span>It starts where you entered</h3>
+      <h3><span class="num">94</span>It starts where you entered</h3>
       <p>Enter from the left and the stagger runs left to right; enter from the right and it reverses. Every character carries both indices, so the script sets one attribute and writes no styles — and the keyboard keeps the default order for free.</p>
       <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -4819,11 +4563,10 @@
   document.querySelectorAll('.u-side').forEach(function(b){
     b.addEventListener('pointerenter', function(e){
       var r = b.getBoundingClientRect();
-      b.dataset.tSide = (e.clientX - r.left) > r.width / 2 ? 'r' : 'l';
+      b.dataset.uSide = (e.clientX - r.left) > r.width / 2 ? 'r' : 'l';
     });
   });
 </script>
-
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
@@ -5613,8 +5356,8 @@
         // p.label came off textContent; markup is SERIALIZED html. Any of & < >
         // is escaped on one side and not the other — and not consistently, since
         // the serializer escapes > in text but leaves it alone in an attribute.
-        // Card 86's «Ship the file ->» matched nothing and lost its property
-        // control in silence, so the literal accepts either form of all three.
+        // A label carrying any of the three matched nothing and lost its
+        // property control in silence, so the literal accepts either form.
         var lit = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
                        .replace(/&/g, '(?:&|&amp;)')
                        .replace(/</g, '(?:<|&lt;)')
