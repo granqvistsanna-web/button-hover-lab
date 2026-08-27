@@ -3078,7 +3078,7 @@ document.addEventListener("DOMContentLoaded", function () {
      light on an already-empty plate for the whole 83ms of its own colour
      change; the tile's duration less the colour's puts the label back to ink
      exactly as the last of the fill leaves the frame. */
-  .j-dir .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
+  .j-dir .lbl{position:relative; transition:color var(--t-1) ease}
   .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-1)}
 
   /* 76 The wave — the fill rises with a curved leading edge that flattens as it
@@ -3105,7 +3105,7 @@ document.addEventListener("DOMContentLoaded", function () {
     border-radius:0% 0% 0% 0% / 0% 0% 0% 0%;
   }
   /* Same rule as 78: the colour lands as the fill clears, not after it. */
-  .j-wave .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
+  .j-wave .lbl{position:relative; transition:color var(--t-1) ease}
   .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
 
   /* 77 In one order, out another — the one thing a gesture variant cannot do at
@@ -3871,8 +3871,8 @@ document.addEventListener("DOMContentLoaded", function () {
      which on a control reads as disabled rather than as quiet, and leaves the
      only boundary of an interactive thing below 3:1. Quiet has to mean low
      contrast, not no contrast. */
-  .o-quiet{border-color:var(--muted); transition:border-color var(--t-2) ease}
-  .o-quiet:hover,.o-quiet:focus-visible{border-color:var(--ink)}
+  .o-quiet{border-color:var(--muted); background:transparent; transition:background-color var(--t-2) ease}
+  .o-quiet:hover,.o-quiet:focus-visible{background:var(--bg-3)}
 
   /* 87 Overruns its measure — a second copy of the label sits just outside the
      right edge and the row slides far enough to prove it is there. Card 16
@@ -3995,7 +3995,7 @@ document.addEventListener("DOMContentLoaded", function () {
      behind it — #f2f2f2 on #ffffff, which is no text at all for about 80ms. At
      rest --t-3 is 133ms, so the recolour lands exactly as the last column
      goes. */
-  .o-step .lbl{position:relative; transition:color var(--t-2) ease var(--t-3)}
+  .o-step .lbl{position:relative; transition:color var(--t-1) ease}
   /* The exit order: last column first, so the staircase comes apart from the
      end it was assembled towards. */
   .o-step .o-step-fill span:nth-child(1){transition-delay:calc(var(--t-stagger) * 5)}
@@ -4022,7 +4022,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-step:hover .o-step-fill span:nth-child(6),
   .o-step:focus-visible .o-step-fill span:nth-child(6){transition-delay:calc(var(--t-stagger) * 5)}
   .o-step:hover .lbl,
-  .o-step:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--t-3)}
+  .o-step:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--t-2)}
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
      card would still arrive in sequence with nothing animating between the
      steps — six jumps instead of one. These are the delays this section adds,
@@ -4458,13 +4458,13 @@ document.addEventListener("DOMContentLoaded", function () {
      name, the way card 80 does. Eleven one-character spans would otherwise be
      announced one at a time. */
   .q-jitter .q-jitter-l{display:inline-block; transform:rotate(0.001deg)}
-  .q-jitter .q-jitter-l:nth-child(7n+1){--q-a:-5deg;   animation-delay:-.05s}
-  .q-jitter .q-jitter-l:nth-child(7n+2){--q-a:4.5deg;  animation-delay:-.31s}
-  .q-jitter .q-jitter-l:nth-child(7n+3){--q-a:-3deg;   animation-delay:-.17s}
-  .q-jitter .q-jitter-l:nth-child(7n+4){--q-a:6deg;    animation-delay:-.44s}
-  .q-jitter .q-jitter-l:nth-child(7n+5){--q-a:-6.5deg; animation-delay:-.09s}
-  .q-jitter .q-jitter-l:nth-child(7n+6){--q-a:3.5deg;  animation-delay:-.38s}
-  .q-jitter .q-jitter-l:nth-child(7n+7){--q-a:-4deg;   animation-delay:-.23s}
+  .q-jitter .q-jitter-l:nth-child(7n+1){--q-a:-11deg;   animation-delay:-.05s}
+  .q-jitter .q-jitter-l:nth-child(7n+2){--q-a:9.5deg;  animation-delay:-.31s}
+  .q-jitter .q-jitter-l:nth-child(7n+3){--q-a:-7deg;   animation-delay:-.17s}
+  .q-jitter .q-jitter-l:nth-child(7n+4){--q-a:13deg;    animation-delay:-.44s}
+  .q-jitter .q-jitter-l:nth-child(7n+5){--q-a:-14deg; animation-delay:-.09s}
+  .q-jitter .q-jitter-l:nth-child(7n+6){--q-a:8deg;  animation-delay:-.38s}
+  .q-jitter .q-jitter-l:nth-child(7n+7){--q-a:-9deg;   animation-delay:-.23s}
   /* .62s is off the ladder for the same reason the other loops here are. */
   .q-jitter:hover .q-jitter-l,
   .q-jitter:focus-visible .q-jitter-l{animation:q-waver .62s ease-in-out infinite alternate}
@@ -5467,7 +5467,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-3) var(--e-out);
   }
   .btn.v-from:hover,
-  .btn.v-from:focus-visible{transform:scale(1.02) rotate(0.001deg)}
+  .btn.v-from:focus-visible{transform:scale(1.045) rotate(0.001deg)}
   .btn.v-from:active{transform:scale(.99) rotate(0.001deg); transition-duration:var(--t-1)}
 
   /* 04 The bloom — the first light on this page that leaves the plate. Cards 31,
