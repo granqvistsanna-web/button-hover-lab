@@ -219,30 +219,30 @@
 
   /* 07 Riktad svep */
   .sweep{overflow:hidden}
-  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
+  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
   .sweep:hover::before,
   .sweep:focus-visible::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .sweep:hover .lbl,
-  .sweep:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-2)}
+  .sweep:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 08 Slutare */
   .shutter{overflow:hidden}
-  .shutter::before{content:""; position:absolute; inset:0; background:var(--accent); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
+  .shutter::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
   .shutter:hover::before,
   .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .shutter:hover .lbl,
-  .shutter:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-1)}
+  .shutter:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
 
   /* 09 Ink fill */
   .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
-  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
+  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink-hover); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
   .inkfill:hover::before,
   .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
   .inkfill:hover .lbl,
-  .inkfill:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-2)}
+  .inkfill:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 10 Sheen */
   .sheen{background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
@@ -969,7 +969,7 @@
   /* rect.e-draw-nib, not .e-draw-nib: the shared rect rule below is 0-2-1 and this
      was 0-2-0, so this element's whole transition list lost the cascade and the
      opacity half of it never ran at all. Matching the rect makes it 0-3-1. */
-  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink); stroke-width:2.5; stroke-linecap:round;
+  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink-hover); stroke-width:2.5; stroke-linecap:round;
     stroke-dasharray:2 80; stroke-dashoffset:calc(var(--draw) - 41); opacity:0;
     transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0), opacity var(--t-5) linear}
   /* 0s, not a duration: a pen is at full weight the moment it touches down. The
@@ -1670,7 +1670,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-caret{gap:7px}
   .h-caret .h-caret-slot{position:relative; display:block; width:1.5px; height:1em}
   .h-caret .h-caret-bar{
-    position:absolute; inset:0; background:var(--accent); border-radius:1px;
+    position:absolute; inset:0; background:var(--ink-hover); border-radius:1px;
     opacity:0; transform:scaleY(.35); transform-origin:50% 100%;
     transition:opacity var(--t-2) ease, transform var(--t-4) var(--e-quint);
   }
@@ -2237,7 +2237,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.j-dir{overflow:hidden}
   .j-dir .j-dir-tile{
     position:absolute; inset:0; pointer-events:none;
-    background:var(--ink);
+    background:var(--ink-hover);
     --j-x:0%; --j-y:100%;
     transform:translate(var(--j-x), var(--j-y));
     transition:transform var(--t-5) var(--e-quint);
@@ -2248,7 +2248,7 @@ document.addEventListener("DOMContentLoaded", function () {
      change; the tile's duration less the colour's puts the label back to ink
      exactly as the last of the fill leaves the frame. */
   .j-dir .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
-  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-1)}
+  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
 
   /* 76 The wave — the fill rises with a curved leading edge that flattens as it
      lands, so it reads as liquid finding its level rather than a rectangle
@@ -2264,7 +2264,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.j-wave{overflow:hidden}
   .j-wave .j-wave-fill{
     position:absolute; left:-12%; right:-12%; bottom:0; height:100%;
-    pointer-events:none; background:var(--ink);
+    pointer-events:none; background:var(--ink-hover);
     border-radius:56% 44% 0% 0% / 34% 34% 0% 0%;
     transform:translateY(100%);
     transition:transform var(--t-5) var(--e-quint), border-radius var(--t-5) var(--e-out) var(--d-2);
@@ -2275,7 +2275,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   /* Same rule as 78: the colour lands as the fill clears, not after it. */
   .j-wave .lbl{position:relative; transition:color var(--t-2) ease calc(var(--t-5) - var(--t-2))}
-  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--d-2)}
+  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 77 In one order, out another — the one thing a gesture variant cannot do at
      all: its exit is always its entrance played backwards. Here the rest-state
@@ -2841,7 +2841,7 @@ document.addEventListener("DOMContentLoaded", function () {
     position-area:top center; margin-bottom:8px;
     position-try-fallbacks:flip-block;
     font:500 10px/1 var(--mono); letter-spacing:.1em;
-    color:var(--ink-on-fill); background:var(--ink);
+    color:var(--on-ink-hover); background:var(--ink-hover);
     padding:5px 7px; border-radius:5px; pointer-events:none;
     display:none; opacity:0;
     transition:opacity var(--t-2) var(--e-out), display var(--t-2) allow-discrete;
@@ -3917,7 +3917,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser::before,
   .btn.q-riser::after{
     content:""; position:absolute; top:100%; width:26px; height:0;
-    background:var(--ink); border-radius:0 0 3px 3px;
+    background:var(--ink-hover); border-radius:0 0 3px 3px;
     transition:height var(--t-3) var(--e-out);
   }
   .btn.q-riser::before{left:17%}
@@ -4588,7 +4588,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.t-hold .t-hold-fill{
     position:absolute; left:0; top:0; bottom:0; width:0; z-index:2;
-    background:var(--ink); overflow:hidden;
+    background:var(--ink-hover); overflow:hidden;
     transition:width var(--t-3) var(--e-out);
   }
   /* Above the label, not behind it. The plate's own label stays white for the
@@ -4601,7 +4601,7 @@ document.addEventListener("DOMContentLoaded", function () {
      label, and nowrap so it never reflows as the fill narrows it. */
   .btn.t-hold .t-hold-over{
     position:absolute; left:28px; top:50%; transform:translateY(-50%);
-    white-space:nowrap; color:var(--ink-on-fill);
+    white-space:nowrap; color:var(--on-ink-hover);
   }
   .btn.t-hold[data-state="holding"] .t-hold-fill{
     width:100%; transition:width var(--t-hold) linear;
@@ -5687,7 +5687,7 @@ document.addEventListener("DOMContentLoaded", function () {
      fade, failed to indicate focus. */
   .x-dotted::after{
     content:""; position:absolute; inset:4px; pointer-events:none;
-    border:1px dotted var(--ink);
+    border:1px dotted var(--ink-hover);
     border-radius:calc(var(--btn-r) - 4px);
     opacity:0; transition:opacity var(--t-1) steps(1,end);
   }

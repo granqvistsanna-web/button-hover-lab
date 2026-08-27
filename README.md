@@ -105,6 +105,19 @@ has always been. The fit walks lightness in **either** direction for exactly thi
 label on a near-white accent has to go down, and the one-way walk the single-primary toolbar
 used would have sent it to white on white.
 
+**Hover reaches about twenty of the hundred and five, and that is the page's own thesis
+showing through rather than a gap.** These effects are geometric: most of them paint their
+arriving layer at rest and animate `transform`, `clip-path` or `height`, so the colour that
+arrives is the same declaration as the fill. Which ones count was settled by reading every
+accent-coloured layer's *computed style at rest* — a `::before` at `scaleX(0)`, a bar
+translated out of its slot, a riser with no height yet is a hover colour; anything already
+visible is an accent. Reading selectors instead would have missed all of them, because none
+declare their colour inside a `:hover` rule.
+
+Label furniture stays with the text: the corner brackets of 13, the underline of 14, the
+strike of 95, the dot grid of 100 and every SVG glyph paint in `currentColor` and so follow
+whatever the label is doing. An arrow beside a word belongs to the word.
+
 Unset is not "follow another swatch" — it leaves the authored alias standing, and the aliases
 are deliberately uneven. `--ink-text` is pinned to `--ink-hi`, so the label does not drift
 when only the accent is picked. `--ink-hover` is pinned to `--ink`, so hover *does* follow
