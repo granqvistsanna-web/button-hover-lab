@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="One hundred and five button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="One hundred and thirteen button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="One hundred and five button hover animations, actually built.">
+<meta property="og:description" content="One hundred and thirteen button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -102,15 +102,7 @@
 
   /* ============ header ============ */
   h1{color:var(--ink-hi); font-size:clamp(34px,5vw,52px); font-weight:700;
-    letter-spacing:-.02em; line-height:1.05; margin:14px 0 16px; text-wrap:balance}
-  .lede{max-width:62ch; font-size:16px; color:var(--ink-mid)}
-  .lede strong{color:var(--ink-hi); font-weight:600}
-  /* The five house rules, as a spec strip rather than five prose boxes —
-     one mono line per rule, in the register graphite gives to metadata. */
-  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:6px 22px; margin-top:26px;
-    font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
-  .rules b{color:var(--ink-mid); font-weight:500}
+    letter-spacing:-.02em; line-height:1.05; margin:6px 0 0; text-wrap:balance}
 
   /* ============ sections & cards ============ */
   .sect{margin-top:72px}
@@ -246,8 +238,21 @@
   .vers-long::before{content:""; position:absolute; left:-8px; top:50%;
     width:1px; height:13px; margin-top:-6.5px; background:var(--hairline)}
   /* In the toolbar the same control sits in a row of its own furniture and
-     needs neither the separator nor the centring. */
+     needs neither the separator nor the centring. What it does need is an
+     edge: on a stage the four words float over a card and read as a set, but
+     in a row that already holds a swatch and a slider they read as four more
+     pieces of furniture. A recessed track — bg-0 on the bg-1 panel, which is
+     the ladder's own way of saying inset — makes them one question with four
+     answers, and the pressed answer rises back to bg-3. */
   .tools .vers-long::before{display:none}
+  .tools .vers-seg{gap:1px; padding:2px; border-radius:var(--r-sm);
+    background:var(--bg-0); box-shadow:inset 0 0 0 1px var(--hairline)}
+  .tools .vers-b{padding:5px 8px}
+  .tools .vers-b[aria-checked="true"]{box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
+  /* Length is a toggle, not a fifth treatment, so it is outlined rather than
+     seated in the track — a different shape for a different kind of answer. */
+  .tools .vers-long{border:1px solid var(--hairline); padding:5px 9px}
+  .tools .vers-long[aria-pressed="true"]{border-color:var(--line-ctl)}
 
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
   .icon{display:block; width:14px; height:14px}
@@ -455,10 +460,39 @@
 
   /* ============ verktygsrad + favoriter ============ */
   .tools{
-    position:sticky; top:0; z-index:20; margin:30px 0 -6px;
+    position:sticky; top:-1px; z-index:20; margin:34px 0 -6px;
     display:flex; flex-wrap:wrap; align-items:center; gap:10px 22px;
-    padding:10px 12px; border-radius:var(--r-md);
+    padding:11px 14px; border-radius:var(--r-md);
     background:var(--bg-1); border:1px solid var(--hairline);
+    transition:background var(--t-med) var(--ease),
+               border-color var(--t-med) var(--ease),
+               box-shadow var(--t-med) var(--ease),
+               border-radius var(--t-fast) var(--ease);
+  }
+  /* ---- Stuck ----------------------------------------------------------
+     A sticky panel that never changes is indistinguishable from a panel that
+     happens to be at the top, and the cards then appear to collide with it
+     rather than pass beneath it. So the panel says which it is: at rest it is
+     a card in the column, and the moment it starts to float it loses its top
+     corners into the viewport edge, thins to a frosted plate, and casts the
+     one shadow on the page.
+
+     The state is read with an IntersectionObserver on the panel's own box at
+     ratio 1 — with top:0 the only way it can be less than fully in view is if
+     it is holding itself there — see the observer. That is why the offset is a
+     single negative pixel and the breathing room above it is margin: a real
+     inset would put a gap between the frosted plate and the viewport edge, and
+     the page's two scroll-margin-top values are measured from the edge too. */
+  .tools[data-stuck]{
+    border-radius:0 0 var(--r-md) var(--r-md);
+    border-top-color:transparent;   /* the pixel the observer parks off-screen */
+    box-shadow:0 14px 28px -18px rgba(var(--shadow-rgb),.9);
+  }
+  @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    .tools[data-stuck]{
+      background:color-mix(in srgb, var(--bg-1) 82%, transparent);
+      -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+    }
   }
   @media (prefers-reduced-transparency: reduce){
     /* Card 31 is the one card built on transparency — frost it solid rather
@@ -466,8 +500,19 @@
     .f-glas .f-glas-yta{-webkit-backdrop-filter:none !important; backdrop-filter:none !important}
     .f-glas:hover .f-glas-yta,
     .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink) 13%, transparent)}
+    /* Same answer for the toolbar: keep the lift, drop the see-through. */
+    .tools[data-stuck]{background:var(--bg-1);
+      -webkit-backdrop-filter:none !important; backdrop-filter:none !important}
   }
   .tools-row{display:flex; align-items:center; gap:10px}
+  /* The three settings and the disclosure are not the same kind of thing, and
+     below 1360 they cannot share a line anyway — the row measures about 1070
+     against a 1000px column, so it wraps at every width where the disclosure
+     exists at all. Wrapping is therefore the layout, not an accident, and the
+     button is pushed to the end of whichever line it lands on: the rail opens
+     directly beneath the panel's right side, so that is where the handle for
+     it belongs. Above 1360 the button is display:none and this does nothing. */
+  .tools-row--end{margin-left:auto}
   .tools-lbl{font-size:11px; font-weight:600; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
 
@@ -487,7 +532,11 @@
      becomes frame, and the text variant — and there the radius IS the effect,
      so the setting leaves them where they are. The overlays inside every other
      card already say border-radius:inherit, so they follow for free. */
-  .tools-sep{width:1px; align-self:stretch; min-height:26px;
+  /* A fixed height and centred, NOT align-self:stretch. Below 1360 the panel
+     is two rows tall (see .tools-row--end), and a stretched rule runs the whole
+     69px — down past the groups it divides and through the empty half of the
+     second line, which reads as a column rule for a layout that has no columns. */
+  .tools-sep{width:1px; height:26px; align-self:center; flex:none;
     background:var(--hairline); margin:0 -6px}
   /* A native colour input, stripped back to the swatch. It is the only control
      on the page that opens something the page does not draw, so it is worth
@@ -498,21 +547,38 @@
     transition:border-color var(--t-2) ease;
   }
   .set-swatch:hover{border-color:var(--ink-mid)}
+  .set-swatch:active{border-color:var(--ink-hi)}
   .set-swatch:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .set-swatch::-webkit-color-swatch-wrapper{padding:2px}
   .set-swatch::-webkit-color-swatch{border:0; border-radius:3px}
   .set-swatch::-moz-color-swatch{border:0; border-radius:3px}
+  /* --p is written by the same paint() that writes the readout, so the
+     travelled part of the track and the number under it cannot disagree. A
+     gradient rather than ::-moz-range-progress: one declaration serves both
+     engines, and the track is 3px — there is nothing a second element buys. */
   .set-range{
+    --p:100%;
     -webkit-appearance:none; appearance:none;
     width:112px; height:20px; flex:none; background:none; cursor:pointer;
   }
-  .set-range::-webkit-slider-runnable-track{height:3px; border-radius:2px; background:var(--bg-3)}
-  .set-range::-moz-range-track{height:3px; border-radius:2px; background:var(--bg-3)}
+  .set-range::-webkit-slider-runnable-track{height:3px; border-radius:2px;
+    background:linear-gradient(to right, var(--ink-low) var(--p), var(--bg-3) var(--p))}
+  .set-range::-moz-range-track{height:3px; border-radius:2px;
+    background:linear-gradient(to right, var(--ink-low) var(--p), var(--bg-3) var(--p))}
+  /* The halo is drawn on the thumb rather than the input so it stays a circle
+     around the handle wherever the handle is, and it is a shadow rather than a
+     border so the 14px hit target never moves under a pointer mid-drag. */
   .set-range::-webkit-slider-thumb{-webkit-appearance:none; appearance:none;
     width:14px; height:14px; margin-top:-5.5px; border:0; border-radius:50%;
-    background:var(--ink-hi)}
+    background:var(--ink-hi); box-shadow:0 0 0 0 color-mix(in srgb, var(--ink-hi) 16%, transparent);
+    transition:box-shadow var(--t-fast) var(--ease)}
   .set-range::-moz-range-thumb{width:14px; height:14px; border:0; border-radius:50%;
-    background:var(--ink-hi)}
+    background:var(--ink-hi); box-shadow:0 0 0 0 color-mix(in srgb, var(--ink-hi) 16%, transparent);
+    transition:box-shadow var(--t-fast) var(--ease)}
+  .set-range:hover::-webkit-slider-thumb{box-shadow:0 0 0 4px color-mix(in srgb, var(--ink-hi) 16%, transparent)}
+  .set-range:hover::-moz-range-thumb{box-shadow:0 0 0 4px color-mix(in srgb, var(--ink-hi) 16%, transparent)}
+  .set-range:active::-webkit-slider-thumb{box-shadow:0 0 0 6px color-mix(in srgb, var(--ink-hi) 22%, transparent)}
+  .set-range:active::-moz-range-thumb{box-shadow:0 0 0 6px color-mix(in srgb, var(--ink-hi) 22%, transparent)}
   .set-range:focus-visible{outline:2px solid var(--ink-low); outline-offset:3px}
   /* Mono and tabular, and wide enough for the longest reading it can hold, so
      dragging the slider does not shove the row around under the pointer. */
@@ -547,6 +613,10 @@
     .tools-row{width:100%; justify-content:space-between}
     /* A vertical rule between stacked full-width rows separates nothing. */
     .tools-sep{display:none}
+    /* Four treatments plus a toggle plus a readout will not sit on one phone
+       line with a label; the track wraps and the readout takes the next. */
+    .tools-row:has(.vers-seg){flex-wrap:wrap; justify-content:flex-start}
+    .tools-row:has(.vers-seg) .set-read{margin-left:auto}
     .set-range{flex:1; min-width:0; max-width:150px}
     .set-swatch{margin-left:auto}
   }
@@ -759,15 +829,6 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
-    <p class="lede">One hundred and five button hover animations, actually built. <strong>Hover, tab and press
-    any of them.</strong></p>
-    <div class="rules">
-      <p><b>instant</b> press on pointer-down</p>
-      <p><b>interruptible</b> turns from wherever it is</p>
-      <p><b>asymmetric</b> exit one rung down</p>
-      <p><b>reduced-motion</b> end state, no travel</p>
-      <p><b>durations</b> 83 / 133 / 200 / 300 / 450 ms</p>
-    </div>
   </header>
 
   <div class="tools" role="group" aria-label="Restyle the studies">
@@ -778,12 +839,14 @@
              aria-describedby="set-contrast">
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
+    <div class="tools-sep" aria-hidden="true"></div>
     <div class="tools-row">
       <span class="tools-lbl">Radius</span>
       <input class="set-range" type="range" min="0" max="28" step="1" value="28"
              aria-label="Button corner radius, applied to every study">
       <span class="set-read" data-read="radius"></span>
     </div>
+    <div class="tools-sep" aria-hidden="true"></div>
     <div class="tools-row">
       <span class="tools-lbl">Version</span>
       <div class="vers-seg" id="v-treat" role="radiogroup"
@@ -797,7 +860,7 @@
               aria-label="Long label, applied to every study that offers it">Long</button>
       <span class="set-read" data-read="versions" aria-live="polite"></span>
     </div>
-    <div class="tools-row">
+    <div class="tools-row tools-row--end">
       <button type="button" class="rail-toggle" aria-expanded="false">Find &amp; filter</button>
     </div>
   </div>
@@ -6471,6 +6534,9 @@ document.addEventListener("DOMContentLoaded", function () {
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
+    <p><b>instant</b> press on pointer-down &nbsp;·&nbsp; <b>interruptible</b> turns from wherever it is</p>
+    <p><b>asymmetric</b> exit one rung down &nbsp;·&nbsp; <b>reduced-motion</b> end state, no travel</p>
+    <p><b>durations</b> 83 / 133 / 200 / 300 / 450 ms</p>
   </footer>
 </div>
 
@@ -6562,6 +6628,26 @@ document.addEventListener("DOMContentLoaded", function () {
     var cards = [].slice.call(document.querySelectorAll('.spec'));
     var tools = document.querySelector('.tools');
     if (!tools || !cards.length) return;
+
+    /* ---- Is the panel floating, or is it just at the top? ---------------
+       Asked with an observer on the panel's own box rather than a scroll
+       handler: a scroll listener answers on every frame of every scroll for a
+       question whose answer changes twice a visit, and it has to know the
+       panel's height, which changes with the viewport. The whole test is the
+       -1px in the panel's `top`: at top:0 a stuck panel is still FULLY in
+       view, the ratio never leaves 1, and the flag never fires — which is the
+       first version of this, and it looked exactly like a working one. Held a
+       pixel above the edge, being stuck is the only way it can be less than
+       whole, and the hidden pixel is the border the stuck style makes
+       transparent anyway.
+       No observer (or a page short enough never to scroll) leaves the flag
+       off, which is the resting style, so the panel degrades to what it was. */
+    if (window.IntersectionObserver){
+      new IntersectionObserver(function(e){
+        if (e[0].intersectionRatio < 1) tools.setAttribute('data-stuck', '');
+        else tools.removeAttribute('data-stuck');
+      }, {threshold:[1]}).observe(tools);
+    }
 
     // These three moved into the rail, so they are looked up on the document
     // rather than inside the toolbar.
@@ -6770,6 +6856,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
+      // Written here and nowhere else, for the reason in the CSS: the filled
+      // part of the track and the number beside it are one fact.
+      range.style.setProperty('--p', (look.radius / PILL * 100).toFixed(2) + '%');
       range.setAttribute('aria-valuetext', readR.textContent);
     }
     function saveLook(){
