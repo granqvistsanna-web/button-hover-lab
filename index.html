@@ -658,19 +658,66 @@
     .e-wave:hover .e-wave-live{font-variation-settings:"wght" 660}
   }
 
-  /* 13 Ritad kontur — stroke-dashoffset ritar ramen */
-  .e-draw{border-radius:12px; border:1px solid var(--line-ctl)}
+  /* 13 Drawn outline — three lines, ONE number.
+     --draw is the ink's dashoffset. On a pathLength of 40 with dasharray:40 the
+     pattern repeats every 80, so 40 and -40 are both hidden and 0 and -80 both
+     fully drawn: every state change is the same move, subtract 40, and the pen
+     never retraces. The other two lines are pure functions of that number:
+
+       guide  --draw + 40   the exact complement — visible only where the pen
+                            has NOT been, so the faint rule retreats ahead of
+                            the stroke and returns behind the tail. The drawn
+                            line REPLACES the rule instead of covering it.
+       nib    --draw - 40   a 2-unit dash sitting on the leading edge. On the
+                            way in it rides the head from corner to corner; on
+                            the way out the head is parked at the end and the
+                            phase carries the nib into the gap, so it is off the
+                            path exactly when there is no pen to show.
+
+     Because all three are derived, no interruption can drift them out of step —
+     there is no second piece of state to get behind. The old CSS border is now
+     transparent: the guide took its job, but removing it outright would shrink
+     the button by 2px and move the demo in its stage. */
+  .e-draw{--draw:40; border-radius:12px; border:1px solid transparent}
   .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible}
+  /* rx 11.25 + half of the 1.5 stroke = 12, so the drawn corner matches the
+     12px border-radius exactly. At 11.5 it measured 12.25 and the corners read
+     a quarter-pixel softer on hover than at rest. */
   .e-draw .e-draw-frame rect{
-    x:0.75px; y:0.75px; width:calc(100% - 1.5px); height:calc(100% - 1.5px); rx:11.5px; ry:11.5px;
-    fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round;
-    stroke-dasharray:40; stroke-dashoffset:40;
-    transition:stroke-dashoffset var(--t-5) var(--e-quint);
+    x:0.75px; y:0.75px; width:calc(100% - 1.5px); height:calc(100% - 1.5px); rx:11.25px; ry:11.25px;
+    fill:none;
+    /* The base curve is the EXIT: an ease-in, so the tail lingers and then
+       whips off the end. :hover restores the draw-in ease-out. The lab argues
+       asymmetry by duration everywhere else; this one earns a second axis,
+       because a pen accelerating away is not a pen settling into place. Local
+       and not a :root token — it is this study's argument, not the page's. */
+    transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0);
   }
-  /* Fallback with no script: draws in, then erases back the way it came. The
-     init after this section replaces it with a stroke that only travels one way. */
   .e-draw:hover .e-draw-frame rect,
-  .e-draw:focus-visible .e-draw-frame rect{stroke-dashoffset:0}
+  .e-draw:focus-visible .e-draw-frame rect{transition-timing-function:var(--e-quint)}
+  .e-draw .e-draw-guide{stroke:var(--line-ctl); stroke-width:1; stroke-linecap:butt;
+    stroke-dasharray:40; stroke-dashoffset:calc(var(--draw) + 40)}
+  /* butt, not round, and this is a fix rather than a preference. A closed rect
+     path starts and ends at the same point, so with dasharray:40 on a pathLength
+     of 40 the hidden state puts a dash BOUNDARY exactly there — and a round cap
+     on a zero-length dash paints a ~1.4px dot at full --ink on the resting
+     button. It has been on the top edge of this study since it was written.
+     There is no offset that hides the stroke without landing on that seam, so
+     the cap has to go. The pen character is not lost: the nib below is the round
+     end, and it is the one you actually watch. */
+  .e-draw .e-draw-ink{stroke:var(--ink); stroke-width:1.5; stroke-linecap:butt;
+    stroke-dasharray:40; stroke-dashoffset:var(--draw)}
+  .e-draw .e-draw-nib{stroke:var(--ink); stroke-width:2.5; stroke-linecap:round;
+    stroke-dasharray:2 78; stroke-dashoffset:calc(var(--draw) - 40); opacity:0;
+    transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0), opacity var(--t-2) ease}
+  .e-draw:hover .e-draw-nib,
+  .e-draw:focus-visible .e-draw-nib{opacity:1;
+    transition-timing-function:var(--e-quint), ease}
+  /* Fallback with no script: --draw never moves off 40, so :hover has to drive
+     all three itself. It draws in and erases back the way it came — the init
+     after this section is what makes the stroke one-way. */
+  .e-draw:hover,
+  .e-draw:focus-visible{--draw:0}
 
   /* 14 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
   .e-chamfer{border-radius:0; color:var(--on-ink)}
@@ -732,7 +779,7 @@
     <article class="spec">
       <div class="stage">
         <button type="button" class="btn e-draw">Read the manifesto
-          <svg class="e-draw-frame" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="12" pathLength="40"/></svg>
+          <svg class="e-draw-frame" aria-hidden="true"><rect class="e-draw-guide" pathLength="40"/><rect class="e-draw-ink" pathLength="40"/><rect class="e-draw-nib" pathLength="40"/></svg>
         </button>
       </div>
       <h3><span class="num">13</span>Drawn outline</h3>
@@ -838,24 +885,26 @@
   })();
 
   // 13 Drawn outline — the stroke only ever travels one way round.
-  // With stroke-dasharray:40 on a pathLength of 40 the pattern repeats every
-  // 80, so offset 40 and -40 are BOTH hidden, and 0 and -80 are both fully
-  // drawn. Every state change is therefore the same move: subtract 40. Hidden
-  // becomes drawn becomes hidden again on the far side, and the pen never
-  // retraces. Nothing here animates — the CSS transition retargets from the
-  // presentation value, so leaving half-drawn finishes the line and carries on
-  // instead of snapping.
+  // Every state change is the same move: subtract 40 from --draw. On a
+  // pathLength of 40 with dasharray:40 the pattern repeats every 80, so 40 and
+  // -40 are both hidden and 0 and -80 both fully drawn; hidden becomes drawn
+  // becomes hidden again on the FAR side, and the pen never retraces. The
+  // guide and the nib are derived from --draw in CSS, so this stays one
+  // number and one write. Nothing here animates — the CSS transition retargets
+  // from the presentation value, so leaving half-drawn finishes the line and
+  // carries on instead of snapping.
   (function(){
     document.querySelectorAll('.e-draw').forEach(function(btn){
-      var rect = btn.querySelector('.e-draw-frame rect');
-      if (!rect) return;
+      if (!btn.querySelector('.e-draw-ink')) return;
       var at = 40, on = false, hovering = false, focused = false;
       function sync(){
         var next = hovering || focused;
         if (next === on) return;          // a click fires pointerenter AND focus
         on = next;
         at -= 40;
-        rect.style.strokeDashoffset = at;
+        // One write. The guide and the nib are calc()s off this value, so they
+        // cannot be told a different story than the ink.
+        btn.style.setProperty('--draw', at);
       }
       btn.addEventListener('pointerenter', function(){ hovering = true;  sync(); });
       btn.addEventListener('pointerleave', function(){ hovering = false; sync(); });
