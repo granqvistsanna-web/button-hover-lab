@@ -178,6 +178,77 @@
   .btn--solid{background:var(--ink); color:var(--on-ink)}
   .btn--line{border:1px solid var(--ink)}
   .btn--text{padding:8px 4px; border-radius:2px}
+
+  /* ---- The four versions ----------------------------------------------
+     Fill, outline and link are the three surface treatments; LONG is a label
+     length, and it composes with all three rather than replacing them — a long
+     label on an outline is where these mechanisms actually break, and a flat
+     four-position control could never reach it.
+
+     None of this is a new idea. The three classes above already existed, and
+     the copy machinery already knew them by name (VARIANTS, further down), so
+     switching version is a class swap and the CSS copy exports whatever you are
+     looking at without being told.
+
+     A study ships in ONE version — whatever its markup carries — and declares
+     the others it can honestly hold in data-versions on its <article>. A
+     version is offered only where the MECHANISM survives it: an effect that
+     lights a plate has nothing to light as a link, and an effect that IS the
+     surface — knurling, deboss, frost — has no outline version at all. A study
+     that declares nothing renders no control, and that absence is the honest
+     signal that the study is surface-locked rather than an oversight. */
+
+  /* The switch itself must not read as a hover. One frame with the transitions
+     and any idle loop off, released on the next — so the plate ARRIVES in its
+     new version instead of animating into it, which on card 04 would otherwise
+     fire the bloom every time you pressed Outline.
+     It never reaches a copied snippet: it is not in VARIANTS, so baseMatcher
+     drops it, and it is named in HOUSE so it can never be read as an effect key. */
+  .btn.bhl-swap, .btn.bhl-swap *,
+  .btn.bhl-swap::before, .btn.bhl-swap::after{
+    transition:none !important; animation:none !important;
+  }
+
+  /* ---- The version switch ---------------------------------------------
+     Pinned to the foot of the stage, not added as a row beneath it. The stage
+     is a fixed 172px so that every hairline on the page lands on one line, and
+     a row only some cards carry would break that promise for all of them.
+
+     It sits in the corner layer with the star and the two copy buttons — but
+     unlike those three it does NOT wait for a card hover. Hovering is the thing
+     being demonstrated on this page, so a control you have to hover to find is
+     a control that arrives in the same gesture as the effect it is about. It is
+     quiet instead: mono at 10.5px in --ink-low, which is the register the chips
+     already use for information. */
+  .vers{
+    position:absolute; left:0; right:0; bottom:10px; z-index:2;
+    display:flex; justify-content:center; align-items:center; gap:15px;
+    pointer-events:none;
+  }
+  .vers>*{pointer-events:auto}
+  .vers-seg{display:flex; align-items:center; gap:2px}
+  .vers-b{
+    font:400 10.5px/1 var(--mono); letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
+    padding:5px 7px; cursor:pointer;
+    transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+  }
+  .vers-b:hover{color:var(--ink-hi); background:var(--bg-2)}
+  .vers-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  /* --ink-hi on bg-3 rather than the toolbar's inverse pill: a white chip at the
+     foot of the stage would be a second bright plate arguing with the button. */
+  .vers-b[aria-checked="true"],
+  .vers-b[aria-pressed="true"]{color:var(--ink-hi); background:var(--bg-3)}
+  /* Treatment and length are two questions. Without the rule, four words in one
+     row read as a single radio group of four, which is the model this control
+     was built to avoid. */
+  .vers-long{position:relative}
+  .vers-long::before{content:""; position:absolute; left:-8px; top:50%;
+    width:1px; height:13px; margin-top:-6.5px; background:var(--hairline)}
+  /* In the toolbar the same control sits in a row of its own furniture and
+     needs neither the separator nor the centring. */
+  .tools .vers-long::before{display:none}
+
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
   .icon{display:block; width:14px; height:14px}
 
@@ -229,6 +300,80 @@
   .sheen:hover::after,
   .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
   .sheen .lbl{position:relative}
+
+  /* ---- Family B in its other versions ---------------------------------
+     This family is built AROUND a fill, so it is the one that has to answer
+     what the other versions even mean. Two rules came out of it, and the rest
+     of the page follows them:
+
+     · ON A FILL, THE ARRIVING PLATE IS THE INVERSE. A --ink sweep across an
+       --ink plate is invisible. The arriving surface becomes --on-ink and the
+       label returns to --ink, which is the inverse pair the page already uses
+       everywhere it has to say «swapped» without a hue.
+     · ON A LINK, A FILL BECOMES A RULE. There is no plate to fill, so the
+       mechanism moves to the only surface a link has — a 1.5px rule along the
+       bottom, entering and leaving on the same geometry the fill did. Where the
+       fill's geometry has no rule equivalent, THERE IS NO LINK VERSION: card 08
+       opens on the vertical and a rule has no vertical to open on, and card 09
+       grows a circle that a link's box would clip to nothing.
+
+     Card 07's link version lands on the same mechanism as card 15's directional
+     underline, and that is not a duplicate to be apologised for — it is the
+     family's own argument arriving: the sweep and the underline were always the
+     same gesture on two different surfaces. */
+
+  /* The arriving plate on a FILL button needs a boundary, and that is this
+     page's own argument rather than a new one: --line-ctl exists because a
+     control boundary has to clear 3:1, and --on-ink arriving on a --bg-1 panel
+     measures 1.07:1 — the plate does not read as switched, it reads as gone.
+     An inset hairline costs no layout, so the box is still identical to three
+     decimals in both states.
+     It goes on the PLATE and not on the button: an inset shadow on the button
+     paints under its own ::before, so the arriving plate covers it and the
+     hairline never appears — measured at 1.06:1 with the rule in place, which
+     is how it was caught. border-radius:inherit is what keeps it on the pill
+     rather than cutting its corners against overflow:hidden.
+     Card 09 needs none of it: its own --line-ctl border sits over the white
+     plate it keeps underneath, so the dark circle arrives inside a ring that
+     already measures 16.7:1. */
+  .sweep.btn--solid::before,
+  .shutter.btn--solid::before{
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
+
+  /* 07 in fill and link */
+  .sweep.btn--solid::before{background:var(--on-ink)}
+  .sweep.btn--solid:hover .lbl,
+  .sweep.btn--solid:focus-visible .lbl{color:var(--ink)}
+  /* inset:0 becomes a rule on the bottom edge. The transform-origin flip above
+     is untouched, so it still enters left and leaves right. */
+  .sweep.btn--text::before{top:auto; bottom:0; height:1.5px; background:var(--ink)}
+  .sweep.btn--text:hover .lbl,
+  .sweep.btn--text:focus-visible .lbl{color:var(--ink); transition-delay:0s}
+
+  /* 08 in fill */
+  .shutter.btn--solid::before{background:var(--on-ink)}
+  .shutter.btn--solid:hover .lbl,
+  .shutter.btn--solid:focus-visible .lbl{color:var(--ink)}
+
+  /* 09 in fill. The --line-ctl hairline it draws for itself is a white at .36
+     and disappears against a white plate, which is correct rather than a loss:
+     a filled button does not need a boundary drawn on top of its own. */
+  .inkfill.btn--solid::before{background:var(--on-ink)}
+  .inkfill.btn--solid:hover .lbl,
+  .inkfill.btn--solid:focus-visible .lbl{color:var(--ink)}
+
+  /* 10 in outline. The sheen is a light crossing a DARK surface, so on a
+     transparent plate both halves invert: the streak is --ink rather than
+     --on-ink, and the hover's surface shift becomes a tint arriving instead of
+     a plate darkening. */
+  .sheen.btn--line{background:none; color:var(--ink)}
+  .sheen.btn--line:hover,
+  .sheen.btn--line:focus-visible{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+  .sheen.btn--line::after{
+    background:linear-gradient(100deg,transparent,
+               color-mix(in srgb,var(--ink) 26%,transparent),transparent);
+  }
 
   /* 11 Pilstafett */
   .relay .slot{position:relative; width:14px; height:14px; overflow:hidden}
@@ -640,6 +785,19 @@
       <span class="set-read" data-read="radius"></span>
     </div>
     <div class="tools-row">
+      <span class="tools-lbl">Version</span>
+      <div class="vers-seg" id="v-treat" role="radiogroup"
+           aria-label="Surface treatment, applied to every study that offers it">
+        <button type="button" class="vers-b" role="radio" aria-checked="true"  data-v="">As built</button>
+        <button type="button" class="vers-b" role="radio" aria-checked="false" data-v="fill">Fill</button>
+        <button type="button" class="vers-b" role="radio" aria-checked="false" data-v="outline">Outline</button>
+        <button type="button" class="vers-b" role="radio" aria-checked="false" data-v="link">Link</button>
+      </div>
+      <button type="button" class="vers-b vers-long" id="v-long" aria-pressed="false"
+              aria-label="Long label, applied to every study that offers it">Long</button>
+      <span class="set-read" data-read="versions" aria-live="polite"></span>
+    </div>
+    <div class="tools-row">
       <button type="button" class="rail-toggle" aria-expanded="false">Find &amp; filter</button>
     </div>
   </div>
@@ -673,7 +831,7 @@
   <h2>Whole button</h2>
   <div class="grid">
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid v-grow"><span class="lbl">See the plan</span></button>
           </div>
@@ -682,7 +840,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid v-shrink"><span class="lbl">See the plan</span></button>
           </div>
@@ -691,7 +849,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line v-from"><span class="lbl">Point at it</span></button>
           </div>
@@ -700,7 +858,7 @@
           <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn g-measure">
               <span class="g-measure-trim" aria-hidden="true"></span>
@@ -713,7 +871,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn g-key">Sign up</button>
           </div>
@@ -722,7 +880,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
             <div class="stage">
               <button type="button" class="btn lift">Download</button>
             </div>
@@ -731,7 +889,7 @@
             <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
             <div class="stage">
               <button type="button" class="btn btn--solid magnet"><span class="m-lbl">Keep in touch</span></button>
             </div>
@@ -740,7 +898,7 @@
             <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn i-give"><span class="i-give-lbl">Download the specification</span></button>
           </div>
@@ -749,7 +907,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--solid i-mass"><span class="i-mass-lbl">Continue to review</span><i class="i-mass-block" aria-hidden="true"></i></button>
           </div>
@@ -776,7 +934,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
             <span class="sr t-mark-live" role="status"></span>
@@ -786,7 +944,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--line t-hold" data-state="idle"><span class="t-hold-fill" aria-hidden="true"><span class="t-hold-over">Hold to delete</span></span><span class="lbl">Hold to delete</span></button>
           </div>
@@ -795,7 +953,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line j-order">
               <i class="j-order-dot" aria-hidden="true"></i>
@@ -810,7 +968,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line q-true"><span class="lbl">Send the file</span></button>
           </div>
@@ -819,7 +977,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--solid q-riser"><span class="lbl">Press to start</span></button>
           </div>
@@ -828,7 +986,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line o-quiet"><span class="lbl">See the work</span></button>
           </div>
@@ -844,7 +1002,7 @@
   <h2>Fill</h2>
   <div class="grid">
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
             <div class="stage">
               <button type="button" class="btn btn--line sweep"><span class="lbl">See all work</span></button>
             </div>
@@ -853,7 +1011,7 @@
             <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
             <div class="stage">
               <button type="button" class="btn btn--line shutter"><span class="lbl">What we do</span></button>
             </div>
@@ -862,7 +1020,7 @@
             <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built fill">
             <div class="stage">
               <button type="button" class="btn inkfill"><span class="lbl">Start a project</span></button>
             </div>
@@ -871,7 +1029,7 @@
             <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built outline">
             <div class="stage">
               <button type="button" class="btn sheen"><span class="lbl">Watch the showreel</span></button>
             </div>
@@ -902,7 +1060,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn o-plate"><span class="lbl">Open the plate</span></button>
           </div>
@@ -911,7 +1069,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn o-hatch"><span class="lbl">Take the brief</span></button>
           </div>
@@ -1307,7 +1465,7 @@
   <h2>Icon</h2>
   <div class="grid">
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
             <div class="stage">
               <button type="button" class="btn btn--solid relay">Next step
                 <span class="slot" aria-hidden="true">
@@ -1321,7 +1479,7 @@
             <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
             <div class="stage">
               <button type="button" class="btn btn--line dotm">
                 <span class="slot" aria-hidden="true">
@@ -1334,7 +1492,7 @@
             <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
           </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--text h-ellip">Read on
               <span class="h-ellip-slot" aria-hidden="true">
@@ -1347,7 +1505,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line h-caret">Search the press room
               <span class="h-caret-slot" aria-hidden="true"><i class="h-caret-bar"></i></span>
@@ -1358,7 +1516,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-stop"></i><i class="i-settle-dash"></i></span>See the schedule</button>
           </div>
@@ -1367,7 +1525,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid i-anti">Continue
               <span class="i-anti-slot" aria-hidden="true">
@@ -1380,7 +1538,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid i-space">View the index
               <span aria-hidden="true">
@@ -1393,7 +1551,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid i-throw">Send the brief
               <span class="i-throw-slot" aria-hidden="true"><i class="i-throw-mark"></i></span>
@@ -1404,7 +1562,7 @@
           <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn p-part"><span class="p-part-row"><span class="p-part-plate">Start the brief</span><span class="p-part-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
           </div>
@@ -1413,7 +1571,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn p-walk"><span class="p-walk-row"><span class="p-walk-plate">Send the file</span><span class="p-walk-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
           </div>
@@ -1422,7 +1580,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn p-trade"><span class="p-trade-row"><span class="p-trade-plate">Open the archive</span><span class="p-trade-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
           </div>
@@ -1431,7 +1589,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate">Take the tour</span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
           </div>
@@ -1440,7 +1598,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn p-hinge"><span class="p-hinge-row"><span class="p-hinge-plate">Book a call</span><span class="p-hinge-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
           </div>
@@ -1449,7 +1607,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn p-slip"><span class="p-slip-row"><span class="p-slip-plate">Read the case</span><span class="p-slip-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
           </div>
@@ -1458,7 +1616,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid j-out">Read the case
               <span class="j-out-slot" aria-hidden="true">
@@ -1471,7 +1629,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line j-optic">
               <span class="j-optic-group">
@@ -1487,7 +1645,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
           </div>
@@ -1496,7 +1654,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line n-cross"><span class="n-cross-row"><span class="n-cross-mark" aria-hidden="true"><svg class="icon n-cross-glyph n-cross-glyph--go" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon n-cross-glyph n-cross-glyph--land" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span><span class="n-cross-lbl">Read the note</span></span></button>
           </div>
@@ -1505,7 +1663,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn n-join"><span class="n-join-stack"><span class="n-join-ghost" aria-hidden="true"><span class="n-join-plate">Book the studio</span><span class="n-join-mark"></span></span><span class="n-join-row"><span class="n-join-plate">Book the studio</span><span class="n-join-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
           </div>
@@ -1514,7 +1672,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--solid w-grid"><span class="lbl">Advance</span><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></button>
           </div>
@@ -1523,7 +1681,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line w-frames"><span class="lbl">Play it back</span><span class="w-frames-win"><svg class="w-frames-strip" viewBox="0 0 56 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/><path d="M17 7h5M23 4l3 3-3 3"/><path d="M37 4l3 3-3 3"/><path d="M44 7h10M50 3l4 4-4 4"/></svg></span></button>
           </div>
@@ -1532,7 +1690,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line w-redraw"><span class="lbl">Change the mark</span><span class="w-redraw-box" aria-hidden="true"><span class="w-redraw-cell w-redraw-n"></span><span class="w-redraw-cell w-redraw-w"></span><span class="w-redraw-cell w-redraw-c"></span><span class="w-redraw-cell w-redraw-e"></span><span class="w-redraw-cell w-redraw-s"></span></span></button>
           </div>
@@ -1541,7 +1699,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <button type="button" class="btn btn--line x-needle"><span class="lbl">Check the level</span><span class="x-needle-dial" aria-hidden="true"><svg class="x-needle-arc" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 12.5a15 15 0 0 1 28 0"/></svg><span class="x-needle-arm"></span></span></button>
           </div>
@@ -1557,7 +1715,7 @@
   <h2>Material and light</h2>
   <div class="grid">
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--line v-bloom"><span class="lbl">Go live</span></button>
           </div>
@@ -1566,7 +1724,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--line v-inner"><span class="lbl">Press to arm</span></button>
           </div>
@@ -1575,7 +1733,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline">
           <div class="stage">
             <button type="button" class="btn btn--line v-live"><span class="lbl">Recording</span></button>
           </div>
@@ -1584,7 +1742,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage f-ruta">
             <button type="button" class="btn f-glas"><i class="f-glas-yta" aria-hidden="true"></i><span class="lbl">Book a walkthrough</span></button>
           </div>
@@ -1593,7 +1751,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn f-motljus">Read the annual report<i class="f-sol" aria-hidden="true"></i></button>
           </div>
@@ -1602,7 +1760,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn f-lykta"><span class="lbl">See the case</span></button>
           </div>
@@ -1611,7 +1769,7 @@
           <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn s-bevel"><span class="lbl">Save changes</span></button>
           </div>
@@ -1620,7 +1778,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn s-crt"><span class="lbl">Open console</span></button>
           </div>
@@ -1629,7 +1787,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn s-sprite"><span class="lbl">Insert coin</span></button>
           </div>
@@ -1638,7 +1796,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn l-knurl"><i class="l-knurl-grip" aria-hidden="true"></i><span class="lbl">Adjust the exposure</span></button>
           </div>
@@ -1647,7 +1805,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn l-deboss"><span class="l-deboss-lbl">Set the tolerance</span></button>
           </div>
@@ -1656,7 +1814,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="fill outline link">
           <div class="stage">
             <span class="l-plate-wrap" data-copy-root>
               <button type="button" class="btn btn--line l-plate" aria-keyshortcuts="Meta+K">Open the console</button>
@@ -1668,7 +1826,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn w-pitch"><span class="lbl">Hold the tone</span></button>
           </div>
@@ -1677,7 +1835,7 @@
           <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
         </article>
 
-    <article class="spec">
+    <article class="spec" data-versions="built">
           <div class="stage">
             <button type="button" class="btn x-bevel"><span class="lbl">OK</span></button>
           </div>
@@ -5282,8 +5440,36 @@ document.addEventListener("DOMContentLoaded", function () {
     box-shadow:inset 0 0 0 0 rgba(255,255,255,0);
     transition:box-shadow var(--t-2) var(--e-out), border-color var(--t-3) ease;
   }
-  .btn.v-inner:hover,
-  .btn.v-inner:focus-visible{border-color:var(--ink)}
+  /* The arm is per version, and it has to be. Measured before it was believed:
+     the hover changed ZERO pixels — not «barely», none. .btn--line already
+     rests at --ink, so brightening to --ink is a no-op, and .btn--solid carries
+     no border for the declaration to find. The card promises «a hairline that
+     brightens» and there was no hairline to brighten.
+     The outline version rests on --line-ctl instead — the control-boundary
+     token, the same one card 09 uses, at 3.36:1 on the panel — so the hairline
+     has somewhere to brighten FROM. The fill version is a harder problem and is
+     deliberately not answered here: --ink IS the plate, so there is no
+     «brighter», and an inset white glow on a near-white plate measures four
+     units. That one is a design decision about the study, not about its
+     versions. */
+  .btn.v-inner.btn--line{border-color:var(--line-ctl)}
+  .btn.v-inner.btn--line:hover,
+  .btn.v-inner.btn--line:focus-visible{border-color:var(--ink)}
+  /* And the fill version inverts, because a white plate cannot be lit brighter:
+     --ink IS the plate, and an inset white glow on it measures four units. So
+     the arm is the same statement — «the edge is live» — in the only ink the
+     plate can carry, and the press then FLIPS it: the groove goes out and the
+     light floods in. Both rules carry .btn--solid so they outrank the shared
+     :active below, which would otherwise win on specificity and swallow the
+     press. */
+  .btn.v-inner.btn--solid:hover,
+  .btn.v-inner.btn--solid:focus-visible{
+    box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--on-ink) 20%, transparent);
+  }
+  .btn.v-inner.btn--solid:active{
+    box-shadow:inset 0 0 18px 0 color-mix(in srgb, var(--on-ink) 24%, transparent);
+    transition-duration:var(--t-1);
+  }
   .btn.v-inner:active{
     box-shadow:inset 0 0 18px 0 rgba(255,255,255,.30);
     transition-duration:var(--t-1);
@@ -6937,7 +7123,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // and on the way into Framer they get prefixed, because `.btn` and `.lbl`
     // are generic enough to collide with whatever else is on the target site.
     var HOUSE = {btn:1, 'btn--solid':1, 'btn--line':1, 'btn--text':1, lbl:1, icon:1, sr:1,
-                 slot:1, track:1};
+                 slot:1, track:1,
+                 // The one-frame switch guard. It is never on a button when a
+                 // copy is taken — the swap releases it synchronously — but a
+                 // key that could collect .bhl-swap's !important rules is not
+                 // something to leave to timing.
+                 'bhl-swap':1};
     var HOUSE_RE = /\.(btn--solid|btn--line|btn--text|btn|lbl|icon|sr|slot|track)(?![\w-])/g;
     var PREFIX = 'bhl-';
     var ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 6.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1.5"/></svg>';
@@ -7844,6 +8035,254 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
 });
 </script>
+<script>
+  /* ============ The version switch ============
+     Three surface treatments and one label length, per study and page-wide.
+
+     The whole thing is a CLASS SWAP, and that is not a shortcut — .btn--solid,
+     .btn--line and .btn--text were on this page before any of it, and the copy
+     machinery already knew them by name in VARIANTS. So the CSS copy hands you
+     the version you are looking at without being told, because parts() clones
+     the LIVE button and baseMatcher keeps whichever treatment class it finds on
+     it. Nothing in the extractor needed a line for this.
+
+     Two axes and not four positions. Length is orthogonal to treatment: a long
+     label on an OUTLINE is where these mechanisms break — a marquee measures a
+     different overflow, tracking has a different measure to absorb, a row that
+     conserves its width has different arithmetic — and a flat four-position
+     control can only ever show a long label on the version the study happens to
+     ship in.
+
+     A study opts in by declaring data-versions on its <article>. Until it does
+     it renders no control and ignores the toolbar, which is what keeps this
+     honest while the remaining families are still being worked through: a card
+     with no control has not been checked in that version, rather than having
+     been checked and found not to need one. */
+  (function(){
+    // One long label for the whole page, so two studies stay comparable — the
+    // same argument that has cards 01 and 02 sharing «See the plan». A study
+    // whose own label length IS the effect overrides it with data-long.
+    var LONG  = 'Download the full specification';
+    // «built» is the fourth position and carries no class: it is what a study
+    // that supplies its own surface — knurling, frost, a bevel — already is.
+    var CLS   = {built:'', fill:'btn--solid', outline:'btn--line', link:'btn--text'};
+    var LABEL = {built:'As built', fill:'Fill', outline:'Outline', link:'Link'};
+    var ORDER = ['built','fill','outline','link'];
+    var ALL   = ['btn--solid','btn--line','btn--text'];
+
+    var root  = document.documentElement;
+    var cards = [];
+
+    function nativeOf(btn){
+      if (btn.classList.contains('btn--solid')) return 'fill';
+      if (btn.classList.contains('btn--line'))  return 'outline';
+      if (btn.classList.contains('btn--text'))  return 'link';
+      return 'built';
+    }
+
+    /* The label nodes of one button, most explicit first. data-label is what a
+       study marks when its label is not a .lbl — a plate, a duplicated copy
+       held to keep the width, a row carrying the text itself. The text-node
+       fallback takes DIRECT children only, so an icon's title is never
+       rewritten and a per-character card never has its spans flattened. */
+    function labelNodes(btn){
+      var n = btn.querySelectorAll('[data-label]');
+      if (n.length) return [].slice.call(n);
+      n = btn.querySelectorAll('.lbl');
+      if (n.length) return [].slice.call(n);
+      return [].filter.call(btn.childNodes, function(x){
+        return x.nodeType === 3 && x.textContent.trim();
+      });
+    }
+
+    /* One frame with transitions and idle loops off. Without it every switch
+       fires the effect it is switching — card 04 blooms, card 06 restarts its
+       breath — and the page would read as though pressing Outline were a hover.
+       The reflow between is what makes the guard land; rAF releases it. */
+    function still(btns, mutate){
+      btns.forEach(function(b){ b.classList.add('bhl-swap'); });
+      mutate();
+      btns.forEach(function(b){ void b.offsetWidth; });
+      requestAnimationFrame(function(){
+        btns.forEach(function(b){ b.classList.remove('bhl-swap'); });
+      });
+    }
+
+    function apply(c){
+      var want = c.local || root.dataset.vTreat || '';
+      var eff  = (want && c.set[want]) ? want : c.nat;
+      var lng  = c.longOK && (c.longLocal != null ? c.longLocal
+                                                  : root.dataset.vLong === '1');
+
+      still(c.btns, function(){
+        c.btns.forEach(function(b){
+          b.classList.remove(ALL[0], ALL[1], ALL[2]);
+          if (CLS[eff]) b.classList.add(CLS[eff]);
+        });
+        c.labels.forEach(function(rec){
+          var txt = lng ? (rec.btn.dataset.long || LONG) : rec.short;
+          if (rec.node.nodeType === 3) rec.node.textContent = txt;
+          else rec.node.textContent = txt;
+        });
+      });
+      // A study that measures its own label re-measures here rather than
+      // guessing. Nothing in family A listens yet; the marquee and the
+      // tracking cards will.
+      c.btns.forEach(function(b){
+        b.dispatchEvent(new CustomEvent('bhl:label', {bubbles:true}));
+      });
+
+      if (c.radios) c.radios.forEach(function(r){
+        var on = r.dataset.v === eff;
+        r.setAttribute('aria-checked', on ? 'true' : 'false');
+        r.tabIndex = on ? 0 : -1;
+      });
+      if (c.longBtn) c.longBtn.setAttribute('aria-pressed', lng ? 'true' : 'false');
+    }
+
+    /* Roving tabindex, which is what a radiogroup owes the keyboard: one stop
+       for the group, arrows to move within it. Four buttons each taking a Tab
+       would put twenty-four stops between one card and the next. */
+    function arrows(group, list, pick){
+      group.addEventListener('keydown', function(e){
+        var i = list.indexOf(document.activeElement);
+        if (i === -1) return;
+        var d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ?  1
+              : e.key === 'ArrowLeft'  || e.key === 'ArrowUp'   ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        var next = list[(i + d + list.length) % list.length];
+        next.focus();
+        pick(next);
+      });
+    }
+
+    document.querySelectorAll('.spec[data-versions]').forEach(function(card){
+      var rootEl = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
+      if (!rootEl) return;
+      var btns = rootEl.classList.contains('btn')
+        ? [rootEl] : [].slice.call(rootEl.querySelectorAll('.btn'));
+      if (!btns.length) return;
+
+      var nat = nativeOf(btns[0]);
+      var set = {}; set[nat] = 1;
+      (card.dataset.versions || '').trim().split(/\s+/).forEach(function(v){
+        if (CLS[v] !== undefined) set[v] = 1;
+      });
+      var avail  = ORDER.filter(function(v){ return set[v]; });
+      var longOK = !card.hasAttribute('data-nolong');
+      if (avail.length < 2 && !longOK) return;
+
+      var labels = [];
+      btns.forEach(function(b){
+        labelNodes(b).forEach(function(node){
+          labels.push({btn: b, node: node, short: node.textContent});
+        });
+      });
+
+      var num  = (card.querySelector('.num') || {textContent:''}).textContent.trim();
+      var name = (card.querySelector('h3') || {textContent:''}).textContent
+                   .replace(num, '').trim();
+
+      var c = {card:card, btns:btns, labels:labels, nat:nat, set:set,
+               avail:avail, longOK:longOK, local:null, longLocal:null,
+               radios:null, longBtn:null};
+
+      var bar = document.createElement('div');
+      bar.className = 'vers';
+
+      if (avail.length > 1){
+        var seg = document.createElement('div');
+        seg.className = 'vers-seg';
+        seg.setAttribute('role', 'radiogroup');
+        seg.setAttribute('aria-label', 'Version of “' + name + '”');
+        c.radios = avail.map(function(v){
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'vers-b';
+          b.setAttribute('role', 'radio');
+          b.dataset.v = v;
+          b.textContent = LABEL[v];
+          b.addEventListener('click', function(){ c.local = v; apply(c); });
+          seg.appendChild(b);
+          return b;
+        });
+        arrows(seg, c.radios, function(b){ c.local = b.dataset.v; apply(c); });
+        bar.appendChild(seg);
+      }
+
+      if (longOK){
+        var lb = document.createElement('button');
+        lb.type = 'button';
+        lb.className = 'vers-b vers-long';
+        lb.textContent = 'Long';
+        lb.setAttribute('aria-pressed', 'false');
+        lb.setAttribute('aria-label', 'Long label on “' + name + '”');
+        lb.addEventListener('click', function(){
+          c.longLocal = lb.getAttribute('aria-pressed') !== 'true';
+          apply(c);
+        });
+        c.longBtn = lb;
+        bar.appendChild(lb);
+      }
+
+      card.querySelector('.stage').appendChild(bar);
+      cards.push(c);
+      apply(c);
+    });
+
+    /* ---- The toolbar's copy of the same control ------------------------
+       Choosing a version page-wide CLEARS every local override, so the page
+       visibly does what was asked rather than leaving a handful of cards
+       silently disagreeing with the control that was just pressed. A per-card
+       press after that overrides again, for that card. */
+    var read = document.querySelector('[data-read="versions"]');
+    var tTreat = document.getElementById('v-treat');
+    var tLong  = document.getElementById('v-long');
+    var total  = document.querySelectorAll('.spec').length;
+
+    function tell(){
+      if (!read) return;
+      var want = root.dataset.vTreat || '';
+      var n = want
+        ? cards.filter(function(c){ return c.set[want]; }).length
+        : cards.length;
+      read.textContent = n + ' of ' + total + ' follow';
+    }
+    function global(){
+      cards.forEach(function(c){ c.local = null; c.longLocal = null; apply(c); });
+      tell();
+    }
+
+    if (tTreat){
+      var tr = [].slice.call(tTreat.querySelectorAll('.vers-b'));
+      function pickTreat(b){
+        root.dataset.vTreat = b.dataset.v;
+        tr.forEach(function(x){
+          var on = x === b;
+          x.setAttribute('aria-checked', on ? 'true' : 'false');
+          x.tabIndex = on ? 0 : -1;
+        });
+        global();
+      }
+      tr.forEach(function(b){
+        b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1;
+        b.addEventListener('click', function(){ pickTreat(b); });
+      });
+      arrows(tTreat, tr, pickTreat);
+    }
+    if (tLong){
+      tLong.addEventListener('click', function(){
+        var on = tLong.getAttribute('aria-pressed') !== 'true';
+        tLong.setAttribute('aria-pressed', on ? 'true' : 'false');
+        root.dataset.vLong = on ? '1' : '0';
+        global();
+      });
+    }
+    tell();
+  })();
+</script>
+
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-urls">{"07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","12":"https://framer.com/m/DotBecomesArrow-78XLOF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/TheSecondLine-0blJk6.js","17":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","18":"https://framer.com/m/TheCaret-wBPSsy.js","19":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/TheLantern-JhIelK.js","34":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","39":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","43":"https://framer.com/m/TheKey-SCe6ZA.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/TheLineGauge-h9qIsP.js","47":"https://framer.com/m/TheDataPlate-xAARQs.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","55":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/TheRealUnderline-wBkGEc.js","58":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","60":"https://framer.com/m/TheOthersRecede-uWvqi9.js","61":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/ThePair-XMHcLD.js","65":"https://framer.com/m/TheDividerYields-BQHpVA.js","66":"https://framer.com/m/ThePiecesPart-ySk8HW.js","68":"https://framer.com/m/TheyTradeFill-OyLZbP.js","69":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","70":"https://framer.com/m/TheMarkHinges-RXuV8I.js","71":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","72":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","73":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","74":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/TheWave-vZigVg.js","77":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","78":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","79":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","83":"https://framer.com/m/ItGoesToWork-UWy42D.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/NothingButThePress-sHz8KT.js","87":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","88":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","89":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","90":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","93":"https://framer.com/m/ThePiecesJoin-sc1diW.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js"}</script>
