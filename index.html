@@ -6593,6 +6593,141 @@ document.addEventListener("DOMContentLoaded", function () {
           return ' ' + name.replace(/-([a-z])/g, function(_, c){ return c.toUpperCase(); }) + '=';
         });
     }
+    // ---- the three places the pasted component wants the opposite of the page ----
+    //
+    // A selector list, split at top-level commas only: :is(), :has() and :not()
+    // all carry commas of their own and must not be cut open.
+    function splitList(sel){
+      var out = [], depth = 0, buf = '';
+      for (var i = 0; i < sel.length; i++){
+        var c = sel.charAt(i);
+        if (c === '(') depth++;
+        else if (c === ')') depth--;
+        if (c === ',' && depth === 0){ out.push(buf); buf = ''; continue; }
+        buf += c;
+      }
+      if (buf.trim()) out.push(buf);
+      return out;
+    }
+    // A branch that matches ONLY while hovering. :hover has to survive having
+    // every :not(...) stripped out first, because the two are opposite claims:
+    // `.i:not(:hover)` is a REST rule and gating it would strip the rest state
+    // on touch, while `.row:has(.btn:hover) .i:not(:hover)` is the siblings of
+    // the hovered one and belongs behind the gate with the rest of that effect.
+    function isHoverBranch(sel){
+      return /:hover/.test(sel.replace(/:not\((?:[^()]|\([^()]*\))*\)/g, ''));
+    }
+    // The page deliberately leaves :hover ungated so that a tap shows the effect
+    // on a phone — the footer says so, and for a gallery you thumb through that
+    // is the right call. A component pasted into a real site wants the opposite:
+    // on a touch device :hover LATCHES after a tap and stays until you tap
+    // something else, so the button sits in its hover state on a page it was
+    // meant to be pressed on. The Framer copy therefore puts every hover branch
+    // behind (hover: hover) and (pointer: fine) — and, crucially, leaves the
+    // :focus-visible branch of the same rule outside it, so the keyboard keeps
+    // everything the pointer just lost. Splitting the rule is the whole job:
+    // gating `.x:hover, .x:focus-visible` wholesale would take the focus state
+    // out on touch too, which is the accessibility bug this avoids.
+    // :is(:hover, :focus-visible) states both halves in ONE selector, so gating
+    // that selector would take the focus half with it — the exact bug the split
+    // exists to avoid. Expand such a group into one selector per member. The
+    // :is() wrapper is kept even when it is left holding a single member,
+    // because :is() takes the specificity of its most specific argument and
+    // unwrapping it would quietly change the cascade.
+    function expandIs(sel){
+      var m = /:(is|where)\(((?:[^()]|\([^()]*\))*)\)/.exec(sel);
+      if (!m) return [sel];
+      var members = splitList(m[2]);
+      var mixed = members.length > 1 &&
+        members.some(function(x){ return /:hover/.test(x); }) &&
+        members.some(function(x){ return !/:hover/.test(x); });
+      if (!mixed) return [sel];
+      var out = [];
+      members.forEach(function(one){
+        out = out.concat(expandIs(
+          sel.slice(0, m.index) + ':' + m[1] + '(' + one.trim() + ')' + sel.slice(m.index + m[0].length)));
+      });
+      return out;
+    }
+    // Every style rule in a block, cut into the half that matches at rest and
+    // the half that matches only under the pointer. Either can come back empty.
+    function splitRules(css){
+      var rest = '', hov = '', i = 0;
+      while (true){
+        var open = css.indexOf('{', i);
+        if (open === -1) break;
+        var depth = 0, j = open;
+        for (; j < css.length; j++){
+          if (css.charAt(j) === '{') depth++;
+          else if (css.charAt(j) === '}'){ depth--; if (depth === 0) break; }
+        }
+        if (j >= css.length) break;
+        var sel = css.slice(i, open).replace(/\/\*[\s\S]*?\*\//g, '').trim();
+        var inner = css.slice(open + 1, j), h = [], r = [];
+        splitList(sel).forEach(function(one){
+          expandIs(one).forEach(function(v){ (isHoverBranch(v) ? h : r).push(v.trim()); });
+        });
+        if (r.length) rest += r.join(',') + '{' + inner + '}\n';
+        if (h.length) hov += h.join(',') + '{' + inner + '}\n';
+        i = j + 1;
+      }
+      return { rest: rest.trim(), hov: hov.trim() };
+    }
+    function gateHover(css){
+      var GATE = '@media (hover: hover) and (pointer: fine)';
+      var out = '', i = 0;
+      while (true){
+        var open = css.indexOf('{', i);
+        if (open === -1){ out += css.slice(i); break; }
+        var depth = 0, j = open;
+        for (; j < css.length; j++){
+          if (css.charAt(j) === '{') depth++;
+          else if (css.charAt(j) === '}'){ depth--; if (depth === 0) break; }
+        }
+        if (j >= css.length){ out += css.slice(i); break; }
+        var prelude = css.slice(i, open), inner = css.slice(open + 1, j);
+        var cm = prelude.match(/^[\s\S]*\*\//);
+        var head = cm ? cm[0] : '', selRaw = prelude.slice(head.length);
+        var lead = selRaw.match(/^\s*/)[0], sel = selRaw.trim(), bits = [];
+        if (/^@(media|supports|layer|container)/.test(sel)){
+          out += prelude + '{' + gateHover(inner) + '}';
+        } else if (/^@starting-style/.test(sel)){
+          // The gate goes OUTSIDE this one. A conditional group nested inside
+          // @starting-style is legal, but @starting-style inside @media is the
+          // older spelling of the same thing and the one that is safe to ship.
+          var s = splitRules(inner);
+          if (s.rest) bits.push(sel + '{\n' + s.rest + '\n}');
+          if (s.hov) bits.push(GATE + '{' + sel + '{\n' + s.hov + '\n}}');
+          out += head + lead + bits.join('\n' + lead);
+        } else if (sel.charAt(0) === '@'){
+          out += prelude + '{' + inner + '}';           // @keyframes, @property
+        } else {
+          var t = splitRules(selRaw + '{' + inner + '}');
+          if (!t.hov){ out += prelude + '{' + inner + '}'; }
+          else {
+            if (t.rest) bits.push(t.rest);
+            bits.push(GATE + '{' + t.hov + '}');
+            out += head + lead + bits.join('\n' + lead);
+          }
+        }
+        i = j + 1;
+      }
+      return out;
+    }
+    // Every token the component reads becomes an override point: the page's own
+    // value stays as the fallback, so a paste looks identical out of the box,
+    // and setting --bhl-<name> anywhere above the component — the Framer page,
+    // body, a wrapper — retargets it at the host project's tokens without
+    // opening this file. Colours and the timing ladder both go through it, which
+    // is the point: no hex and no duration in here is a dead end. It also keeps
+    // the promise the AA clamp needs — the default that ships is the clamped one,
+    // and a project that overrides it is choosing its own value knowingly.
+    function overridable(decls){
+      return decls.replace(/(--[\w-]+)\s*:\s*([^;]+);/g, function(_, name, val){
+        return name + ':var(--' + PREFIX + name.slice(2) + ', ' + val.trim() + ');';
+      });
+    }
+
     function indent(s, pad, skipFirst){
       return s.split('\n').map(function(l, i){
         return (skipFirst && !i) || !l ? l : pad + l;
@@ -6617,19 +6752,23 @@ document.addEventListener("DOMContentLoaded", function () {
         '@media (prefers-reduced-motion: reduce){\n' +
         '  .' + cls + ',.' + cls + ' *,.' + cls + ' *::before,.' + cls + ' *::after{\n' +
         '    transition-duration:.01ms !important; animation-duration:.01ms !important}\n' +
-        '}';
+        '}\n' +
+        '/* the plate renders as <a> the moment a Link is set; the page never has one. */\n' +
+        '/* One declaration only — an element-qualified rule outranks the class rules */\n' +
+        '/* it sits beside, and a shorthand here would take their transitions with it. */\n' +
+        'a.' + PREFIX + 'btn{text-decoration:none}';
 
       var css = [preamble];
       var allTokens = p.tokens.concat(p.bodyTokens);
       if (allTokens.length) css.push(block('tokens, scoped to this component') +
-        allTokens.map(function(t){ return wrap(t.cond, scopeRoot(t.sel, cls) + '{' + t.decls + '}'); }).join('\n'));
+        allTokens.map(function(t){ return wrap(t.cond, scopeRoot(t.sel, cls) + '{' + overridable(t.decls) + '}'); }).join('\n'));
       // These come last so an alias declared above resolves against them.
       if (p.external) css.push(block('tokens resolved from a sheet this page cannot enumerate') +
-        '.' + cls + '{' + p.external + '}');
+        '.' + cls + '{' + overridable(p.external) + '}');
       if (p.base.length) css.push(block('button base') + p.base.join('\n'));
       if (p.ats.length)  css.push(block('registered properties / keyframes') + p.ats.join('\n'));
       css.push(block('the effect') + p.effectCss);
-      var cssText = tpl(css.join('\n').replace(HOUSE_RE, '.' + PREFIX + '$1'));
+      var cssText = tpl(gateHover(css.join('\n')).replace(HOUSE_RE, '.' + PREFIX + '$1'));
 
       // On the page these sit in no form. In Framer they might, and a
       // type-less button submits it.
@@ -6654,6 +6793,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (swapped === markup) label = ''; else markup = swapped;
       }
 
+      // A button that cannot go anywhere is half a component, and every one of
+      // these ends up as a CTA. Where the card is a single button the root
+      // element becomes an <a> the moment a Link is set and stays a <button>
+      // otherwise — one element either way, so the effect's CSS, which is all
+      // class-based, cannot tell the difference. A row of buttons keeps its
+      // markup for the same reason it keeps its labels: they are not one control.
+      var link = !p.multi && (markup.match(/<button/g) || []).length === 1;
+      if (link){
+        markup = markup.replace(/<button\s+type="button"/, '<Tag {...tagProps}')
+                       .replace(/<\/button>/, '</Tag>');
+      }
+
       var head = [];
       if (p.js) head.push('// @ts-nocheck — this file vendors the page’s own init script,',
                           '// which is browser JS rather than TypeScript. The component itself is typed.');
@@ -6671,6 +6822,22 @@ document.addEventListener("DOMContentLoaded", function () {
       if (p.tokens.concat(p.bodyTokens).some(function(t){ return /prefers-color-scheme/.test(t.cond); })){
         head.push(' * Dark values follow the visitor’s system setting.');
       }
+      head.push(' *');
+      head.push(' * Every token below is written as var(--' + PREFIX + 'name, <the page value>), so');
+      head.push(' * the paste looks like the demo on arrival and one declaration higher up');
+      head.push(' * the tree — on the page, on body, on a wrapper — retargets it at your own');
+      head.push(' * colours or your own timings. Nothing in here is a dead end.');
+      head.push(' *');
+      head.push(' * Hover is behind (hover: hover) and (pointer: fine); the :focus-visible');
+      head.push(' * half of each rule is not, so the keyboard keeps what touch gives up.');
+      head.push(' * The gallery does the opposite on purpose — a tap has to show the effect');
+      head.push(' * there — which is why this differs from the CSS copy of the same card.');
+      if (link){
+        head.push(' *');
+        head.push(' * Set Link and the button renders as an anchor; leave it empty and it stays');
+        head.push(' * a <button type="button">.');
+      }
+      head.push(' *');
       head.push(' * The face arrives as a resolved stack under --font-ui in the CSS below,');
       head.push(' * so it stands up on its own — add the real webfont to the Framer project');
       head.push(' * for the intended face, or change the token to your own.');
@@ -6698,19 +6865,85 @@ document.addEventListener("DOMContentLoaded", function () {
 
       var imports = [];
       imports.push('import type { CSSProperties } from "react"');
-      if (p.js) imports.push('import { useEffect, useRef } from "react"');
-      if (label) imports.push('import { addPropertyControls, ControlType } from "framer"');
+      imports.push('import { useEffect, useState' + (p.js ? ', useRef' : '') + ' } from "react"');
+      if (label || link) imports.push('import { addPropertyControls, ControlType } from "framer"');
 
       var body = [];
-      body.push('export default function ' + comp + '(' +
-        (label ? '{ label = ' + JSON.stringify(label) + ', style }' : '{ style }') +
-        ': { ' + (label ? 'label?: string; ' : '') + 'style?: CSSProperties }) {');
+      var args = [], types = [];
+      if (label){ args.push('label = ' + JSON.stringify(label)); types.push('label?: string'); }
+      if (link){ args.push('href', 'newTab = false'); types.push('href?: string', 'newTab?: boolean'); }
+      args.push('style'); types.push('style?: CSSProperties');
+      body.push('export default function ' + comp + '({ ' + args.join(', ') + ' }: { ' +
+        types.join('; ') + ' }) {');
+      if (link){
+        body.push('    const Tag: any = href ? "a" : "button"');
+        body.push('    const tagProps: any = href');
+        body.push('        ? { href, target: newTab ? "_blank" : undefined, rel: newTab ? "noreferrer" : undefined }');
+        body.push('        : { type: "button" }');
+      }
+      // One stylesheet per component rather than per instance. It renders inline
+      // for the first paint — server-rendered HTML has no effect to run, and a
+      // button that arrives unstyled for a frame is worse than any of this — then
+      // moves into <head> on mount, so ten of these on a page parse the CSS once
+      // between them instead of ten times. Ref-counted on the tag itself, so the
+      // last instance to leave takes it and a remount finds it already there.
+      body.push('    const [hoisted, setHoisted] = useState(false)');
+      body.push('    useEffect(() => {');
+      body.push('        const find = () => document.head.querySelector<HTMLStyleElement>(');
+      body.push('            \'style[data-bhl="\' + SHEET + \'"]\')');
+      body.push('        let tag = find()');
+      body.push('        if (!tag) {');
+      body.push('            tag = document.createElement("style")');
+      body.push('            tag.setAttribute("data-bhl", SHEET)');
+      body.push('            tag.textContent = CSS');
+      body.push('            document.head.appendChild(tag)');
+      body.push('        }');
+      body.push('        tag.dataset.n = String((Number(tag.dataset.n) || 0) + 1)');
+      body.push('        setHoisted(true)');
+      body.push('        return () => {');
+      body.push('            const t = find()');
+      body.push('            if (!t) return');
+      body.push('            const left = (Number(t.dataset.n) || 1) - 1');
+      body.push('            if (left > 0) t.dataset.n = String(left)');
+      body.push('            else t.remove()');
+      body.push('        }');
+      body.push('    }, [])');
       if (p.js){
         body.push('    const root = useRef<HTMLDivElement | null>(null)');
         body.push('    useEffect(() => {');
         body.push('        const el = root.current');
         body.push('        if (!el || el.dataset.bhlReady) return');
         body.push('        el.dataset.bhlReady = "1"');
+        body.push('        // Teardown. The vendored init calls addEventListener,');
+        body.push('        // requestAnimationFrame and setTimeout bare, which on the page means');
+        body.push('        // window\u2019s and for ever — correct for a document that never');
+        body.push('        // unmounts, wrong here, where the Framer canvas re-mounts on every');
+        body.push('        // edit and each mount would leave another global listener behind.');
+        body.push('        // Shadowing the three in this scope keeps their behaviour exactly and');
+        body.push('        // records what has to be undone; member calls (el.addEventListener)');
+        body.push('        // are untouched and die with the element as they always did.');
+        body.push('        const bin: Array<() => void> = []');
+        body.push('        const addEventListener = (t: string, fn: any, o?: any) => {');
+        body.push('            window.addEventListener(t, fn, o)');
+        body.push('            bin.push(() => window.removeEventListener(t, fn, o))');
+        body.push('        }');
+        body.push('        const rafs = new Set<number>()');
+        body.push('        const requestAnimationFrame = (fn: FrameRequestCallback) => {');
+        body.push('            const id = window.requestAnimationFrame((t) => { rafs.delete(id); fn(t) })');
+        body.push('            rafs.add(id)');
+        body.push('            return id');
+        body.push('        }');
+        body.push('        const cancelAnimationFrame = (id: number) => {');
+        body.push('            rafs.delete(id)');
+        body.push('            window.cancelAnimationFrame(id)');
+        body.push('        }');
+        body.push('        const timers = new Set<number>()');
+        body.push('        const setTimeout = (fn: any, ms?: number) => {');
+        body.push('            const id = window.setTimeout(() => { timers.delete(id); fn() }, ms)');
+        body.push('            timers.add(id)');
+        body.push('            return id');
+        body.push('        }');
+        body.push('        const clearTimeout = (id: number) => { timers.delete(id); window.clearTimeout(id) }');
         body.push('        // Scoped to this instance, so two of them on one page never bind');
         body.push('        // each other’s nodes, and a canvas re-mount cannot bind twice.');
         body.push('        const scope = {');
@@ -6726,6 +6959,15 @@ document.addEventListener("DOMContentLoaded", function () {
         body.push('        };');
         body.push(indent(p.js.replace(/document\.querySelectorAll\(/g, 'scope.querySelectorAll(')
                              .replace(/document\.querySelector\(/g, 'scope.querySelector('), '        '));
+        // The ready flag has to go with everything else. React re-mounts the same
+        // element in development, and a flag that outlived its own teardown would
+        // make the second mount return early with nothing bound.
+        body.push('        return () => {');
+        body.push('            bin.forEach(function(off){ off() })');
+        body.push('            rafs.forEach(function(id){ window.cancelAnimationFrame(id) })');
+        body.push('            timers.forEach(function(id){ window.clearTimeout(id) })');
+        body.push('            delete el.dataset.bhlReady');
+        body.push('        }');
         body.push('    }, [])');
       }
       body.push('    return (');
@@ -6743,21 +6985,29 @@ document.addEventListener("DOMContentLoaded", function () {
       body.push('        <div' + (p.js ? ' ref={root}' : '') +
                 ' className="' + [cls].concat(p.wrapKeys).join(' ') +
                 '" style={{ ' + box + '...style }}>');
-      body.push('            <style>{CSS}</style>');
+      body.push('            {!hoisted && <style>{CSS}</style>}');
       body.push('            ' + indent(markup, '            ', true));
       body.push('        </div>');
       body.push('    )');
       body.push('}');
-      if (label){
+      if (label || link){
         body.push('');
         body.push('addPropertyControls(' + comp + ', {');
-        body.push('    label: { type: ControlType.String, title: "Label", defaultValue: ' +
-                  JSON.stringify(label) + ' },');
+        if (label){
+          body.push('    label: { type: ControlType.String, title: "Label", defaultValue: ' +
+                    JSON.stringify(label) + ' },');
+        }
+        if (link){
+          body.push('    href: { type: ControlType.Link, title: "Link" },');
+          body.push('    newTab: { type: ControlType.Boolean, title: "New tab", defaultValue: false,');
+          body.push('        hidden: (p: any) => !p.href },');
+        }
         body.push('})');
       }
 
       var file = [head.join('\n'), ''];
       if (imports.length) file.push(imports.join('\n'), '');
+      file.push('const SHEET = ' + JSON.stringify(cls), '');
       file.push('const CSS = `\n' + cssText.replace(/^\n+/, '') + '\n`', '');
       file.push('/**');
       file.push(' * @framerSupportedLayoutWidth ' + (p.multi ? 'any-prefer-fixed' : 'auto'));

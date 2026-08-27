@@ -156,16 +156,43 @@ extraction has to make up the difference:
 - The colour tokens are **scoped to the component**, not to `:root`, and the shared classes
   are prefixed `bhl-`. Nothing a pasted component brings with it restyles the rest of the
   site. Tokens that live in a stylesheet the page cannot enumerate are resolved off the root
-  and labelled as such, so an alias chain still arrives with a value.
+  and labelled as such, so an alias chain still arrives with a value. Each one is written
+  as `var(--bhl-<name>, <the page's value>)`, so the paste looks like the demo on arrival
+  and one declaration higher up the tree retargets it at your own colours — or, since the
+  timing ladder goes through the same treatment, at your own durations. Nothing in the
+  file is a dead end.
 - Two page-wide rules are **element selectors**, so the extractor cannot see them and writes
   them back by hand: the box model, and the `prefers-reduced-motion` fallback. Losing the
   second one silently would be the worst of the two.
+- **Hover is gated** behind `(hover: hover) and (pointer: fine)`, and the `:focus-visible`
+  half of each rule is deliberately left outside it. This is the one place the component
+  disagrees with the page on purpose: here a tap has to show the effect, because thumbing
+  through a gallery is the whole point; on a real site `:hover` latches after a tap and
+  leaves the button sitting in its hover state until you press something else. Rules that
+  state both conditions at once are split rather than gated wholesale, so the keyboard
+  keeps everything the pointer gives up.
 - The label becomes a **property control**, except where the effect duplicates it across
   layers to hold its width — there a single control would change one copy and not the other,
   so the labels stay in the markup and the file's header says so.
+- A single-button study also takes a **Link**. Set it and the plate renders as an `<a>`;
+  leave it empty and it stays a `<button type="button">`. It is one element either way, so
+  the effect — which is all class-based — cannot tell the difference. A row of buttons keeps
+  its markup, for the same reason it keeps its labels.
 - A section's init script moves into a `useEffect`, **scoped to the instance**, so two of them
   on one page never bind each other's nodes. Only that card's chunk comes along, unless the
   block shares state between cards, in which case it arrives whole.
+- That `useEffect` **returns a teardown**, which the page itself has no need of. Several
+  inits call `addEventListener`, `requestAnimationFrame` and `setTimeout` bare — on a
+  document that never unmounts, binding to `window` for ever is correct. A Framer canvas
+  re-mounts a component on every edit, so each mount would leave another global listener
+  behind. The three are shadowed inside the effect, which keeps their behaviour exactly and
+  records what has to be undone; member calls like `btn.addEventListener` are untouched and
+  still die with the element.
+- The stylesheet is **one per component, not one per instance**. It renders inline for the
+  first paint, because server-rendered markup has no effect to run and a button that arrives
+  unstyled for a frame is worse than anything this avoids, then moves into `<head>` on mount
+  under a key of its own. Ten of these on a page parse the CSS once between them; the last
+  one to leave takes it with it.
 - The face arrives as a resolved stack under `--font-ui`, so the component stands up on its
   own in system fonts. Add the real webfont to the Framer project for the intended face, or
   point the token at your own — a component cannot bring a webfont with it.
