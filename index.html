@@ -36,6 +36,10 @@
     --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
     --on-ink:var(--inverse-ink);
     --shadow-rgb:0,0,0;
+    /* The button radius, as one token the whole page reads. It is here in the
+       alias block rather than inline on .btn so the toolbar has one property to
+       write and the Copy buttons have one to resolve. */
+    --btn-r:999px;
     --mono:var(--font-mono);
     --e-quint:cubic-bezier(0.22,1,0.36,1);
     --e-out:cubic-bezier(0.33,1,0.68,1);
@@ -116,10 +120,10 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       sixty-four demo buttons was rendering in system-ui while the page around
+       sixty-eight demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
-    color:var(--ink); background:none; border:0; border-radius:999px;
+    color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
     padding:15px 28px; cursor:pointer;
     transition:transform var(--t-1) var(--e-out);
   }
@@ -292,6 +296,55 @@
   .seg-b:hover{color:var(--ink-mid)}
   .seg-b[aria-checked="true"]{background:var(--bg-3); color:var(--ink-hi)}
   .seg-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
+
+  /* ---- Global settings ------------------------------------------------
+     Two knobs that restyle all sixty-two studies at once. Both are written as
+     inline custom properties on the ROOT element, which is also where the Copy
+     buttons resolve their alias chains from — so a snippet copied after a
+     change carries what is on screen rather than the page's defaults. That is
+     the whole reason they are tokens and not a class.
+
+     The primary re-points --ink and --accent and nothing else. Every effect
+     reads its colour through those two, and no page chrome reads either, so
+     the tint stops at the stage edge and the toolbar stays graphite.
+
+     Radius is deliberately partial. Six studies fix or animate their own
+     corner — 09 Corners, 13 Draw, 14 Chamfer, 22 Diagonal radius, 23 Rule
+     becomes frame, and the text variant — and there the radius IS the effect,
+     so the setting leaves them where they are. The overlays inside every other
+     card already say border-radius:inherit, so they follow for free. */
+  .tools-sep{width:1px; align-self:stretch; min-height:26px;
+    background:var(--hairline); margin:0 -6px}
+  /* A native colour input, stripped back to the swatch. It is the only control
+     on the page that opens something the page does not draw, so it is worth
+     letting the OS own it rather than rebuilding a picker badly. */
+  .set-swatch{
+    width:28px; height:28px; padding:0; flex:none; cursor:pointer;
+    background:none; border:1px solid var(--line-ctl); border-radius:var(--r-sm);
+    transition:border-color var(--t-2) ease;
+  }
+  .set-swatch:hover{border-color:var(--ink-mid)}
+  .set-swatch:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .set-swatch::-webkit-color-swatch-wrapper{padding:2px}
+  .set-swatch::-webkit-color-swatch{border:0; border-radius:3px}
+  .set-swatch::-moz-color-swatch{border:0; border-radius:3px}
+  .set-range{
+    -webkit-appearance:none; appearance:none;
+    width:112px; height:20px; flex:none; background:none; cursor:pointer;
+  }
+  .set-range::-webkit-slider-runnable-track{height:3px; border-radius:2px; background:var(--bg-3)}
+  .set-range::-moz-range-track{height:3px; border-radius:2px; background:var(--bg-3)}
+  .set-range::-webkit-slider-thumb{-webkit-appearance:none; appearance:none;
+    width:14px; height:14px; margin-top:-5.5px; border:0; border-radius:50%;
+    background:var(--ink-hi)}
+  .set-range::-moz-range-thumb{width:14px; height:14px; border:0; border-radius:50%;
+    background:var(--ink-hi)}
+  .set-range:focus-visible{outline:2px solid var(--ink-low); outline-offset:3px}
+  /* Mono and tabular, and wide enough for the longest reading it can hold, so
+     dragging the slider does not shove the row around under the pointer. */
+  .set-read{font:400 11.5px/1 var(--mono); color:var(--ink-low);
+    font-variant-numeric:tabular-nums; min-width:7ch}
+  .set-read b{font-weight:400; color:var(--ink-mid); cursor:help}
   .fav-only{
     display:inline-flex; align-items:center; gap:7px;
     font:500 13.5px/1 var(--font-ui); color:var(--ink-mid);
@@ -318,6 +371,10 @@
     /* Each axis gets its own line WITH its label — two unlabelled «All»
        groups stacked on each other are a coin toss. */
     .tools-row{width:100%; justify-content:space-between}
+    /* A vertical rule between stacked full-width rows separates nothing. */
+    .tools-sep{display:none}
+    .set-range{flex:1; min-width:0; max-width:150px}
+    .set-swatch{margin-left:auto}
   }
 
   .spec .stage{position:relative}
@@ -393,7 +450,7 @@
     </div>
   </header>
 
-  <div class="tools" role="group" aria-label="Filter the studies">
+  <div class="tools" role="group" aria-label="Filter and restyle the studies">
     <div class="tools-row">
       <span class="tools-lbl" id="seg-lbl-ton">Intensity</span>
       <div class="seg" data-axis="ton" role="radiogroup" aria-labelledby="seg-lbl-ton">
@@ -409,6 +466,20 @@
         <button type="button" class="seg-b" role="radio" data-val="Variant" aria-checked="false" tabindex="-1">Variant</button>
         <button type="button" class="seg-b" role="radio" data-val="Code" aria-checked="false" tabindex="-1">Code</button>
       </div>
+    </div>
+    <span class="tools-sep" aria-hidden="true"></span>
+    <div class="tools-row">
+      <span class="tools-lbl">Primary</span>
+      <input class="set-swatch" type="color" value="#ffffff"
+             aria-label="Primary colour, applied to every study"
+             aria-describedby="set-contrast">
+      <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
+    </div>
+    <div class="tools-row">
+      <span class="tools-lbl">Radius</span>
+      <input class="set-range" type="range" min="0" max="28" step="1" value="28"
+             aria-label="Button corner radius, applied to every study">
+      <span class="set-read" data-read="radius"></span>
     </div>
     <div class="tools-row">
       <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
@@ -2999,7 +3070,8 @@
       countEl.textContent = shown === cards.length
         ? cards.length + ' studies'
         : shown + ' of ' + cards.length;
-      var filtered = state.ton !== 'all' || state.framer !== 'all' || state.fav;
+      var filtered = state.ton !== 'all' || state.framer !== 'all' || state.fav
+                  || look.colour || look.radius !== PILL;
       reset.hidden = !filtered;
     }
 
@@ -3017,6 +3089,133 @@
       state[seg.dataset.axis] = b.dataset.val;
       apply();
     }
+
+
+    // ---- Global settings: primary and radius ---------------------------
+    // Written as inline custom properties on the root element. That is not
+    // decoration: the Copy buttons resolve their alias chains against the
+    // computed root, so anything set here travels into the copied snippet and
+    // the page never hands out CSS that contradicts what is on screen.
+    var SET_KEY = 'knapplabbet-utseende';
+    var PILL    = 28;                       // the top of the slider IS the pill
+    var swatch  = tools.querySelector('.set-swatch');
+    var range   = tools.querySelector('.set-range');
+    var readC   = tools.querySelector('[data-read="colour"]');
+    var readR   = tools.querySelector('[data-read="radius"]');
+    var look    = {colour:'', radius:PILL};  // '' — the page's own monochrome
+
+    // The panel colour is read off a rendered card rather than off the --bg-1
+    // token, because the token arrives from a stylesheet this page does not own
+    // and may be authored in any colour syntax. getComputedStyle always hands
+    // back rgb(), whatever went in.
+    function rgbOf(el, prop){
+      var m = getComputedStyle(el)[prop].match(/[\d.]+/g);
+      return m ? [+m[0], +m[1], +m[2]] : [20, 20, 20];
+    }
+    var PANEL = rgbOf(cards[0], 'backgroundColor');
+    // White is the default primary, and it is graphite's white rather than
+    // #ffffff — the system ships --ink-hi at a shade under pure, because pure
+    // white on near-black glares. Measured off a rendered button instead of
+    // named here, so it stays correct if the ladder is ever retuned, and read
+    // BEFORE the first paint, while the root still carries no override.
+    var WHITE_RGB = rgbOf(document.querySelector('.btn'), 'color');
+    var WHITE     = toHex(WHITE_RGB);
+
+    function chan(c){ c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
+    function lum(c){ return .2126 * chan(c[0]) + .7152 * chan(c[1]) + .0722 * chan(c[2]); }
+    function ratio(a, b){
+      var x = lum(a), y = lum(b);
+      return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
+    }
+    function toRgb(hex){
+      hex = hex.replace('#', '');
+      return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)];
+    }
+    function toHex(c){
+      return '#' + c.map(function(v){ return ('0' + Math.round(v).toString(16)).slice(-2); }).join('');
+    }
+    function toHsl(c){
+      var r = c[0] / 255, g = c[1] / 255, b = c[2] / 255;
+      var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+      if (d){
+        if (mx === r)      h = ((g - b) / d + (g < b ? 6 : 0));
+        else if (mx === g) h = (b - r) / d + 2;
+        else               h = (r - g) / d + 4;
+        h *= 60;
+      }
+      var l = (mx + mn) / 2;
+      return [h, d ? d / (1 - Math.abs(2 * l - 1)) : 0, l];
+    }
+    function fromHsl(h, sa, l){
+      var c = (1 - Math.abs(2 * l - 1)) * sa, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+      var t = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x]
+            : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return [(t[0] + m) * 255, (t[1] + m) * 255, (t[2] + m) * 255];
+    }
+    // A dark-only page cannot take a dark accent: --ink colours label text as
+    // well as fills, so a navy primary would put nine cards' labels under AA on
+    // the panel. Hue and saturation are kept and lightness is walked up until
+    // the label clears 4.5:1 — at worst that lands on white, which is where the
+    // page started. The readout says when it moved, so the fit is never silent.
+    function fit(hex){
+      var hsl = toHsl(toRgb(hex)), rgb = toRgb(hex), moved = false;
+      while (ratio(rgb, PANEL) < 4.5 && hsl[2] < 1){
+        hsl[2] = Math.min(1, hsl[2] + .01);
+        rgb = fromHsl(hsl[0], hsl[1], hsl[2]);
+        moved = true;
+      }
+      return {rgb: rgb, hex: toHex(rgb), moved: moved, ratio: ratio(rgb, PANEL)};
+    }
+    // Text ON the primary. The fit above guarantees the primary is lighter than
+    // the panel, so this resolves to black in practice — it is computed anyway
+    // rather than assumed, because the guarantee lives in another function.
+    function onTop(rgb){
+      return ratio(rgb, [0, 0, 0]) >= ratio(rgb, [255, 255, 255]) ? '#000000' : '#ffffff';
+    }
+
+    function paint(){
+      var root = document.documentElement.style;
+      if (look.colour){
+        var f = fit(look.colour);
+        root.setProperty('--ink', f.hex);
+        root.setProperty('--accent', f.hex);
+        root.setProperty('--on-ink', onTop(f.rgb));
+        root.setProperty('--on-accent', onTop(f.rgb));
+        readC.innerHTML = f.ratio.toFixed(1) + ':1' + (f.moved ? ' <b>↑</b>' : '');
+        readC.title = f.moved
+          ? 'Lightened to ' + f.hex + ' so the label clears 4.5:1 on the panel. A dark page cannot carry a dark accent.'
+          : 'Label contrast on the panel.';
+      } else {
+        ['--ink', '--accent', '--on-ink', '--on-accent'].forEach(function(k){ root.removeProperty(k); });
+        swatch.value = WHITE;
+        readC.textContent = ratio(WHITE_RGB, PANEL).toFixed(1) + ':1';
+        readC.title = 'The default primary: ' + WHITE + ', graphite\u2019s white. '
+                    + 'It is left as an alias rather than written to the root, so a copied '
+                    + 'snippet still reads --ink-hi and follows the system it lands in.';
+      }
+      root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
+      readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
+      range.setAttribute('aria-valuetext', readR.textContent);
+    }
+    function saveLook(){
+      try { localStorage.setItem(SET_KEY, JSON.stringify(look)); } catch(e){}
+    }
+    try {
+      var stored = JSON.parse(localStorage.getItem(SET_KEY));
+      if (stored && typeof stored === 'object'){
+        if (typeof stored.colour === 'string' && /^#[0-9a-f]{6}$/i.test(stored.colour)) look.colour = stored.colour;
+        if (typeof stored.radius === 'number' && stored.radius >= 0 && stored.radius <= PILL) look.radius = stored.radius;
+      }
+    } catch(e){}
+    if (look.colour) swatch.value = look.colour;
+    range.value = look.radius;
+
+    swatch.addEventListener('input', function(){
+      look.colour = swatch.value; paint(); saveLook(); apply();
+    });
+    range.addEventListener('input', function(){
+      look.radius = +range.value; paint(); saveLook(); apply();
+    });
 
     tools.querySelectorAll('.seg').forEach(function(seg){
       seg.addEventListener('click', function(e){
@@ -3047,6 +3246,10 @@
 
     reset.addEventListener('click', function(){
       state = {ton:'all', framer:'all', fav:false};
+      look  = {colour:'', radius:PILL};
+      range.value  = PILL;
+      paint();
+      saveLook();
       tools.querySelectorAll('.seg').forEach(function(seg){
         seg.querySelectorAll('.seg-b').forEach(function(x){
           var on = x.dataset.val === 'all';
@@ -3058,6 +3261,7 @@
       apply();
     });
 
+    paint();
     apply();
   })();
 </script>
@@ -3276,13 +3480,23 @@
       // narrowed to the ones this card actually reads. There was a light and a
       // dark pair here before the graphite pass; there is one block now, and
       // this does not care how many there are.
+      // A :root rule holds what was AUTHORED, and the toolbar's primary and
+      // radius are written as inline custom properties on the root element,
+      // which no stylesheet rule can see. Reading the override back here is
+      // what keeps the promise at the top of this file: a snippet copied with
+      // a primary set carries that primary, not the default it replaced.
+      function rootVal(rule, prop){
+        return (document.documentElement.style.getPropertyValue(prop).trim()
+             || rule.style.getPropertyValue(prop).trim());
+      }
+
       var tokens = [];
       walk(function(r, cond){
         if (!r.selectorText || !/^:root/.test(r.selectorText.trim())) return;
         var decls = [];
         for (var i = 0; i < r.style.length; i++){
           var prop = r.style[i];
-          if (usedTokens[prop]) decls.push(prop + ':' + r.style.getPropertyValue(prop).trim() + ';');
+          if (usedTokens[prop]) decls.push(prop + ':' + rootVal(r, prop) + ';');
         }
         // Kept as parts, not as finished text: the CSS copy prints the
         // selector as authored, the Framer copy has to re-scope it.
@@ -3301,7 +3515,7 @@
         for (var i = 0; i < r.style.length; i++){
           var prop = r.style[i];
           if (bodyUsed[prop] && !usedTokens[prop]){
-            decls.push(prop + ':' + r.style.getPropertyValue(prop).trim() + ';');
+            decls.push(prop + ':' + rootVal(r, prop) + ';');
           }
         }
         if (decls.length) bodyTokens.push({cond: cond, sel: r.selectorText.trim(), decls: decls.join(' ')});
