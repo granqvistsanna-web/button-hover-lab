@@ -459,6 +459,158 @@
     *,*::before,*::after{transition-duration:.01ms !important; animation-duration:.01ms !important;
       transition-delay:0ms !important; animation-delay:0ms !important}
   }
+
+  /* ============ the rail ============
+     Ninety-five studies is past the point where a filter row can hold the
+     navigation as well. So the toolbar keeps only what RESTYLES the page —
+     primary and radius, the two things that rewrite every card and every
+     copied snippet — and everything that FINDS a card moved here: the search,
+     the two axes that were already there, the derived facets, the sections,
+     the count and the reset.
+
+     Nothing in this rail is authored twice. The facet names are fixed but
+     their membership and their counts are read off the live stylesheet at
+     load, the way the Copy buttons read it: a card is tagged «it moves»
+     because a rule of its own transitions a transform, not because someone
+     typed a chip. Add a card and it files itself.
+
+     One element, two shapes. At 1300px and up the wrap becomes a two-column
+     grid and this sits in column one, sticky, always open. Below that it is a
+     disclosure under the toolbar, closed until asked for, because a rail that
+     eats a third of a laptop screen is worse than a button. Same DOM either
+     way — a rail that rebuilt itself on resize would lose the filter you had
+     just set. */
+  .rail{
+    border:1px solid var(--hairline); border-radius:var(--r-md);
+    background:var(--bg-1); padding:16px 15px 14px;
+  }
+  /* :not([hidden]) on every display rule, not a bare .rail — the nav ships
+     with the hidden attribute and JS takes it off once the facets are built.
+     A bare .rail{display:block} in a media query outranks the UA's
+     [hidden]{display:none} and the empty shell flashes up before the script
+     has filled it. */
+  .rail-grp{margin-bottom:16px}
+  .rail-grp:last-of-type{margin-bottom:0}
+  .rail-lbl{display:block; margin-bottom:7px;
+    font:600 11px/1 var(--font-ui); letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-low)}
+  .rail-q{
+    width:100%; padding:8px 10px; border-radius:var(--r-sm);
+    border:1px solid var(--line-ctl); background:var(--bg-0);
+    color:var(--ink-hi); font:400 13.5px/1.2 var(--font-ui);
+  }
+  .rail-q::placeholder{color:var(--ink-faint)}
+  .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
+  /* The rail is a column, so the label sits above its control rather than
+     beside it. The rows keep their .tools-row class and their existing
+     wiring — only the axis turns. */
+  .rail .tools-row{flex-direction:column; align-items:stretch; gap:6px}
+  .rail .seg{width:100%}
+  .rail .seg-b{flex:1}
+  .rail-list{list-style:none; display:flex; flex-direction:column; gap:1px}
+  .rail-list label{
+    display:flex; align-items:center; gap:8px;
+    padding:5px 7px; border-radius:6px; cursor:pointer;
+    font:400 13px/1.3 var(--font-ui); color:var(--ink-mid);
+  }
+  .rail-list label:hover{background:var(--bg-2); color:var(--ink-hi)}
+  .rail-list input{
+    appearance:none; width:13px; height:13px; flex:none; margin:0;
+    border:1px solid var(--line-ctl); border-radius:3px; background:none;
+  }
+  .rail-list input:checked{background:var(--accent); border-color:var(--accent)}
+  /* The tick is drawn with a border rather than a glyph: at 13px a check
+     character sits off-centre in every face, and the two edges scale. */
+  .rail-list input:checked::after{
+    content:""; display:block; width:7px; height:3.5px; margin:1.5px 0 0 1px;
+    border-left:1.5px solid var(--on-accent); border-bottom:1.5px solid var(--on-accent);
+    transform:rotate(-45deg);
+  }
+  .rail-list input:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .rail-name{flex:1; min-width:0}
+  /* Tabular, because these are counts in a column and a proportional 1 makes
+     the column look bent. --ink-low and not --ink-faint: faint measures 2.8:1
+     on this panel, which is under AA, and the note at the top of the chip rules
+     already settled that a count is information rather than decoration. */
+  .rail-n{font:400 11px/1 var(--mono); color:var(--ink-low);
+    font-variant-numeric:tabular-nums}
+  .rail-list label:hover .rail-n{color:var(--ink-hi)}
+  /* A facet that can no longer match anything says so by going quiet, and
+     stays clickable — it is still how you turn it back off. */
+  .rail-list label[data-empty]{color:var(--ink-faint)}
+  .rail-sects{list-style:none; display:flex; flex-direction:column; gap:1px}
+  .rail-sects a{
+    display:flex; gap:8px; align-items:baseline;
+    padding:4px 7px; border-radius:6px;
+    font:400 12.5px/1.35 var(--font-ui); color:var(--ink-low);
+    text-decoration:none;
+  }
+  .rail-sects a:hover{background:var(--bg-2); color:var(--ink-hi)}
+  .rail-sects a:focus-visible{outline:2px solid var(--ink-low); outline-offset:-1px}
+  /* Where you are, stated once. aria-current carries it for a screen reader
+     and the same attribute does the styling, so the two cannot disagree. */
+  .rail-sects a[aria-current="true"]{color:var(--ink-hi); background:var(--bg-2)}
+  .rail-sects a[hidden]{display:none}
+  /* At the top, not the foot. The rail scrolls inside itself as soon as the
+     section list outgrows the viewport, and a count you have to scroll to is
+     no use at the moment you tick a box. */
+  .rail-top{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+    margin:12px 0 16px; padding-bottom:14px; border-bottom:1px solid var(--hairline)}
+  .rail-toggle{
+    display:inline-flex; align-items:center; gap:7px;
+    padding:7px 12px; border:1px solid var(--line-ctl); border-radius:var(--r-sm);
+    background:none; color:var(--ink-mid); cursor:pointer;
+    font:400 13px/1 var(--font-ui);
+  }
+  .rail-toggle:hover{background:var(--bg-3); color:var(--ink-hi)}
+  .rail-toggle:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .rail-toggle::after{content:"▾"; font-size:11px; color:var(--ink-low)}
+  .rail-toggle[aria-expanded="true"]::after{content:"▴"}
+  /* A jump has to clear the sticky toolbar, and the browser's own idea of the
+     top of a section is the top of its box. */
+  .sect{scroll-margin-top:120px}
+
+  /* 1360px, and the number is not arbitrary: 1352 of shell plus a hair, so the
+     centring arithmetic below is always valid. Under that the rail is the
+     disclosure instead, which is also why the breakpoint is generous — a
+     216px rail squeezed against a 1004px grid is worse than a button.
+
+     The rail is FIXED rather than a sticky grid item, and that is the second
+     attempt. As a grid item in row one it sized the row: the rail is taller
+     than the header, so the toolbar and every card started below the fold.
+     grid-row:1/-1 does not fix it either, because with no explicit rows -1
+     resolves back to line 1. Fixed takes the rail out of flow entirely, the
+     wrap just carries padding where it used to be, and nothing the rail does
+     can push the grid around. */
+  @media (min-width: 1360px){
+    .wrap{max-width:1352px; padding-left:292px}   /* 28 gutter + 216 rail + 48 gap */
+    .rail:not([hidden]){
+      display:block; position:fixed; top:22px; width:216px;
+      /* the wrap's own left edge, plus its gutter */
+      left:calc(50% - 676px + 28px);
+      max-height:calc(100vh - 44px); overflow-y:auto; overscroll-behavior:contain;
+    }
+    .rail-toggle{display:none}
+  }
+  @media (max-width: 1359px){
+    .rail:not([hidden]){display:none; margin-top:12px}
+    .rail:not([hidden])[data-open]{display:block}
+    /* As a panel it has the whole column to work with, so the lists flow into
+       as many columns as fit instead of running one item per row — eighteen
+       sections stacked is most of a phone screen, and the point of the
+       disclosure is that it costs a button. */
+    .rail[data-open] .rail-list,
+    .rail[data-open] .rail-sects{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+      gap:1px 16px;
+    }
+    .rail[data-open] .rail-grp{margin-bottom:18px}
+  }
+  /* Smooth only where it is wanted: a jump is a big travel and the clamp at
+     the foot of this stylesheet cannot reach scroll-behavior. */
+  @media (prefers-reduced-motion: no-preference){
+    html{scroll-behavior:smooth}
+  }
 </style>
 </head>
 <body>
@@ -476,24 +628,7 @@
     </div>
   </header>
 
-  <div class="tools" role="group" aria-label="Filter and restyle the studies">
-    <div class="tools-row">
-      <span class="tools-lbl" id="seg-lbl-ton">Intensity</span>
-      <div class="seg" data-axis="ton" role="radiogroup" aria-labelledby="seg-lbl-ton">
-        <button type="button" class="seg-b" role="radio" data-val="all" aria-checked="true" tabindex="0">All</button>
-        <button type="button" class="seg-b" role="radio" data-val="Subtle" aria-checked="false" tabindex="-1">Subtle</button>
-        <button type="button" class="seg-b" role="radio" data-val="Bold" aria-checked="false" tabindex="-1">Bold</button>
-      </div>
-    </div>
-    <div class="tools-row">
-      <span class="tools-lbl" id="seg-lbl-framer">In Framer</span>
-      <div class="seg" data-axis="framer" role="radiogroup" aria-labelledby="seg-lbl-framer">
-        <button type="button" class="seg-b" role="radio" data-val="all" aria-checked="true" tabindex="0">All</button>
-        <button type="button" class="seg-b" role="radio" data-val="Variant" aria-checked="false" tabindex="-1">Variant</button>
-        <button type="button" class="seg-b" role="radio" data-val="Code" aria-checked="false" tabindex="-1">Code</button>
-      </div>
-    </div>
-    <span class="tools-sep" aria-hidden="true"></span>
+  <div class="tools" role="group" aria-label="Restyle the studies">
     <div class="tools-row">
       <span class="tools-lbl">Primary</span>
       <input class="set-swatch" type="color" value="#ffffff"
@@ -508,11 +643,50 @@
       <span class="set-read" data-read="radius"></span>
     </div>
     <div class="tools-row">
+      <button type="button" class="rail-toggle" aria-expanded="false">Find &amp; filter</button>
+    </div>
+  </div>
+
+  <nav class="rail" id="rail" hidden aria-label="Find a study">
+    <div class="rail-grp">
+      <label class="rail-lbl" for="rail-q">Find</label>
+      <input class="rail-q" id="rail-q" type="search" autocomplete="off"
+             placeholder="name, word or number">
+    </div>
+    <div class="rail-top">
       <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
       <span class="tools-count" aria-live="polite"></span>
       <button type="button" class="tools-reset" hidden>Reset</button>
     </div>
-  </div>
+    <div class="tools-row rail-grp">
+      <span class="tools-lbl" id="seg-lbl-ton">Intensity</span>
+      <div class="seg" data-axis="ton" role="radiogroup" aria-labelledby="seg-lbl-ton">
+        <button type="button" class="seg-b" role="radio" data-val="all" aria-checked="true" tabindex="0">All</button>
+        <button type="button" class="seg-b" role="radio" data-val="Subtle" aria-checked="false" tabindex="-1">Subtle</button>
+        <button type="button" class="seg-b" role="radio" data-val="Bold" aria-checked="false" tabindex="-1">Bold</button>
+      </div>
+    </div>
+    <div class="tools-row rail-grp">
+      <span class="tools-lbl" id="seg-lbl-framer">In Framer</span>
+      <div class="seg" data-axis="framer" role="radiogroup" aria-labelledby="seg-lbl-framer">
+        <button type="button" class="seg-b" role="radio" data-val="all" aria-checked="true" tabindex="0">All</button>
+        <button type="button" class="seg-b" role="radio" data-val="Variant" aria-checked="false" tabindex="-1">Variant</button>
+        <button type="button" class="seg-b" role="radio" data-val="Code" aria-checked="false" tabindex="-1">Code</button>
+      </div>
+    </div>
+    <div class="rail-grp" data-facet="changes">
+      <span class="rail-lbl">What changes</span>
+      <ul class="rail-list"></ul>
+    </div>
+    <div class="rail-grp" data-facet="answers">
+      <span class="rail-lbl">Answers to</span>
+      <ul class="rail-list"></ul>
+    </div>
+    <div class="rail-grp">
+      <span class="rail-lbl">Sections</span>
+      <ul class="rail-sects"></ul>
+    </div>
+  </nav>
 
     <section class="sect">
     <h2>A — The fill tells you</h2>
@@ -4655,10 +4829,12 @@
     var tools = document.querySelector('.tools');
     if (!tools || !cards.length) return;
 
-    var countEl = tools.querySelector('.tools-count');
-    var favBtn  = tools.querySelector('.fav-only');
-    var reset   = tools.querySelector('.tools-reset');
-    var state   = {ton:'all', framer:'all', fav:false};
+    // These three moved into the rail, so they are looked up on the document
+    // rather than inside the toolbar.
+    var countEl = document.querySelector('.tools-count');
+    var favBtn  = document.querySelector('.fav-only');
+    var reset   = document.querySelector('.tools-reset');
+    var state   = {ton:'all', framer:'all', fav:false, q:'', changes:[], answers:[]};
 
     function load(){
       // `|| []` only catches null. Anything else valid JSON — an object, a
@@ -4715,14 +4891,15 @@
     empty.className = 'tools-empty';
     empty.hidden = true;
     empty.textContent = 'Nothing matches this filter.';
-    tools.parentNode.insertBefore(empty, tools.nextSibling);
+    // Before the first section, not after the toolbar: the rail sits between
+    // them now, and «nothing matches» belongs with the grid it is about.
+    var firstSect = document.querySelector('.sect');
+    firstSect.parentNode.insertBefore(empty, firstSect);
 
     function apply(){
       var shown = 0;
       cards.forEach(function(card){
-        var ok = (state.ton === 'all' || card.dataset.ton === state.ton)
-              && (state.framer === 'all' || card.dataset.framer === state.framer)
-              && (!state.fav || favs.indexOf(card.dataset.id) > -1);
+        var ok = passes(card);
         card.hidden = !ok;
         if (ok) shown++;
       });
@@ -4736,8 +4913,10 @@
         ? cards.length + ' studies'
         : shown + ' of ' + cards.length;
       var filtered = state.ton !== 'all' || state.framer !== 'all' || state.fav
+                  || state.q || state.changes.length || state.answers.length
                   || look.colour || look.radius !== PILL;
       reset.hidden = !filtered;
+      paintRail();
     }
 
     // The options on an axis are mutually exclusive, so each group is a
@@ -4882,7 +5061,7 @@
       look.radius = +range.value; paint(); saveLook(); apply();
     });
 
-    tools.querySelectorAll('.seg').forEach(function(seg){
+    document.querySelectorAll('.seg').forEach(function(seg){
       seg.addEventListener('click', function(e){
         var b = e.target.closest('.seg-b');
         if (b) checkSeg(seg, b, false);
@@ -4910,12 +5089,14 @@
     });
 
     reset.addEventListener('click', function(){
-      state = {ton:'all', framer:'all', fav:false};
+      state = {ton:'all', framer:'all', fav:false, q:'', changes:[], answers:[]};
+      if (qEl) qEl.value = '';
+      document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
       look  = {colour:'', radius:PILL};
       range.value  = PILL;
       paint();
       saveLook();
-      tools.querySelectorAll('.seg').forEach(function(seg){
+      document.querySelectorAll('.seg').forEach(function(seg){
         seg.querySelectorAll('.seg-b').forEach(function(x){
           var on = x.dataset.val === 'all';
           x.setAttribute('aria-checked', on ? 'true' : 'false');
@@ -4925,6 +5106,288 @@
       favBtn.setAttribute('aria-pressed', 'false');
       apply();
     });
+
+    // ---- The rail: search, derived facets, sections ---------------------
+    // Everything here is read off the page rather than written twice. A card
+    // is tagged «it moves» because a rule of its own transitions a transform,
+    // and «needs JS» because its own chip says so — so the facets cannot drift
+    // out of step with the studies the way a hand-typed tag would.
+    var rail = document.querySelector('.rail');
+    var railToggle = document.querySelector('.rail-toggle');
+    var qEl = document.querySelector('.rail-q');
+
+    // Which declaration means what. The order matters only for reading: a card
+    // that transitions a transform AND a colour carries both tags.
+    var CHANGES = [
+      {k:'moves', label:'it moves',       re:/^(transform|translate|rotate|scale|offset-)/},
+      {k:'fades', label:'it fades',       re:/^opacity$/},
+      {k:'tone',  label:'tone or light',  re:/^(color|background|border-[a-z]+-color|box-shadow|text-shadow|outline|filter|backdrop-filter)/},
+      {k:'type',  label:'the type sets',  re:/^(letter-spacing|word-spacing|font-|text-decoration|text-emphasis)/},
+      {k:'shape', label:'its shape',      re:/^(border-[a-z-]*radius|clip-path|mask|-webkit-mask|corner-|width|height|padding|gap|grid-template|stroke|d$)/},
+      {k:'seq',   label:'in sequence',    re:/^(transition-delay|animation-delay)$/}
+    ];
+    var ANSWERS = [
+      {k:'hover', label:'a hover alone'},
+      {k:'press', label:'a press of its own'},
+      {k:'loop',  label:'a loop'},
+      {k:'js',    label:'needs JavaScript'}
+    ];
+
+    // One flat list of every authored rule, @media and @supports included, so a
+    // card whose effect only exists inside a query is still tagged.
+    function allRules(){
+      var out = [];
+      function rec(list){
+        [].forEach.call(list, function(r){
+          if (r.selectorText) { out.push(r); return; }
+          if (r.cssRules) rec(r.cssRules);
+        });
+      }
+      [].forEach.call(document.styleSheets, function(sh){
+        try { rec(sh.cssRules); } catch(e){}       // cross-origin: the DS sheet
+      });
+      return out;
+    }
+    // The same key derivation the Copy buttons use: every class on the card's
+    // button and its descendants that is not house furniture. Matching .btn
+    // loosely would hand every card every other card's rules.
+    var HOUSE_KEYS = {btn:1,'btn--solid':1,'btn--line':1,'btn--text':1,lbl:1,icon:1,
+                      sr:1,slot:1,track:1,inner:1};
+    function tag(){
+      var rules = allRules();
+      cards.forEach(function(card){
+        var root = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
+        if (!root) return;
+        var keys = [];
+        function take(el){
+          [].forEach.call(el.classList, function(c){
+            if (!HOUSE_KEYS[c] && keys.indexOf(c) === -1) keys.push(c);
+          });
+        }
+        take(root);
+        [].forEach.call(root.querySelectorAll('*'), take);
+        var res = keys.map(function(k){
+          return new RegExp('\\.' + k.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&') + '(?![\\w-])');
+        });
+        var props = {}, press = false, loop = false, uses = {};
+        rules.forEach(function(r){
+          if (!res.some(function(re){ return re.test(r.selectorText); })) return;
+          var stateRule = /:hover|:focus-visible|:active|\[data-/.test(r.selectorText);
+          if (/:active/.test(r.selectorText)) press = true;
+          // An animation declared on the REST state is running before you
+          // arrive — an idle behaviour, not an answer to a gesture.
+          if (!stateRule && (r.style.animationName || r.style.animation)) loop = true;
+          if (r.style.animationName) props['animation'] = 1;
+          // A transition shorthand carrying var() has NO readable longhands:
+          // CSSOM keeps a pending-substitution value and transitionProperty
+          // comes back empty. On this page 131 rules declare a transition and
+          // exactly two expose the longhand, because every duration is a token
+          // — so the SHORTHAND is what gets read, and the property is the first
+          // word of each comma-separated part.
+          var tp = r.style.getPropertyValue('transition') ||
+                   r.style.getPropertyValue('transition-property');
+          if (tp) tp.split(',').forEach(function(part){
+            var p = part.trim().split(/\s+/)[0];
+            if (p && p !== 'none' && p !== 'all') props[p] = 1;
+          });
+          // will-change is the author stating what a script is about to move,
+          // and it is the only trace a JS-driven transform leaves in the
+          // stylesheet at all. Card 11 moves the plate from JS and would
+          // otherwise be filed under nothing but its colour.
+          var wc = r.style.getPropertyValue('will-change');
+          if (wc) wc.split(',').forEach(function(p){
+            p = p.trim(); if (p && p !== 'auto') props[p] = 1;
+          });
+          // Which declarations READ each custom property. Cards 36, 48, 49 and
+          // 91 transition a registered length and spend it in a rest-state
+          // calc(), so the animated property name is --i-gap and the thing that
+          // actually moves is gap, padding or letter-spacing. Without this they
+          // carry no tag at all and fall out of every facet.
+          for (var k = 0; k < r.style.length; k++){
+            var prop = r.style[k], val = r.style.getPropertyValue(prop);
+            var m, vre = /var\((--[\w-]+)/g;
+            while ((m = vre.exec(val))){
+              (uses[m[1]] = uses[m[1]] || []).push(prop);
+            }
+          }
+          if (!stateRule) return;
+          for (var i = 0; i < r.style.length; i++) props[r.style[i]] = 1;
+        });
+        Object.keys(props).forEach(function(p){
+          if (p.indexOf('--') !== 0) return;
+          (uses[p] || []).forEach(function(target){ props[target] = 1; });
+        });
+        var names = Object.keys(props);
+        var changes = CHANGES.filter(function(g){
+          return names.some(function(p){ return g.re.test(p); });
+        }).map(function(g){ return g.k; });
+        var chips = [].slice.call(card.querySelectorAll('.chip'))
+                      .map(function(c){ return c.textContent; }).join(' ');
+        var answers = [];
+        if (/\bJS\b/.test(chips)) answers.push('js');
+        if (loop)  answers.push('loop');
+        if (press) answers.push('press');
+        if (!answers.length) answers.push('hover');
+        card.dataset.changes = changes.join(' ');
+        card.dataset.answers = answers.join(' ');
+        // What the search reads. Built once — the alternative is lowercasing
+        // four nodes per card on every keystroke.
+        card.dataset.hay = (
+          (card.querySelector('h3') || {textContent:''}).textContent + ' ' +
+          (card.querySelector('p')  || {textContent:''}).textContent + ' ' + chips
+        ).toLowerCase();
+      });
+    }
+
+    // A card passes when it clears every axis. Within a facet group the boxes
+    // are an OR — ticking «it moves» and «it fades» asks for either, which is
+    // what a reader means by it — and the groups are an AND with each other.
+    function passes(card, skip){
+      if (state.ton !== 'all' && card.dataset.ton !== state.ton) return false;
+      if (state.framer !== 'all' && card.dataset.framer !== state.framer) return false;
+      if (state.fav && favs.indexOf(card.dataset.id) < 0) return false;
+      if (state.q && card.dataset.hay.indexOf(state.q) < 0
+                  && card.dataset.id.indexOf(state.q) < 0) return false;
+      if (skip !== 'changes' && state.changes.length && !state.changes.some(function(k){
+        return (' ' + card.dataset.changes + ' ').indexOf(' ' + k + ' ') > -1;
+      })) return false;
+      if (skip !== 'answers' && state.answers.length && !state.answers.some(function(k){
+        return (' ' + card.dataset.answers + ' ').indexOf(' ' + k + ' ') > -1;
+      })) return false;
+      return true;
+    }
+
+    function buildRail(){
+      if (!rail) return;
+      [{key:'changes', defs:CHANGES}, {key:'answers', defs:ANSWERS}].forEach(function(grp){
+        var ul = rail.querySelector('[data-facet="' + grp.key + '"] .rail-list');
+        if (!ul) return;
+        grp.defs.forEach(function(d){
+          var li = document.createElement('li');
+          var lab = document.createElement('label');
+          var box = document.createElement('input');
+          box.type = 'checkbox'; box.value = d.k; box.dataset.group = grp.key;
+          var name = document.createElement('span');
+          name.className = 'rail-name'; name.textContent = d.label;
+          // Two counts, one number. The visible one is aria-hidden because
+          // «it moves68» is what a wrapping label concatenates into an
+          // accessible name; the .sr copy says «68 studies» instead, so the
+          // name reads as a sentence and still carries the number.
+          var n = document.createElement('span');
+          n.className = 'rail-n';
+          n.setAttribute('aria-hidden', 'true');
+          var srn = document.createElement('span');
+          srn.className = 'sr';
+          lab.appendChild(box); lab.appendChild(name); lab.appendChild(n); lab.appendChild(srn);
+          li.appendChild(lab); ul.appendChild(li);
+          box.addEventListener('change', function(){
+            var list = state[grp.key];
+            var i = list.indexOf(d.k);
+            if (box.checked && i < 0) list.push(d.k);
+            if (!box.checked && i > -1) list.splice(i, 1);
+            apply();
+          });
+        });
+      });
+      // The sections, with an id each so the links have something to reach.
+      var ul = rail.querySelector('.rail-sects');
+      document.querySelectorAll('.sect').forEach(function(sect){
+        var h = sect.querySelector('h2');
+        if (!h) return;
+        var letter = h.textContent.trim().charAt(0).toLowerCase();
+        if (!sect.id) sect.id = 's-' + letter;
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        a.href = '#' + sect.id;
+        a.innerHTML = '<span class="rail-name"></span>' +
+                      '<span class="rail-n" aria-hidden="true"></span>' +
+                      '<span class="sr"></span>';
+        a.querySelector('.rail-name').textContent = h.textContent.trim();
+        a.dataset.for = sect.id;
+        li.appendChild(a); ul.appendChild(li);
+      });
+      rail.hidden = false;
+    }
+
+    // Facet counts answer «and how many if I tick this», so each group's own
+    // selection is left out of its own arithmetic. Counting with the group
+    // included would show 0 next to every box you had not ticked.
+    function paintRail(){
+      if (!rail) return;
+      [{key:'changes', defs:CHANGES}, {key:'answers', defs:ANSWERS}].forEach(function(grp){
+        grp.defs.forEach(function(d){
+          var lab = rail.querySelector('input[data-group="' + grp.key + '"][value="' + d.k + '"]');
+          if (!lab) return;
+          var n = 0;
+          cards.forEach(function(card){
+            if (!passes(card, grp.key)) return;
+            if ((' ' + card.dataset[grp.key] + ' ').indexOf(' ' + d.k + ' ') > -1) n++;
+          });
+          var row = lab.closest('label');
+          row.querySelector('.rail-n').textContent = n;
+          row.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
+          if (n) row.removeAttribute('data-empty'); else row.setAttribute('data-empty', '');
+        });
+      });
+      rail.querySelectorAll('.rail-sects a').forEach(function(a){
+        var sect = document.getElementById(a.dataset.for);
+        if (!sect) return;
+        var own = [].slice.call(sect.querySelectorAll('.spec'));
+        var n = own.filter(function(c){ return !c.hidden; }).length;
+        a.querySelector('.rail-n').textContent = n;
+        a.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
+        a.hidden = n === 0;
+      });
+    }
+
+    if (qEl){
+      qEl.addEventListener('input', function(){
+        state.q = qEl.value.trim().toLowerCase();
+        apply();
+      });
+      // Escape clears the field rather than only blurring it, which is what
+      // every other search box on the web does.
+      qEl.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && qEl.value){ qEl.value = ''; state.q = ''; apply(); }
+      });
+    }
+    if (railToggle && rail){
+      railToggle.setAttribute('aria-controls', 'rail');
+      railToggle.addEventListener('click', function(){
+        var open = rail.hasAttribute('data-open');
+        if (open) rail.removeAttribute('data-open'); else rail.setAttribute('data-open', '');
+        railToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+      });
+    }
+
+    // Where you are, from the sections themselves. rootMargin pulls the top of
+    // the viewport down past the sticky toolbar so the section under it is not
+    // the one reported as current.
+    function spy(){
+      if (!rail || !('IntersectionObserver' in window)) return;
+      var seen = [];
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var i = seen.indexOf(e.target);
+          if (e.isIntersecting && i < 0) seen.push(e.target);
+          if (!e.isIntersecting && i > -1) seen.splice(i, 1);
+        });
+        // The topmost visible section wins, so scrolling up marks the one you
+        // are arriving at rather than the one you are leaving.
+        var top = seen.slice().sort(function(a, b){
+          return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+        })[0];
+        rail.querySelectorAll('.rail-sects a').forEach(function(a){
+          if (top && a.dataset.for === top.id) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      }, {rootMargin: '-120px 0px -55% 0px'});
+      document.querySelectorAll('.sect').forEach(function(s){ io.observe(s); });
+    }
+
+    tag();
+    buildRail();
+    spy();
 
     paint();
     apply();
