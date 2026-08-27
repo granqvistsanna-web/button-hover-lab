@@ -5606,6 +5606,682 @@ document.addEventListener("DOMContentLoaded", function () {
 </style>
 
 
+<style>
+  /* ============ Section V — The flood, and the light on it ============
+     The button that prompted this section is the one on every tutorial site: a
+     dark plate, a circle that grows from the middle on hover, a black gradient
+     laid over the top, and scale(.97) on the press. Card 09 is already the
+     circle, done better — it grows from where the pointer crossed rather than
+     from a fixed centre, and it scales a fixed square rather than animating
+     width and height, which are layout properties and cost a reflow a frame.
+
+     But the tutorial button carries something this page has almost none of.
+     A hundred and eight studies in, exactly one lights a plate — card 107's
+     bevel, which puts two light sources on the four EDGES and nothing on the
+     face between them. No card lights the SURFACE. Graphite states
+     elevation as lightness and forbids shadow as depth, so the whole page
+     changes a plate's colour and never its material. A gradient laid over the
+     surface is a light source, and a light source is the one property of a
+     plate that should survive its colour changing.
+
+     So: the light, the measurement the circle never gets, and the press you can
+     still call off. All three wear the same clothes — a lift-bg plate, a flood
+     of --ink, a label that inverts — so the three mechanisms are the only
+     difference between them.
+
+     The prefix is y-. */
+
+  /* 109 The light stays put — the flood goes UNDER the light, not over it.
+     The tutorial version writes the gradient as a sibling div and gets its
+     stacking by accident of document order; when the circle is a later sibling
+     it floods OVER the shade, the plate loses its light the instant it changes
+     colour, and what was a lit material becomes a flat sticker. Here the light
+     is the plate's own ::after and outranks the flood by construction, so the
+     surface is lit the same before, during and after.
+     The light is spent as lightness because there is no hue on this page: a
+     white hairline along the top edge where light catches, and .28 black at the
+     foot where it falls away. Both help the label rather than cost it — at rest
+     a near-white label sits on a plate the shade DARKENS, and once flooded a
+     near-black label sits on a fill the same shade darkens again. The one
+     gradient raises contrast in both states, which is why it can be this
+     strong. The tutorial's margin-top:-0.25em is reaching for the same thing:
+     it wants the shade to stop short of the bottom edge. A three-stop gradient
+     says it without moving the layer. */
+  .btn.y-lit{
+    background:var(--lift-bg);
+    overflow:hidden;
+  }
+  .btn.y-lit::before{
+    content:""; position:absolute; left:50%; top:50%; z-index:0;
+    width:300%; aspect-ratio:1; border-radius:50%;
+    background:var(--ink);
+    transform:translate(-50%,-50%) scale(0) rotate(0.001deg);
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .btn.y-lit:hover::before,
+  .btn.y-lit:focus-visible::before{transform:translate(-50%,-50%) scale(1) rotate(0.001deg)}
+  /* The light. inset:0 and not a sibling: it is a property of the plate, so it
+     is drawn by the plate, and nothing downstream can reorder it. */
+  .btn.y-lit::after{
+    content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+    border-radius:inherit;
+    background:
+      linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,0) 1.5px),
+      linear-gradient(rgba(0,0,0,0) 42%, rgba(0,0,0,.10) 74%, rgba(0,0,0,.28));
+  }
+  .btn.y-lit .lbl{position:relative; z-index:2; transition:color var(--t-2) ease}
+  .btn.y-lit:hover .lbl,
+  .btn.y-lit:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  @media (prefers-reduced-motion: reduce){
+    .btn.y-lit::before{
+      transform:translate(-50%,-50%) scale(1) rotate(0.001deg); opacity:0;
+      transition:opacity var(--t-3) ease;
+    }
+    .btn.y-lit:hover::before,
+    .btn.y-lit:focus-visible::before{opacity:1}
+  }
+
+  /* 110 The circle knows the corner — the radius is measured to the farthest
+     corner from the point you crossed, so the flood finishes exactly as the
+     transition does. Card 09 uses width:240%, the tutorial uses 14em, and both
+     are guesses at a number only the plate can know. A guess that is too big is
+     not a harmless margin: the plate is covered before the scale reaches 1, so
+     the tail of the ease is spent off-screen and the fill READS shorter than
+     the rung it was given — by a different amount on every plate width on the
+     page. 240% of a 300px plate is a 360px radius where 305 was needed; the
+     last 15% of a quintic ease is its slowest 15%, so a third of the perceived
+     duration goes missing.
+     Measured, --t-5 means filled. The label's colour swap can then be delayed
+     against the fill and land right, which at a guessed radius it cannot.
+     Without JS the custom properties fall back to the centre and 150px, which
+     is card 09 — a floor, not a failure. */
+  .btn.y-reach{
+    background:var(--lift-bg);
+    overflow:hidden;
+  }
+  .btn.y-reach::before{
+    content:""; position:absolute; left:var(--y-x,50%); top:var(--y-y,50%); z-index:0;
+    width:calc(var(--y-r,150px) * 2); aspect-ratio:1; border-radius:50%;
+    background:var(--ink);
+    transform:translate(-50%,-50%) scale(0) rotate(0.001deg);
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .btn.y-reach:hover::before,
+  .btn.y-reach:focus-visible::before{transform:translate(-50%,-50%) scale(1) rotate(0.001deg)}
+  .btn.y-reach .lbl{position:relative; z-index:2; transition:color var(--t-2) ease}
+  .btn.y-reach:hover .lbl,
+  .btn.y-reach:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  @media (prefers-reduced-motion: reduce){
+    .btn.y-reach::before{
+      transform:translate(-50%,-50%) scale(1) rotate(0.001deg); opacity:0;
+      transition:opacity var(--t-3) ease;
+    }
+    .btn.y-reach:hover::before,
+    .btn.y-reach:focus-visible::before{opacity:1}
+  }
+
+  /* 111 The fill is the press — the flood starts on pointer-DOWN, from the point
+     you pressed, and it is the only study on this page you can call off. Drag
+     off the plate and it retracts and nothing fires; come back and it resumes
+     from wherever it got to; release outside and the button was never pressed.
+     Card 77 makes the DURATION of the press the input and card 09 the hover;
+     here it is the place you let go.
+     What makes it possible is setPointerCapture, which no other card needs: the
+     moves have to keep arriving after the pointer has left the plate, and
+     :active alone drops the state the moment it does. The house press is taken
+     off :active and put on the state for the same reason — a plate that stays
+     compressed while its fill retracts is telling you two different things.
+     The asymmetry rule pays for the cancel by itself. Pressing, the pointer is
+     over the plate, so --t-5 resolves to 450ms; dragged off, it is not, and the
+     retraction resolves to 300. Calling it off is a rung quicker than doing it,
+     without a line saying so.
+     The keyboard has no press point, so Enter and Space flood from the centre —
+     the fallback cards 03 and 82 take. */
+  .btn.y-hold{
+    background:var(--lift-bg);
+    overflow:hidden;
+    transform:scale(1) rotate(0.001deg);
+  }
+  /* The press belongs to the state, not to :active — during a capture :active
+     stays true off-plate, which is exactly where the plate must let go. */
+  .btn.y-hold:active{transform:scale(1) rotate(0.001deg)}
+  .btn.y-hold[data-state="pressing"],
+  .btn.y-hold[data-state="done"]{transform:scale(.97) rotate(0.001deg)}
+  .btn.y-hold::before{
+    content:""; position:absolute; left:var(--y-x,50%); top:var(--y-y,50%); z-index:0;
+    width:calc(var(--y-r,150px) * 2); aspect-ratio:1; border-radius:50%;
+    background:var(--ink);
+    transform:translate(-50%,-50%) scale(0) rotate(0.001deg);
+    transition:transform var(--t-5) var(--e-out);
+  }
+  .btn.y-hold[data-state="pressing"]::before,
+  .btn.y-hold[data-state="done"]::before{transform:translate(-50%,-50%) scale(1) rotate(0.001deg)}
+  /* The commit is not a new movement — it closes whatever is left of the flood,
+     at the shortest rung, so letting go reads as the last of the press rather
+     than as an animation of its own. */
+  .btn.y-hold[data-state="done"]::before{transition-duration:var(--t-1)}
+  .btn.y-hold .lbl{position:relative; z-index:2; transition:color var(--t-3) ease}
+  .btn.y-hold[data-state="pressing"] .lbl,
+  .btn.y-hold[data-state="done"] .lbl{color:var(--on-ink)}
+  @media (prefers-reduced-motion: reduce){
+    .btn.y-hold::before{
+      transform:translate(-50%,-50%) scale(1) rotate(0.001deg); opacity:0;
+      transition:opacity var(--t-2) ease;
+    }
+    .btn.y-hold[data-state="pressing"]::before,
+    .btn.y-hold[data-state="done"]::before{opacity:1}
+    .btn.y-hold,
+    .btn.y-hold[data-state="pressing"],
+    .btn.y-hold[data-state="done"]{transform:none}
+  }
+</style>
+
+<section class="sect">
+  <h2>V — The flood, and the light on it</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn y-lit"><span class="lbl">Start a project</span></button>
+      </div>
+      <h3><span class="num">109</span>The light stays put</h3>
+      <p>A plate lit from above, with the flood passing underneath the light rather than over it — so the surface changes colour without changing material. Card 107 lights a plate's four edges; this is the first to light the face between them.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn y-reach"><span class="lbl">Send the brief</span></button>
+      </div>
+      <h3><span class="num">110</span>The circle knows the corner</h3>
+      <p>The radius is measured to the farthest corner from the point you crossed, so the flood finishes exactly when the transition does. Card 09's 240% and the tutorial's 14em are guesses, and a guessed radius makes the same rung read shorter on every plate width.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn y-hold" data-state="idle"><span class="lbl">Add to the project</span></button>
+        <span class="sr y-hold-live" role="status"></span>
+      </div>
+      <h3><span class="num">111</span>The fill is the press</h3>
+      <p>The flood starts on pointer-down from the point you pressed, and this is the one study you can call off: drag off the plate and it retracts, come back and it resumes, release outside and nothing happened. Card 77 makes the duration of the press the input; here it is the place you let go.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 110 The circle knows the corner — the radius the plate actually needs.
+  // Measured on the way in and not cached: --btn-r and the toolbar can change
+  // the plate under it, and a rect read is cheap next to the paint it sizes.
+  (function(){
+    function fit(btn, cx, cy){
+      var r = btn.getBoundingClientRect();
+      // The transform is a scale about the circle's own centre, so the rect is
+      // the plate's own box whatever the press is doing to it.
+      var x = cx - r.left, y = cy - r.top;
+      var d = Math.max(
+        Math.hypot(x, y),                          Math.hypot(r.width - x, y),
+        Math.hypot(x, r.height - y),               Math.hypot(r.width - x, r.height - y));
+      btn.style.setProperty('--y-x', x.toFixed(1) + 'px');
+      btn.style.setProperty('--y-y', y.toFixed(1) + 'px');
+      // Ceil, not round: half a pixel short leaves a lit hairline in the corner
+      // at the exact moment the fill is meant to be complete.
+      btn.style.setProperty('--y-r', Math.ceil(d) + 'px');
+    }
+    document.querySelectorAll('.y-reach').forEach(function(btn){
+      btn.addEventListener('pointerenter', function(e){ fit(btn, e.clientX, e.clientY); });
+      // The keyboard crosses no edge: the centre, and the radius from it.
+      btn.addEventListener('focus', function(){
+        var r = btn.getBoundingClientRect();
+        fit(btn, r.left + r.width / 2, r.top + r.height / 2);
+      });
+    });
+  })();
+
+  // 111 The fill is the press — pointer capture, so the moves keep arriving
+  // after the pointer has left the plate. Everything visual is CSS reacting to
+  // data-state; the script owns the state machine and nothing else.
+  (function(){
+    var SLOP = 10;   // px of forgiveness outside the plate, as a tap target gets
+    document.querySelectorAll('.y-hold').forEach(function(btn){
+      var live = btn.parentNode.querySelector('.y-hold-live');
+      var held = null, inside = false, back = null;
+
+      function fit(cx, cy){
+        var r = btn.getBoundingClientRect();
+        var x = cx - r.left, y = cy - r.top;
+        var d = Math.max(
+          Math.hypot(x, y),            Math.hypot(r.width - x, y),
+          Math.hypot(x, r.height - y), Math.hypot(r.width - x, r.height - y));
+        btn.style.setProperty('--y-x', x.toFixed(1) + 'px');
+        btn.style.setProperty('--y-y', y.toFixed(1) + 'px');
+        btn.style.setProperty('--y-r', Math.ceil(d) + 'px');
+      }
+      function near(e){
+        var r = btn.getBoundingClientRect();
+        return e.clientX >= r.left - SLOP && e.clientX <= r.right + SLOP &&
+               e.clientY >= r.top  - SLOP && e.clientY <= r.bottom + SLOP;
+      }
+      function state(s){ btn.setAttribute('data-state', s); }
+      function release(){
+        if (held !== null && btn.hasPointerCapture(held)) btn.releasePointerCapture(held);
+        held = null;
+      }
+      function commit(){
+        clearTimeout(back);
+        state('done');
+        if (live) live.textContent = 'Added to the project';
+        // Long enough to be seen as a state and not a flash; the return is a
+        // timeout rather than a transition, so the 450ms ceiling still holds.
+        back = setTimeout(function(){
+          state('idle');
+          if (live) live.textContent = '';
+        }, 900);
+      }
+
+      btn.addEventListener('pointerdown', function(e){
+        if (e.button !== 0) return;
+        clearTimeout(back);
+        held = e.pointerId;
+        btn.setPointerCapture(held);
+        inside = true;
+        fit(e.clientX, e.clientY);
+        state('pressing');
+      });
+      btn.addEventListener('pointermove', function(e){
+        if (held === null || e.pointerId !== held) return;
+        var now = near(e);
+        if (now === inside) return;      // only the crossings are events
+        inside = now;
+        // The origin is NOT re-measured on the way back: it is the point you
+        // pressed, and the flood resumes from where it got to rather than
+        // restarting somewhere else. The transition is interruptible, so
+        // reversing it mid-flight is the browser's job and it does it from the
+        // live value.
+        state(inside ? 'pressing' : 'idle');
+      });
+      btn.addEventListener('pointerup', function(e){
+        if (held === null || e.pointerId !== held) return;
+        var hit = near(e);
+        release();
+        if (hit) commit(); else state('idle');
+      });
+      btn.addEventListener('pointercancel', function(){ release(); state('idle'); });
+      // A capture makes the plate's own click unreliable off-target, so the
+      // commit above is the click. This stops a second one landing on top of it.
+      btn.addEventListener('click', function(e){ if (e.detail !== 0) e.preventDefault(); });
+
+      // The keyboard has no press point. Enter and Space flood from the centre,
+      // hold while the key is down, and commit on the way up — the same gesture,
+      // with the one thing it cannot express left out.
+      btn.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        if (e.repeat) return;
+        clearTimeout(back);
+        var r = btn.getBoundingClientRect();
+        fit(r.left + r.width / 2, r.top + r.height / 2);
+        state('pressing');
+      });
+      btn.addEventListener('keyup', function(e){
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        if (btn.getAttribute('data-state') === 'pressing') commit();
+      });
+      // Tabbing away mid-press is a cancel, like dragging off is.
+      btn.addEventListener('blur', function(){
+        if (btn.getAttribute('data-state') === 'pressing') state('idle');
+      });
+    });
+  })();
+</script>
+
+<style>
+  /* ============ Section W — Borrowed from the galleries ============
+     Five studies taken from the hundred-button galleries that everyone lands on
+     first. Each one has a real idea inside it and a cost the gallery never
+     states, because a gallery is a shop window and this is a specimen page. The
+     idea is kept; the cost is paid or the card says why it is not.
+
+     What the four sources actually get right, in order: a label does not need
+     to be TOLD what colour to be; a progress bar that lurches is describing
+     something true; a control can have a thickness; and the amplitude of a
+     letter's movement can carry the shape of the word. What they get wrong is
+     the same thing four times — a layout property animated where a transform
+     would do, a duration two and a half times the ceiling, and a count of six
+     letters written into the stylesheet.
+
+     Two house rules get argued with here rather than followed, and both notes
+     say so in place: section L's «no box-shadow» (card 116 stacks PLATES, not
+     shadow) and its «no mix-blend-mode» (cards 112 and 113 spend the page's second
+     and third — the second is what buys the deleted parameter, and the third is
+     the same fill under the same label, where swapping a colour instead would
+     put that parameter straight back).
+
+     The prefix is z-. */
+
+  /* 112 The label doesn't need telling — the fill passes under the label and the
+     label inverts itself, per pixel, exactly where the fill has reached.
+     Cards 09, 109 and 110 all do this the other way: swap .lbl's colour on a
+     delay tuned against the fill. That delay is a number nobody can be right
+     about — it is only correct for one duration at one plate width, and every
+     one of those three carries a different guess at it. Difference blending
+     does not tune the parameter, it deletes it. There is no frame where the
+     label is the wrong colour, because the label is not a colour.
+     What it costs, stated plainly. The label can no longer hold a token: it is
+     the inverse of whatever is under it. At rest that is --ink-hi minus --bg-2,
+     which is #d0d0d0 — a step below the rest of the page's labels, at 10.3:1 on
+     the plate. Over the fill it is exact black on #f2f2f2, 18.8:1, better than
+     the swap ever was. On a page with one grayscale this is the whole argument
+     for it; on a hued site the inverse of a brand colour is its complement,
+     which is never also a brand colour, and this card is the wrong one.
+     isolation:isolate is not optional — without it the difference reaches past
+     the button and inverts the stage behind it. */
+  .btn.z-diff{
+    background:var(--lift-bg);
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .btn.z-diff::before{
+    content:""; position:absolute; inset:0; z-index:0;
+    background:var(--ink);
+    transform:scaleX(0); transform-origin:left center;
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .btn.z-diff:hover::before,
+  .btn.z-diff:focus-visible::before{transform:scaleX(1)}
+  .btn.z-diff .lbl{
+    position:relative; z-index:1;
+    color:var(--ink);
+    mix-blend-mode:difference;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .btn.z-diff::before{
+      transform:scaleX(1); opacity:0;
+      transition:opacity var(--t-3) ease;
+    }
+    .btn.z-diff:hover::before,
+    .btn.z-diff:focus-visible::before{opacity:1}
+  }
+
+  /* 113 The lurch is the honest part — the gallery's progress bar stalls at a
+     quarter, sits there, then leaps to full. That shape is the one true thing
+     about it: real work is uneven, and a bar that rises linearly reads as
+     decoration precisely because nothing that actually takes time is linear.
+     Everything around the shape is wrong, and all of it is fixable. It animates
+     WIDTH, which is a layout property, so the gallery's version reflows the
+     button every frame for eleven hundred milliseconds; scaleX is the same
+     picture on the compositor. It runs 1.2s, two and a half times this page's
+     ceiling. And it is an @keyframes, so it cannot be interrupted — leave
+     halfway and it plays on to the end, against the second house rule.
+     Written as an easing instead of a keyframe list, the whole shape becomes
+     one interruptible transition on --t-5, and the stall survives intact. The
+     stops are the gallery's own frames, renormalised: it reached full at 60% of
+     its duration and spent the rest fading, so each time is divided by .6.
+     --z-work is deliberately LOCAL and not a fourth easing token. The three in
+     the head are a vocabulary — this is data, the shape of one uneven job, and
+     a token would invite it onto things that are not that job.
+     It stays a bar and not a real report: bound to nothing, a progress bar is a
+     lie about state. Card 75 is the honest one, bound to work that exists. This
+     card owns the SHAPE; 75 owns the binding. */
+  .btn.z-lurch{
+    --z-work:linear(0, 0.15 16.7%, 0.25 41.7%, 0.35 66.7%, 0.75 91.7%, 1);
+    background:var(--lift-bg);
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .btn.z-lurch::before{
+    content:""; position:absolute; inset:0; z-index:0;
+    background:var(--ink);
+    transform:scaleX(0); transform-origin:left center;
+    transition:transform var(--t-5) var(--z-work);
+  }
+  .btn.z-lurch:hover::before,
+  .btn.z-lurch:focus-visible::before{transform:scaleX(1)}
+  /* The exit is not the work running backwards — a job does not un-stall. It
+     leaves on the house curve, one rung down, which is the asymmetry rule doing
+     what it was written for. */
+  .btn.z-lurch::before{transition-timing-function:var(--e-out)}
+  .btn.z-lurch:hover::before,
+  .btn.z-lurch:focus-visible::before{transition-timing-function:var(--z-work)}
+  .btn.z-lurch .lbl{position:relative; z-index:1; color:var(--ink); mix-blend-mode:difference}
+  @media (prefers-reduced-motion: reduce){
+    .btn.z-lurch::before{
+      transform:scaleX(1); opacity:0;
+      transition:opacity var(--t-3) ease;
+    }
+    .btn.z-lurch:hover::before,
+    .btn.z-lurch:focus-visible::before{opacity:1}
+  }
+
+  /* 114 The plate has a thickness — the control is a slab seen slightly from
+     above, and tilting it further on hover shows the side it was standing on.
+     The side face is the same box rotated -90deg about its own top edge, so it
+     is welded to the face by construction and stays welded at any angle: there
+     is no second number to keep in sync with the first.
+     The gallery version puts perspective on the button as a PROPERTY, which
+     applies to children only — so its side faces are projected and its own
+     front face is not, and the face is an orthographic squash pretending to be
+     a rotation. perspective() inside the transform projects the element itself,
+     and transform-style:preserve-3d puts the side in the same space. One
+     element, no wrapper, correct at both ends.
+     Two costs. overflow:hidden flattens a 3D subtree, so this is the one plate
+     here that can carry no fill. And an extrusion assumes a straight edge: at
+     the page's default 999px radius the face is a pill and its side is read
+     edge-on and foreshortened, which holds along the flat of the plate and is
+     thinnest at the two ends. It is the card most improved by turning the
+     radius down, and the toolbar can.
+     The press composes rather than replaces — one function list in all three
+     states, for section A's reason. */
+  .btn.z-slab{
+    background:var(--bg-3);
+    transform-style:preserve-3d;
+    transform:perspective(800px) rotateX(6deg) scale(1);
+    transition:transform var(--t-4) var(--e-out);
+  }
+  .btn.z-slab:hover,
+  .btn.z-slab:focus-visible{transform:perspective(800px) rotateX(20deg) scale(1)}
+  .btn.z-slab:active{transform:perspective(800px) rotateX(20deg) scale(.97); transition-duration:var(--t-1)}
+  /* The thickness. Not a shadow: the side faces away from the light, so it is a
+     step DOWN the graphite ladder from the face, which is how this page has said
+     depth since the first card. It has to be a step down from the FACE and still
+     a step up from the STAGE — built first at --bg-1 it was the stage's own
+     colour exactly, and the slab had a side nobody could see. So the face is
+     raised to --bg-3 and the side takes --bg-2: two steps, both legible, and the
+     plate reads brighter than its neighbours because it is the one standing up. */
+  .btn.z-slab::before{
+    content:""; position:absolute; left:0; top:100%; width:100%; height:9px;
+    background:var(--bg-2);
+    border-radius:inherit;
+    transform:rotateX(-90deg); transform-origin:0 0;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .btn.z-slab,
+    .btn.z-slab:hover,
+    .btn.z-slab:focus-visible,
+    .btn.z-slab:active{transform:none; transition:background-color var(--t-3) ease}
+    .btn.z-slab:hover,
+    .btn.z-slab:focus-visible{background:var(--bg-4)}
+    .btn.z-slab::before{display:none}
+  }
+
+  /* 115 The word bows — the distance from the middle of the word sets how FAR
+     each letter travels, not when it starts. Card 25 orders the same lift by
+     distance from the centre and the word still reads as a sequence being
+     played, one letter after another. Set amplitude by the same measurement and
+     nothing is sequenced at all: every letter leaves on the same frame, the
+     middle travels furthest, the ends do not move, and the word deforms as one
+     object under load — a struck string rather than a queue.
+     The ends are not idle. They take the ROTATION the middle does not: --r is
+     1 minus --a, so the letters that cannot displace pivot instead, which is
+     what the ends of a bowed object do. That observation is the gallery's, and
+     it is the best thing in it.
+     What the gallery cannot do is any other word. Its amplitudes are written as
+     nth-child(1) through (6), so the effect exists for six letters and silently
+     flattens the moment a client writes a seventh — and the ends stop being the
+     ends. The measurement belongs to the word, so it is taken from the word:
+     the script reads how many characters there actually are and normalises the
+     distance across them, which is the same argument card 110 makes about a
+     radius.
+     Without the script --a is 0 and the label sits still: a floor, not a
+     failure. */
+  .z-bow .z-bow-c{
+    display:inline-block;
+    --a:0; --s:1; --r:calc(1 - var(--a));
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-out);
+  }
+  .z-bow:hover .z-bow-c,
+  .z-bow:focus-visible .z-bow-c{
+    transform:translateY(calc(-7px * var(--a))) rotate(calc(-9deg * var(--r) * var(--s,1)));
+  }
+  @media (prefers-reduced-motion: reduce){
+    .z-bow .z-bow-c,
+    .z-bow:hover .z-bow-c,
+    .z-bow:focus-visible .z-bow-c{transform:none; transition:none}
+  }
+
+  /* 116 It was a stack all along — the plate lifts and three more appear under
+     it, fanned. They are not shadows and this card is not an exception to
+     section L: a shadow is an absence of light and would be invisible on a
+     near-black stage, which is exactly why the rule exists. These are PLATES —
+     three steps of the same grayscale, each one lighter than the stage it sits
+     on — so they read as lightness, which is the only way this page has ever
+     stated depth. box-shadow is just the cheapest way to draw them: three
+     copies of the plate's own box, at its own radius, laid out by one property,
+     with no elements and nothing to keep in sync when the radius changes.
+     Negative spread is what makes it a stack rather than a glow. Each layer is
+     inset 3px and offset 4px further down, so each one shows about a pixel more
+     than the one above it and the fan is even. At rest every layer is offset 0
+     and inset behind the plate, so there is nothing to hide and nothing to fade
+     — the stack is not revealed, it is assembled.
+     The lift and the press are one function list, as card 114's is. */
+  .btn.z-stack{
+    background:var(--lift-bg);
+    transform:translateY(0) scale(1) rotate(0.001deg);
+    box-shadow:
+      0 0 0 -3px rgba(255,255,255,.10),
+      0 0 0 -3px rgba(255,255,255,.06),
+      0 0 0 -3px rgba(255,255,255,.03);
+    transition:transform var(--t-3) var(--e-out), box-shadow var(--t-3) var(--e-out);
+  }
+  .btn.z-stack:hover,
+  .btn.z-stack:focus-visible{
+    transform:translateY(-5px) scale(1) rotate(0.001deg);
+    box-shadow:
+      0 5px 0 -3px rgba(255,255,255,.10),
+      0 9px 0 -3px rgba(255,255,255,.06),
+      0 13px 0 -3px rgba(255,255,255,.03);
+  }
+  /* Pressed, the plate goes back down onto its stack — the sheets close up
+     rather than staying fanned under a button that has been pushed into them. */
+  .btn.z-stack:active{
+    transform:translateY(-1px) scale(.97) rotate(0.001deg);
+    box-shadow:
+      0 2px 0 -3px rgba(255,255,255,.10),
+      0 4px 0 -3px rgba(255,255,255,.06),
+      0 6px 0 -3px rgba(255,255,255,.03);
+    transition-duration:var(--t-1);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .btn.z-stack,
+    .btn.z-stack:hover,
+    .btn.z-stack:focus-visible,
+    .btn.z-stack:active{transform:none}
+  }
+</style>
+
+<section class="sect">
+  <h2>W — Borrowed from the galleries</h2>
+  <div class="grid">
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn z-diff"><span class="lbl">Open the archive</span></button>
+      </div>
+      <h3><span class="num">112</span>The label doesn't need telling</h3>
+      <p>The fill passes under the label and the label inverts itself per pixel, so there is no delayed colour swap to tune. Cards 09, 109 and 110 each carry a different guess at that delay; this deletes the parameter instead of guessing better.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn z-lurch"><span class="lbl">Run the export</span></button>
+      </div>
+      <h3><span class="num">113</span>The lurch is the honest part</h3>
+      <p>A progress bar that stalls at a quarter and then leaps, because real work is uneven and a linear bar is the one shape no job has. The gallery spends 1.2s animating width in an uninterruptible keyframe list; the same shape is one scaleX transition on a linear() curve.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn z-slab"><span class="lbl">Print the sheet</span></button>
+      </div>
+      <h3><span class="num">114</span>The plate has a thickness</h3>
+      <p>A slab seen slightly from above, tilting further to show the side it stands on. The side face is the same box rotated about its own top edge, so it is welded to the face at any angle and there is no second number to keep in sync.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn btn--line z-bow"><span class="lbl" aria-hidden="true"></span><span class="sr">Tune the ensemble</span></button>
+      </div>
+      <h3><span class="num">115</span>The word bows</h3>
+      <p>Distance from the middle of the word sets how far each letter travels rather than when it starts, so nothing is sequenced: the middle displaces, the ends pivot, and the word deforms as one object. Card 25 orders the same lift by that measurement and still reads as a queue.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec">
+      <div class="stage">
+        <button type="button" class="btn z-stack"><span class="lbl">Duplicate the layout</span></button>
+      </div>
+      <h3><span class="num">116</span>It was a stack all along</h3>
+      <p>The plate lifts and three more fan out beneath it. They are plates and not shadow — three steps of the same grayscale, drawn by one property at the plate's own radius, so depth is still stated as lightness.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+  // 115 The word bows — the amplitude is normalised across the letters that are
+  // actually there. The gallery writes six of them into the stylesheet; a label
+  // is whatever the client typed, so the count is read rather than assumed.
+  (function(){
+    document.querySelectorAll('.z-bow').forEach(function(btn){
+      var host = btn.querySelector('.lbl');
+      var name = btn.querySelector('.sr');
+      if (!host || !name) return;
+      var text = name.textContent;
+      // Split once, at build time for the page and at mount for a component.
+      // The accessible name is the .sr span; these spans are decoration and are
+      // hidden from the tree by the .lbl's own aria-hidden.
+      var chars = text.split('');
+      host.textContent = '';
+      chars.forEach(function(ch){
+        var s = document.createElement('span');
+        s.className = 'z-bow-c';
+        // A space cannot be an inline-block of zero width and still hold the
+        // word apart: it keeps its own box and simply never moves.
+        s.textContent = ch === ' ' ? ' ' : ch;
+        host.appendChild(s);
+      });
+      // 1 at the middle of the word, 0 at both ends, linear between. A word of
+      // one letter has no ends to measure against and stays still.
+      var n = chars.length, mid = (n - 1) / 2;
+      [].forEach.call(host.children, function(s, i){
+        var a = mid > 0 ? 1 - Math.abs(i - mid) / mid : 0;
+        s.style.setProperty('--a', a.toFixed(3));
+        // The pivot runs the other way and is signed, so the two halves of the
+        // word lean apart rather than all one way — the ends of a bowed object
+        // rotate away from its middle.
+        s.style.setProperty('--s', i < mid ? '1' : '-1');
+      });
+    });
+  })();
+</script>
+
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
