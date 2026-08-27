@@ -1,6 +1,6 @@
 # Button Hover Lab
 
-Sixty-four button hover animations, actually built. Hover, tab and press all of them.
+One hundred and five button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -16,7 +16,7 @@ script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the sixty-four obeys all five:
+Every one of the one hundred and five obeys all five:
 
 | | |
 |---|---|
@@ -24,7 +24,7 @@ Every one of the sixty-four obeys all five:
 | **Interruptible** | Hover out halfway and the animation turns smoothly from wherever it is — no waiting for it to finish. |
 | **In one way, out another** | The exit takes its own path — and its own clock, one rung down the ladder. |
 | **Reduced motion** | Everything falls back to plain colour and opacity changes. |
-| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the sixty-four effects; the toolbar chrome runs on the design system's own `--t-fast`. |
+| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the one hundred and five effects; the toolbar chrome runs on the design system's own `--t-fast`. |
 
 And, without exception: no layout shift — every button's own box stays identical to three
 decimals, and in the group cards the row does too, the one deliberate exception being
@@ -33,23 +33,31 @@ transition longer than 450 ms, a visible focus state, every string at AA contras
 and a clean accessible name even where the label is split into per-character spans. Three
 cards run a *loop* rather than a transition, and those are listed as exceptions below.
 
-## The thirteen families
+## The twenty-one families
 
 | | |
 |---|---|
-| **A** The fill tells you | directional sweep, shutter, ink fill, sheen |
-| **B** The sign points | arrow relay, dot becomes arrow, guillemets, crop marks, directional underline |
-| **C** You feel the physics | elevation step, magnetic |
-| **D** The challengers | weight wave, drawn outline, chamfered corner, in register, counter |
-| **E** Light and material | frosted glass, backlight, the lantern, the grain settles, edge light |
-| **F** The plate and its geometry | diagonal radius, filling the measure, the key |
-| **G** The word and the mark | label roll, the second line, three dots become an arrow, the caret, only when it doesn't fit |
-| **H** Mass, lag and resistance | the plate gives, the type doesn't, two masses, anticipation, the rule takes the load, re-spacing, the real underline, it matches your tempo, the exit remembers |
-| **I** The studio idioms | directional fill, the wave, in one order, out another, it leaves by the corner, the optical centre holds, resolve |
-| **J** In company | the others recede, the travelling indicator, conserved compression, repulsion, the pair, the divider yields |
-| **K** Borrowed from objects | knurling, deboss, the line gauge, the data plate, continuous corners |
-| **L** Argued the other way | changes sides, the pieces join, ticker label, struck through |
-| **M** The second showcase | nothing but the press, overruns its measure, too long to sit still, the plate has no direction, the hatch withdraws, stepped fill |
+| **A** The ones everyone ships | the small grow, the small shrink, it grows from where you came in, the bloom, lit from within, it breathes, until you arrive |
+| **B** The fill tells you | directional sweep, shutter, ink fill, sheen |
+| **C** The sign points | arrow relay, dot becomes arrow, crop marks, directional underline |
+| **D** The word and the mark | label roll, the second line, three dots become an arrow, the caret, only when it doesn't fit |
+| **E** The label, letter by letter | the roll, letter by letter, a lift, not a roll, it lands past its mark, word by word, from the middle out, in no particular order |
+| **F** The challengers | weight wave, drawn outline, chamfered corner, in register, counter |
+| **G** Light and material | frosted glass, backlight, the lantern |
+| **H** From a brief of eleven | the light source flips, the tube converges, two frames, it prints, the measure absorbs the tracking, no direction at all |
+| **I** The plate and its geometry | diagonal radius, filling the measure, edge light, the key |
+| **J** Borrowed from objects | knurling, deboss, the line gauge, the data plate, continuous corners |
+| **K** You feel the physics | elevation step, magnetic |
+| **L** Mass, lag and resistance | the plate gives, the type doesn't, two masses, the settle, anticipation, the rule takes the load, re-spacing, the real underline, it matches your tempo, the exit remembers |
+| **M** In company | the others recede, the travelling indicator, conserved compression, repulsion, the pair, the divider yields |
+| **N** The pair, other than joining | the pieces part, the mark walks the plate, they trade fill, the arrow leaves, the plates stay, the mark hinges, the mark slips behind |
+| **O** After the press | it reports on itself, the plate becomes the mark, it asks you to mean it |
+| **P** The studio idioms | directional fill, the wave, in one order, out another, it leaves by the corner, the optical centre holds, resolve |
+| **Q** The third showcase | straightens up, the riser, it goes to work, one full turn, nervous type |
+| **R** The second showcase | nothing but the press, overruns its measure, too long to sit still, the plate has no direction, the hatch withdraws, stepped fill |
+| **S** Argued the other way | changes sides, the pieces join, ticker label, struck through |
+| **T** Everything on a grid | the fill has no edge, set on a four-pixel grid, the corner comes off in cells, four frames, not a tween, it does not rotate, the same grey, a coarser grid |
+| **U** The machine had an answer | split-flap, the needle swings, outset, then inset, the dotted rectangle |
 
 **Mass, lag and resistance** treats the button as an object
 with weight — parts of it arrive at different times, it resists, it settles rather than
@@ -75,7 +83,7 @@ pair.
 Filter by intensity or by how it ports, and star the ones worth keeping — the shortlist
 persists in your browser.
 
-The same toolbar carries two global settings that restyle all sixty-two at once: a
+The same toolbar carries two global settings that restyle all one hundred and five at once: a
 **primary** and a **button radius**. Both are written as custom properties on the root
 element, which is also where the copy buttons resolve from, so a snippet copied with a
 primary set carries that primary rather than the default it replaced.
@@ -193,7 +201,7 @@ the page and into `framer-components.json`. It skips any study whose content has
 moved, so published URLs stay put, and it never deletes a code file that no study claims any
 more — somebody may already have pasted it. One linked stylesheet — the Graphite Console
 tokens, which carry self-hosted Geist and Geist Mono — and everything else is CSS, with
-small vanilla-JS loops in 11 of the 64 cards, only
+small vanilla-JS loops in 14 of the 105 cards, only
 where CSS genuinely cannot reach — a critically damped spring, a pointer-driven gradient, a
 per-character weight ripple, an overflow measurement, a velocity handoff, a pointer-speed
 reading, and the edge the pointer crossed.
