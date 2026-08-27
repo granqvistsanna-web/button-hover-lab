@@ -4379,7 +4379,10 @@
         if (swapped === markup) label = ''; else markup = swapped;
       }
 
-      var head = ['/**'];
+      var head = [];
+      if (p.js) head.push('// @ts-nocheck — this file vendors the page’s own init script,',
+                          '// which is browser JS rather than TypeScript. The component itself is typed.');
+      head.push('/**');
       head.push(' * ' + p.num + ' · ' + p.name + ' — ' + p.chips.join(' · '));
       head.push(' * Button Hover Lab — ' + SOURCE);
       head.push(' *');
@@ -4419,14 +4422,16 @@
       head.push(' */');
 
       var imports = [];
+      imports.push('import type { CSSProperties } from "react"');
       if (p.js) imports.push('import { useEffect, useRef } from "react"');
       if (label) imports.push('import { addPropertyControls, ControlType } from "framer"');
 
       var body = [];
       body.push('export default function ' + comp + '(' +
-        (label ? '{ label = ' + JSON.stringify(label) + ', style }' : '{ style }') + ') {');
+        (label ? '{ label = ' + JSON.stringify(label) + ', style }' : '{ style }') +
+        ': { ' + (label ? 'label?: string; ' : '') + 'style?: CSSProperties }) {');
       if (p.js){
-        body.push('    const root = useRef(null)');
+        body.push('    const root = useRef<HTMLDivElement | null>(null)');
         body.push('    useEffect(() => {');
         body.push('        const el = root.current');
         body.push('        if (!el || el.dataset.bhlReady) return');
@@ -4434,9 +4439,9 @@
         body.push('        // Scoped to this instance, so two of them on one page never bind');
         body.push('        // each other’s nodes, and a canvas re-mount cannot bind twice.');
         body.push('        const scope = {');
-        body.push('            querySelector: (s) => (el.matches(s) ? el : el.querySelector(s)),');
-        body.push('            querySelectorAll: (s) => {');
-        body.push('                const out = [].slice.call(el.querySelectorAll(s))');
+        body.push('            querySelector: (s: string): any => (el.matches(s) ? el : el.querySelector(s)),');
+        body.push('            querySelectorAll: (s: string): any[] => {');
+        body.push('                const out: any[] = [].slice.call(el.querySelectorAll(s))');
         body.push('                if (el.matches(s)) out.unshift(el)');
         body.push('                return out');
         body.push('            },');
@@ -4507,16 +4512,51 @@
       });
     }
 
+    // Every study is also a code file in a Framer project, and a Framer code
+    // file gets a public framer.com/m/ module URL the moment it exists — no
+    // publishing, no marketplace, no account. Paste that URL onto a canvas and
+    // the component arrives already built. The map from card number to URL is
+    // generated into this page by tools/sync-framer.mjs; it is read lazily so
+    // it does not matter where in the document that block ends up.
+    //
+    // The URL is deliberately the versionless form. Framer resolves it at
+    // paste time and pins the instance to whatever version it found, so a
+    // later edit here reaches the next person who pastes it and can never
+    // change a button that someone has already placed.
+    var framerUrls = null;
+    function framerUrl(num){
+      if (framerUrls === null){
+        var el = document.getElementById('bhl-framer-urls');
+        try { framerUrls = el ? JSON.parse(el.textContent) : {}; }
+        catch (e) { framerUrls = {}; }
+      }
+      return framerUrls[num];
+    }
+
     // Two actions, one collector. The left one is the CSS as authored, for
-    // reading and for any target that is not Framer; the right one is the same
-    // effect as a Framer code file, for pasting.
+    // reading and for any target that is not Framer. The right one hands over
+    // the module URL — option-click it for the whole code file instead, which
+    // is what you want if you would rather own the source than reference it.
+    // A study added since the last sync has no URL yet; rather than copy
+    // nothing, it falls back to the code file and says so.
     var ACTIONS = [
-      {cls:'copy',           icon:ICON,    fmt:asCss,
+      {cls:'copy',           icon:ICON,
        title:function(n){ return 'Copy the CSS for “' + n + '”'; },
-       said:function(n){ return n + ' — CSS copied'; }},
-      {cls:'copy copy--fr',  icon:FRAMER,  fmt:asFramer,
-       title:function(n){ return 'Copy “' + n + '” as a Framer code component'; },
-       said:function(n){ return n + ' — Framer component copied'; }}
+       run:function(card, n){
+         return {text: asCss(parts(card)), said: n + ' — CSS copied'};
+       }},
+      {cls:'copy copy--fr',  icon:FRAMER,
+       title:function(n){ return 'Copy “' + n + '” for Framer — paste the URL straight onto a canvas. Option-click for the code file.'; },
+       run:function(card, n, ev){
+         var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
+         var url = framerUrl(num);
+         if (url && !ev.altKey){
+           return {text: url, said: n + ' — Framer URL copied, paste it onto a canvas'};
+         }
+         return {text: asFramer(parts(card)),
+                 said: n + (url ? ' — Framer code file copied'
+                               : ' — not synced yet, code file copied instead')};
+       }}
     ];
 
     document.querySelectorAll('.spec').forEach(function(card){
@@ -4533,12 +4573,13 @@
         b.title = a.title(name);
         b.setAttribute('aria-label', b.title);
         var t = null;
-        b.addEventListener('click', function(){
-          put(a.fmt(parts(card))).then(function(){
+        b.addEventListener('click', function(ev){
+          var r = a.run(card, name, ev);
+          put(r.text).then(function(){
             clearTimeout(t);
             b.innerHTML = DONE;
             b.setAttribute('data-done', '1');
-            live.textContent = a.said(name);
+            live.textContent = r.said;
             t = setTimeout(function(){
               b.innerHTML = a.icon;
               b.removeAttribute('data-done');
@@ -4557,6 +4598,10 @@
     });
   })();
 </script>
+
+<!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/DirectionalSweep-dlV5mD.js","02":"https://framer.com/m/Shutter-8E8j3M.js","03":"https://framer.com/m/InkFill-GW6yhu.js","04":"https://framer.com/m/Sheen-eN4I5o.js","05":"https://framer.com/m/ArrowRelay-NcEpRz.js","06":"https://framer.com/m/DotBecomesArrow-78XLOF.js","07":"https://framer.com/m/Guillemets-rObXKn.js","08":"https://framer.com/m/CropMarks-fjWU0F.js","09":"https://framer.com/m/DirectionalUnderline-IatvfH.js","10":"https://framer.com/m/ElevationStep-AKmCza.js","11":"https://framer.com/m/Magnetic-SmTIHx.js","12":"https://framer.com/m/WeightWave-w7rPq4.js","13":"https://framer.com/m/DrawnOutline-cmxkyg.js","14":"https://framer.com/m/ChamferedCorner-lvjej9.js","15":"https://framer.com/m/InRegister-QpqTov.js","16":"https://framer.com/m/Counter-R61N2D.js","17":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","18":"https://framer.com/m/Backlight-68rjpP.js","19":"https://framer.com/m/TheLantern-JhIelK.js","20":"https://framer.com/m/TheGrainSettles-qDFHdb.js","21":"https://framer.com/m/EdgeLight-eEskv2.js","22":"https://framer.com/m/DiagonalRadius-QprZXR.js","23":"https://framer.com/m/RuleBecomesFrame-mTkC7D.js","24":"https://framer.com/m/FillingTheMeasure-LXrYgI.js","25":"https://framer.com/m/TheKey-SCe6ZA.js","26":"https://framer.com/m/LabelRoll-p0eOmG.js","27":"https://framer.com/m/TheSecondLine-0blJk6.js","28":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","29":"https://framer.com/m/TheCaret-wBPSsy.js","30":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","31":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","32":"https://framer.com/m/TwoMasses-Sb7Tcx.js","33":"https://framer.com/m/TheSettle-2TMnOM.js","34":"https://framer.com/m/Anticipation-r4w6lE.js","35":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","36":"https://framer.com/m/ReSpacing-9XNknM.js","37":"https://framer.com/m/SettingTheLine-kEUeIM.js","38":"https://framer.com/m/TheRealUnderline-wBkGEc.js","39":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","40":"https://framer.com/m/TheExitRemembers-y2VaAw.js","41":"https://framer.com/m/DirectionalFill-fpvcPF.js","42":"https://framer.com/m/TheWave-vZigVg.js","43":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","44":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","45":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","46":"https://framer.com/m/Resolve-QdqmRV.js","47":"https://framer.com/m/TheOthersRecede-uWvqi9.js","48":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","49":"https://framer.com/m/ConservedCompression-qOYXER.js","50":"https://framer.com/m/Repulsion-8kbI6W.js","51":"https://framer.com/m/ThePair-XMHcLD.js","52":"https://framer.com/m/TheDividerYields-BQHpVA.js","53":"https://framer.com/m/Knurling-8R1JoN.js","54":"https://framer.com/m/Deboss-n6GzCh.js","55":"https://framer.com/m/TheLineGauge-h9qIsP.js","56":"https://framer.com/m/TheDataPlate-xAARQs.js","57":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","58":"https://framer.com/m/TheStop-fTngvI.js","59":"https://framer.com/m/ChangesSides-0nQCL2.js","60":"https://framer.com/m/ThePiecesJoin-sc1diW.js","61":"https://framer.com/m/TickerLabel-1JFxFP.js","62":"https://framer.com/m/StruckThrough-P16etM.js","63":"https://framer.com/m/NothingButThePress-sHz8KT.js","64":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","65":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","66":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","67":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","68":"https://framer.com/m/SteppedFill-6Em9QG.js","69":"https://framer.com/m/ThePiecesPart-ySk8HW.js","70":"https://framer.com/m/TheMarkWalksThePlate-RYjUHt.js","71":"https://framer.com/m/TheyTradeFill-OyLZbP.js","72":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","73":"https://framer.com/m/TheMarkHinges-RXuV8I.js","74":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","75":"https://framer.com/m/StraightensUp-PMQhjy.js","76":"https://framer.com/m/TheTerminal-Jan0hL.js","77":"https://framer.com/m/ItGoesToWork-UWy42D.js","78":"https://framer.com/m/TheLabelTurns-docxl4.js","79":"https://framer.com/m/NervousType-7TInHS.js"}</script>
+<!-- BHL:FRAMER-URLS end -->
 
 </body>
 </html>
