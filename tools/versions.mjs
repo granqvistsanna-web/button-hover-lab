@@ -58,6 +58,28 @@ export const VERSIONS = {
   // button is a THIRD surface arguing with the two inside it, so there is none.
   'p-part':'built', 'p-walk':'built', 'p-trade':'built', 'p-cycle':'built',
   'p-hinge':'built', 'p-slip':'built', 'n-join':'built',
+  // — Label ———————————————————————————————————————————————————
+  // The mechanism is in the type, so the surface under it is free. These are
+  // also where LONG stops being a free ride: half of them hold their label as
+  // one element per character rather than as text.
+  'roll':'fill outline link',     'h-second':'fill outline link',
+  'e-count':'fill outline link',  's-track':'fill outline link',
+  'q-turn':'fill outline link',   'n-ticker':'fill outline link',
+  'x-flap':'fill outline link',
+  // The three whose subject IS the label's length. They keep the treatment
+  // axis; the long label is theirs to answer rather than ours to impose, and
+  // each already ships a label chosen to overrun its own measure.
+  'h-marq':'fill outline', 'o-over':'fill outline', 'o-loop':'fill outline',
+  // — Label, per character ——————————————————————————————————————
+  // Split into one element per character — or per WORD for «Word by word», and
+  // twice per character for the two rolls, which need a copy to roll to. The
+  // switch rebuilds the split from the first fragment as a template rather than
+  // flattening it to text.
+  'u-roll':'fill outline link',   'u-lift':'fill outline link',
+  'u-land':'fill outline link',   'u-words':'fill outline link',
+  'u-centre':'fill outline link', 'u-shuffle':'fill outline link',
+  'e-wave':'fill outline link',   's-print':'fill outline link',
+  'j-resolve':'fill outline link','q-jitter':'fill outline link',
 };
 
 const F = new URL('../index.html', import.meta.url).pathname;
