@@ -83,22 +83,37 @@ pair.
 Filter by intensity or by how it ports, and star the ones worth keeping — the shortlist
 persists in your browser.
 
-The same toolbar carries two global settings that restyle all one hundred and five at once: a
-**primary** and a **button radius**. Both are written as custom properties on the root
-element, which is also where the copy buttons resolve from, so a snippet copied with a
-primary set carries that primary rather than the default it replaced.
+The same toolbar carries four global settings that restyle all one hundred and five at once:
+**text**, **accent**, **hover** and a **button radius**. All are written as custom properties
+on the root element, which is also where the copy buttons resolve from, so a snippet copied
+with colours set carries those colours rather than the defaults they replaced.
 
-White is the default primary, and it is graphite's white — `--ink-hi`, a shade under pure,
-because pure white on near-black glares. The toolbar measures it off a rendered button
-rather than naming it, and leaves it as an alias rather than writing it to the root, so a
-snippet copied at the default still reads `--ink-hi` and follows the system it lands in.
-Picking `#ffffff` by hand is a real choice and is treated as one.
+Three colours, because a monochrome page hides the fact that `--ink` was doing three jobs at
+once. **Text** is the label at rest, and everything that belongs to the label — card 57's
+underline goes with it, not with the fill that arrives behind it. **Accent** is the fill and
+the mark: `--ink` and `--accent` together. **Hover** is whatever arrives when you point at
+something. Set all three the same and the page behaves exactly as it did when there was one
+swatch.
 
-The primary re-points `--ink` and `--accent` and nothing else — no page chrome reads
-either, so the tint stops at the stage edge. A dark-only page cannot carry a dark accent:
-`--ink` colours label text as well as fills, so a chosen colour has its lightness walked up,
-hue and saturation intact, until the label clears 4.5:1 on the panel. The toolbar prints the
-measured ratio and marks it `↑` when the colour had to move.
+Unset is not "follow another swatch" — it leaves the authored alias standing, and the aliases
+are deliberately uneven. `--ink-text` is pinned to `--ink-hi`, so the label does not drift
+when only the accent is picked. `--ink-hover` is pinned to `--ink`, so hover *does* follow
+the accent until it is given a colour of its own. That is what each one is expected to do:
+text stays put, hover goes along.
+
+White is the default for all three, and it is graphite's white — `--ink-hi`, a shade under
+pure, because pure white on near-black glares. The toolbar measures it off a probe that asks
+for `var(--ink)` rather than naming it, and leaves it as an alias rather than writing it to
+the root, so a snippet copied at the default still reads `--ink-hi` and follows the system it
+lands in. Picking `#ffffff` by hand is a real choice and is treated as one.
+
+No page chrome reads any of the three, so the tint stops at the stage edge whatever is set. A
+dark-only page cannot carry a dark colour in any of the roles — the label would go under AA,
+the fill would vanish into the panel — so a chosen colour has its lightness walked up, hue and
+saturation intact, until it clears its floor: 4.5:1 for text, 3:1 for the hover fill and its
+borders. Accent is held to 4.5 rather than 3 even though it is a fill token, because cards 31
+and 44 feed local pair aliases from `--ink` and put it behind a label. Each caption is marked
+`↑` when its colour had to move, and the toolbar prints the label's measured ratio.
 
 Radius is deliberately partial. Six studies fix or animate their own corner — 09, 13, 14,
 22, 23 and the text variant — and there the radius *is* the effect, so the setting leaves

@@ -51,6 +51,20 @@
     /* The inverse pair IS the accent — no hue anywhere on the page. */
     --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
     --on-ink:var(--inverse-ink);
+    /* ---- The three colour roles ----------------------------------------
+       --ink was doing two jobs at once: the label at REST, and the fill that
+       ARRIVES on hover. On a monochrome page that is one colour and the
+       overload is invisible. Give the toolbar a text swatch and a hover
+       swatch and the two jobs come apart, so each needs its own name.
+
+       Both alias back to --ink. That is the safety property, not tidiness:
+       every site this pass did not reclassify keeps resolving to exactly the
+       colour it resolved to before, so a missed rule is a rule that still
+       works. The toolbar overrides these on the root only when a swatch is
+       actually set, and the Copy buttons resolve the alias either way. */
+    --ink-text:var(--ink);          /* the label, at rest                  */
+    --ink-hover:var(--ink);         /* the colour that arrives on hover    */
+    --on-ink-hover:var(--on-ink);   /* the label once that colour is under it */
     --shadow-rgb:0,0,0;
     /* The button radius, as one token the whole page reads. It is here in the
        alias block rather than inline on .btn so the toolbar has one property to
@@ -107,8 +121,8 @@
   .lede strong{color:var(--ink-hi); font-weight:600}
   /* The five house rules, as a spec strip rather than five prose boxes —
      one mono line per rule, in the register graphite gives to metadata. */
-  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:6px 22px; margin-top:26px;
+  /* One line now, not a five-cell grid — see the note in the header. */
+  .rules{margin-top:22px; max-width:52ch;
     font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
   .rules b{color:var(--ink-mid); font-weight:500}
 
@@ -160,7 +174,7 @@
        one hundred and five demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
-    color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
+    color:var(--ink-text); background:none; border:0; border-radius:var(--btn-r);
     padding:15px 28px; cursor:pointer;
     transition:transform var(--t-1) var(--e-out);
   }
@@ -224,7 +238,7 @@
   /* 10 Sheen */
   .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
-  .sheen:focus-visible{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
   .sheen:hover::after,
   .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
@@ -296,9 +310,9 @@
      is why this is the one card whose focus state is not its hover state. */
   .magnet{will-change:transform; transition:transform var(--t-1) var(--e-out), background var(--t-3) ease}
   .magnet .m-lbl{display:inline-block; will-change:transform}
-  .magnet:focus-visible{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+  .magnet:focus-visible{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
   @media (prefers-reduced-motion: reduce){
-    .magnet:hover{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+    .magnet:hover{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
   }
 
   /* ============ footer ============ */
@@ -320,22 +334,33 @@
        than leaving the single effect that ignores the preference. */
     .f-glas .f-glas-yta{-webkit-backdrop-filter:none !important; backdrop-filter:none !important}
     .f-glas:hover .f-glas-yta,
-    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink) 13%, transparent)}
+    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink-hover) 13%, transparent)}
   }
   .tools-row{display:flex; align-items:center; gap:10px}
   .tools-lbl{font-size:11px; font-weight:600; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all one hundred and five studies at once. Both are written as
+     Four knobs that restyle all one hundred and five studies at once. All are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
      the whole reason they are tokens and not a class.
 
-     The primary re-points --ink and --accent and nothing else. Every effect
-     reads its colour through those two, and no page chrome reads either, so
-     the tint stops at the stage edge and the toolbar stays graphite.
+     Three colours, because a monochrome page hides the fact that --ink was
+     doing three jobs: TEXT is the label at rest, ACCENT is the fill and the
+     mark, HOVER is whatever arrives when you point at it. Set all three the
+     same and the page behaves exactly as it did when there was one swatch.
+
+     Each is fitted before it is written. A dark-only page cannot take a dark
+     colour in any of the three roles — the label would go under AA, the fill
+     would vanish into the panel — so lightness is walked up until the role
+     clears its threshold: 4.5:1 for text, 3:1 for a fill or a border, both
+     measured on the card. Hue and saturation survive. The readout says when a
+     colour moved, so the fit is never silent.
+
+     No page chrome reads any of the three, so the tint stops at the stage edge
+     and the toolbar stays graphite whatever is set.
 
      Radius is deliberately partial. Six studies fix or animate their own
      corner — 09 Corners, 13 Draw, 14 Chamfer, 22 Diagonal radius, 23 Rule
@@ -344,6 +369,18 @@
      card already say border-radius:inherit, so they follow for free. */
   .tools-sep{width:1px; align-self:stretch; min-height:26px;
     background:var(--hairline); margin:0 -6px}
+  /* Caption and swatch as one <label>, so the caption IS the accessible name
+     and the hit target is the pair rather than 28 square pixels. Three of these
+     sit on one line: the toolbar is sticky and every row it grows costs the
+     reader viewport for the whole page. */
+  .set-pair{display:inline-flex; align-items:center; gap:7px; cursor:pointer}
+  .set-cap{font-size:11px; font-weight:600; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-low); transition:color var(--t-2) ease}
+  .set-pair:hover .set-cap{color:var(--ink-mid)}
+  /* The marker the fit puts up when it had to move a colour. Inline with the
+     caption rather than in the shared readout, because with three swatches a
+     single readout cannot say WHICH one moved. */
+  .set-cap b{font-weight:400; color:var(--ink-mid); cursor:help}
   /* A native colour input, stripped back to the swatch. It is the only control
      on the page that opens something the page does not draw, so it is worth
      letting the OS own it rather than rebuilding a picker badly. */
@@ -616,21 +653,37 @@
     <h1>Button Hover Lab</h1>
     <p class="lede">One hundred and five button hover animations, actually built. <strong>Hover, tab and press
     any of them.</strong></p>
-    <div class="rules">
-      <p><b>instant</b> press on pointer-down</p>
-      <p><b>interruptible</b> turns from wherever it is</p>
-      <p><b>asymmetric</b> exit one rung down</p>
-      <p><b>reduced-motion</b> end state, no travel</p>
-      <p><b>durations</b> 83 / 133 / 200 / 300 / 450 ms</p>
-    </div>
+    <!-- The five house rules used to be listed here, one line each. They said
+         what the hundred and five studies below already demonstrate, in the
+         same words as this page's own meta description, and they stood between
+         the lede and the first button a reader could touch. What survives is
+         the ladder, because five specific numbers are the one thing on that
+         list nobody can infer by hovering. The full set, with the reasoning,
+         is the house-rules table in the README. -->
+    <p class="rules">Interruptible, reduced-motion aware, five durations:
+    <b>83 / 133 / 200 / 300 / 450 ms</b>.</p>
   </header>
 
   <div class="tools" role="group" aria-label="Restyle the studies">
     <div class="tools-row">
-      <span class="tools-lbl">Primary</span>
-      <input class="set-swatch" type="color" value="#ffffff"
-             aria-label="Primary colour, applied to every study"
-             aria-describedby="set-contrast">
+      <label class="set-pair">
+        <span class="set-cap" data-cap="text">Text</span>
+        <input class="set-swatch" type="color" data-set="text" value="#ffffff"
+               aria-label="Label text colour, applied to every study"
+               aria-describedby="set-contrast">
+      </label>
+      <label class="set-pair">
+        <span class="set-cap" data-cap="accent">Accent</span>
+        <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
+               aria-label="Fill and mark colour, applied to every study"
+               aria-describedby="set-contrast">
+      </label>
+      <label class="set-pair">
+        <span class="set-cap" data-cap="hover">Hover</span>
+        <input class="set-swatch" type="color" data-set="hover" value="#ffffff"
+               aria-label="The colour that arrives on hover, applied to every study"
+               aria-describedby="set-contrast">
+      </label>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
     <div class="tools-row">
@@ -1156,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", function () {
                background-color var(--t-5) var(--e-out), box-shadow var(--t-5) var(--e-out);
   }
   .f-glas .lbl{ position:relative }
-  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink) 22%, var(--line)) }
+  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 22%, var(--line)) }
   .f-glas:hover .f-glas-yta, .f-glas:focus-visible .f-glas-yta{
     background-color:color-mix(in srgb, var(--ink) 7%, transparent);
     box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 65%, transparent);
@@ -1287,9 +1340,9 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
   }
   .f-kant .lbl{ position:relative; z-index:1 }
-  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink) 24%, var(--line)) }
+  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 24%, var(--line)) }
   /* .btn carried, so the press beats the hover pair's (0,2,0) — card 51's note. */
-  .btn.f-kant:active{ border-color:var(--accent); transition-duration:var(--t-1) }
+  .btn.f-kant:active{ border-color:var(--ink-hover); transition-duration:var(--t-1) }
   .f-kant .f-kant-lamp{ display:none }
   @supports (offset-path: border-box){
     .f-kant .f-kant-lamp{
@@ -1764,7 +1817,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .i-give .i-give-lbl{display:inline-block; transform:scale(1); transition:transform var(--t-3) var(--e-out)}
   /* .btn.i-give above is (0,2,0), so the hover has to carry .btn too or it loses. */
-  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink) 40%,var(--line-ctl))}
+  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 40%,var(--line-ctl))}
   .btn.i-give:active{transition-duration:var(--t-1)}
   .btn.i-give:active .i-give-lbl{transform:scale(1.030928); transition-duration:var(--t-1)}
 
@@ -1871,7 +1924,7 @@ document.addEventListener("DOMContentLoaded", function () {
     d:path("M0 2 Q60 2 120 2");
     transition:d var(--t-4) var(--e-quint);
   }
-  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--ink)}
+  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--ink-hover)}
   .i-beam:hover .i-beam-rule path, .i-beam:focus-visible .i-beam-rule path{
     d:path("M0 2 Q60 12 120 2");
   }
@@ -1901,7 +1954,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-rule .i-rule-lbl{
     text-decoration-line:underline;
     text-decoration-skip-ink:auto;
-    text-decoration-color:color-mix(in srgb,var(--ink) 42%,transparent);
+    text-decoration-color:color-mix(in srgb,var(--ink-text) 42%,transparent);
     text-decoration-thickness:1px;
     text-underline-offset:.26em;
     transition:text-decoration-thickness var(--t-4) var(--e-quint),
@@ -1911,7 +1964,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-rule:hover .i-rule-lbl, .i-rule:focus-visible .i-rule-lbl{
     text-decoration-thickness:2px;
     text-underline-offset:.12em;
-    text-decoration-color:var(--ink);
+    text-decoration-color:var(--ink-text);
   }
 
   /* 58 It matches your tempo — the carrier is deliberately the plainest thing
@@ -1927,7 +1980,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:background-color var(--i-rung) var(--e-out),
                color var(--i-rung) var(--e-out), transform var(--t-1) var(--e-out);
   }
-  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink); color:var(--on-ink)}
+  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink-hover); color:var(--on-ink-hover)}
 
   /* 59 The exit remembers — the return home is handed the pointer's exit
      velocity and settled by a critically damped spring (omega 20 rad/s), so a
@@ -2287,7 +2340,7 @@ document.addEventListener("DOMContentLoaded", function () {
     border-radius:6px; padding:16px 24px;
   }
   .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
-  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink)}
+  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink-text)}
 </style>
 
 <section class="sect">
@@ -2565,12 +2618,12 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-pair .k-pair-a{background-color:var(--ink); color:var(--on-ink)}
   .k-pair .k-pair-b{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
-    color:var(--ink); border-color:var(--line-ctl);
+    color:var(--ink-text); border-color:var(--line-ctl);
   }
-  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-a{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
-    color:var(--ink); border-color:var(--line-ctl);
+    color:var(--ink-text); border-color:var(--line-ctl);
   }
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-b{
     background-color:var(--ink); color:var(--on-ink); border-color:transparent;
@@ -2593,7 +2646,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--line-ctl);
     transition:opacity var(--t-3) ease;
   }
-  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 7%,transparent)}
+  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 7%,transparent)}
   .k-div .k-div-i:is(:hover,:focus-visible)::before,
   .k-div .k-div-i:is(:hover,:focus-visible) + .k-div-i::before{opacity:0}
 </style>
@@ -2699,14 +2752,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .l-knurl .l-knurl-grip{
     position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    color:var(--ink); opacity:0;
+    color:var(--ink-hover); opacity:0;
     background-image:repeating-linear-gradient(72deg, currentColor 0 1px, transparent 1px 6px);
     -webkit-mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
     mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
     transition:opacity var(--t-4) var(--e-out);
   }
   .l-knurl .lbl{position:relative}
-  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
   .l-knurl:hover .l-knurl-grip, .l-knurl:focus-visible .l-knurl-grip{opacity:.17}
 
   /* 45 Deboss — a letterpress impression, or a stamped nameplate. The exact
@@ -2720,7 +2773,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--lift-bg); border:1px solid var(--line-ctl);
     transition:border-color var(--t-3) ease;
   }
-  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
   .l-deboss .l-deboss-lbl{
     display:inline-block;
     text-shadow:0 -1px 0 transparent, 0 1px 0 transparent;
@@ -2728,7 +2781,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.l-deboss:active{transform:scale(1)}
   .btn.l-deboss:active .l-deboss-lbl{
-    color:color-mix(in srgb,var(--ink) 70%,var(--lift-bg));
+    color:color-mix(in srgb,var(--ink-text) 70%,var(--lift-bg));
     /* The shadow does most of the work and the highlight is a bonus. That was
        written when a light mode existed and the highlight collapsed in it —
        --l-lys and --lift-bg landed five values apart, so a plate that was
@@ -2758,7 +2811,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:clip-path var(--t-5) var(--e-quint), color var(--t-3) ease;
   }
   .l-gauge:hover .l-gauge-rule, .l-gauge:focus-visible .l-gauge-rule{
-    clip-path:inset(0 0 0 0); color:var(--ink);
+    clip-path:inset(0 0 0 0); color:var(--ink-hover);
   }
 
   /* 47 The data plate — the small engraved plate on a machine, and the first
@@ -3204,7 +3257,7 @@ document.addEventListener("DOMContentLoaded", function () {
      only boundary of an interactive thing below 3:1. Quiet has to mean low
      contrast, not no contrast. */
   .o-quiet{border-color:var(--muted); transition:border-color var(--t-2) ease}
-  .o-quiet:hover,.o-quiet:focus-visible{border-color:var(--ink)}
+  .o-quiet:hover,.o-quiet:focus-visible{border-color:var(--ink-hover)}
 
   /* 87 Overruns its measure — a second copy of the label sits just outside the
      right edge and the row slides far enough to prove it is there. Card 16
@@ -3266,9 +3319,9 @@ document.addEventListener("DOMContentLoaded", function () {
      It goes imperceptible once the plate turns white, which is fine — a white
      plate on a dark card is its own edge. */
   .o-plate{border:1px solid var(--line-ctl); border-radius:var(--r-md);
-    background:var(--lift-bg); color:var(--ink);
+    background:var(--lift-bg); color:var(--ink-text);
     transition:background var(--t-3) ease,color var(--t-3) ease}
-  .o-plate:hover,.o-plate:focus-visible{background:var(--accent); color:var(--on-accent)}
+  .o-plate:hover,.o-plate:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
 
   /* 90 The hatch withdraws — the surface inverts and the hatching leaves by
      the trailing edge rather than fading where it stands. The inversion is
@@ -3281,7 +3334,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Boundary for the same reason as card 89. The hatch is not one: it is the
      thing that leaves. */
   .o-hatch{position:relative; overflow:hidden; border:1px solid var(--line-ctl);
-    background:var(--lift-bg); color:var(--ink);
+    background:var(--lift-bg); color:var(--ink-text);
     transition:background var(--t-3) ease,color var(--t-3) ease}
   .o-hatch::before{content:""; position:absolute; inset:0; pointer-events:none;
     background:repeating-linear-gradient(135deg,
@@ -3289,7 +3342,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-4) var(--e-quint),opacity var(--t-2) ease}
   .o-hatch:hover::before,
   .o-hatch:focus-visible::before{transform:translateX(101%); opacity:0}
-  .o-hatch:hover,.o-hatch:focus-visible{background:var(--accent); color:var(--on-accent)}
+  .o-hatch:hover,.o-hatch:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
   .o-hatch .lbl{position:relative}
 
   /* 91 Stepped fill — the only new mechanism in the set. Six columns rise from
@@ -3550,12 +3603,12 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--on-ink);
     box-shadow:inset 0 0 0 1px transparent}
   .p-trade .p-trade-mark{display:grid; place-items:center; width:46px;
-    background:none; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line-ctl)}
+    background:none; color:var(--ink-text); box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .p-trade:hover .p-trade-plate,
-  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink);
+  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink-text);
     box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .p-trade:hover .p-trade-mark,
-  .p-trade:focus-visible .p-trade-mark{background:var(--ink); color:var(--on-ink);
+  .p-trade:focus-visible .p-trade-mark{background:var(--ink-hover); color:var(--on-ink-hover);
     box-shadow:inset 0 0 0 1px transparent}
 
   /* 69 The arrow leaves, the plates stay — the two masses hold perfectly still
@@ -4195,7 +4248,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.s-sprite:hover,
   .btn.s-sprite:focus-visible{color:var(--on-ink)}
   .btn.s-sprite:hover::after,
-  .btn.s-sprite:focus-visible::after{background:var(--ink)}
+  .btn.s-sprite:focus-visible::after{background:var(--ink-hover)}
   .btn.s-sprite:active{transform:none}
   .btn.s-sprite:active::after{background:var(--ink-mid)}
 
@@ -5209,7 +5262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:box-shadow var(--t-2) var(--e-out), border-color var(--t-3) ease;
   }
   .btn.v-inner:hover,
-  .btn.v-inner:focus-visible{border-color:var(--ink)}
+  .btn.v-inner:focus-visible{border-color:var(--ink-hover)}
   .btn.v-inner:active{
     box-shadow:inset 0 0 18px 0 rgba(255,255,255,.30);
     transition-duration:var(--t-1);
@@ -5856,18 +5909,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // ---- Global settings: primary and radius ---------------------------
+    // ---- Global settings: three colours and a radius --------------------
     // Written as inline custom properties on the root element. That is not
     // decoration: the Copy buttons resolve their alias chains against the
     // computed root, so anything set here travels into the copied snippet and
     // the page never hands out CSS that contradicts what is on screen.
     var SET_KEY = 'knapplabbet-utseende';
     var PILL    = 28;                       // the top of the slider IS the pill
-    var swatch  = tools.querySelector('.set-swatch');
     var range   = tools.querySelector('.set-range');
     var readC   = tools.querySelector('[data-read="colour"]');
     var readR   = tools.querySelector('[data-read="radius"]');
-    var look    = {colour:'', radius:PILL};  // '' — the page's own monochrome
 
     // The panel colour is read off a rendered card rather than off the --bg-1
     // token, because the token arrives from a stylesheet this page does not own
@@ -5878,13 +5929,59 @@ document.addEventListener("DOMContentLoaded", function () {
       return m ? [+m[0], +m[1], +m[2]] : [20, 20, 20];
     }
     var PANEL = rgbOf(cards[0], 'backgroundColor');
-    // White is the default primary, and it is graphite's white rather than
-    // #ffffff — the system ships --ink-hi at a shade under pure, because pure
-    // white on near-black glares. Measured off a rendered button instead of
-    // named here, so it stays correct if the ladder is ever retuned, and read
-    // BEFORE the first paint, while the root still carries no override.
-    var WHITE_RGB = rgbOf(document.querySelector('.btn'), 'color');
+    // White is the default for all three, and it is graphite's white rather
+    // than #ffffff — the system ships --ink-hi at a shade under pure, because
+    // pure white on near-black glares. Still measured rather than named, so it
+    // stays correct if the ladder is ever retuned, and still read BEFORE the
+    // first paint while the root carries no override.
+    //
+    // Measured off a PROBE, not off the first .btn. The first button on the
+    // page is a solid one, so its computed colour is --on-ink — near-black —
+    // and reading the default off it put #101010 in the swatch and 1.1:1 in
+    // the readout. A probe that asks for var(--ink) and nothing else cannot be
+    // wrong-footed by whichever variant happens to sort first, and computed
+    // colour still comes back as rgb() whatever syntax the token was authored
+    // in, which was the reason for measuring instead of naming.
+    var probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink)';
+    document.body.appendChild(probe);
+    var WHITE_RGB = rgbOf(probe, 'color');
     var WHITE     = toHex(WHITE_RGB);
+    probe.remove();
+
+    // The three roles --ink used to play at once, and what each has to clear
+    // against the card to stay legible.
+    //
+    //   min   4.5 is the AA floor for text. 3 is WCAG 1.4.11 for a non-text
+    //         boundary, which is the same argument --line-ctl already makes a
+    //         few hundred lines up. ACCENT is held to 4.5 rather than 3 even
+    //         though it is a fill token: card 31's --f-lys and card 44's
+    //         --l-lys are local pair aliases fed from --ink, and both put it
+    //         behind a label. One token reaching text by a route this pass
+    //         cannot see is enough to make the stricter floor the honest one.
+    //   set   the tokens the role writes.
+    //   on    the tokens for whatever sits ON that colour. Computed from the
+    //         fitted result, never picked: text on a fill is a consequence of
+    //         the fill, not a decision the reader should have to make.
+    var ROLES = [
+      {key:'text',   min:4.5, set:['--ink-text']},
+      {key:'accent', min:4.5, set:['--ink', '--accent'], on:['--on-ink', '--on-accent']},
+      {key:'hover',  min:3,   set:['--ink-hover'],       on:['--on-ink-hover']}
+    ];
+    // '' — unset, meaning the page's own monochrome. Unset is not «follow
+    // another swatch»: leaving the token off the root lets the authored alias
+    // stand, and the aliases are deliberately uneven. --ink-text is pinned to
+    // --ink-hi so the label never drifts when only the accent is picked, while
+    // --ink-hover is pinned to --ink so hover DOES follow the accent until it
+    // is given a colour of its own. That is the behaviour a reader expects
+    // from each: text stays put, hover goes along.
+    var look = {text:'', accent:'', hover:'', radius:PILL};
+    var swatches = {}, caps = {};
+    ROLES.forEach(function(r){
+      swatches[r.key] = tools.querySelector('.set-swatch[data-set="' + r.key + '"]');
+      caps[r.key]     = tools.querySelector('.set-cap[data-cap="' + r.key + '"]');
+      caps[r.key].setAttribute('data-label', caps[r.key].textContent);
+    });
 
     function chan(c){ c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
     function lum(c){ return .2126 * chan(c[0]) + .7152 * chan(c[1]) + .0722 * chan(c[2]); }
@@ -5917,47 +6014,61 @@ document.addEventListener("DOMContentLoaded", function () {
             : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
       return [(t[0] + m) * 255, (t[1] + m) * 255, (t[2] + m) * 255];
     }
-    // A dark-only page cannot take a dark accent: --ink colours label text as
-    // well as fills, so a navy primary would put nine cards' labels under AA on
-    // the panel. Hue and saturation are kept and lightness is walked up until
-    // the label clears 4.5:1 — at worst that lands on white, which is where the
-    // page started. The readout says when it moved, so the fit is never silent.
-    function fit(hex){
+    // A dark-only page cannot take a dark colour in any of the three roles: a
+    // navy label goes under AA on the panel, a navy fill disappears into it.
+    // Hue and saturation are kept and lightness is walked up until the role
+    // clears its own floor — at worst that lands on white, which is where the
+    // page started. The caption says when it moved, so the fit is never silent.
+    function fit(hex, min){
       var hsl = toHsl(toRgb(hex)), rgb = toRgb(hex), moved = false;
-      while (ratio(rgb, PANEL) < 4.5 && hsl[2] < 1){
+      while (ratio(rgb, PANEL) < min && hsl[2] < 1){
         hsl[2] = Math.min(1, hsl[2] + .01);
         rgb = fromHsl(hsl[0], hsl[1], hsl[2]);
         moved = true;
       }
       return {rgb: rgb, hex: toHex(rgb), moved: moved, ratio: ratio(rgb, PANEL)};
     }
-    // Text ON the primary. The fit above guarantees the primary is lighter than
-    // the panel, so this resolves to black in practice — it is computed anyway
-    // rather than assumed, because the guarantee lives in another function.
+    // Text ON a fitted colour. The fit above guarantees the colour is lighter
+    // than the panel, so this resolves to black in practice — it is computed
+    // anyway rather than assumed, because the guarantee lives in another
+    // function and this one should survive that function changing.
     function onTop(rgb){
       return ratio(rgb, [0, 0, 0]) >= ratio(rgb, [255, 255, 255]) ? '#000000' : '#ffffff';
     }
 
     function paint(){
       var root = document.documentElement.style;
-      if (look.colour){
-        var f = fit(look.colour);
-        root.setProperty('--ink', f.hex);
-        root.setProperty('--accent', f.hex);
-        root.setProperty('--on-ink', onTop(f.rgb));
-        root.setProperty('--on-accent', onTop(f.rgb));
-        readC.innerHTML = f.ratio.toFixed(1) + ':1' + (f.moved ? ' <b>↑</b>' : '');
-        readC.title = f.moved
-          ? 'Lightened to ' + f.hex + ' so the label clears 4.5:1 on the panel. A dark page cannot carry a dark accent.'
-          : 'Label contrast on the panel.';
-      } else {
-        ['--ink', '--accent', '--on-ink', '--on-accent'].forEach(function(k){ root.removeProperty(k); });
-        swatch.value = WHITE;
-        readC.textContent = ratio(WHITE_RGB, PANEL).toFixed(1) + ':1';
-        readC.title = 'The default primary: ' + WHITE + ', graphite\u2019s white. '
-                    + 'It is left as an alias rather than written to the root, so a copied '
-                    + 'snippet still reads --ink-hi and follows the system it lands in.';
-      }
+      var textRatio = null, moved = 0;
+      ROLES.forEach(function(r){
+        var cap = caps[r.key], sw = swatches[r.key], label = cap.getAttribute('data-label');
+        if (look[r.key]){
+          var f = fit(look[r.key], r.min);
+          r.set.forEach(function(p){ root.setProperty(p, f.hex); });
+          (r.on || []).forEach(function(p){ root.setProperty(p, onTop(f.rgb)); });
+          cap.innerHTML = label + (f.moved ? ' <b>↑</b>' : '');
+          cap.title = f.moved
+            ? label + ' lightened to ' + f.hex + ', so it clears ' + r.min
+              + ':1 on the card. A dark page cannot carry a dark colour.'
+            : label + ': ' + f.ratio.toFixed(1) + ':1 on the card.';
+          if (f.moved) moved++;
+          if (r.key === 'text') textRatio = f.ratio;
+        } else {
+          r.set.concat(r.on || []).forEach(function(p){ root.removeProperty(p); });
+          sw.value  = WHITE;
+          cap.textContent = label;
+          cap.title = label + ' is unset: ' + WHITE + ', graphite’s white. It is left as '
+                    + 'an alias rather than written to the root, so a copied snippet still '
+                    + 'reads the system token and follows the system it lands in.';
+        }
+      });
+      // One number, and it is the label's, because the label is the only one
+      // of the three that can put a reader below AA. The fills report
+      // themselves in their own captions.
+      if (textRatio === null) textRatio = ratio(WHITE_RGB, PANEL);
+      readC.textContent = textRatio.toFixed(1) + ':1';
+      readC.title = 'Label contrast on the card.'
+                  + (moved ? ' ' + moved + (moved > 1 ? ' colours were' : ' colour was')
+                             + ' lightened to stay legible — see the ↑.' : '');
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
       range.setAttribute('aria-valuetext', readR.textContent);
@@ -5965,19 +6076,30 @@ document.addEventListener("DOMContentLoaded", function () {
     function saveLook(){
       try { localStorage.setItem(SET_KEY, JSON.stringify(look)); } catch(e){}
     }
+    var HEX = /^#[0-9a-f]{6}$/i;
     try {
       var stored = JSON.parse(localStorage.getItem(SET_KEY));
       if (stored && typeof stored === 'object'){
-        if (typeof stored.colour === 'string' && /^#[0-9a-f]{6}$/i.test(stored.colour)) look.colour = stored.colour;
+        // A visitor who set a primary under the one-swatch toolbar has
+        // {colour, radius} in storage. That one swatch drove label and fill
+        // together, so replaying it across all three roles reproduces exactly
+        // what they left on screen rather than dropping their setting.
+        if (typeof stored.colour === 'string' && HEX.test(stored.colour)){
+          look.text = look.accent = look.hover = stored.colour;
+        }
+        ROLES.forEach(function(r){
+          if (typeof stored[r.key] === 'string' && HEX.test(stored[r.key])) look[r.key] = stored[r.key];
+        });
         if (typeof stored.radius === 'number' && stored.radius >= 0 && stored.radius <= PILL) look.radius = stored.radius;
       }
     } catch(e){}
-    if (look.colour) swatch.value = look.colour;
-    range.value = look.radius;
-
-    swatch.addEventListener('input', function(){
-      look.colour = swatch.value; paint(); saveLook(); apply();
+    ROLES.forEach(function(r){
+      if (look[r.key]) swatches[r.key].value = look[r.key];
+      swatches[r.key].addEventListener('input', function(){
+        look[r.key] = swatches[r.key].value; paint(); saveLook(); apply();
+      });
     });
+    range.value = look.radius;
     range.addEventListener('input', function(){
       look.radius = +range.value; paint(); saveLook(); apply();
     });
@@ -5992,9 +6114,9 @@ document.addEventListener("DOMContentLoaded", function () {
       state = {fav:false, q:'', changes:[], answers:[]};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
-      look  = {colour:'', radius:PILL};
+      look  = {text:'', accent:'', hover:'', radius:PILL};
       range.value  = PILL;
-      paint();
+      paint();   // clears all three swatches back to WHITE on its unset branch
       saveLook();
       favBtn.setAttribute('aria-pressed', 'false');
       apply();
