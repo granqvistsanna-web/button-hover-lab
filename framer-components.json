@@ -788,5 +788,149 @@
     "id": "BU_Rcyw",
     "url": "https://framer.com/m/NervousType-7TInHS.js",
     "pinned": "https://framer.com/m/NervousType-7TInHS.js@ONNTwHbXrebbLZBJLeOJ"
+  },
+  {
+    "num": "80",
+    "name": "Single storey",
+    "comp": "SingleStorey",
+    "file": "SingleStorey.tsx",
+    "hash": "4752788caa1a1a33",
+    "id": "IUpZAML",
+    "url": "https://framer.com/m/SingleStorey-z62nnB.js"
+  },
+  {
+    "num": "81",
+    "name": "Telling them apart",
+    "comp": "TellingThemApart",
+    "file": "TellingThemApart.tsx",
+    "hash": "a707d7e07a804ad6",
+    "id": "cnchv7Z",
+    "url": "https://framer.com/m/TellingThemApart-8WQlW9.js"
+  },
+  {
+    "num": "82",
+    "name": "The figures change gauge",
+    "comp": "TheFiguresChangeGauge",
+    "file": "TheFiguresChangeGauge.tsx",
+    "hash": "29c11b9f6a787e4e",
+    "id": "MFgwHqJ",
+    "url": "https://framer.com/m/TheFiguresChangeGauge-rRj0yw.js"
+  },
+  {
+    "num": "83",
+    "name": "The fraction resolves",
+    "comp": "TheFractionResolves",
+    "file": "TheFractionResolves.tsx",
+    "hash": "5279468c0f0628cd",
+    "id": "kEkxPhS",
+    "url": "https://framer.com/m/TheFractionResolves-jf6xlC.js"
+  },
+  {
+    "num": "84",
+    "name": "The marks flatten",
+    "comp": "TheMarksFlatten",
+    "file": "TheMarksFlatten.tsx",
+    "hash": "016e6486fbf5609e",
+    "id": "raUmUh0",
+    "url": "https://framer.com/m/TheMarksFlatten-hDjMqS.js"
+  },
+  {
+    "num": "85",
+    "name": "The numero sign",
+    "comp": "TheNumeroSign",
+    "file": "TheNumeroSign.tsx",
+    "hash": "52170693d4740acd",
+    "id": "hz3_hOr",
+    "url": "https://framer.com/m/TheNumeroSign-DVQ0yF.js"
+  },
+  {
+    "num": "86",
+    "name": "Tracking was the switch",
+    "comp": "TrackingWasTheSwitch",
+    "file": "TrackingWasTheSwitch.tsx",
+    "hash": "1c7d64dbe3d8a9a1",
+    "id": "nj2PCfV",
+    "url": "https://framer.com/m/TrackingWasTheSwitch-plH7M0.js"
+  },
+  {
+    "num": "87",
+    "name": "The light source flips",
+    "comp": "TheLightSourceFlips",
+    "file": "TheLightSourceFlips.tsx",
+    "hash": "18a47cc575565c14",
+    "id": "met6srx",
+    "url": "https://framer.com/m/TheLightSourceFlips-NAY7oj.js"
+  },
+  {
+    "num": "88",
+    "name": "The tube converges",
+    "comp": "TheTubeConverges",
+    "file": "TheTubeConverges.tsx",
+    "hash": "68c6f460c84ea528",
+    "id": "AQvFMC4",
+    "url": "https://framer.com/m/TheTubeConverges-Mzevog.js"
+  },
+  {
+    "num": "89",
+    "name": "Two frames",
+    "comp": "TwoFrames",
+    "file": "TwoFrames.tsx",
+    "hash": "d9233732526e34b7",
+    "id": "IfQnVUt",
+    "url": "https://framer.com/m/TwoFrames-Xkk1by.js"
+  },
+  {
+    "num": "90",
+    "name": "It prints",
+    "comp": "ItPrints",
+    "file": "ItPrints.tsx",
+    "hash": "cf0681124a02d60d",
+    "id": "g8vMM_N",
+    "url": "https://framer.com/m/ItPrints-d0SyuT.js"
+  },
+  {
+    "num": "91",
+    "name": "The measure absorbs the tracking",
+    "comp": "TheMeasureAbsorbsTheTracking",
+    "file": "TheMeasureAbsorbsTheTracking.tsx",
+    "hash": "7934d6a43d48a2eb",
+    "id": "OmwfFEl",
+    "url": "https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js"
+  },
+  {
+    "num": "92",
+    "name": "No direction at all",
+    "comp": "NoDirectionAtAll",
+    "file": "NoDirectionAtAll.tsx",
+    "hash": "b7b98164a4ad2c35",
+    "id": "gwWasby",
+    "url": "https://framer.com/m/NoDirectionAtAll-o7wENC.js"
+  },
+  {
+    "num": "93",
+    "name": "It reports on itself",
+    "comp": "ItReportsOnItself",
+    "file": "ItReportsOnItself.tsx",
+    "hash": "88743932a5e79924",
+    "id": "RlpVn2r",
+    "url": "https://framer.com/m/ItReportsOnItself-UWJJzz.js"
+  },
+  {
+    "num": "94",
+    "name": "The plate becomes the mark",
+    "comp": "ThePlateBecomesTheMark",
+    "file": "ThePlateBecomesTheMark.tsx",
+    "hash": "c692588855697bab",
+    "id": "lB22RV5",
+    "url": "https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js"
+  },
+  {
+    "num": "95",
+    "name": "It asks you to mean it",
+    "comp": "ItAsksYouToMeanIt",
+    "file": "ItAsksYouToMeanIt.tsx",
+    "hash": "461fcf0b46babd3b",
+    "id": "BxrRDDA",
+    "url": "https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"
   }
 ]
