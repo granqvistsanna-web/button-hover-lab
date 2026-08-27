@@ -67,6 +67,29 @@
        Nothing outside the ladder without a comment saying why. */
     --t-1: 83ms;   --t-2: 133ms;  --t-3: 200ms;  --t-4: 300ms;  --t-5: 450ms;
     --d-1: 50ms;   --d-2: 100ms;  --t-stagger: 26ms;
+    /* ---- The pair gap --------------------------------------------------
+       The one spacing value on this page that is not decoration: card 60
+       and the six of section N are all built as a label plate and a 46px
+       mark plate this far apart, and THREE of them derive a translate from
+       it — 69 rests one gap closed, 74 leaves by its own width plus one
+       gap, and 70's plate crosses the mark's width plus one gap. Written
+       as a literal in both places it is a silent bug the first time the
+       spacing is judged again on screen, which is exactly what happened at
+       7px. Named once, the derived translates cannot drift from it. */
+    --pair-gap: 5px;
+    /* A third curve, and the only one that leaves the 0-1 range. Card 34's
+       wind-up dips BELOW zero inline; this is the same admission at the other
+       end, and it reopens the question card 33 was retired over — a damped
+       spring written as a linear() curve, taken out because a sliding dash has
+       no mass to justify it. A hinge does: hardware that swings about a fixed
+       pin arrives at a stop, and overrunning it by a couple of degrees is what
+       a stop looks like. It is a token and not an inline curve because three
+       easings is still a vocabulary and four one-offs is not. Peak is 1.058 at
+       63% of the duration, so a -34deg swing overruns to -36deg. It belongs on
+       the OPENING only, for card 34's reason: the stop is at 0deg, and a hinge
+       that overshoots as it closes has swung through the plate it is fixed
+       to. */
+    --e-back: cubic-bezier(0.34, 1.42, 0.64, 1);
   }
 
   *{box-sizing:border-box; margin:0; padding:0}
@@ -2960,16 +2983,42 @@
 
      THE ONE THAT VACATES GOES FIRST, and that makes the enter and the exit
      different orders — which is the section's whole argument, and something a
-     gesture variant cannot express at all. Moved together the two boxes met in
-     the middle at full speed and read as a collision rather than a swap. On the
-     way in the label steps aside first and the mark crosses into the space it
-     left; on the way out the mark comes home first and the label follows it
-     back. One --d-1 either way, and it is the rest-state delay that carries the
-     exit order, exactly as card 43 does it. */
+     gesture variant cannot express at all. On the way in the label steps aside
+     and the mark crosses after it; on the way out the mark breaks away first
+     and the label is back in place before it docks. One --d-1 either way, and
+     it is the rest-state delay that carries the exit order, exactly as card 43
+     does it.
+
+     THE TWO PIECES DO NOT SHARE A DURATION, and that is the correction. They
+     did, and it made the card feel like it had not started: the label's travel
+     is 22px and the mark's is the label's whole width — 107px at this string —
+     so one --t-5 for both ran the label at 49px/s against the mark's 238. A
+     fifth of the distance in the same time is a drift, and it was the first
+     thing the eye was given. It is card 61's point about a loop applied to a
+     pair: this is judged on SPEED, not on duration. The label is on --t-3 now,
+     which is 110px/s, and it arrives while the mark is still crossing — so the
+     stated order is something you can see rather than a 50ms delay you cannot.
+     The mark keeps --t-5 and stays the last thing moving in both directions,
+     which is the right subject for a card about the mark changing sides.
+
+     WHAT THE STAGGER DOES NOT FIX: the arrow passes over the label's glyphs,
+     14px of full overlap for about 200ms on the way in — a little longer than
+     before, because a label that parks early stops retreating from the mark. That is intrinsic to
+     crossing a bare label — the label stepping aside 22px does not clear a
+     107px path, it only shifts it — so the delays change the ORDER and never
+     the overlap. Card 70 crosses two solid masses and can put the travelling
+     one in front with a z-index; there is no plate to hide behind here, and
+     dipping the mark's opacity mid-travel would need a keyframe for what is
+     supposed to be one transition. It is left visible and named instead.
+
+     The gap here stays 8px and off --pair-gap on purpose: that token is the
+     label-plate-and-46px-circle spacing of card 60 and section N, and this is
+     a bare 14px icon inside one border, which is a different construction. */
   .n-cross .n-cross-row{position:relative; display:inline-flex; align-items:center; gap:8px}
   .n-cross .n-cross-lbl,
-  .n-cross .n-cross-mark{transform:translateX(0); transition:transform var(--t-5) var(--e-quint)}
-  .n-cross .n-cross-mark{display:block}
+  .n-cross .n-cross-mark{transform:translateX(0)}
+  .n-cross .n-cross-lbl{transition:transform var(--t-3) var(--e-quint)}
+  .n-cross .n-cross-mark{display:block; transition:transform var(--t-5) var(--e-quint)}
   /* rest — the exit: the mark comes home, then the label follows it back */
   .n-cross .n-cross-mark{transition-delay:0s}
   .n-cross .n-cross-lbl{transition-delay:var(--d-1)}
@@ -2993,7 +3042,7 @@
      height comes from its padding leaves a half-pixel step at the seam, and a
      step is exactly what this card is claiming to remove. */
   .n-join .n-join-ghost,
-  .n-join .n-join-row{grid-area:1/1; display:inline-flex; align-items:stretch; gap:7px}
+  .n-join .n-join-row{grid-area:1/1; display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .n-join .n-join-ghost{visibility:hidden}
   .n-join .n-join-row{justify-self:start}
   .n-join .n-join-plate,
@@ -3003,12 +3052,14 @@
   }
   .n-join .n-join-plate{padding:15px 26px; border-radius:999px; transform:translateX(0)}
   .n-join .n-join-mark{display:grid; place-items:center; width:46px; border-radius:999px; transform:translateX(0)}
-  /* The facing corners go to a true zero and the mark closes the exact 7px it
-     was given, so the two backgrounds meet without a seam to find. */
+  /* The facing corners go to a true zero and the mark closes the exact
+     --pair-gap it was given, so the two backgrounds meet without a seam to
+     find. The travel is derived from the token and not written out, so the
+     seam cannot come apart the next time the spacing is judged. */
   .n-join:hover .n-join-plate,
   .n-join:focus-visible .n-join-plate{border-radius:999px 0 0 999px}
   .n-join:hover .n-join-mark,
-  .n-join:focus-visible .n-join-mark{transform:translateX(-7px); border-radius:0 999px 999px 0}
+  .n-join:focus-visible .n-join-mark{transform:translateX(calc(-1 * var(--pair-gap))); border-radius:0 999px 999px 0}
 
   /* 61 Ticker label — a label that fits perfectly well loops anyway. Card 30
      moves a label only when it is genuinely clipped and holds still otherwise;
@@ -3265,17 +3316,50 @@
      claim about what a fill is — blocks arriving rather than a front moving.
 
      The columns are spans and not a gradient because a gradient cannot
-     stagger. The delays are on the hover side only: on the way out all six
-     drop together, one rung down, because a staircase retreating in sequence
-     reads as an undo of the animation rather than as leaving. */
+     stagger.
+
+     It does not retract. Card 01's two-origin trick, turned through ninety
+     degrees: the origin is the edge each phase grows FROM, so it is `bottom`
+     on the hover side and `top` at rest, and because transform-origin is not
+     in the transition list it switches in the same frame the transform starts.
+     The fill therefore rises off the floor on the way in and, on the way out,
+     collapses toward the ceiling instead of sinking back down the way it came
+     — one continuous upward movement across both halves, which is what card 01
+     does horizontally.
+
+     The stagger is now declared on BOTH sides, and reversed on the exit:
+     column six leaves first. It used to sit on the hover selectors alone,
+     which meant all six columns returned in the same frame — the one part of
+     the card that read as a snap rather than as a decision. Reversed, the
+     staircase unbuilds from the end it was built towards. */
   .o-step{position:relative; overflow:hidden}
   .o-step .o-step-fill{position:absolute; inset:0; display:flex; pointer-events:none}
   .o-step .o-step-fill span{flex:1; background:var(--accent);
-    transform:scaleY(0); transform-origin:bottom;
+    transform:scaleY(0); transform-origin:top;
     transition:transform var(--t-2) var(--e-out)}
-  .o-step .lbl{position:relative; transition:color var(--t-2) ease}
+  /* The label waits for the fill to pass under it, in BOTH directions. The
+     exit delay is the correction the reversed stagger asked for: the fill now
+     takes its 83ms plus the 130ms of stagger to leave, and a label that
+     recoloured on its own 83ms went light while three columns were still white
+     behind it — #f2f2f2 on #ffffff, which is no text at all for about 80ms. At
+     rest --t-3 is 133ms, so the recolour lands exactly as the last column
+     goes. */
+  .o-step .lbl{position:relative; transition:color var(--t-2) ease var(--t-3)}
+  /* The exit order: last column first, so the staircase comes apart from the
+     end it was assembled towards. */
+  .o-step .o-step-fill span:nth-child(1){transition-delay:calc(var(--t-stagger) * 5)}
+  .o-step .o-step-fill span:nth-child(2){transition-delay:calc(var(--t-stagger) * 4)}
+  .o-step .o-step-fill span:nth-child(3){transition-delay:calc(var(--t-stagger) * 3)}
+  .o-step .o-step-fill span:nth-child(4){transition-delay:calc(var(--t-stagger) * 2)}
+  .o-step .o-step-fill span:nth-child(5){transition-delay:calc(var(--t-stagger) * 1)}
+  .o-step .o-step-fill span:nth-child(6){transition-delay:0s}
   .o-step:hover .o-step-fill span,
-  .o-step:focus-visible .o-step-fill span{transform:scaleY(1)}
+  .o-step:focus-visible .o-step-fill span{transform:scaleY(1); transform-origin:bottom}
+  /* Column one has to name its 0s now. It used to inherit it from having no
+     rest delay at all; the reversed exit gives it the longest one, and without
+     this the staircase built from column TWO and column one landed last. */
+  .o-step:hover .o-step-fill span:nth-child(1),
+  .o-step:focus-visible .o-step-fill span:nth-child(1){transition-delay:0s}
   .o-step:hover .o-step-fill span:nth-child(2),
   .o-step:focus-visible .o-step-fill span:nth-child(2){transition-delay:calc(var(--t-stagger) * 1)}
   .o-step:hover .o-step-fill span:nth-child(3),
@@ -3286,7 +3370,6 @@
   .o-step:focus-visible .o-step-fill span:nth-child(5){transition-delay:calc(var(--t-stagger) * 4)}
   .o-step:hover .o-step-fill span:nth-child(6),
   .o-step:focus-visible .o-step-fill span:nth-child(6){transition-delay:calc(var(--t-stagger) * 5)}
-  /* The label waits for the fill to pass under it. */
   .o-step:hover .lbl,
   .o-step:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--t-3)}
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
@@ -3294,6 +3377,7 @@
      steps — six jumps instead of one. These are the delays this section adds,
      so this section takes them back. */
   @media (prefers-reduced-motion: reduce){
+    /* Both sides of the stagger now, not just the hover side. */
     .o-step .o-step-fill span,.o-step .lbl{transition-delay:0s !important}
     /* Same reason as card 61: clamping an infinite loop to 0.01ms is a blur and
        not stillness, so it has to be stopped outright. The mask stays one-sided
@@ -3361,7 +3445,7 @@
         <button type="button" class="btn btn--line o-step"><span class="o-step-fill" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="lbl">Start the build</span></button>
       </div>
       <h3><span class="num">68</span>Stepped fill</h3>
-      <p>Six columns rise on a stagger, so the fill has a jagged leading edge on the way in and resolves flat. Every other fill here has a straight or a curved front — this is blocks arriving rather than a front moving.</p>
+      <p>Six columns rise on a stagger, so the fill has a jagged leading edge on the way in and resolves flat. It does not retract: on the way out it collapses toward the ceiling, last column first, so the movement is upward through both halves. Every other fill here has a straight or a curved front — this is blocks arriving rather than a front moving.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3371,7 +3455,7 @@
 <style>
   /* ============ Section N — The pair, other than joining ============
      Card 60 built the only two-mass button on the page: a label plate and a
-     46px mark plate holding an arrow, seven pixels apart, addressable
+     46px mark plate holding an arrow, one --pair-gap apart, addressable
      separately. It then spent its whole hover closing that gap. Closing it is
      the least interesting thing that anatomy can do, so these six keep 60's
      construction exactly and do something else with it.
@@ -3387,42 +3471,58 @@
      seam, and the seam is what all six of these are about.
 
      None of them reserves width the way 60's hidden copy does, because none of
-     them changes it — every state below is a transform or a colour, so the row
-     alone holds the box and a ghost would have nothing to guard against. */
+     them changes it — everything below is a transform or a colour, so the row
+     alone holds the box and a ghost would have nothing to guard against. Card
+     72 is the one that is not a STATE: it advances on an event and stays
+     advanced, so it is also the only one here the exit-one-rung-down rule has
+     nothing to act on. Its own note carries that. */
 
   /* 69 The pieces part — card 60 read backwards. Rest IS 60's hover state: the
-     mark has already closed the seven pixels and the two facing corners are
+     mark has already closed the gap and the two facing corners are
      square, so the pair arrives as one capsule and the hover takes it apart.
      Same two properties, same rung, opposite argument. */
   .p-part{padding:0; background:none; border:0; border-radius:999px}
-  .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-part .p-part-plate,
   .p-part .p-part-mark{background:var(--ink); color:var(--on-ink);
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
   .p-part .p-part-plate{padding:15px 26px; border-radius:999px 0 0 999px}
   .p-part .p-part-mark{display:grid; place-items:center; width:46px;
-    border-radius:0 999px 999px 0; transform:translateX(-7px)}
+    border-radius:0 999px 999px 0; transform:translateX(calc(-1 * var(--pair-gap)))}
   .p-part:hover .p-part-plate,
   .p-part:focus-visible .p-part-plate{border-radius:999px}
   .p-part:hover .p-part-mark,
   .p-part:focus-visible .p-part-mark{border-radius:999px; transform:translateX(0)}
 
-  /* 70 The mark walks the plate — the only travel here that CSS cannot name. A
-     translation of -100% is the mark's OWN width; crossing the label plate
-     needs the plate's width, which lives on a sibling. Measured the way cards
-     59 and 30 measure theirs, and gated on the class for the same reason:
-     until a real number exists the hover does nothing rather than something
-     wrong. The z-order is what makes it a crossing and not a swap. */
+  /* 70 The mark walks the plate — the only travel here that CSS cannot name,
+     and a true exchange: the two pieces trade slots. The split is card 59's,
+     and 59's is the reasoning. The MEASURED travel belongs to whichever piece
+     has to cross a variable-width box — the mark, clearing the label plate,
+     which lives on a sibling and which -100% cannot express because -100% is
+     the mark's OWN width. The CONSTANT travel belongs to the piece crossing the
+     mark: 46px plus one --pair-gap, both authored here, so it needs no measure
+     at all. Both are gated on the class, for 59's reason doubled — half a swap
+     is worse than no swap.
+
+     They move together, same rung, same curve, because an exchange is
+     symmetric: unlike 59 there is no piece that vacates first, since each one
+     is heading for the slot the other is still standing in. So they must
+     overlap — two boxes trading places along one axis cannot avoid each other —
+     and the z-order stops being the effect and becomes a tie-break. The mark
+     stays on top. Underneath, it would disappear behind the plate and reappear
+     on the far side, and that is card 74's mechanism, not this one. */
   .p-walk{padding:0; background:none; border:0; border-radius:999px}
-  .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-walk .p-walk-plate,
-  .p-walk .p-walk-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
-  .p-walk .p-walk-plate{padding:15px 26px; position:relative; z-index:0}
-  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px;
-    position:relative; z-index:1; transform:translateX(0);
+  .p-walk .p-walk-mark{background:var(--ink); color:var(--on-ink); border-radius:999px;
+    position:relative; transform:translateX(0);
     transition:transform var(--t-5) var(--e-quint)}
+  .p-walk .p-walk-plate{padding:15px 26px; z-index:0}
+  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px; z-index:1}
   .p-walk.p-is-set:hover .p-walk-mark,
   .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
+  .p-walk.p-is-set:hover .p-walk-plate,
+  .p-walk.p-is-set:focus-visible .p-walk-plate{transform:translateX(calc(46px + var(--pair-gap)))}
 
   /* 71 They trade fill — card 60 with the travel removed. Neither piece moves,
      and the boundary is an inset shadow rather than a border, so nothing
@@ -3431,7 +3531,7 @@
      states name a shadow — one of them transparent — so there is always
      something for the hover value to interpolate from. */
   .p-trade{padding:0; background:none; border:0; border-radius:999px}
-  .p-trade .p-trade-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-trade .p-trade-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-trade .p-trade-plate,
   .p-trade .p-trade-mark{border-radius:999px;
     transition:background-color var(--t-3) var(--e-out), color var(--t-3) var(--e-out),
@@ -3449,31 +3549,74 @@
 
   /* 72 The arrow leaves, the plates stay — the two masses hold perfectly still
      and the mark becomes a window. Both arrows sit in one grid cell and the
-     mark clips them; the delays swap between the states so the incoming arrow
-     follows the outgoing one on the way in AND on the way out, rather than the
-     two crossing in the middle. */
+     mark clips them.
+
+     THIS IS THE ONE CARD ON THE PAGE WITH NO EXIT, and so the only one the
+     house exit-one-rung-down contract has nothing to act on: a transition is
+     reversible by definition, so as long as the position was a hover STATE the
+     pointer leaving walked the arrow back. It is now an event. Each pass runs
+     an animation with `forwards`, and on the last animationend the roles are
+     swapped on the button and the animation taken off — so the arrived position
+     is a static class and there is nothing left to undo. Card 40 keeps a state
+     after the pointer goes and card 61 keeps its place; this keeps a position,
+     which is the same argument applied to a cycle.
+
+     The roles are classes and not :hover, so the two static positions are
+     always declared: whichever arrow is in the window sits at 0 and the other
+     waits one clip-width to the left. The animation's end state is the NEXT
+     role's static state, which is why swapping the class and dropping the
+     animation in the same frame does not flicker. The outgoing arrow lands at
+     +230% and the class puts it at -230%, both outside a 46px window by 2.2px,
+     so the wrap is real but never seen.
+
+     300ms is --t-4's full rung, written out rather than named: .btn shadows the
+     ladder one rung down at rest, so the token would change value under a
+     running animation the moment the pointer left and the animation would jump
+     to a new progress. A duration a state cannot reach into is the point. */
   .p-cycle{padding:0; background:none; border:0; border-radius:999px}
-  .p-cycle .p-cycle-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-cycle .p-cycle-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-cycle .p-cycle-plate,
   .p-cycle .p-cycle-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
   .p-cycle .p-cycle-plate{padding:15px 26px}
   .p-cycle .p-cycle-mark{display:grid; place-items:center; width:46px; overflow:hidden}
   .p-cycle .p-cycle-cyc{display:grid; width:100%; justify-items:center}
-  .p-cycle .p-cycle-cyc>.icon{grid-area:1/1; transition:transform var(--t-4) var(--e-quint)}
-  .p-cycle .p-cycle-cyc>.icon:first-child{transform:translateX(0); transition-delay:var(--d-1)}
-  .p-cycle .p-cycle-cyc>.icon:last-child{transform:translateX(-230%); transition-delay:0s}
-  .p-cycle:hover .p-cycle-cyc>.icon:first-child,
-  .p-cycle:focus-visible .p-cycle-cyc>.icon:first-child{transform:translateX(230%); transition-delay:0s}
-  .p-cycle:hover .p-cycle-cyc>.icon:last-child,
-  .p-cycle:focus-visible .p-cycle-cyc>.icon:last-child{transform:translateX(0); transition-delay:var(--d-1)}
+  .p-cycle .p-cycle-cyc>.icon{grid-area:1/1}
+  /* The two roles. No :hover anywhere — the class says which arrow holds the
+     window, and the other one waits to the left of it. */
+  .p-cycle .p-cycle-cyc>.icon:first-child{transform:translateX(0)}
+  .p-cycle .p-cycle-cyc>.icon:last-child{transform:translateX(-230%)}
+  .p-cycle.p-cycle-b .p-cycle-cyc>.icon:first-child{transform:translateX(-230%)}
+  .p-cycle.p-cycle-b .p-cycle-cyc>.icon:last-child{transform:translateX(0)}
+  /* One step forward. The incoming arrow follows the outgoing one by --d-1
+     rather than crossing it in the middle, which is what the old two-state
+     version used its swapped delays for. */
+  @keyframes p-cycle-exit{ from{transform:translateX(0)}    to{transform:translateX(230%)} }
+  @keyframes p-cycle-enter{ from{transform:translateX(-230%)} to{transform:translateX(0)} }
+  .p-cycle.p-cycle-run .p-cycle-cyc>.icon{
+    animation-duration:300ms; animation-timing-function:var(--e-quint);
+    animation-fill-mode:forwards}
+  .p-cycle.p-cycle-run:not(.p-cycle-b) .p-cycle-cyc>.icon:first-child{animation-name:p-cycle-exit}
+  .p-cycle.p-cycle-run:not(.p-cycle-b) .p-cycle-cyc>.icon:last-child{
+    animation-name:p-cycle-enter; animation-delay:var(--d-1)}
+  .p-cycle.p-cycle-run.p-cycle-b .p-cycle-cyc>.icon:last-child{animation-name:p-cycle-exit}
+  .p-cycle.p-cycle-run.p-cycle-b .p-cycle-cyc>.icon:first-child{
+    animation-name:p-cycle-enter; animation-delay:var(--d-1)}
 
   /* 73 The mark hinges — the only card on the page that leaves the plane.
      transform-origin sits on the seam edge, so the mark pivots about the line
      card 60 spends its hover erasing. backface-visibility because a
      34-degree tip on a 46px plate is close enough to the edge to flicker
-     without it. */
+     without it.
+
+     The opening takes --e-back and overruns the 34 degrees by two, because a
+     hinge has a stop and this is what reaching one looks like; the token's own
+     note carries the argument, including that it reopens card 33. The CLOSE
+     keeps --e-quint, exactly as card 34 keeps the plain curve on the way out:
+     the stop is at 0deg and it is the plate, so a hinge cannot overshoot
+     shut. Only the timing function is stated on the hover side, so the
+     duration still falls a rung on the exit like everything else. */
   .p-hinge{padding:0; background:none; border:0; border-radius:999px}
-  .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:7px; perspective:520px}
+  .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
   .p-hinge .p-hinge-plate,
   .p-hinge .p-hinge-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
   .p-hinge .p-hinge-plate{padding:15px 26px}
@@ -3481,13 +3624,14 @@
     transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
     transition:transform var(--t-4) var(--e-quint)}
   .p-hinge:hover .p-hinge-mark,
-  .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg)}
+  .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg);
+    transition-timing-function:var(--e-back)}
 
   /* 74 The mark slips behind — here -100% IS enough, because the mark only has
      to clear its own width plus the gap to be gone behind the plate. The
      z-order is the whole effect; without it the mark simply overlaps. */
   .p-slip{padding:0; background:none; border:0; border-radius:999px}
-  .p-slip .p-slip-row{display:inline-flex; align-items:stretch; gap:7px}
+  .p-slip .p-slip-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-slip .p-slip-plate,
   .p-slip .p-slip-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
   .p-slip .p-slip-plate{padding:15px 26px; position:relative; z-index:1}
@@ -3495,7 +3639,7 @@
     position:relative; z-index:0; transform:translateX(0);
     transition:transform var(--t-5) var(--e-quint)}
   .p-slip:hover .p-slip-mark,
-  .p-slip:focus-visible .p-slip-mark{transform:translateX(calc(-100% - 7px))}
+  .p-slip:focus-visible .p-slip-mark{transform:translateX(calc(-100% - var(--pair-gap)))}
 </style>
 
 <section class="sect">
@@ -3507,7 +3651,7 @@
         <button type="button" class="btn p-part"><span class="p-part-row"><span class="p-part-plate">Start the brief</span><span class="p-part-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
       </div>
       <h3><span class="num">69</span>The pieces part</h3>
-      <p>Card 60 read backwards: this one arrives joined and comes apart. The same seven pixels and the same two corners, arguing for separation rather than for one object.</p>
+      <p>Card 60 read backwards: this one arrives joined and comes apart. The same gap and the same two corners, arguing for separation rather than for one object.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3516,7 +3660,7 @@
         <button type="button" class="btn p-walk"><span class="p-walk-row"><span class="p-walk-plate">Send the file</span><span class="p-walk-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
       </div>
       <h3><span class="num">70</span>The mark walks the plate</h3>
-      <p>The mark crosses the whole label and docks at the far end, occluding it on the way. Card 59 walks a bare icon across a label inside one border; this is one solid mass crossing another, and the distance has to be measured.</p>
+      <p>The two pieces exchange places: the mark crosses the whole label to the far end while the plate slides into the slot it vacates. Card 59 walks a bare icon across a label inside one border; this is one solid mass crossing another, and only one of the two distances can be measured.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3534,8 +3678,8 @@
         <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate">Take the tour</span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
       </div>
       <h3><span class="num">72</span>The arrow leaves, the plates stay</h3>
-      <p>The pair becomes a frame and only its contents move — the arrow exits the mark's right edge and a second one enters from the left, clipped by the plate it sits in. The two masses hold perfectly still.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+      <p>The pair becomes a frame and only its contents move — the arrow exits the mark's right edge and the next one enters from the left, clipped by the plate it sits in. It does not come back: every pass advances the cycle one step and leaves it there, so this is the one study here with no exit at all.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
     <article class="spec">
@@ -3543,7 +3687,7 @@
         <button type="button" class="btn p-hinge"><span class="p-hinge-row"><span class="p-hinge-plate">Book a call</span><span class="p-hinge-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
       </div>
       <h3><span class="num">73</span>The mark hinges</h3>
-      <p>It pivots on the seam instead of sliding along it, so it reads as hardware fixed to the plate rather than as a second object beside it. The one study here that leaves the plane.</p>
+      <p>It pivots on the seam instead of sliding along it, so it reads as hardware fixed to the plate rather than as a second object beside it. It overruns the angle by two degrees on the way open, the way a hinge reaches a stop, and closes without overshooting because the stop is the plate. The one study here that leaves the plane.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3583,6 +3727,37 @@
         raf = requestAnimationFrame(function(){ raf = null; measure(); });
       });
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    });
+  })();
+
+  // 72 The arrow leaves, the plates stay — the cycle only ever goes forward, and
+  // a transition cannot: it is reversible by definition, so the pointer leaving
+  // walked the arrow back. So each pass runs an animation with `forwards`, and
+  // the roles — which arrow holds the window — are a class. On the last
+  // animationend the class flips and the animation comes off in the same frame,
+  // which leaves the arrived position standing as a static state with nothing
+  // for an exit to undo. The wrap from +230% to -230% happens there, outside
+  // the clip.
+  (function(){
+    document.querySelectorAll('.p-cycle').forEach(function(btn){
+      var cyc = btn.querySelector('.p-cycle-cyc');
+      if (!cyc) return;
+      // One step per pass. Re-entering mid-step does not queue a second one:
+      // the cycle advances on the gesture, not on the number of times you
+      // cross the edge of it.
+      function step(){
+        if (!btn.classList.contains('p-cycle-run')) btn.classList.add('p-cycle-run');
+      }
+      btn.addEventListener('pointerenter', step);
+      btn.addEventListener('focus', step);
+      // The ENTERING arrow finishes last, so it is the one that commits.
+      // Matched by animation name rather than by counting events, so this stays
+      // correct if the --d-1 lead ever moves to the other side.
+      cyc.addEventListener('animationend', function(e){
+        if (e.animationName !== 'p-cycle-enter') return;
+        btn.classList.toggle('p-cycle-b');
+        btn.classList.remove('p-cycle-run');
+      });
     });
   })();
 </script>
