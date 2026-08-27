@@ -1174,43 +1174,73 @@
   .f-korn .lbl{ position:relative }
   .f-korn:hover .f-korn-yta, .f-korn:focus-visible .f-korn-yta{ transform:scale(1); opacity:.2 }
 
-  /* 21 Edge light — a @property angle runs an accent streak one lap around the
-     hairline. THE LAP PARKS; IT DOES NOT REWIND. A registered angle transitions
-     in both directions, so one plain rule sent the streak backwards round the
-     plate on exit — the one thing a light running a lap must never do, and a
-     direct contradiction of the card's own claim that it parks at twelve. The
-     exit now fades the streak out where it stands and resets the angle 0s later
-     on a delay equal to that fade, so the reset happens with nothing on screen.
-     It fixes the interrupted case too: leave at six o'clock and the streak dies
-     at six o'clock instead of snapping back to twelve on the way out.
+  /* 21 Edge light — an accent streak runs one lap around the hairline. THE LAP
+     PARKS; IT DOES NOT REWIND. The exit fades the streak out where it stands
+     and resets its position 0s later on a delay equal to that fade, so the
+     reset happens with nothing on screen. That also fixes the interrupted case:
+     leave at six o'clock and the streak dies at six o'clock instead of snapping
+     back round the plate on the way out.
 
-     --e-quint, not --e-out, for the lap: the streak has to leave twelve at speed
-     and settle into it, which is what parking means. And the light comes up on
-     --t-2 rather than --t-3 — at 200ms the streak was still fading in a fifth of
-     the way through its own lap. */
-  @property --f-vinkel{ syntax:"<angle>"; inherits:false; initial-value:0deg }
+     It used to run on a conic-gradient turned by a registered angle, and the
+     measurement is why it no longer does. A CONIC GRADIENT SWEEPS ANGLE, AND A
+     LAP IS ARC. On this plate — 203 x 47, so a 460px outline whose two caps are
+     32% of it — a degree of angle buys 0.205px of outline at the middle of the
+     top edge and 2.37px at the caps. That is an 11.6x speed range in a single
+     lap: at a tenth of the way through, the light had covered 3.7% of the edge;
+     between a sixth and a third of the way through it covered a quarter of it.
+     The head deformed by the same factor, 3px long at twelve and 13px at the
+     ends. It read as a smudge that stalled and then bolted, and no amount of
+     tuning the stops fixes it, because the primitive is measuring the wrong
+     thing.
+
+     offset-path travels the OUTLINE. The lamp is one small element on
+     `offset-path:border-box` with offset-distance driven 0% -> 100%, which is
+     constant arc speed by construction and a constant-length head with it.
+     offset-rotate:auto keeps it tangent, and offset-anchor:100% 50% puts its
+     bright end on the path so the comet trails rather than leads. The head is
+     12px: a straight chord on the 23.5px cap radius, which is a 0.54px sagitta,
+     so it hugs the curve. At 22px that error is 2.7px and the streak visibly
+     lifts off the corner — the length is a geometry budget, not a taste.
+
+     There is no magic number for where the lap starts. A coord-box path begins
+     at the top-left shoulder, where the cap meets the straight edge, and runs
+     clockwise; 0% and 100% are therefore the same point at any plate width, so
+     the streak parks exactly where it set off and the card needs no fraction
+     computed for this label's measure. Card 78 leans on the same congruence for
+     its exit.
+
+     --e-quint, not --e-out, for the lap: the streak has to leave the shoulder at
+     speed and settle into it, which is what parking means. The light comes up on
+     --t-2 rather than --t-3 — at 200ms it was still fading in a fifth of the way
+     through its own lap.
+
+     Where offset-path cannot take a coord box, the lamp is not shown at all and
+     the hover is carried by the hairline going lighter, which every state here
+     does anyway. Card 35 makes the same trade for animating `d`: the mechanism
+     is progressive, the answer to the hover is not. */
   .f-kant{
     background:var(--lift-bg); border:1px solid var(--line-ctl);
     transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
   }
-  .f-kant::before{
-    content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; opacity:0;
-    background:conic-gradient(from var(--f-vinkel),
-      color-mix(in srgb, var(--accent) 92%, transparent) 0 4%,
-      color-mix(in srgb, var(--accent) 30%, transparent) 10%, transparent 18% 100%);
-    /* rest — and so the EXIT: hold the angle, fade the light, reset unseen */
-    transition:opacity var(--t-2) var(--e-out), --f-vinkel 0s linear var(--t-2);
-  }
-  .f-kant::after{
-    content:""; position:absolute; inset:0; border-radius:inherit;
-    background:var(--lift-bg); pointer-events:none;
-  }
   .f-kant .lbl{ position:relative; z-index:1 }
   .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink) 24%, var(--line)) }
-  .f-kant:hover::before, .f-kant:focus-visible::before{
-    opacity:1; --f-vinkel:360deg;
-    /* hover — and so the ENTER: the light is up in --t-2, the lap runs full rung */
-    transition:opacity var(--t-2) var(--e-out), --f-vinkel var(--t-5) var(--e-quint);
+  .f-kant .f-kant-lamp{ display:none }
+  @supports (offset-path: border-box){
+    .f-kant .f-kant-lamp{
+      display:block; position:absolute; width:12px; height:2px; border-radius:1px;
+      pointer-events:none; opacity:0; z-index:3;
+      background:linear-gradient(90deg, transparent,
+        color-mix(in srgb, var(--accent) 30%, transparent) 50%, var(--accent));
+      offset-path:border-box; offset-rotate:auto; offset-anchor:100% 50%;
+      offset-distance:0%;
+      /* rest — and so the EXIT: hold position, fade the light, reset unseen */
+      transition:opacity var(--t-2) var(--e-out), offset-distance 0s linear var(--t-2);
+    }
+    .f-kant:hover .f-kant-lamp, .f-kant:focus-visible .f-kant-lamp{
+      opacity:1; offset-distance:100%;
+      /* hover — and so the ENTER: the light is up in --t-2, the lap runs full rung */
+      transition:opacity var(--t-2) var(--e-out), offset-distance var(--t-5) var(--e-quint);
+    }
   }
 
   /* Reduced motion: the end state must still read as "hover" — the light becomes an even lift */
@@ -1265,10 +1295,10 @@
 
     <article class="spec">
       <div class="stage">
-        <button type="button" class="btn f-kant"><span class="lbl">Download the report</span></button>
+        <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
       </div>
       <h3><span class="num">21</span>Edge light</h3>
-        <p>A narrow accent streak lights up and runs one lap around the edge, parking as a small tick at twelve and leaving the hairline a shade darker.</p>
+        <p>A narrow accent streak lights up and runs one lap of the edge at constant speed, parking where it set off and leaving the hairline a shade lighter. It travels the outline rather than an angle — a conic gradient would cross the caps 11.6 times faster than the flanks.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -1312,49 +1342,32 @@
   }
   .g-radius:hover,
   .g-radius:focus-visible{border-radius:5px 26px 5px 26px}
-  /* 23 Rule becomes frame — one line, two jobs (clip-path + radius) */
-  .g-frame{padding:14px 26px}
-  .g-frame .g-frame-ring{
-    position:absolute; inset:0; pointer-events:none;
-    border:1.5px solid color-mix(in srgb,var(--ink) 62%,transparent);
-    /* 0, not 3px: at rest only a 1.5px band of this box is visible, and a 3px
-       corner arc bites into both ends of what has to read as a straight rule. */
-    border-radius:0px;
-    clip-path:inset(calc(100% - 1.5px) 22% 0% 22%);
-    /* TWO movements, not one, and this is the fix. Run together they landed on
-       top of each other in the first 150ms of a 450ms transition and the card
-       read as a snap. Now the frame rises, THEN the corners soften; on the way
-       out the corners sharpen first and the frame drops after. Each delay is the
-       other movement's own duration — enter 500ms, exit 333ms. */
-    transition:clip-path var(--t-4) var(--e-quint) var(--t-3),
-               border-radius var(--t-3) var(--e-quint) 0s,
-               border-color var(--t-4) ease 0s;
-  }
-  .g-frame:hover .g-frame-ring,
-  .g-frame:focus-visible .g-frame-ring{
-    clip-path:inset(0% 0% 0% 0%);
-    /* 22px, not 999px. The ring is 43px tall — 14px padding, a 15px line box,
-       14px padding — so anything over 21.5px clamps to 21.5px. Interpolating to
-       999px passed 309px at 30ms, which means it reached its visual maximum
-       about two milliseconds in: the rule snapped into a pill before it had
-       begun to rise. 22px is a hair over half, so it still reads as a full pill
-       and only the last two per cent of the travel is clamped. */
-    border-radius:22px;
-    border-color:var(--ink);
-    transition-delay:0s, var(--t-4), 0s;
-  }
-  .g-frame .lbl{position:relative}
 
   /* 24 Filling the measure — the plate grows out to its reserved measure.
-     Deliberately quieter than it was, in three places. The reserve is 3px/10px
-     rather than 5px/14px: the plate now settles into its measure instead of
-     lunging the last third of the way across it. The travel runs on --e-out
-     rather than --e-quint, because quint covers three quarters of its distance
-     in the first quarter of its time, and on a horizontal jump that reads as a
-     snap with a long dead tail rather than as something filling. And the trim
-     gives way as the plate lands: at rest the hairline IS the reserved measure,
-     but at full hover it is a second outline drawn on top of a solid ink
-     capsule, which is the loudest thing in the old version. */
+     The travel runs on --e-out rather than --e-quint, because quint covers
+     three quarters of its distance in the first quarter of its time, and on a
+     horizontal jump that reads as a snap with a long dead tail rather than as
+     something filling. And the trim gives way as the plate lands: at rest the
+     hairline IS the reserved measure, but at full hover it is a second outline
+     drawn on top of a solid ink capsule, which is the loudest thing in the
+     version before this one.
+
+     The reserve is 5px on every side. It was 3px top and bottom against 10px
+     at the ends, which is a 3.3:1 band, and on two concentric capsules that
+     does not read as a reserve — it reads as a plate that has slipped. The
+     geometry is worth being exact about: for a capsule of height H the radius
+     is H/2, so a uniform inset d leaves an inner capsule of radius H/2 - d and
+     the gap between the two is exactly d at every point on the outline, caps
+     included. Uniform is not approximately even here, it is provably even, and
+     nothing else is. So the balanced band is the round number and there was no
+     ratio to tune.
+
+     What that costs is honest: the horizontal travel halves, 10px to 5px. The
+     card is named for the measure and the measure is horizontal, so the
+     temptation was to keep the ends wider and call the imbalance emphasis. It
+     is not emphasis at rest — a rest state is a picture, and that one was
+     lopsided. The gesture gives up 5px and gains 2px in the other axis, which
+     is a smaller movement in a straighter line. */
   .g-measure{padding:17px 34px; color:var(--on-ink)}
   .g-measure .g-measure-trim{
     position:absolute; inset:0; border:1px solid var(--line);
@@ -1364,11 +1377,11 @@
   .g-measure .g-measure-plate{
     position:absolute; inset:0; background:var(--ink);
     border-radius:inherit; pointer-events:none;
-    clip-path:inset(3px 10px round 999px);
+    clip-path:inset(5px round 999px);
     transition:clip-path var(--t-5) var(--e-out);
   }
   .g-measure:hover .g-measure-plate,
-  .g-measure:focus-visible .g-measure-plate{clip-path:inset(0px 0px round 999px)}
+  .g-measure:focus-visible .g-measure-plate{clip-path:inset(0px round 999px)}
   .g-measure:hover .g-measure-trim,
   .g-measure:focus-visible .g-measure-trim{border-color:transparent}
   .g-measure .lbl{position:relative}
@@ -1407,18 +1420,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-<article class="spec">
-      <div class="stage">
-        <button class="btn g-frame">
-          <span class="g-frame-ring" aria-hidden="true"></span>
-          <span class="lbl">How we work</span>
-        </button>
-      </div>
-      <h3><span class="num">23</span>Rule becomes frame</h3>
-        <p>At rest it is a line under the label; on hover it rises along the sides and closes into a full frame.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
     <article class="spec">
       <div class="stage">
         <button type="button" class="btn g-measure">
@@ -1428,7 +1429,7 @@
         </button>
       </div>
       <h3><span class="num">24</span>Filling the measure</h3>
-        <p>The plate sits inset within its own measure and grows out to the hairline on hover.</p>
+        <p>The plate sits an even five pixels inside its own measure and grows out to the hairline on hover — on two concentric capsules a uniform inset is the only band that is provably even at every point.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -1691,15 +1692,32 @@
   .i-mass:hover .i-mass-lbl, .i-mass:focus-visible .i-mass-lbl,
   .i-mass:hover .i-mass-block, .i-mass:focus-visible .i-mass-block{transform:translateX(3px)}
   /* 33 The settle — a critically-underdamped spring (damping ratio .50,
-     omega 12 rad/s) sampled to a linear() curve: one 16.3% overshoot, second
+     omega 12 rad/s) sampled to a linear() curve: one 16.2% overshoot, second
      lobe 0.43% so it never reads as a bounce. Still one plain transition, so it
-     reverses from wherever it has got to. The slot is 14px and the dash 10px,
-     so a 2.28px overshoot lands inside it — nothing is clipped. */
-  .i-settle .i-settle-slot{position:relative; display:block; width:14px; height:1.5px; overflow:hidden}
+     reverses from wherever it has got to.
+
+     The maths was always right and it could not be seen. On the old 14px
+     travel the overshoot was 2.28px of a 1.5px hairline: a real spring drawn
+     at a size where a spring and a plain ease are the same picture. The travel
+     is 26px now and the bar 2px, which puts the peak at 4.20px — but amplitude
+     alone would still only read as a loose arrival. What makes it legible is
+     that the bar now lands against a STOP. A hairline tick sits at 22px, the
+     nose crosses it, and it comes back to sit flush. An overshoot you can
+     measure becomes an overshoot you can read, because there is finally
+     something in the frame that says where the bar was supposed to end.
+
+     The tick is 10px tall and the bar 2px, so the bar hides only the middle
+     fifth of it and the ends stay visible under the nose the whole way past.
+     The peak puts the nose at 26.20px inside a 28px slot, so nothing clips. */
+  .i-settle .i-settle-slot{position:relative; display:block; width:28px; height:10px; overflow:hidden}
+  .i-settle .i-settle-stop{
+    position:absolute; top:0; left:22px; width:2px; height:10px;
+    background:color-mix(in srgb, currentColor 38%, transparent);
+  }
   .i-settle .i-settle-dash{
-    position:absolute; top:0; left:0; width:10px; height:1.5px;
+    position:absolute; top:4px; left:4px; width:18px; height:2px;
     background:currentColor; border-radius:1px;
-    transform:translateX(-14px);
+    transform:translateX(-26px);
     transition:transform var(--t-4) var(--e-out);
   }
   .i-settle:hover .i-settle-dash, .i-settle:focus-visible .i-settle-dash{
@@ -1720,6 +1738,14 @@
      The exit keeps the plain curve — a wind-up on the way out would read as the
      arrow lunging as it leaves.
 
+     The advance is 5px, not the 7px it was. Seven read as the arrow leaving
+     the label behind rather than as a flick, and the gap it opened was the
+     loudest thing about a card whose subject is a pixel and a half of
+     backwards travel. Dropping to 5 on the same curve would have taken the
+     wind-up down to 1.02px with it, so the curve is deepened to -0.9 to hold
+     the trough at -0.242 — 1.21px, within a fifth of a pixel of what it always
+     was. The small number is the card; the big one was only carrying it.
+
      On --t-3, not --t-4. Anticipation is a flick: the whole point is that the
      load and the release are quick enough to read as one gesture. At the 300ms
      rung the trough landed at 63ms and the last quarter of the duration moved
@@ -1733,8 +1759,8 @@
     transition:transform var(--t-3) var(--e-out);
   }
   .i-anti:hover .i-anti-arrow, .i-anti:focus-visible .i-anti-arrow{
-    transform:translateX(7px);
-    transition-timing-function:cubic-bezier(.5,-.8,.25,1);
+    transform:translateX(5px);
+    transition-timing-function:cubic-bezier(.5,-.9,.25,1);
   }
 
   /* 35 The rule takes the load — the SVG path itself is interpolated (the CSS
@@ -1778,22 +1804,6 @@
     transition:--i-gap var(--t-4) var(--e-quint), transform var(--t-1) var(--e-out);
   }
   .btn.i-space:hover, .btn.i-space:focus-visible{--i-gap:7px}
-  /* 37 Setting the line — a hard edge travels through the label, so each glyph
-     changes colour mid-stroke. Two copies at the SAME weight, so the metrics
-     are identical and no ghost sizer is needed; both are aria-hidden and a
-     clean single string sits in .sr. On a bordered plate: as bare text the
-     muted rest state reads as disabled copy rather than as a control. --muted
-     on the stage measures 4.96:1 light and 4.63:1 dark, so the rest label
-     clears 4.5:1 in both themes. */
-  .i-set .i-set-stack{display:inline-grid; justify-items:start}
-  .i-set .i-set-base, .i-set .i-set-top{grid-area:1/1; white-space:nowrap; font-weight:500}
-  .i-set .i-set-base{color:var(--muted)}
-  .i-set .i-set-top{
-    color:var(--ink);
-    clip-path:inset(0 100% 0 0);
-    transition:clip-path var(--t-5) var(--e-quint);
-  }
-  .i-set:hover .i-set-top, .i-set:focus-visible .i-set-top{clip-path:inset(0 0 0 0)}
 
   /* 38 The real underline — the browser's own decoration, not a pseudo-element,
      which is the whole point: skip-ink keeps clean gaps around the descenders
@@ -1841,7 +1851,12 @@
   .i-throw .i-throw-slot{position:relative; display:block; width:14px; height:14px}
   .i-throw .i-throw-mark{
     position:absolute; top:2px; left:2px; width:10px; height:10px;
-    border:1.5px solid currentColor; border-radius:50%;
+    /* Filled, not a 1.5px ring. The card's entire claim is a 2.5px overshoot,
+       and at this size an outline that thin reads as a hole punched in the
+       plate rather than as a mass being thrown — there is no body in it for
+       the eye to follow past the stop and back. A solid disc on the same 10px
+       footprint changes no layout and gives the spring something to carry. */
+    background:currentColor; border-radius:50%;
     /* An explicit identity, and the spring writes a transform on every frame
        including the resting one — section J's rule, applied here: an element
        transformed in both states keeps one rasterisation throughout. */
@@ -1879,10 +1894,10 @@
 
 <article class="spec">
       <div class="stage">
-        <button class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-dash"></i></span>See the schedule</button>
+        <button class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-stop"></i><i class="i-settle-dash"></i></span>See the schedule</button>
       </div>
       <h3><span class="num">33</span>The settle</h3>
-      <p>The dash slides into its reserved slot on a damped spring written as a linear() easing curve — one sixteen-per-cent overshoot and no second bounce.</p>
+      <p>The bar slides into its slot on a damped spring written as a linear() easing curve, overruns the hairline stop by four pixels and settles back flush against it — one overshoot, no second bounce.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -1923,21 +1938,6 @@
       <h3><span class="num">36</span>Re-spacing</h3>
       <p>The gap between label and mark opens by exactly what the right padding gives up, so the mark travels out toward the trim while the measure stays identical to the pixel.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-<article class="spec">
-      <div class="stage">
-        <button class="btn btn--line i-set">
-          <span class="i-set-stack">
-            <span class="i-set-base" aria-hidden="true">Read the method</span>
-            <span class="i-set-top" aria-hidden="true">Read the method</span>
-            <span class="sr">Read the method</span>
-          </span>
-        </button>
-      </div>
-      <h3><span class="num">37</span>Setting the line</h3>
-      <p>A hard edge travels through the label and every glyph changes colour mid-stroke, as a line of type being set rather than a fill passing behind it.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec">
@@ -3770,24 +3770,54 @@
   .btn.q-true:focus-visible{transform:rotate(0.001deg) scale(1)}
   .btn.q-true:active{transform:rotate(0.001deg) scale(.97); transition-duration:var(--t-1)}
 
-  /* 76 The terminal — a tab extrudes from the top edge, the way a battery
-     terminal or a keycap stem stands off the body it belongs to. Section K
+  /* 76 The riser — the plate grows the geometry it stands on. Section K
      borrows from objects, but always INTO the plate: card 53 mills grooves
      into it, 54 sinks the type below it, 25 stands it on a hard bottom edge.
-     This is the first card that adds material outside the plate's outline.
-     The tab is a pseudo-element on the button rather than a sibling: it is the
-     same ink as the plate, so it has to inherit the plate's own colour to read
-     as part of it. It grows from behind the top edge, so the join is never
-     visible. Height and not scaleY, because a scaled tab carries its corner
-     radius with it and arrives as a squashed pill instead of a stem. */
-  .btn.q-tab::before{
-    content:""; position:absolute; left:50%; bottom:100%;
-    width:26px; height:0; margin-left:-13px;
-    background:var(--ink); border-radius:4px 4px 0 0;
+     This is the one card that adds material OUTSIDE the plate's outline.
+
+     It was a 7px tab on the top edge and the claim was right while the object
+     was too small to make it. A stem that size on a 200px plate is a nick in
+     the silhouette; you have to be told it is there. So the same material now
+     does something structural instead of decorative: two legs grow down from
+     the bottom edge while the plate rises by exactly their height. The legs'
+     feet stay on the line the plate was resting on, nothing below the button
+     moves, and the button ends up standing off the page on a frame it did not
+     have a moment ago.
+
+     Which is a different claim from the two lifts this page already has. Card
+     10 raises a plate by growing the shadow under it and 25 paints a hard edge
+     beneath one; both describe a height with light, and neither puts anything
+     there. This grows the structure and lets the light follow.
+
+     Height and not scaleY, for the reason the tab had it: a scaled leg carries
+     its corner radius with it and lands as a squashed pill instead of a post.
+     The legs are pseudo-elements rather than siblings because they are the
+     same ink as the plate and have to inherit its colour to read as one body.
+
+     The press is the point of the whole thing, so it has to work: .btn:active
+     sets a bare scale and transform is ONE property, so a press would drop the
+     rise and the button would fall through its own legs. All three states name
+     translate then scale, in that order, and the press shortens the legs to
+     3px as it settles the plate onto them — the object being pushed down. */
+  .btn.q-riser{
+    transform:translateY(0) scale(1);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .btn.q-riser::before,
+  .btn.q-riser::after{
+    content:""; position:absolute; top:100%; width:26px; height:0;
+    background:var(--ink); border-radius:0 0 3px 3px;
     transition:height var(--t-3) var(--e-out);
   }
-  .btn.q-tab:hover::before,
-  .btn.q-tab:focus-visible::before{height:7px}
+  .btn.q-riser::before{left:17%}
+  .btn.q-riser::after{right:17%}
+  .btn.q-riser:hover,
+  .btn.q-riser:focus-visible{transform:translateY(-7px) scale(1)}
+  .btn.q-riser:hover::before, .btn.q-riser:hover::after,
+  .btn.q-riser:focus-visible::before, .btn.q-riser:focus-visible::after{height:7px}
+  .btn.q-riser:active{transform:translateY(-3px) scale(.97); transition-duration:var(--t-1)}
+  .btn.q-riser:active::before,
+  .btn.q-riser:active::after{height:3px; transition-duration:var(--t-1)}
 
   /* 77 It goes to work — the mark turns a quarter and a dashed ring runs
      around it. This is the page's first loop used as the hover STATE. Cards 29
@@ -3813,18 +3843,38 @@
   .q-spin:focus-visible .q-spin-ring{opacity:1; animation:q-ring-turn 2.4s linear infinite}
   @keyframes q-ring-turn{to{transform:rotate(360deg)}}
 
-  /* 78 The label turns — the whole word rotates around the plate's centre and
-     keeps going. Card 26 rolls the label and hands over to a duplicate; card
-     65 loops one that genuinely does not fit. Both of those keep the type
-     readable at the ends of the movement. This one does not, and the card is
-     here on exactly that point: it is the loudest thing on the page, and the
-     only one that makes its own label unreadable for as long as you point at
-     it. A specimen page should own its worst idea as clearly as its best.
-     6s is off the ladder for the reason 61, 65 and 77 are. */
-  .q-turn .q-turn-lbl{display:inline-block; transform:rotate(0.001deg)}
+  /* 78 One full turn — the whole word makes exactly one revolution and lands
+     readable. Card 26 rolls the label and hands over to a duplicate; card 65
+     loops one that genuinely does not fit. Both keep the type readable at the
+     ends of the movement, and so, now, does this.
+
+     It used to spin forever, and it was defended here on the grounds that a
+     specimen page should own its worst idea. That defence does not survive
+     contact with the thing: a label that is unreadable for as long as you point
+     at it is not a loud answer to a hover, it is the absence of one, and it
+     took the section's rotation argument down with it. Bounded, the same
+     gesture makes the argument properly — the page turns the plate in card 75
+     and a single letter in card 79, and this is the whole word between them.
+
+     What the bound buys is the mechanism, and it is the reason the card is
+     worth keeping at all. A full turn ENDS WHERE IT STARTED, so the exit needs
+     no animation: 360deg and 0deg are congruent and the reset is a snap
+     between two identical pictures. Card 21 has the same problem — a light
+     that runs a lap must never rewind — and has to spend a fade hiding its
+     reset, because an angle mid-lap is not congruent with anything. This one
+     has nothing to hide. One transition in, 0s out, no duplicate element, no
+     registered property, no keyframe.
+
+     Interrupted, that same 0s is the correct behaviour rather than a
+     concession: leave at 180deg and the word snaps upright instead of
+     unwinding through another 180deg of unreadable. The fastest route back to
+     a legible label is the right one, and here it is also the cheapest.
+
+     The independent `rotate` property, not a transform function, so the house
+     press keeps its scale without either state having to restate the other. */
+  .q-turn .q-turn-lbl{display:inline-block; rotate:0deg; transition:rotate 0s}
   .q-turn:hover .q-turn-lbl,
-  .q-turn:focus-visible .q-turn-lbl{animation:q-orbit 6s linear infinite}
-  @keyframes q-orbit{to{transform:rotate(360deg)}}
+  .q-turn:focus-visible .q-turn-lbl{rotate:360deg; transition:rotate var(--t-5) var(--e-quint)}
 
   /* 79 Nervous type — every letter tilts on its own timing, so the word never
      settles while you are pointing at it. Card 12 also works letter by letter,
@@ -3852,19 +3902,23 @@
   @keyframes q-waver{to{transform:rotate(var(--q-a,4deg))}}
 
   @media (prefers-reduced-motion: reduce){
-    /* Three loops in this section, and the global clamp turns a loop into a
+    /* Two loops in this section now, and the global clamp turns a loop into a
        blur rather than into stillness, so each is stopped outright. Card 29 is
        the precedent for what happens next: the end state remains, the motion
-       does not. So the mark stays turned and the ring stays visible; the label
-       takes a single static angle instead of orbiting; and the letters hold
-       the tilt they were going to waver around, which is the hand-drawn look
-       the card is about, just standing still. Every card here still answers a
-       hover — none of them goes inert. */
+       does not. So the mark stays turned and the ring stays visible, and the
+       letters hold the tilt they were going to waver around, which is the
+       hand-drawn look the card is about, just standing still.
+
+       Card 78 is not a loop any more, but it needs this block more than the
+       loops do. Its end state is a full revolution, and a full revolution
+       CLAMPED TO NO DURATION IS INDISTINGUISHABLE FROM NOT MOVING — the one
+       card here that would answer a hover with a picture identical to its rest
+       state. It takes a static angle instead, the way it did when it orbited.
+       Every card here still answers a hover — none of them goes inert. */
     .q-spin:hover .q-spin-ring,
     .q-spin:focus-visible .q-spin-ring{animation:none !important; opacity:1}
-    .q-turn .q-turn-lbl{animation:none !important}
     .q-turn:hover .q-turn-lbl,
-    .q-turn:focus-visible .q-turn-lbl{animation:none !important; transform:rotate(-8deg)}
+    .q-turn:focus-visible .q-turn-lbl{rotate:-8deg}
     .q-jitter .q-jitter-l{animation:none !important}
     .q-jitter:hover .q-jitter-l,
     .q-jitter:focus-visible .q-jitter-l{animation:none !important;
@@ -3887,10 +3941,10 @@
 
     <article class="spec">
       <div class="stage">
-        <button type="button" class="btn btn--solid q-tab"><span class="lbl">Press to start</span></button>
+        <button type="button" class="btn btn--solid q-riser"><span class="lbl">Press to start</span></button>
       </div>
-      <h3><span class="num">76</span>The terminal</h3>
-      <p>A tab extrudes from the top edge, like a battery terminal or a keycap stem. Cards 53, 54 and 25 all borrow from objects by working into the plate; this is the first that adds material outside its outline.</p>
+      <h3><span class="num">76</span>The riser</h3>
+      <p>Two legs grow from the bottom edge as the plate rises by exactly their height, so nothing below it moves and the button ends up standing off the page. Cards 10 and 25 describe a lift with light; this one grows the structure and lets the light follow.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -3907,8 +3961,8 @@
       <div class="stage">
         <button type="button" class="btn btn--solid q-turn"><span class="lbl q-turn-lbl">Spin it up</span></button>
       </div>
-      <h3><span class="num">78</span>The label turns</h3>
-      <p>The word rotates around the plate's centre and keeps going. Cards 26 and 65 both move the label but keep it readable at the ends; this one does not, and it is here on that point — the page should own its loudest idea.</p>
+      <h3><span class="num">78</span>One full turn</h3>
+      <p>The word makes exactly one revolution and lands readable. Because a full turn ends where it started, the exit needs no animation at all — card 21 has to fade its light out to hide the same reset, and this one has nothing to hide.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -4099,10 +4153,11 @@
   .btn.s-sprite:active::after{background:var(--ink-mid)}
 
   /* 83 It prints — the label arrives one glyph at a time, each snapping from
-     bled ink to sharp with nothing in between, on a fixed 26ms beat. Card 37
-     is this same event made continuous: a hard edge travels through the word
-     and every glyph changes colour mid-stroke. This one is quantised. A glyph
-     is either printed or it is not, and the beat is a print head rather than
+     bled ink to sharp with nothing in between, on a fixed 26ms beat. Cards 12
+     and 79 also work letter by letter, but both move type that has already
+     arrived; this one is arrival itself, and it is quantised. A glyph is
+     either printed or it is not, and the beat is a print head rather than
+     an easing curve.
      an easing curve.
      --t-stagger is the page's own token, used here as a rhythm and not as a
      one-off offset: eleven glyphs at 26ms is 286ms of printing, inside the
@@ -4241,7 +4296,7 @@
         <button type="button" class="btn btn--line s-print"><span aria-hidden="true"><span class="s-print-l">P</span><span class="s-print-l">r</span><span class="s-print-l">i</span><span class="s-print-l">n</span><span class="s-print-l">t</span> <span class="s-print-l">t</span><span class="s-print-l">i</span><span class="s-print-l">c</span><span class="s-print-l">k</span><span class="s-print-l">e</span><span class="s-print-l">t</span></span><span class="sr">Print ticket</span></button>
       </div>
       <h3><span class="num">83</span>It prints</h3>
-      <p>The label arrives one glyph at a time on a fixed 26ms beat, each snapping from bled ink to sharp with nothing in between. Card 37 is the same event made continuous; this one is quantised, and the beat is a print head rather than a curve.</p>
+      <p>The label arrives one glyph at a time on a fixed 26ms beat, each snapping from bled ink to sharp with nothing in between. Cards 12 and 79 also work letter by letter, but on type that has already arrived; this one is arrival, and quantised — the beat is a print head rather than a curve.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -4383,11 +4438,13 @@
      No hue, so no red. The commitment is the fill you have to sit through, and
      the page's inverse pair does the work colour would have done elsewhere.
 
-     The overlay label is card 37's technique rather than a colour transition: a
-     second copy of the word inside the fill, revealed exactly as the fill's edge
-     passes it, so each glyph changes at the moment it is crossed instead of the
-     whole word fading at the midpoint. It is aria-hidden, and the real label
-     carries the name — card 26 duplicates a label the same way.
+     The overlay label is a second copy of the word inside the fill rather than a
+     colour transition, revealed exactly as the fill's edge passes it, so each
+     glyph changes at the moment it is crossed instead of the whole word fading
+     at the midpoint. A retired study used to carry that technique and this card
+     cited it; with that one gone this is the page's only instance, so the
+     mechanism is described here rather than referred to. It is aria-hidden, and
+     the real label carries the name — card 26 duplicates a label the same way.
 
      --t-hold is declared here and read by the script, so the bar and the timer
      cannot disagree. It is deliberately NOT shortened under reduced motion: the
@@ -4584,11 +4641,21 @@
        inline style. The Copy machinery strips every style attribute off its
        clone, so an inline index would work on this page and arrive dead in the
        snippet.
-     · The delay is calc(var(--i) * var(--t-stagger)), and --t-stagger is the
-       house 26ms. It is set in BOTH states, which is card 43's insight: the
-       rest-state delay IS the exit delay. Left in the hover rule alone, the
-       letters leave in formation and only arrive in sequence, which reads as a
-       broken effect rather than a quiet one.
+     · The stagger is calc(var(--i) * var(--t-stagger)) and --t-stagger is the
+       house 26ms. The two ROLLS hold their displacement, so they stagger on a
+       transition and the delay is set in BOTH states — card 43's insight: the
+       rest-state delay IS the exit delay, and left in the hover rule alone the
+       letters leave in formation and only arrive in sequence.
+     · The four LIFTS hold nothing. They rise and return inside one animation,
+       so there is no exit to stage and the stagger lives on animation-delay.
+       That is a correction, and worth recording as one: they used to travel to
+       a displaced state and PARK there for as long as the pointer stayed. A
+       label sitting 3px above its own baseline is a label that has come off
+       its line, and it read as a bug rather than as an effect — the misalign-
+       ment was the most visible thing about four of the six cards here, and
+       card 90's own copy already claimed the characters 'return' while the CSS
+       held them up. A gesture that goes out and comes back needs no held state
+       to be legible, and staying is the one thing it must not do.
      · Splitting a label costs the kerning between every pair, because kerning
        does not cross an element boundary. Measured on these six labels: 0.69px
        to 3.50px per label split by character, and 0.02px to 0.05px split by
@@ -4604,7 +4671,7 @@
      section before it. r- went out with a withdrawn section and is not being
      reused, so the ledger still reads as a history rather than a lookup. */
 
-  /* 80 The roll, letter by letter — card 26's gesture, resolved. Each character
+  /* 89 The roll, letter by letter — card 26's gesture, resolved. Each character
      is its own two-row column: the letter you can see leaves through the top of
      its box while its duplicate arrives from the bottom of the same box, and
      the columns start 26ms apart. Nothing is revealed and nothing is hidden —
@@ -4645,7 +4712,40 @@
   .u-roll .u-roll-c:nth-child(9){--i:8}
   .u-roll .u-roll-c:nth-child(10){--i:9}
 
-  /* 81 A lift, not a roll — the same stagger with nothing masked, nothing
+  /* The two curves the four lifts share. A lift that returns cannot be a
+     transition: a transition needs an end state to travel TO, and the end
+     state of this gesture is where it began. So it is one animation per
+     character, staggered on animation-delay, with fill-mode both so a
+     character sits at its 0% frame through its own delay instead of jumping.
+     Nothing is held at either end, which is the entire point.
+     Names that are not substrings of one another, on purpose: the Copy
+     buttons find a card's keyframes with indexOf on the name, so u-rise inside
+     a u-rise-something would be handed the wrong block. */
+  @keyframes u-rise{
+    0%   {transform:translateY(0) rotate(0.001deg)}
+    46%  {transform:translateY(-3px) rotate(0.001deg)}
+    100% {transform:translateY(0) rotate(0.001deg)}
+  }
+  /* The bounce keeps its sampled spring, and the spring now runs on the RISE
+     only — a per-keyframe animation-timing-function, which is the one place
+     CSS lets a single animation change curve mid-flight. The peak of 1.3378
+     against a 4px travel puts the character 5.35px up before it settles back
+     onto its 4px mark, and only then does it leave. Landing past the mark and
+     then returning to the baseline are two different movements now, and they
+     read more clearly apart than they did when the second one never happened. */
+  @keyframes u-overshoot{
+    0%   {transform:translateY(0) rotate(0.001deg);
+          animation-timing-function:linear(0 0%, 0.1868 4.17%, 0.5462 8.33%, 0.8892 12.5%,
+      1.1394 16.67%, 1.2827 20.83%, 1.3378 25%, 1.3311 29.17%, 1.2857 33.33%, 1.2205 37.5%,
+      1.1509 41.67%, 1.0876 45.83%, 1.0374 50%, 1.0022 54.17%, 0.9812 58.33%, 0.9714 62.5%,
+      0.9694 66.67%, 0.9723 70.83%, 0.9778 75%, 0.9843 79.17%, 0.9905 83.33%, 0.9955 87.5%,
+      0.999 91.67%, 1.0009 95.83%, 1 100%)}
+    58%  {transform:translateY(-4px) rotate(0.001deg);
+          animation-timing-function:cubic-bezier(0.4,0,0.6,1)}
+    100% {transform:translateY(0) rotate(0.001deg)}
+  }
+
+  /* 90 A lift, not a roll — the same stagger with nothing masked, nothing
      duplicated and nowhere for a descender to be clipped: each character lifts
      3px and comes back. It is here as the argument that card 89 is usually the
      wrong choice. A roll replaces the label, so it needs a mask, a duplicate,
@@ -4654,12 +4754,15 @@
      3px, not more. The travel has to stay under the distance between the
      baseline and the cap line or the word comes apart into ten objects — which
      is the failure mode this whole section is about. */
-  .u-lift .u-lift-c{display:inline-block;
-    transform:translateY(0) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out) calc(var(--i) * var(--t-stagger));
-  }
+  .u-lift .u-lift-c{display:inline-block; transform:translateY(0) rotate(0.001deg)}
   .u-lift:hover .u-lift-c,
-  .u-lift:focus-visible .u-lift-c{transform:translateY(-3px) rotate(0.001deg)}
+  .u-lift:focus-visible .u-lift-c{
+    animation-name:u-rise;
+    animation-duration:var(--t-4);
+    animation-timing-function:var(--e-out);
+    animation-delay:calc(var(--i) * var(--t-stagger));
+    animation-fill-mode:both;
+  }
   .u-lift .u-lift-c:nth-child(1){--i:0}
   .u-lift .u-lift-c:nth-child(2){--i:1}
   .u-lift .u-lift-c:nth-child(3){--i:2}
@@ -4671,7 +4774,7 @@
   .u-lift .u-lift-c:nth-child(9){--i:8}
   .u-lift .u-lift-c:nth-child(10){--i:9}
 
-  /* 82 It lands past its mark — the bounce, and the one card on the page that
+  /* 91 It lands past its mark — the bounce, and the one card on the page that
      wants to be read as one. Card 33 samples an underdamped spring and then
      tunes the second lobe down to 0.43% precisely SO THAT it never reads as a
      bounce; this keeps the lobe. The curve overshoots to 1.34 and settles
@@ -4684,21 +4787,17 @@
      as a word; at 60ms it becomes ten separate bounces and looks like a
      children's app. That is the whole difference between this and the thing
      nobody wants on a button.
-     Still one plain transition, so it reverses from wherever it has got to. */
-  .u-land .u-land-c{display:inline-block;
-    transform:translateY(0) rotate(0.001deg);
-    transition:transform var(--t-4) var(--e-out) calc(var(--i) * var(--t-stagger));
-  }
+     The spring is damping ratio .38, omega 15 rad/s, sampled at 24 steps: one
+     34% overshoot and one 6% return, where card 33 keeps 16% and 0.43%. It
+     lives in @keyframes u-overshoot above, on the rise, and the character then
+     comes back down to the baseline rather than parking on its mark. */
+  .u-land .u-land-c{display:inline-block; transform:translateY(0) rotate(0.001deg)}
   .u-land:hover .u-land-c,
   .u-land:focus-visible .u-land-c{
-    transform:translateY(-4px) rotate(0.001deg);
-    /* damping ratio .38, omega 15 rad/s, sampled at 24 steps: one 34% overshoot
-       and one 6% return, where card 33 keeps 16% and 0.43%. */
-    transition-timing-function:linear(0 0%, 0.1868 4.17%, 0.5462 8.33%, 0.8892 12.5%,
-      1.1394 16.67%, 1.2827 20.83%, 1.3378 25%, 1.3311 29.17%, 1.2857 33.33%, 1.2205 37.5%,
-      1.1509 41.67%, 1.0876 45.83%, 1.0374 50%, 1.0022 54.17%, 0.9812 58.33%, 0.9714 62.5%,
-      0.9694 66.67%, 0.9723 70.83%, 0.9778 75%, 0.9843 79.17%, 0.9905 83.33%, 0.9955 87.5%,
-      0.999 91.67%, 1.0009 95.83%, 1 100%);
+    animation-name:u-overshoot;
+    animation-duration:var(--t-5);
+    animation-delay:calc(var(--i) * var(--t-stagger));
+    animation-fill-mode:both;
   }
   .u-land .u-land-c:nth-child(1){--i:0}
   .u-land .u-land-c:nth-child(2){--i:1}
@@ -4710,7 +4809,7 @@
   .u-land .u-land-c:nth-child(8){--i:7}
   .u-land .u-land-c:nth-child(9){--i:8}
 
-  /* 83 Word by word — the same roll with the unit changed, and the card that
+  /* 92 Word by word — the same roll with the unit changed, and the card that
      answers «who would use this». Four words on a 300ms rung with a 26ms step
      is a CTA reading itself out; twenty-one characters is a wave passing over a
      button. The mechanism is identical and only the granularity moved, which is
@@ -4733,7 +4832,7 @@
   .u-words .u-words-c:nth-child(3){--i:2}
   .u-words .u-words-c:nth-child(4){--i:3}
 
-  /* 84 From the middle out — the same lift, ordered by distance from the
+  /* 93 From the middle out — the same lift, ordered by distance from the
      label's centre instead of by reading order. Both ends move last and the
      word breathes from the middle, which reads as ONE object under the pointer
      where left-to-right reads as a queue being served.
@@ -4743,12 +4842,15 @@
      card 90 needs to reach the end of ten letters. Ordering by distance rather
      than by reading order buys back a third of the span, which is why this is
      the card that can afford the full 26ms step. */
-  .u-centre .u-centre-c{display:inline-block;
-    transform:translateY(0) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out) calc(var(--i) * var(--t-stagger));
-  }
+  .u-centre .u-centre-c{display:inline-block; transform:translateY(0) rotate(0.001deg)}
   .u-centre:hover .u-centre-c,
-  .u-centre:focus-visible .u-centre-c{transform:translateY(-3px) rotate(0.001deg)}
+  .u-centre:focus-visible .u-centre-c{
+    animation-name:u-rise;
+    animation-duration:var(--t-4);
+    animation-timing-function:var(--e-out);
+    animation-delay:calc(var(--i) * var(--t-stagger));
+    animation-fill-mode:both;
+  }
   .u-centre .u-centre-c:nth-child(1){--i:6}
   .u-centre .u-centre-c:nth-child(2){--i:5}
   .u-centre .u-centre-c:nth-child(3){--i:4}
@@ -4763,52 +4865,77 @@
   .u-centre .u-centre-c:nth-child(12){--i:5}
   .u-centre .u-centre-c:nth-child(13){--i:6}
 
-  /* 85 It starts where you entered — the stagger runs away from the pointer.
-     Enter from the left and it goes left to right; enter from the right and it
-     reverses. Card 01 does this for a fill and card 44 for an exit; neither has
-     done it to a label's characters, and a variant cannot do it at all because
-     the entry side is not a state.
-     Every character carries BOTH indices, --i and --j, authored on the same
-     nth-child rule, so the script has no arithmetic to do and no styles to
-     write: it sets one attribute on the button and CSS picks the column. That
-     also means the keyboard gets the default order for free — focus has no
-     entry side, the attribute is never set, and --i is what remains.
-     The read is on pointerenter, against the button's own centre rather than
-     the viewport's, and it is one getBoundingClientRect per enter.
-     Ten characters, not the seventeen this label started as: at 26ms a
-     fifteen-letter word puts 364ms between the first column and the last, and
-     the direction stops being legible as one gesture — you watch a queue
-     instead. The step is the house 26ms; the LABEL is what has to give. */
-  .u-side .u-side-c{display:inline-block;
-    transform:translateY(0) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out) calc(var(--i) * var(--t-stagger));
+  /* 94 In no particular order — the same lift with the order taken away. Cards
+     90 and 93 both answer «which character moves first» with a rule you can
+     see: reading order, and distance from the centre. This answers it with no
+     rule at all, and the claim is that a word breathing in no order reads as a
+     surface being disturbed rather than as a sequence being played.
+
+     CSS HAS NO RANDOMNESS, so the disorder is authored. Card 79 says the same
+     thing about its seven tilt angles and it is worth saying twice, because it
+     is the constraint people expect to be able to ignore. The indices are a
+     fixed permutation of 0–9 chosen against one test: no two neighbouring
+     characters may hold neighbouring indices, |i(n) − i(n+1)| >= 2 everywhere.
+     Without it a shuffle keeps throwing up local runs of three and four in
+     sequence and the eye finds them immediately — it reads as a queue with
+     mistakes in it, which is worse than either a queue or a shuffle. It READS
+     as random, which is the only claim the card makes; the honest description
+     is ten values in a chosen order. The permutation here is
+     4 9 1 6 0 8 3 5 2 7, and its smallest neighbouring gap is 2.
+
+     It replaces a study that keyed the stagger to the pointer's entry side.
+     That one measured correctly, answered the hover and still did not work: a
+     stagger's DIRECTION is only legible against the other direction, and one
+     button never shows you both. It read as an ordinary left-to-right lift half
+     the time and an ordinary right-to-left lift the rest, which is a mechanism
+     that cannot be seen — the reason to drop a card is not that it is broken.
+     This one asks for no pointer position and no script at all, and the section
+     loses its only JS chip with it. */
+  .u-shuffle .u-shuffle-c{display:inline-block; transform:translateY(0) rotate(0.001deg)}
+  .u-shuffle:hover .u-shuffle-c,
+  .u-shuffle:focus-visible .u-shuffle-c{
+    animation-name:u-rise;
+    animation-duration:var(--t-4);
+    animation-timing-function:var(--e-out);
+    animation-delay:calc(var(--i) * var(--t-stagger));
+    animation-fill-mode:both;
   }
-  .u-side[data-u-side="r"] .u-side-c{
-    transition-delay:calc(var(--j) * var(--t-stagger));
-  }
-  .u-side:hover .u-side-c,
-  .u-side:focus-visible .u-side-c{transform:translateY(-3px) rotate(0.001deg)}
-  .u-side .u-side-c:nth-child(1){--i:0; --j:9}
-  .u-side .u-side-c:nth-child(2){--i:1; --j:8}
-  .u-side .u-side-c:nth-child(3){--i:2; --j:7}
-  .u-side .u-side-c:nth-child(4){--i:3; --j:6}
-  .u-side .u-side-c:nth-child(5){--i:4; --j:5}
-  .u-side .u-side-c:nth-child(6){--i:5; --j:4}
-  .u-side .u-side-c:nth-child(7){--i:6; --j:3}
-  .u-side .u-side-c:nth-child(8){--i:7; --j:2}
-  .u-side .u-side-c:nth-child(9){--i:8; --j:1}
-  .u-side .u-side-c:nth-child(10){--i:9; --j:0}
+  .u-shuffle .u-shuffle-c:nth-child(1){--i:4}
+  .u-shuffle .u-shuffle-c:nth-child(2){--i:9}
+  .u-shuffle .u-shuffle-c:nth-child(3){--i:1}
+  .u-shuffle .u-shuffle-c:nth-child(4){--i:6}
+  .u-shuffle .u-shuffle-c:nth-child(5){--i:0}
+  .u-shuffle .u-shuffle-c:nth-child(6){--i:8}
+  .u-shuffle .u-shuffle-c:nth-child(7){--i:3}
+  .u-shuffle .u-shuffle-c:nth-child(8){--i:5}
+  .u-shuffle .u-shuffle-c:nth-child(9){--i:2}
+  .u-shuffle .u-shuffle-c:nth-child(10){--i:7}
 
   @media (prefers-reduced-motion: reduce){
-    /* The global clamp zeroes every delay, which is exactly right here: a
-       stagger IS a sequence of delays, so it collapses to the whole label
-       moving at once, and every card still answers a hover. Card 82 is the one
-       that needs saying out loud — its overshoot is in the timing function, and
-       a .01ms duration lands on the end value, so the bounce does not survive
-       as a flicker. Nothing to add, and this comment is the record that it was
-       checked rather than assumed. */
+    /* The global clamp zeroes every delay, which is exactly right for the two
+       ROLLS: a stagger is a sequence of delays, so it collapses to the whole
+       label rolling at once and the card still answers the hover.
+       The four LIFTS need the opposite, and this is the one place on the page
+       where the clamp actively breaks a card rather than simplifying it. Their
+       gesture returns, so a clamped animation lands on its 100% frame — which
+       IS the rest position. Four cards would answer a hover with a picture
+       identical to their rest state, which is the one outcome the page does not
+       allow. There is no still frame to fall back on either, because having no
+       held state is the whole design. So under reduced motion they take back
+       exactly the held displacement the section just removed: the only place
+       here where the reduced-motion state is MORE displaced than the settled
+       one, and the only honest reading of a movement whose end value is its
+       start value.
+       Card 91 keeps its own line because its travel is 4px, not 3px, and its
+       overshoot is in the keyframes rather than the timing function: with the
+       animation off there is nothing left to flicker. */
+    .u-lift:hover .u-lift-c, .u-lift:focus-visible .u-lift-c,
+    .u-centre:hover .u-centre-c, .u-centre:focus-visible .u-centre-c,
+    .u-shuffle:hover .u-shuffle-c, .u-shuffle:focus-visible .u-shuffle-c{
+      animation:none !important; transform:translateY(-3px) rotate(0.001deg)}
     .u-land:hover .u-land-c,
-    .u-land:focus-visible .u-land-c{transition-timing-function:linear !important}
+    .u-land:focus-visible .u-land-c{
+      animation:none !important; transform:translateY(-4px) rotate(0.001deg)}
   }
 </style>
 
@@ -4863,25 +4990,16 @@
 
     <article class="spec">
       <div class="stage">
-        <button type="button" class="btn btn--solid u-side"><span class="lbl"><span class="u-side-c" aria-hidden="true">O</span><span class="u-side-c" aria-hidden="true">p</span><span class="u-side-c" aria-hidden="true">e</span><span class="u-side-c" aria-hidden="true">n</span> <span class="u-side-c" aria-hidden="true">t</span><span class="u-side-c" aria-hidden="true">h</span><span class="u-side-c" aria-hidden="true">e</span> <span class="u-side-c" aria-hidden="true">m</span><span class="u-side-c" aria-hidden="true">a</span><span class="u-side-c" aria-hidden="true">p</span></span><span class="sr">Open the map</span></button>
+        <button type="button" class="btn btn--solid u-shuffle"><span class="lbl"><span class="u-shuffle-c" aria-hidden="true">O</span><span class="u-shuffle-c" aria-hidden="true">p</span><span class="u-shuffle-c" aria-hidden="true">e</span><span class="u-shuffle-c" aria-hidden="true">n</span> <span class="u-shuffle-c" aria-hidden="true">t</span><span class="u-shuffle-c" aria-hidden="true">h</span><span class="u-shuffle-c" aria-hidden="true">e</span> <span class="u-shuffle-c" aria-hidden="true">m</span><span class="u-shuffle-c" aria-hidden="true">a</span><span class="u-shuffle-c" aria-hidden="true">p</span></span><span class="sr">Open the map</span></button>
       </div>
-      <h3><span class="num">94</span>It starts where you entered</h3>
-      <p>Enter from the left and the stagger runs left to right; enter from the right and it reverses. Every character carries both indices, so the script sets one attribute and writes no styles — and the keyboard keeps the default order for free.</p>
-      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+      <h3><span class="num">94</span>In no particular order</h3>
+      <p>The same lift with the order taken away: a fixed permutation of the ten indices, chosen so no two neighbouring characters hold neighbouring delays. CSS has no randomness, so the disorder is authored — it reads as a surface disturbed rather than a sequence played.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
   </div>
 </section>
 
-<script>
-  // 85 It starts where you entered — one attribute per enter; CSS owns the rest.
-  document.querySelectorAll('.u-side').forEach(function(b){
-    b.addEventListener('pointerenter', function(e){
-      var r = b.getBoundingClientRect();
-      b.dataset.uSide = (e.clientX - r.left) > r.width / 2 ? 'r' : 'l';
-    });
-  });
-</script>
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
     <p><b>production</b> wrap hover in @media (any-hover: hover), keep :active outside</p>
@@ -6060,6 +6178,17 @@
     // generated into this page by tools/sync-framer.mjs; it is read lazily so
     // it does not matter where in the document that block ends up.
     //
+    // Eleven numbers are deliberately ABSENT from the map. Two are the retired
+    // studies. The other nine were reworked in the same pass that wrote this
+    // note, so their published modules still serve the effect the page used to
+    // show — card 76's URL is still named TheTerminal and still grows a 7px tab.
+    // A stale module is worse than no module: the fallback below copies the real
+    // code file and says so out loud, whereas a wrong URL hands over something
+    // that silently contradicts the demo it was copied from. Run
+    // tools/sync-framer.mjs to republish those nine and the map fills itself
+    // back in. Never delete the Framer code files they point at — somebody may
+    // have pasted one already.
+    //
     // The URL is deliberately the versionless form. Framer resolves it at
     // paste time and pins the instance to whatever version it found, so a
     // later edit here reaches the next person who pastes it and can never
@@ -6141,7 +6270,7 @@
 </script>
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/DirectionalSweep-dlV5mD.js","02":"https://framer.com/m/Shutter-8E8j3M.js","03":"https://framer.com/m/InkFill-GW6yhu.js","04":"https://framer.com/m/Sheen-eN4I5o.js","05":"https://framer.com/m/ArrowRelay-NcEpRz.js","06":"https://framer.com/m/DotBecomesArrow-78XLOF.js","07":"https://framer.com/m/Guillemets-rObXKn.js","08":"https://framer.com/m/CropMarks-fjWU0F.js","09":"https://framer.com/m/DirectionalUnderline-IatvfH.js","10":"https://framer.com/m/ElevationStep-AKmCza.js","11":"https://framer.com/m/Magnetic-SmTIHx.js","12":"https://framer.com/m/WeightWave-w7rPq4.js","13":"https://framer.com/m/DrawnOutline-cmxkyg.js","14":"https://framer.com/m/ChamferedCorner-lvjej9.js","15":"https://framer.com/m/InRegister-QpqTov.js","16":"https://framer.com/m/Counter-R61N2D.js","17":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","18":"https://framer.com/m/Backlight-68rjpP.js","19":"https://framer.com/m/TheLantern-JhIelK.js","20":"https://framer.com/m/TheGrainSettles-qDFHdb.js","21":"https://framer.com/m/EdgeLight-eEskv2.js","22":"https://framer.com/m/DiagonalRadius-QprZXR.js","23":"https://framer.com/m/RuleBecomesFrame-mTkC7D.js","24":"https://framer.com/m/FillingTheMeasure-LXrYgI.js","25":"https://framer.com/m/TheKey-SCe6ZA.js","26":"https://framer.com/m/LabelRoll-p0eOmG.js","27":"https://framer.com/m/TheSecondLine-0blJk6.js","28":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","29":"https://framer.com/m/TheCaret-wBPSsy.js","30":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","31":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","32":"https://framer.com/m/TwoMasses-Sb7Tcx.js","33":"https://framer.com/m/TheSettle-2TMnOM.js","34":"https://framer.com/m/Anticipation-r4w6lE.js","35":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","36":"https://framer.com/m/ReSpacing-9XNknM.js","37":"https://framer.com/m/SettingTheLine-kEUeIM.js","38":"https://framer.com/m/TheRealUnderline-wBkGEc.js","39":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","40":"https://framer.com/m/TheExitRemembers-y2VaAw.js","41":"https://framer.com/m/DirectionalFill-fpvcPF.js","42":"https://framer.com/m/TheWave-vZigVg.js","43":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","44":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","45":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","46":"https://framer.com/m/Resolve-QdqmRV.js","47":"https://framer.com/m/TheOthersRecede-uWvqi9.js","48":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","49":"https://framer.com/m/ConservedCompression-qOYXER.js","50":"https://framer.com/m/Repulsion-8kbI6W.js","51":"https://framer.com/m/ThePair-XMHcLD.js","52":"https://framer.com/m/TheDividerYields-BQHpVA.js","53":"https://framer.com/m/Knurling-8R1JoN.js","54":"https://framer.com/m/Deboss-n6GzCh.js","55":"https://framer.com/m/TheLineGauge-h9qIsP.js","56":"https://framer.com/m/TheDataPlate-xAARQs.js","57":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","58":"https://framer.com/m/TheStop-fTngvI.js","59":"https://framer.com/m/ChangesSides-0nQCL2.js","60":"https://framer.com/m/ThePiecesJoin-sc1diW.js","61":"https://framer.com/m/TickerLabel-1JFxFP.js","62":"https://framer.com/m/StruckThrough-P16etM.js","63":"https://framer.com/m/NothingButThePress-sHz8KT.js","64":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","65":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","66":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","67":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","68":"https://framer.com/m/SteppedFill-6Em9QG.js","69":"https://framer.com/m/ThePiecesPart-ySk8HW.js","70":"https://framer.com/m/TheMarkWalksThePlate-RYjUHt.js","71":"https://framer.com/m/TheyTradeFill-OyLZbP.js","72":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","73":"https://framer.com/m/TheMarkHinges-RXuV8I.js","74":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","75":"https://framer.com/m/StraightensUp-PMQhjy.js","76":"https://framer.com/m/TheTerminal-Jan0hL.js","77":"https://framer.com/m/ItGoesToWork-UWy42D.js","78":"https://framer.com/m/TheLabelTurns-docxl4.js","79":"https://framer.com/m/NervousType-7TInHS.js","80":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","81":"https://framer.com/m/TheTubeConverges-Mzevog.js","82":"https://framer.com/m/TwoFrames-Xkk1by.js","83":"https://framer.com/m/ItPrints-d0SyuT.js","84":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","85":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","86":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","87":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","88":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/DirectionalSweep-dlV5mD.js","02":"https://framer.com/m/Shutter-8E8j3M.js","03":"https://framer.com/m/InkFill-GW6yhu.js","04":"https://framer.com/m/Sheen-eN4I5o.js","05":"https://framer.com/m/ArrowRelay-NcEpRz.js","06":"https://framer.com/m/DotBecomesArrow-78XLOF.js","07":"https://framer.com/m/Guillemets-rObXKn.js","08":"https://framer.com/m/CropMarks-fjWU0F.js","09":"https://framer.com/m/DirectionalUnderline-IatvfH.js","10":"https://framer.com/m/ElevationStep-AKmCza.js","11":"https://framer.com/m/Magnetic-SmTIHx.js","12":"https://framer.com/m/WeightWave-w7rPq4.js","13":"https://framer.com/m/DrawnOutline-cmxkyg.js","14":"https://framer.com/m/ChamferedCorner-lvjej9.js","15":"https://framer.com/m/InRegister-QpqTov.js","16":"https://framer.com/m/Counter-R61N2D.js","17":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","18":"https://framer.com/m/Backlight-68rjpP.js","19":"https://framer.com/m/TheLantern-JhIelK.js","20":"https://framer.com/m/TheGrainSettles-qDFHdb.js","22":"https://framer.com/m/DiagonalRadius-QprZXR.js","25":"https://framer.com/m/TheKey-SCe6ZA.js","26":"https://framer.com/m/LabelRoll-p0eOmG.js","27":"https://framer.com/m/TheSecondLine-0blJk6.js","28":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","29":"https://framer.com/m/TheCaret-wBPSsy.js","30":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","31":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","32":"https://framer.com/m/TwoMasses-Sb7Tcx.js","35":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","36":"https://framer.com/m/ReSpacing-9XNknM.js","38":"https://framer.com/m/TheRealUnderline-wBkGEc.js","39":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","41":"https://framer.com/m/DirectionalFill-fpvcPF.js","42":"https://framer.com/m/TheWave-vZigVg.js","43":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","44":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","45":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","46":"https://framer.com/m/Resolve-QdqmRV.js","47":"https://framer.com/m/TheOthersRecede-uWvqi9.js","48":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","49":"https://framer.com/m/ConservedCompression-qOYXER.js","50":"https://framer.com/m/Repulsion-8kbI6W.js","51":"https://framer.com/m/ThePair-XMHcLD.js","52":"https://framer.com/m/TheDividerYields-BQHpVA.js","53":"https://framer.com/m/Knurling-8R1JoN.js","54":"https://framer.com/m/Deboss-n6GzCh.js","55":"https://framer.com/m/TheLineGauge-h9qIsP.js","56":"https://framer.com/m/TheDataPlate-xAARQs.js","57":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","58":"https://framer.com/m/TheStop-fTngvI.js","59":"https://framer.com/m/ChangesSides-0nQCL2.js","60":"https://framer.com/m/ThePiecesJoin-sc1diW.js","61":"https://framer.com/m/TickerLabel-1JFxFP.js","62":"https://framer.com/m/StruckThrough-P16etM.js","63":"https://framer.com/m/NothingButThePress-sHz8KT.js","64":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","65":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","66":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","67":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","69":"https://framer.com/m/ThePiecesPart-ySk8HW.js","71":"https://framer.com/m/TheyTradeFill-OyLZbP.js","72":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","73":"https://framer.com/m/TheMarkHinges-RXuV8I.js","74":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","75":"https://framer.com/m/StraightensUp-PMQhjy.js","77":"https://framer.com/m/ItGoesToWork-UWy42D.js","79":"https://framer.com/m/NervousType-7TInHS.js","80":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","81":"https://framer.com/m/TheTubeConverges-Mzevog.js","82":"https://framer.com/m/TwoFrames-Xkk1by.js","83":"https://framer.com/m/ItPrints-d0SyuT.js","84":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","85":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","86":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","87":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","88":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 
 </body>
