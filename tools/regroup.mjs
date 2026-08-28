@@ -66,7 +66,7 @@ const GROUP_OF = {
   'Wave through': 'button',
   'Straightens up': 'button',
   'Riser': 'button',
-  'Press only': 'button',
+  'Hairline only': 'button',
 
   // Fill — a fill arrives or leaves.
   'Directional sweep': 'fill',
