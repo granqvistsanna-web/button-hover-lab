@@ -81,7 +81,7 @@
     --btn-r:999px;
     /* The left panel's width, as one token: body reserves it as padding and
        the panel claims it as its own width, so the two cannot disagree. */
-    --rail-w:268px;
+    --rail-w:288px;
     --mono:var(--font-mono);
     --e-quint:cubic-bezier(0.22,1,0.36,1);
     --e-out:cubic-bezier(0.33,1,0.68,1);
@@ -604,6 +604,21 @@
      caption rather than in the shared readout, because with three swatches a
      single readout cannot say WHICH one moved. */
   .set-cap b{font-weight:400; color:var(--ink-mid); cursor:help}
+  /* The way back to unset. --ink-hover aliases --ink and --ink-text aliases it
+     too, so an unset role FOLLOWS the one above it and a single pick colours
+     the whole button. That only holds while a role can be returned to unset,
+     and the only route was hitting graphite's exact white inside the OS picker
+     — which nobody can do on purpose. So every role that is set says so with a
+     clear, and clearing hands it back to the alias.
+     It lives inside the <label>, which would otherwise open the picker on the
+     way past; the handler takes the click before the label sees it. */
+  .set-clear{
+    font:inherit; font-size:12px; line-height:1; color:var(--ink-low);
+    background:none; border:0; padding:0 0 0 5px; cursor:pointer;
+    transition:color var(--t-2) ease;
+  }
+  .set-clear:hover{color:var(--ink-hi)}
+  .set-clear:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px; border-radius:2px}
   /* A native colour input, stripped back to the swatch. It is the only control
      on the page that opens something the page does not draw, so it is worth
      letting the OS own it rather than rebuilding a picker badly. */
@@ -653,7 +668,7 @@
   .set-read b{font-weight:400; color:var(--ink-mid); cursor:help}
   .fav-only{
     display:inline-flex; align-items:center; gap:7px;
-    font:500 13.5px/1 var(--font-ui); color:var(--ink-mid);
+    font:500 14px/1 var(--font-ui); color:var(--ink-mid);
     background:var(--bg-2); border:0; border-radius:var(--r-sm);
     padding:9px 13px; cursor:pointer;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
@@ -666,9 +681,9 @@
   .fav-only[aria-pressed="true"]::before{color:inherit}
   .fav-only[aria-pressed="true"]{background:var(--inverse-bg); color:var(--inverse-ink)}
   .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
-  .tools-count{font:400 12.5px/1 var(--mono); color:var(--ink-low);
+  .tools-count{font:500 13px/1 var(--mono); color:var(--ink-mid);
     font-variant-numeric:tabular-nums}
-  .tools-reset{font:400 13.5px/1 var(--font-ui); color:var(--ink-low);
+  .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
     background:none; border:0; padding:6px 2px; cursor:pointer}
   .tools-reset:hover{color:var(--ink-hi)}
   .tools-reset:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
@@ -804,7 +819,7 @@
      [hidden]{display:none} and the empty shell flashes up before the script
      has filled it. */
   .rail-head{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
-  .rail-lbl{display:block; margin:0 0 7px 7px;
+  .rail-lbl{display:block; margin:0 0 8px 9px;
     font:600 11px/1 var(--font-ui); letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
   .rail-q{
@@ -813,9 +828,9 @@
        one word this looks for. In the panel the header is 228px and the cap
        never bites. */
     flex:1 1 190px; min-width:0; max-width:440px;
-    padding:8px 10px; border-radius:var(--r-sm);
+    padding:9px 11px; border-radius:var(--r-sm);
     border:1px solid var(--line-ctl); background:var(--bg-0);
-    color:var(--ink-hi); font:400 13.5px/1.2 var(--font-ui);
+    color:var(--ink-hi); font:400 15px/1.2 var(--font-ui);
   }
   .rail-q::placeholder{color:var(--ink-faint)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
@@ -828,18 +843,20 @@
      boxes ticked on its own summary, so a filter can never be applied out of
      sight; the count in the status bar and the Reset button are the second and
      third places the same fact is stated. */
-  .rail-drop{border-top:1px solid var(--hairline)}
+  .rail-drop{margin:0}
   .rail-sum{
-    display:flex; align-items:center; gap:8px; cursor:pointer;
-    list-style:none; padding:12px 7px;
-    font:600 11px/1 var(--font-ui); letter-spacing:.14em; text-transform:uppercase;
-    color:var(--ink-low);
-    transition:color var(--t-1) var(--ease);
+    display:flex; align-items:center; gap:9px; cursor:pointer;
+    list-style:none; padding:8px 9px; border-radius:var(--r-xs);
+    font:500 15px/1.3 var(--font-ui); color:var(--ink-mid);
+    transition:color var(--t-1) var(--ease), background var(--t-1) var(--ease);
   }
   .rail-sum::-webkit-details-marker{display:none}
-  .rail-sum:hover{color:var(--ink-hi)}
+  .rail-sum:hover{background:var(--bg-2); color:var(--ink-hi)}
+  /* The open group is the one being read. It says so in ink rather than with a
+     second plate, so an open group and a hovered one stay distinguishable. */
+  .rail-drop[open] > .rail-sum{color:var(--ink-hi)}
   .rail-sum:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px;
-    border-radius:6px; color:var(--ink-hi)}
+    color:var(--ink-hi)}
   .rail-sum-t{flex:1; min-width:0}
   /* The chevron is drawn, not typed. A ▾ glyph sits on a different baseline in
      every face and rotating one about its own box never lands where the eye
@@ -868,7 +885,7 @@
      --ink-low and not --ink-faint: faint composites to 3.0:1 on this panel,
      which is under AA for body text, and the note on the counts settled that
      argument already. */
-  .rail-hint{margin:2px 7px 10px; font:400 12px/1.45 var(--font-ui); color:var(--ink-low)}
+  .rail-hint{margin:2px 9px 10px; font:400 13px/1.45 var(--font-ui); color:var(--ink-low)}
   @media (prefers-reduced-motion: no-preference){
     /* Fade and rise, no scale — the house rule for anything that appears.
        Height cannot be animated on a <details> without either a script or
@@ -878,12 +895,12 @@
   }
   @keyframes rail-in{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
 
-  .rail-list{list-style:none; display:flex; flex-direction:column; gap:1px;
-    margin-bottom:10px}
+  .rail-list{list-style:none; display:flex; flex-direction:column; gap:2px;
+    margin-bottom:12px}
   .rail-list label{
     display:flex; align-items:center; gap:8px;
-    padding:5px 7px; border-radius:6px; cursor:pointer;
-    font:400 13px/1.3 var(--font-ui); color:var(--ink-mid);
+    padding:7px 9px; border-radius:var(--r-xs); cursor:pointer;
+    font:400 15px/1.3 var(--font-ui); color:var(--ink-mid);
   }
   .rail-list label:hover{background:var(--bg-2); color:var(--ink-hi)}
   /* A ticked row reads as ticked without the pointer on it. The 13px box is
@@ -908,7 +925,7 @@
      the column look bent. --ink-low and not --ink-faint: faint measures 2.8:1
      on this panel, which is under AA, and the note at the top of the chip rules
      already settled that a count is information rather than decoration. */
-  .rail-n{font:400 11px/1 var(--mono); color:var(--ink-low);
+  .rail-n{font:500 12px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
   .rail-list label:hover .rail-n{color:var(--ink-hi)}
   /* A facet that can no longer match anything says so by going quiet, and
@@ -919,13 +936,14 @@
      Not a dropdown, and that is deliberate. It is the navigation rather than a
      filter, the scroll spy marks the section you are in on it, and a marker
      inside a shut disclosure marks nothing. */
-  .rail-grp{padding-top:14px; border-top:1px solid var(--hairline)}
+  .rail-grp{margin-top:12px; padding-top:16px; border-top:1px solid var(--hairline)}
   .rail-hint + .rail-list{margin-top:0}
-  .rail-sects{list-style:none; display:flex; flex-direction:column; gap:1px}
+  .rail-sects{list-style:none; display:flex; flex-direction:column; gap:2px}
   .rail-sects a{
     display:flex; gap:8px; align-items:baseline;
-    padding:4px 7px; border-radius:6px;
-    font:400 12.5px/1.35 var(--font-ui); color:var(--ink-low);
+    position:relative;
+    padding:7px 9px; border-radius:var(--r-xs);
+    font:400 14px/1.35 var(--font-ui); color:var(--ink-low);
     text-decoration:none;
   }
   .rail-sects a:hover{background:var(--bg-2); color:var(--ink-hi)}
@@ -933,6 +951,14 @@
   /* Where you are, stated once. aria-current carries it for a screen reader
      and the same attribute does the styling, so the two cannot disagree. */
   .rail-sects a[aria-current="true"]{color:var(--ink-hi); background:var(--bg-2)}
+  /* White is the page's only accent and this is the only place in the panel
+     that earns it: one thing is true at a time, and it is where you are. The
+     bar is on the row's own left edge rather than the panel's, so it reads as
+     belonging to the row and not as a second wall beside the first. */
+  .rail-sects a[aria-current="true"]::before{
+    content:""; position:absolute; left:0; top:50%; width:2px; height:15px;
+    margin-top:-7.5px; border-radius:1px; background:var(--accent);
+  }
   .rail-sects a[hidden]{display:none}
 
   /* ---- The status bar -------------------------------------------------- */
@@ -979,15 +1005,16 @@
       background:var(--bg-1);
       border:0; border-right:1px solid var(--hairline); border-radius:0;
     }
-    .rail-head{padding:20px 20px 16px; border-bottom:1px solid var(--hairline)}
+    .rail-head{padding:var(--pad-panel) var(--pad-panel) 16px;
+      border-bottom:1px solid var(--hairline)}
     /* min-height:0 is what lets the body actually scroll: a flex item's
        automatic minimum size is its content, so without it the body grows past
        the panel and the status bar is pushed off the bottom of the screen. */
     .rail-body{flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
-      padding:0 13px 20px}
-    .rail-drop:first-of-type{border-top:0}
+      padding:10px 11px var(--pad-panel)}
+    .rail-grp{margin-top:14px}
     .rail-grp{padding:14px 0 0}
-    .rail-foot{margin:0; padding:13px 20px; background:var(--bg-1);
+    .rail-foot{margin:0; padding:14px var(--pad-panel); background:var(--bg-1);
       border-top:1px solid var(--hairline)}
     .rail-toggle{display:none}
   }
@@ -1000,8 +1027,12 @@
        disclosure is that it costs a button. */
     .rail[data-open] .rail-list,
     .rail[data-open] .rail-sects{
-      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
-      gap:1px 16px;
+      /* 230 and not 190: at the DS row size the two longest section names —
+         «V — The flood, and the light on it» and «W — Borrowed from the
+         galleries» — wrapped to two lines in a 190px track, which bent the
+         whole grid's baseline. */
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+      gap:2px 16px;
     }
     .rail-head{margin-bottom:4px}
   }
@@ -4775,7 +4806,7 @@ document.addEventListener("DOMContentLoaded", function () {
      under the 3:1 a boundary owes. That is card 51's argument and the reason
      --line-ctl exists at all. */
   .btn.s-bevel{
-    background:var(--bg-3); color:var(--ink-hi);
+    background:var(--bg-3); color:var(--ink-text);
     border:2px solid; border-radius:0; padding:13px 26px;
     border-color:var(--ink-low) var(--bg-0) var(--bg-0) var(--ink-low);
     transition:border-color var(--t-2) ease;
@@ -4823,7 +4854,7 @@ document.addEventListener("DOMContentLoaded", function () {
      tube instead of as a fade.
      Square, because a bezel is not a radius. */
   .btn.s-crt{
-    background:var(--bg-0); color:var(--ink-hi);
+    background:var(--bg-0); color:var(--ink-text);
     border:1px solid var(--line-ctl); border-radius:0; overflow:hidden;
     font:500 13px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
     padding:15px 24px;
@@ -6048,7 +6079,7 @@ document.addEventListener("DOMContentLoaded", function () {
        them on, so this card sets its own radius and does not follow the
        toolbar — the same admission card 98 makes for the same reason. */
     border-radius:2px;
-    background:var(--bg-2); color:var(--ink-hi);
+    background:var(--bg-2); color:var(--ink-text);
     border:2px solid;
     border-color:var(--ink-low) var(--bg-3) var(--bg-3) var(--ink-low);
     padding:13px 26px;
@@ -7241,7 +7272,9 @@ document.addEventListener("DOMContentLoaded", function () {
         var f = fitted[r.key];
         if (f){
           r.set.forEach(function(p){ root.setProperty(p, f.hex); });
-          cap.innerHTML = label + (f.moved ? ' <b>↑</b>' : '');
+          cap.innerHTML = label + (f.moved ? ' <b>↑</b>' : '')
+                        + ' <button type="button" class="set-clear" aria-label="Clear '
+                        + label + ', so it follows the colour above it again">✕</button>';
           cap.title = f.moved
             ? label + ' moved to ' + f.hex + ', so it clears ' + r.min
               + ':1 on the card. A dark page cannot carry a dark colour.'
@@ -7323,6 +7356,19 @@ document.addEventListener("DOMContentLoaded", function () {
         paint(); saveLook(); apply();
       });
     });
+    // Delegated, because paint() rewrites the captions and a listener bound to
+    // the button itself would not survive the first repaint.
+    tools.addEventListener('click', function(e){
+      var x = e.target.closest && e.target.closest('.set-clear');
+      if (!x) return;
+      e.preventDefault();          // the <label> would open the picker otherwise
+      e.stopPropagation();
+      var cap = x.closest('.set-cap');
+      if (!cap) return;
+      look[cap.getAttribute('data-cap')] = '';
+      paint(); saveLook(); apply();
+    });
+
     range.value = look.radius;
     range.addEventListener('input', function(){
       look.radius = +range.value; paint(); saveLook(); apply();
