@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="One hundred and fourteen button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
+<meta name="description" content="Eighty-nine button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="One hundred and fourteen button hover animations, actually built.">
+<meta property="og:description" content="Eighty-nine button hover animations, actually built.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
 <title>Button Hover Lab</title>
@@ -32,7 +32,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all one hundred and five effect rules keep resolving under their own names.
+     ALIAS so all eighty-nine effect rules keep resolving under their own names.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -65,8 +65,8 @@
     --ink-text:var(--ink);          /* the label, at rest                  */
     --ink-hover:var(--ink);         /* the colour that arrives on hover    */
     --on-ink-hover:var(--on-ink);   /* the label once that colour is under it */
-    /* The label on a FILLED plate — cards 01 and 02 are both btn--solid, and
-       every plate and mark study lands here too. It cannot simply read
+    /* The label on a FILLED plate — every solid-plate study lands here, and
+       every plate and mark study does too. It cannot simply read
        --ink-text: a label sitting on the accent has to contrast with the
        accent, not with the card behind it. So the toolbar re-fits the chosen
        text colour against the fill and writes the result here, and when no
@@ -153,7 +153,7 @@
      where the eye starts losing its place on the way back. Capped at the
      lede's own measure rather than a new number invented for three cards. */
   .spec--wide>p{max-width:62ch}
-  /* One stage height for all one hundred and five, so the hairline under every stage
+  /* One stage height for all eighty-nine, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -182,7 +182,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       one hundred and five demo buttons was rendering in system-ui while the page around
+       eighty-nine demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink-text); background:none; border:0; border-radius:var(--btn-r);
@@ -194,7 +194,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all one hundred and five inherit it,
+     and LEAVES at the shorter one. One rule pair, and all eighty-nine inherit it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -571,7 +571,7 @@
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Four knobs that restyle all one hundred and three studies at once. All are written as
+     Four knobs that restyle all eighty-nine studies at once. All are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -796,7 +796,7 @@
   }
 
   /* ============ the left panel ============
-     One hundred and three studies is past the point where a filter row can hold the
+     Eighty-nine studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
      the three colours and the radius, the things that rewrite every card and
      every copied snippet — and everything that FINDS a card lives here: the
@@ -1110,8 +1110,8 @@
 </head>
 <body>
 <div class="wrap">
-  <!-- Every card costs five or six tab stops and there are one hundred and
-       fourteen of them, so the panel is fifteen presses of overhead paid on
+  <!-- Every card costs five or six tab stops and there are eighty-nine of
+       them, so the panel is fifteen presses of overhead paid on
        arrival. This is the standard way out of that, and the only element on
        the page that is invisible until it is focused. -->
   <a class="skip" href="#studies">Skip to the studies</a>
@@ -1247,24 +1247,6 @@
     <section class="sect">
   <h2>Whole button</h2>
   <div class="grid">
-
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T15:22:21+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--solid v-grow"><span class="lbl">See the plan</span></button>
-                  </div>
-                  <h3><span class="num">01</span>Small grow</h3>
-                  <p>Two percent, and nothing else. The most-shipped button hover there is, and the page's first — it needs no measurement and no structure, which is exactly why everyone reaches for it. What it costs is the row it sits in.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T15:22:21+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--solid v-shrink"><span class="lbl">See the plan</span></button>
-                  </div>
-                  <h3><span class="num">02</span>Small shrink</h3>
-                  <p>The same gesture inverted, on the same label. It never crosses its own boundary, so a row of these cannot overlap, and it leaves the press somewhere to go &mdash; but receding on approach reads as withdrawal.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
 
     <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T07:16:51+02:00">
                   <div class="stage">
@@ -1575,15 +1557,6 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T15:17:06+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--solid g-radius"><span class="lbl">See the full case</span></button>
-                  </div>
-                  <h3><span class="num">40</span>Diagonal radius</h3>
-                    <p>The capsule keeps two corners and draws the other two in, so the plate changes body without moving.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
     <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T13:09:06+02:00">
                   <div class="stage">
                     <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
@@ -1642,15 +1615,6 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T13:13:31+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--line x-dotted"><span class="lbl">Tab to this one</span></button>
-                  </div>
-                  <h3><span class="num">105</span>Dotted focus</h3>
-                  <p>A hairline dotted rect inside the plate, on the keyboard and only on the keyboard. Added to the house focus ring rather than replacing it &mdash; the ring carries the contrast, the rect carries the meaning.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
   </div>
 </section>
 
@@ -1703,15 +1667,6 @@
                   <h3><span class="num">30</span>Counter</h3>
                     <p>The counter wakes and steps up to today's number.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-                </article>
-
-    <article class="spec" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T13:09:06+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--line s-track"><span class="lbl">Learn more</span></button>
-                  </div>
-                  <h3><span class="num">38</span>Tracking trade</h3>
-                  <p>The word opens up by a pixel and a half a letter and the plate does not get any wider &mdash; the padding gives back exactly what the tracking takes. Card 56 does the same accounting for the gap.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
 
@@ -1816,15 +1771,6 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T13:13:31+02:00">
-              <div class="stage">
-                <button type="button" class="btn btn--line z-bow"><span class="lbl" aria-hidden="true">Tune the ensemble</span><span class="sr">Tune the ensemble</span></button>
-              </div>
-              <h3><span class="num">115</span>Word bow</h3>
-              <p>Distance from the middle sets how far each letter travels rather than when it starts, so nothing is sequenced: the middle displaces, the ends pivot, and the word deforms as one object. Card 25 still reads as a queue.</p>
-              <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-            </article>
-
   </div>
 </section>
 
@@ -1858,19 +1804,6 @@
                     <p>The dot that marks rest gives way to the arrow that marks action — in the same fixed slot, so nothing in the layout jumps.</p>
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
-
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T07:16:51+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--text h-ellip">Read on
-                      <span class="h-ellip-slot" aria-hidden="true">
-                        <i class="h-ellip-d h-ellip-d1"></i><i class="h-ellip-d h-ellip-d2"></i><i class="h-ellip-d h-ellip-d3"></i>
-                      </span>
-                    </button>
-                  </div>
-                  <h3><span class="num">17</span>Ellipsis arrow</h3>
-                    <p>The ellipsis's three dots slide together and swing out into the arrow's own strokes — no finished arrow is swapped in, it is the same three marks the whole way.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
 
 
     <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T15:17:06+02:00">
@@ -1928,15 +1861,6 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T07:16:51+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn p-trade"><span class="p-trade-row"><span class="p-trade-plate">Open the archive</span><span class="p-trade-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
-                  </div>
-                  <h3><span class="num">68</span>Fill swap</h3>
-                  <p>Card 93 with the travel taken out. Neither piece moves; the plate gives up its fill and the mark takes it, so the pair changes which half is speaking without changing its shape.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
     <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T14:09:59+02:00">
                   <div class="stage">
                     <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate"><span class="p-cycle-lbl"><span>Take the tour</span><span aria-hidden="true">Take the tour</span></span></span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
@@ -1989,7 +1913,7 @@
                     <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
                   </div>
                   <h3><span class="num">83</span>Working state</h3>
-                  <p>The mark turns a quarter and a dashed ring runs around it. Card 06 breathes before you arrive and gives up the moment you point; this is the loop that starts because you pointed at it.</p>
+                  <p>The mark turns a quarter and a dashed ring runs around it. A loop that is already running when you arrive gives up the moment you point at it; this is the loop that starts because you pointed.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
@@ -2030,15 +1954,6 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T13:13:31+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--line x-needle"><span class="lbl">Check the level</span><span class="x-needle-dial" aria-hidden="true"><svg class="x-needle-arc" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 12.5a15 15 0 0 1 28 0"/></svg><span class="x-needle-arm"></span></span></button>
-                  </div>
-                  <h3><span class="num">103</span>Needle swing</h3>
-                  <p>Thrown across the dial in 300ms and returned in 450 &mdash; the only study here whose exit is slower than its entrance, because a meter movement is not getting out of your way, it is dragged back by a spring.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
   </div>
 </section>
 
@@ -2060,17 +1975,8 @@
                     <button type="button" class="btn btn--line v-inner"><span class="lbl">Press to arm</span></button>
                   </div>
                   <h3><span class="num">05</span>Inner light</h3>
-                  <p>The press fills the plate with its own light instead of pushing it down. Cards 45 and 43 answer the press with depth; this answers it with energy, the other thing a physical control does when you close it.</p>
+                  <p>The press fills the plate with its own light instead of pushing it down. Card 43 answers the press with depth; this answers it with energy, the other thing a physical control does when you close it.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T13:13:31+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--line v-live"><span class="lbl">Recording</span></button>
-                  </div>
-                  <h3><span class="num">06</span>Idle breath</h3>
-                  <p>A slow bloom at rest that stops the moment you point at it. Card 83 loops because you pointed; this one is already going &mdash; hovering is the proof it worked.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
     <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-27T18:46:08+02:00">
@@ -2111,15 +2017,6 @@
 
     <article class="spec" data-versions="built" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T13:09:06+02:00">
                   <div class="stage">
-                    <button type="button" class="btn s-crt"><span class="lbl">Open console</span></button>
-                  </div>
-                  <h3><span class="num">35</span>CRT converge</h3>
-                  <p>Two grey ghosts either side of every stroke pull into register, the phosphor blooms, scanlines drift over the type. The idiom splits the strokes into red and cyan; with no colour to split, the split is grey and runs backwards.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-                </article>
-
-    <article class="spec" data-versions="built" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T13:09:06+02:00">
-                  <div class="stage">
                     <button type="button" class="btn s-sprite"><span class="lbl">Insert coin</span></button>
                   </div>
                   <h3><span class="num">36</span>Sprite swap</h3>
@@ -2136,15 +2033,6 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-27T18:46:08+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn l-deboss"><span class="l-deboss-lbl">Set the tolerance</span></button>
-                  </div>
-                  <h3><span class="num">45</span>Deboss</h3>
-                  <p>The press sinks the type into the plate — dark along the top edge, catching light along the bottom — and the plate itself does not move at all.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
     <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T07:16:51+02:00">
                   <div class="stage">
                     <span class="l-plate-wrap" data-copy-root>
@@ -2154,15 +2042,6 @@
                   </div>
                   <h3><span class="num">47</span>Shortcut plate</h3>
                   <p>The shortcut sits on a small engraved plate the browser tethers to the button and flips below it when there is no room above.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
-    <article class="spec" data-versions="built" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T07:16:51+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn w-pitch"><span class="lbl">Hold the tone</span></button>
-                  </div>
-                  <h3><span class="num">101</span>Coarse dither</h3>
-                  <p>A checkerboard covers half its cell whatever the cell's size, so doubling the pitch changes the texture and not the tone. The plate answers you without changing colour at all.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -2280,21 +2159,12 @@
   <h2>Two at once</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T14:09:59+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--solid c-chassis">Open the spec sheet</button>
-                  </div>
-                  <h3><span class="num">118</span>Under load</h3>
-                  <p>Card 48 and card 02 at the same instant, and the one pairing on the page where both channels are the SAME physical event read two ways: a milled chassis taking pressure squares its corners and loses a hair of size. The shrink is 2.8%, small enough that you read the corner changing rather than the button moving.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-                </article>
-
     <article class="spec" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T14:09:59+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid c-swell"><span class="track"><span class="inner"><span>Start the trial</span><span aria-hidden="true">Start the trial</span></span></span></button>
                   </div>
                   <h3><span class="num">119</span>Swell</h3>
-                  <p>Card 15's roll against card 01's grow. They do not fuse into one movement because they are on different axes &mdash; the label translates on Y while the plate scales &mdash; and the grow is capped at 1.03: at 1.06 the plate wins and the roll becomes something you notice afterwards.</p>
+                  <p>Card 15's roll against a plate that grows under it. They do not fuse into one movement because they are on different axes &mdash; the label translates on Y while the plate scales &mdash; and the grow is capped at 1.03: at 1.06 the plate wins and the roll becomes something you notice afterwards.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -2344,7 +2214,7 @@
                     <button type="button" class="btn c-regis"><span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">View the plate</span></button>
                   </div>
                   <h3><span class="num">124</span>Closing marks</h3>
-                  <p>Card 13's marks close IN while the label grows. Marks out and label open would be two channels saying the same word twice; a frame tightening against type expanding is a tension, and that is what makes it read as one gesture. The label grows on a transform and not on card 38's tracking, because tracking changes the label's width and a hug-content button is as wide as its label.</p>
+                  <p>Card 13's marks close IN while the label grows. Marks out and label open would be two channels saying the same word twice; a frame tightening against type expanding is a tension, and that is what makes it read as one gesture. The label grows on a transform and not on tracking, because tracking changes the label's width and a hug-content button is as wide as its label.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -2763,11 +2633,10 @@ document.addEventListener("DOMContentLoaded", function () {
      claim; an eased clock takes it straight back. On a loop it stops being even
      a preference: any ease puts a seam at the join, a stall every 2400ms at the
      top-left shoulder, and the one thing a circling light must not have is a
-     place where it is always slow. The page's other linear clocks are card
-     83's working ring and card 35's CRT drift, and the three of them are
-     linear for one reason: a rung is how long a state takes to ARRIVE, and a
-     loop is not arriving. Card 83 turns on the same 2400ms, which is a
-     coincidence and not a system.
+     place where it is always slow. The page's other linear clock is card 83's
+     working ring, and both are linear for one reason: a rung is how long a
+     state takes to ARRIVE, and a loop is not arriving. Card 83 turns on the
+     same 2400ms, which is a coincidence and not a system.
 
      The light still comes up on --t-1, but not for the reason it used to. The
      old note argued that at 133ms a fast lap was already three tenths round, so
@@ -2867,34 +2736,6 @@ document.addEventListener("DOMContentLoaded", function () {
 <style>
   /* ============ Section I — The plate and its geometry ============ */
 
-  /* 40 Diagonal radius — the capsule releases two opposite corners */
-  .g-radius{
-    border-radius:26px;
-    transition:border-radius var(--t-5) var(--e-quint), transform var(--t-2) var(--e-out);
-  }
-  .g-radius:hover,
-  .g-radius:focus-visible{border-radius:5px 26px 5px 26px; transform:scale(.972) rotate(0.001deg)}
-  /* A shape change on its own reads as a state being set. The same change on a
-     plate that is also giving reads as the shape being PRESSED into its new
-     geometry — which is what the card is about. The transform runs on the
-     radius's own curve and rung, not on the --t-2 press value already declared
-     above, so the two arrive together.
-
-     The label counter-scales exactly, so this is the BACKGROUND changing size
-     and nothing else; a scaled label would resample the type for 2.8% of
-     movement it gains nothing from. */
-  .g-radius{transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
-  .g-radius .lbl{transform:scale(1) rotate(0.001deg);
-    transition:transform var(--t-5) var(--e-quint)}
-  .g-radius:hover .lbl,
-  .g-radius:focus-visible .lbl{transform:scale(1.0288066) rotate(0.001deg)}
-  /* The press was on --t-2 before this card gained a hover transform; keeping
-     it at the radius's 450ms would make a click feel like a decision. Back to
-     the snap rung. */
-  .g-radius:active{transform:scale(.95) rotate(0.001deg); transition-duration:var(--t-1)}
-  .g-radius:active .lbl{transform:scale(1.0526) rotate(0.001deg);
-    transition-duration:var(--t-1)}
-
   /* 41 Inset fill — the plate grows out to its reserved measure.
      The travel runs on --e-out rather than --e-quint, because quint covers
      three quarters of its distance in the first quarter of its time, and on a
@@ -2984,26 +2825,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-second:focus-visible .h-second-add{grid-template-columns:minmax(0,1fr)}
   .h-second:hover .h-second-add>span,
   .h-second:focus-visible .h-second-add>span{opacity:1; transition-delay:var(--d-2)}
-
-  /* 17 Tre punkter blir pil — ellipsens punkter blir pilens egna streck, fast 14 px slot */
-  .h-ellip{gap:6px}
-  .h-ellip .h-ellip-slot{position:relative; display:block; width:14px; height:14px}
-  .h-ellip .h-ellip-d{
-    position:absolute; top:50%; margin-top:-1.3px; width:2.6px; height:2.6px;
-    border-radius:999px; background:currentColor;
-    transform-origin:0 50%;
-    transition:transform var(--t-5) var(--e-quint);
-  }
-  .h-ellip .h-ellip-d1{left:0}
-  .h-ellip .h-ellip-d2{left:5.7px}
-  .h-ellip .h-ellip-d3{left:11.4px}
-  /* the end state is pixel-identical to the page's SVG arrow: shaft 2→12, head 45° out to (8,3) and (8,11) */
-  .h-ellip:hover .h-ellip-d1,
-  .h-ellip:focus-visible .h-ellip-d1{transform:translateX(2px) scale(3.846,.577)}
-  .h-ellip:hover .h-ellip-d2,
-  .h-ellip:focus-visible .h-ellip-d2{transform:translateX(6.3px) rotate(135deg) scale(2.176,.577)}
-  .h-ellip:hover .h-ellip-d3,
-  .h-ellip:focus-visible .h-ellip-d3{transform:translateX(.6px) rotate(-135deg) scale(2.176,.577)}
 
   /* 19 Overflow only — the label moves only if it is actually clipped */
   .h-marq{max-width:min(100%,264px)}
@@ -3923,15 +3744,6 @@ document.addEventListener("DOMContentLoaded", function () {
      PREFIX: l-, one past the section letter, same as the last three. Prefixes
      track the order things were authored; the heading letter moves when the
      page is restructured and a copied class name must not. */
-
-  /* The light half of the token pair is ALWAYS --l-lys and the dark half
-     ALWAYS --l-mork, whichever theme is running. Card 45's impression depends
-     on it: a sunk face is dark along its top edge and catches light along its
-     bottom one, and that has to stay true when the whole palette inverts. */
-  /* --l-lys is the LIGHT half of the pair, --l-mork the dark one. Dark-only
-     now, so --ink is the light half — no theme guard left to keep in sync. */
-  .l-deboss{ --l-lys:var(--ink); --l-mork:var(--on-ink) }
-
   /* 44 Knurling — a camera dial, or the grip ring on a lens. The grooves sit
      at the ENDS, where a hand would actually hold it, not across the face
      where they would fight the label. The mask is a token colour rather than a
@@ -3951,37 +3763,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .l-knurl .lbl{position:relative}
   .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
   .l-knurl:hover .l-knurl-grip, .l-knurl:focus-visible .l-knurl-grip{opacity:.17}
-
-  /* 45 Deboss — a letterpress impression, or a stamped nameplate. The exact
-     inversion of card 51: there the plate compresses and the type stays rigid,
-     here the type sinks and the plate does not move at all, which is why the
-     house press transform is cancelled rather than inherited.
-     Both text-shadow lists carry TWO shadows, including at rest. Shadow lists
-     only interpolate when they are the same length; one transparent shadow
-     against two would have snapped instead of pressing. */
-  .btn.l-deboss{
-    background:var(--lift-bg); border:1px solid var(--line-ctl);
-    transition:border-color var(--t-3) ease;
-  }
-  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
-  .l-deboss .l-deboss-lbl{
-    display:inline-block;
-    text-shadow:0 -1px 0 transparent, 0 1px 0 transparent;
-    transition:text-shadow var(--t-2) var(--e-out), color var(--t-2) ease;
-  }
-  .btn.l-deboss:active{transform:scale(1)}
-  .btn.l-deboss:active .l-deboss-lbl{
-    color:color-mix(in srgb,var(--ink-text) 70%,var(--lift-bg));
-    /* The shadow does most of the work and the highlight is a bonus. That was
-       written when a light mode existed and the highlight collapsed in it —
-       --l-lys and --lift-bg landed five values apart, so a plate that was
-       already almost the lightest thing in the palette had no brighter tone to
-       catch, which is true of real light material too. Dark-only now, so the
-       pair separates properly and both edges read. */
-    text-shadow:0 -1px 0 color-mix(in srgb,var(--l-mork) 42%,transparent),
-                0 1px 0 color-mix(in srgb,var(--l-lys) 85%,transparent);
-    transition-duration:var(--t-1);
-  }
 
   /* 46 Line gauge — a printer's type gauge. Two repeating gradients: a
      short tick every 6px and a long one every 30th, which is what a real gauge
@@ -4042,7 +3823,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* 48 Continuous corners — a milled aluminium chassis, where the corner is a
      continuous curve rather than an arc spliced between two straight edges.
      The RADIUS never changes; only the curvature does, which is what separates
-     this from card 40. The background step is there so the card still reports
+     it from a corner that simply opens up. The background step is there so the card still reports
      itself where corner-shape is unsupported. */
   .btn.l-corner{
     border-radius:20px;
@@ -4503,29 +4284,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-walk.p-is-set:hover .p-walk-plate,
   .p-walk.p-is-set:focus-visible .p-walk-plate{transform:translateX(calc(46px + var(--pair-gap)))}
 
-  /* 68 Fill swap — card 93 with the travel removed. Neither piece moves,
-     and the boundary is an inset shadow rather than a border, so nothing
-     reflows the moment a fill leaves. --line-ctl and not --line: this is a
-     control boundary and has to clear 3:1, which is card 51's note. Both rest
-     states name a shadow — one of them transparent — so there is always
-     something for the hover value to interpolate from. */
-  .p-trade{padding:0; background:none; border:0; border-radius:999px}
-  .p-trade .p-trade-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
-  .p-trade .p-trade-plate,
-  .p-trade .p-trade-mark{border-radius:999px;
-    transition:background-color var(--t-3) var(--e-out), color var(--t-3) var(--e-out),
-      box-shadow var(--t-3) var(--e-out)}
-  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--ink-on-fill);
-    box-shadow:inset 0 0 0 1px transparent}
-  .p-trade .p-trade-mark{display:grid; place-items:center; width:46px;
-    background:none; color:var(--ink-text); box-shadow:inset 0 0 0 1px var(--line-ctl)}
-  .p-trade:hover .p-trade-plate,
-  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink-text);
-    box-shadow:inset 0 0 0 1px var(--line-ctl)}
-  .p-trade:hover .p-trade-mark,
-  .p-trade:focus-visible .p-trade-mark{background:var(--ink-hover); color:var(--on-ink-hover);
-    box-shadow:inset 0 0 0 1px transparent}
-
   /* 69 Clipped relay — the capsule holds perfectly still and both halves of it
      become windows. Two arrows sit in one grid cell inside the mark and two
      copies of the label sit in one grid cell inside the plate; each half clips
@@ -4729,9 +4487,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Five survived that test, and three of them turn in the plane of the page,
      which is the thing this page had almost never done. It turns a MARK — card
-     78's, out of the page along its own diagonal; card 17's ellipsis dots into
-     the arrow's strokes; and, since section N, card 70's mark hinging on the
-     seam, which is a rotateY and so not in the plane at all. It had never
+     78's, out of the page along its own diagonal; and, since section N, card
+     70's mark hinging on the seam, which is a rotateY and so not in the plane
+     at all. It had never
      turned the plate itself, never turned a whole label, and never turned a
      single letter. It had also never let a loop run as the hover STATE: the
      two loops it has are idle behaviours that were already going before you
@@ -4810,10 +4568,10 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser:active::after{height:3px; transition-duration:var(--t-1)}
 
   /* 83 Working state — the mark turns a quarter and a dashed ring runs
-     around it. This is the page's loop used as the hover STATE. Card 06
-     breathes before you arrive and gives up the moment you point at it; this
-     one starts because you pointed, and what it says is that the thing is
-     working.
+     around it. This is the page's loop used as the hover STATE. A loop
+     that is already running when you arrive gives up the moment you point at
+     it; this one starts because you pointed, and what it says is that the
+     thing is working.
      2.4s is off the ladder, on purpose, the way every loop here is: a
      rung is how long a state takes to ARRIVE, and a loop is not arriving.
      pathLength:56 is what makes the dashes come out even — the real
@@ -4956,65 +4714,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.s-bevel:active .lbl{transform:translate(1px,1px)}
 
-  /* 35 CRT converge — mono type on a black plate, misconverged at rest
-     and pulling into register when you point at it. The idiom this comes from
-     splits the strokes into red and cyan; there is no colour here to split,
-     so the split is two grey ghosts either side of the stroke — and the
-     movement runs the other way. The source added the aberration ON hover;
-     this page's habit, since card 81, is to let rest be the state that reads
-     as wrong and make the hover the thing that fixes it.
-     The scanlines are a repeating gradient on a pseudo-element ABOVE the
-     label, which is the only stacking order that works: a scanline that the
-     type sits on top of is a texture on an empty plate, and the whole point
-     is that the lines cross the glyphs.
-
-     THEY CROSS THE GLYPHS; THEY DO NOT CUT THEM. The line was 72% of --bg-0
-     over a 1px band in every 3, which leaves a white stroke at 28% of itself
-     where it is crossed — every letter sawn into three pieces, and the hover
-     ending up harder to read than the rest state it is supposed to be fixing.
-     That inverts the card: convergence is the argument, and an argument you have
-     to squint through is lost whatever it proves. At 45% the crossed rows hold a
-     little over half their luminance, which still reads as a line across the
-     type from a foot away and as type at any distance at all. The glow was
-     raised in the same pass, 7px to 9px and 55% to 62%: with the lines lighter
-     there is room for the tube to look powered rather than merely misconverged,
-     and the two changes are one decision — a screen that is doing its job is
-     bright first and striped second. 5.6s for one period is off the ladder
-     for the reason 83 and 06 are — a rung is how long a state takes to
-     ARRIVE, and a loop is not arriving. The drift is exactly one 3px period,
-     so the loop has no seam.
-     The flicker is one pass of a stepped keyframe rather than a transition. A
-     tube warming up does not ease, and steps() is what makes it read as a
-     tube instead of as a fade.
-     Square, because a bezel is not a radius. */
-  .btn.s-crt{
-    background:var(--bg-0); color:var(--ink-text);
-    border:1px solid var(--line-ctl); border-radius:0; overflow:hidden;
-    font:500 13px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
-    padding:15px 24px;
-  }
-  .btn.s-crt .lbl{position:relative; z-index:1;
-    text-shadow:-1.2px 0 0 color-mix(in srgb,var(--ink) 34%,transparent),
-                 1.2px 0 0 color-mix(in srgb,var(--ink) 34%,transparent);
-    transition:text-shadow var(--t-4) var(--e-out);
-  }
-  .btn.s-crt:hover .lbl,
-  .btn.s-crt:focus-visible .lbl{
-    text-shadow:0 0 9px color-mix(in srgb,var(--ink) 62%,transparent);
-    animation:s-crt-strike var(--t-4) steps(1,end) 1;
-  }
-  .btn.s-crt::after{
-    content:""; position:absolute; inset:-3px 0; z-index:2; opacity:0;
-    pointer-events:none;
-    background:repeating-linear-gradient(to bottom,
-      transparent 0 2px, color-mix(in srgb,var(--bg-0) 45%,transparent) 2px 3px);
-    transition:opacity var(--t-3) ease;
-  }
-  .btn.s-crt:hover::after,
-  .btn.s-crt:focus-visible::after{opacity:1; animation:s-crt-drift 5.6s linear infinite}
-  @keyframes s-crt-strike{0%{opacity:.3} 22%{opacity:1} 40%{opacity:.45} 64%{opacity:1}}
-  @keyframes s-crt-drift{to{transform:translateY(3px)}}
-
   /* 36 Sprite swap — the only study on this page with no transition at all.
      Everything else here interpolates, and the second house rule is that an
      interpolation can be caught and turned from wherever it happens to be. A
@@ -5121,34 +4820,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   @keyframes s-print-hit{from{transform:translateY(-2px)} to{transform:translateY(0)}}
 
-  /* 38 Tracking trade — the label opens up by 1.5px a
-     letter and the plate does not get one pixel wider. This is the tracking AS the
-     effect rather than as a means to something else, which the page had not
-     run before, and for a good reason — done
-     plainly it grows the button, and a control that changes size on hover is
-     the thing the page's third rule exists to prevent.
-     So it is card 56's conservation moved from the gap to the glyphs: here the
-     padding pays for the tracking. One registered
-     length feeds two opposing metrics — the tracking takes (n-1) x --s-tr
-     across the word and the horizontal padding gives back exactly half of
-     that on each side. Registered, because a plain custom property is a
-     string to the interpolator and would snap.
-     n-1 and not n: the browser adds tracking after EVERY character including
-     the last, and the negative margin on the label takes that trailing space
-     back out. Measured without it, the plate grows by 1.5px — one whole rung
-     — and the word sits 0.75px left of its own centre, which is card 79's
-     complaint exactly. */
-  @property --s-tr{syntax:"<length>"; inherits:true; initial-value:0px}
-  .btn.s-track{
-    --s-tr:0px; --s-n:10;
-    letter-spacing:var(--s-tr);
-    padding-inline:calc(28px - (var(--s-n) - 1) * var(--s-tr) / 2);
-    transition:--s-tr var(--t-5) var(--e-quint), transform var(--t-1) var(--e-out);
-  }
-  .btn.s-track .lbl{margin-right:calc(-1 * var(--s-tr))}
-  .btn.s-track:hover,
-  .btn.s-track:focus-visible{--s-tr:1.5px}
-
   /* 39 Centre underline — the rule grows from the centre of the word and
      retreats to it. Card 14 is the other answer: it flips its transform
      origin between enter and exit, so the underline arrives from the left and
@@ -5173,16 +4844,12 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.s-mid:focus-visible .lbl::after{transform:scaleX(1)}
 
   @media (prefers-reduced-motion: reduce){
-    /* Three animations in this section, and the global clamp turns each of
-       them into a flicker rather than into stillness — a 0.01ms loop is still
-       a loop. Each is stopped outright and left at the state the hover was
-       taking it to. 21 needs nothing: a swap with no transition is already
+    /* The animation left in this section, and the global clamp turns it into
+       a flicker rather than into stillness — a 0.01ms loop is still a loop. It
+       is stopped outright and left at the state the hover was taking it to.
+       21 needs nothing: a swap with no transition is already
        what reduced motion asks for, which is the one place its argument and
        the rule agree. */
-    .btn.s-crt:hover .lbl,
-    .btn.s-crt:focus-visible .lbl{animation:none !important}
-    .btn.s-crt:hover::after,
-    .btn.s-crt:focus-visible::after{animation:none !important}
     .s-print:hover .s-print-l,
     .s-print:focus-visible .s-print-l{animation:none !important; transition-delay:0ms !important}
   }
@@ -5783,97 +5450,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <style>
-  /* ============ Section A — The ones everyone ships ============
-     One hundred and three studies in, and the page does not contain the button hover that
-     is on more websites than every other effect here put together: the plate
-     grows a little. Not one card scales the plate on hover — the only scale in
-     any hover rule is card 81's identity, carried so its press does not drop a
-     rotation. The exotica arrived first and the floor was never laid.
+  /* ============ Section A — Light that leaves the plate ============
+     This batch was laid as a floor: the plate grows a little, the plate shrinks
+     a little, and a slow bloom that breathes before you arrive. All three were
+     the most-shipped hovers on the web and the least interesting ones on this
+     page, and they were cut for exactly that — a specimen page earns nothing by
+     holding an effect the reader can write from memory. What survived is the
+     half that was never obvious: light.
 
-     So: the two everyone reaches for, one upgrade to them, and the light this
-     page has never made. On the light — cards 31, 32, 33 and 42 all light the
-     plate from INSIDE it, under the surface or along its own edge. None of them
-     lets light leave. On a page with no hue, a bloom outside the plate is the
-     only «brighter» there is, which is why the three light cards here all spend
-     it outward rather than adding a colour the system does not have.
+     Cards 31, 32, 33 and 42 all light the plate from INSIDE it, under the
+     surface or along its own edge. None of them lets light leave. On a page
+     with no hue, a bloom outside the plate is the only «brighter» there is,
+     which is why the two light cards here spend it outward rather than adding
+     a colour the system does not have.
 
-     Two things every card here has to answer, because the basics are where the
-     costs actually bite:
+     Two things both still have to answer, because this is where the costs
+     actually bite:
 
-     · A scaled plate moves EVERY edge, so it cannot sit in a tight row without
-       overlapping its neighbours. Card 02 is the version that never does.
-     · The house press is scale(.97). A hover that grows to 1.02 leaves the press
-       five percent to travel, and the two compose rather than replace each
-       other — every card here writes one function list in all three states, as
-       card 81 had to.
+     · The house press is scale(.97), and a hover that leaves a transform in
+       place has to compose with it rather than replace it — every card here
+       writes one function list in all three states, as card 81 had to.
      · Type re-rasterises when a transform starts unless the element is already
        transformed at rest. Every rest state here carries rotate(0.001deg) for
        the reason section M gives.
 
      The prefix is v-: r- is retired, s- went to «From a brief of eleven», t- to
      «After the press» and u- to «The label, letter by letter». */
-
-  /* 01 Small grow — scale(1.02), and nothing else at all. The most-shipped
-     button hover there is, and the page's first. It is here without irony: it
-     works because it is proportional to nothing, needs no measurement and no
-     structure, and reads on any plate at any size.
-     What it costs is a row. Two percent of a 180px plate is 3.6px, spent 1.8px
-     off each end, so the button silently eats into whatever sits beside it —
-     which is why the pair below exists. The press composes rather than
-     replaces: scale(.99) is the grow giving most of itself back, not the house
-     .97 arriving from nowhere. */
-  .btn.v-grow{
-    transform:scale(1) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out);
-  }
-  .btn.v-grow:hover,
-  .btn.v-grow:focus-visible{transform:scale(1.02) rotate(0.001deg)}
-  .btn.v-grow:active{transform:scale(.99) rotate(0.001deg); transition-duration:var(--t-1)}
-  /* The label carries the exact inverse on the same curve and the same rung, so
-     parent x child is identity at the label's centre and the BACKGROUND is the
-     only thing that changes size. The plate is what the card is about; two
-     percent is not enough movement to buy by resampling the type for it, and a
-     label that grows with its plate is a different effect wearing this one's
-     name. 1/1.02 and 1/.99, to eight places, because a rounded inverse leaves
-     the type drifting a fraction of a pixel at the hover's far end.
-     THERE IS NO LINK VERSION: a link has no plate to grow, so the mechanism
-     has nothing to act on and the study declares fill and outline only. */
-  .btn.v-grow .lbl{
-    transform:scale(1) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out);
-  }
-  .btn.v-grow:hover .lbl,
-  .btn.v-grow:focus-visible .lbl{transform:scale(.98039216) rotate(0.001deg)}
-  .btn.v-grow:active .lbl{transform:scale(1.01010101) rotate(0.001deg); transition-duration:var(--t-1)}
-
-  /* 02 Small shrink — the same gesture inverted, on the same label, and the
-     one you can actually put in a row. It never crosses its own boundary, so a
-     toolbar of these cannot overlap; and it leaves the press somewhere to go,
-     which the grow does not — at 1.02 the press has to travel five percent to
-     reach .97, and at .98 it travels two.
-     The argument against it is that receding on approach reads as withdrawal on
-     a plate that is asking to be pressed. Both are here, on one label, so the
-     comparison is the card rather than an opinion in a note. */
-  .btn.v-shrink{
-    transform:scale(1) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out);
-  }
-  .btn.v-shrink:hover,
-  .btn.v-shrink:focus-visible{transform:scale(.98) rotate(0.001deg)}
-  .btn.v-shrink:active{transform:scale(.96) rotate(0.001deg); transition-duration:var(--t-1)}
-  /* Counter-scaled the same way as 01, and for the same reason — the pair only
-     compares if the two differ in the one thing they are about. It matters more
-     on this side: a label shrinking with its plate is the reading that makes
-     the withdrawal look like the button retreating from the pointer, and the
-     plate alone is the honest version of the argument the copy makes.
-     Fill and outline only, for 01's reason. */
-  .btn.v-shrink .lbl{
-    transform:scale(1) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out);
-  }
-  .btn.v-shrink:hover .lbl,
-  .btn.v-shrink:focus-visible .lbl{transform:scale(1.02040816) rotate(0.001deg)}
-  .btn.v-shrink:active .lbl{transform:scale(1.04166667) rotate(0.001deg); transition-duration:var(--t-1)}
 
   /* 04 Bloom — the first light on this page that leaves the plate. Cards 31,
      32, 33 and 42 all work inside the boundary: a blur under the surface, a
@@ -5895,8 +5497,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* 05 Inner light — the press fills the plate with its own light instead of
-     pushing it down. Card 45 sinks the type into the material and card 43 gives
-     the plate a hard edge to land on; both answer the press with DEPTH. This
+     pushing it down. Card 43 gives the plate a hard edge to land on, which
+     answers the press with DEPTH. This
      answers it with energy, which is the other thing a physical control does
      when you close it — an inset bloom, brightest at the boundary, so the plate
      reads as lit rather than as moved.
@@ -5942,38 +5544,6 @@ document.addEventListener("DOMContentLoaded", function () {
     box-shadow:inset 0 0 18px 0 rgba(255,255,255,.30);
     transition-duration:var(--t-1);
   }
-
-  /* 06 Idle breath — a slow bloom in and out at REST, which
-     stops the moment you point at it. Card 83's loop starts on hover and says
-     work is happening; this one is the other position — the loop is the
-     attention it is asking for, so hovering is the proof it worked and the
-     reason to stop.
-     4.2s is off the ladder for the reason 83 is: a rung is how long
-     a state takes to ARRIVE, and a loop is not arriving. The bloom is card 04's
-     shadow at half strength, because an idle animation that matches a hover
-     leaves the hover nothing to say.
-     Reduced motion stops it outright rather than clamping it — a 0.01ms loop is
-     a flicker, not stillness — and the plate keeps the lit end of the breath,
-     so the live state is still legible standing still. Card 83 does the same. */
-  .btn.v-live{
-    border-color:var(--line-ctl);
-    box-shadow:0 0 0 0 rgba(255,255,255,0);
-    animation:v-breathe 3.4s var(--ease) infinite;
-    transition:box-shadow var(--t-3) var(--e-out), border-color var(--t-3) ease;
-  }
-  @keyframes v-breathe{
-    0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
-    50%    {box-shadow:0 0 20px 1px rgba(255,255,255,.14)}
-  }
-  .btn.v-live:hover,
-  .btn.v-live:focus-visible{
-    animation:none;
-    box-shadow:0 0 24px 2px rgba(255,255,255,.18);
-    border-color:var(--ink);
-  }
-  @media (prefers-reduced-motion: reduce){
-    .btn.v-live{animation:none !important; box-shadow:0 0 20px 1px rgba(255,255,255,.14)}
-  }
 </style>
 
 
@@ -5983,9 +5553,9 @@ document.addEventListener("DOMContentLoaded", function () {
      five durations, and every one of those curves describes a CONTINUOUS
      position: the button is somewhere new on every frame. A bitmap display
      cannot be somewhere new on every frame — it can only be on the grid or on
-     the next cell of it. So the timing function here is steps(), which card 35
-     already reached for once with the same reasoning: a tube warming up does
-     not ease. This section spends that argument on movement, shape and tone
+     the next cell of it. So the timing function here is steps(), for the reason
+     a tube warming up does not ease: a device that quantises its own output
+     cannot be asked to interpolate. This section spends that argument on movement, shape and tone
      rather than on a flicker.
 
      Nothing below leaves the ladder. steps() takes a duration token like every
@@ -6096,33 +5666,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .w-redraw:focus-visible .w-redraw-e{transform:translate(8px,8px)}
   .w-redraw:hover .w-redraw-s,
   .w-redraw:focus-visible .w-redraw-s{transform:translate(0,8px)}
-
-  /* 101 Coarse dither — the tone is a pattern, and it holds. */
-  .w-pitch{overflow:hidden}
-  /* A checkerboard covers exactly half of whatever cell it is drawn in, so its
-     tone is independent of its pitch: 4px cells and 8px cells are the same
-     grey. That is the whole study. Nothing about the colour changes on hover —
-     no fill arrives, no opacity moves — and the button still visibly answers,
-     because the GRID it is made of doubles. Two steps, so you can see it land.
-     It is the quietest way this page has found to say that a tone and a
-     texture are the same object seen at two distances.
-     The squares are --line-ctl and not --ink for a reason the screen gave up
-     before any assertion did: half a field of near-white is a near-white
-     plate, and the house label vanished into it. At .36 the same fifty percent
-     composites to a dark grey the label reads on, and a tone that had to be
-     legible to make its point about tone is the right place to spend the one
-     token on this page that exists purely to clear a contrast floor. */
-  .w-pitch::before{
-    content:""; position:absolute; inset:0; background:var(--line-ctl);
-    -webkit-mask-image:conic-gradient(#000 0 25%, #0000 0 50%, #000 0 75%, #0000 0);
-            mask-image:conic-gradient(#000 0 25%, #0000 0 50%, #000 0 75%, #0000 0);
-    -webkit-mask-size:4px 4px;  mask-size:4px 4px;
-    transition:-webkit-mask-size var(--t-4) steps(2,end),
-                       mask-size var(--t-4) steps(2,end);
-  }
-  .w-pitch:hover::before,
-  .w-pitch:focus-visible::before{-webkit-mask-size:8px 8px; mask-size:8px 8px}
-  .w-pitch .lbl{position:relative; z-index:1}
 </style>
 
 
@@ -6132,28 +5675,6 @@ document.addEventListener("DOMContentLoaded", function () {
      desktop button wore for a decade, and the dotted rectangle that told you
      where the keyboard was — each one is a solved problem being read back, and
      in most of them the old answer is still the better one. This is section S's argument aimed backwards rather than sideways. */
-
-  /* 103 Needle swing — and comes back slower than it went. */
-  .x-needle-dial{display:block; position:relative; width:34px; height:14px}
-  .x-needle-arc{display:block; width:34px; height:14px; opacity:.45}
-  /* The one place on this page where the exit is LONGER than the enter, and it
-     is deliberate. The house rule — exit one rung down — describes an interface
-     getting out of your way. A meter movement is not an interface: the needle
-     is thrown by the signal and returned by a spring against damping, so it
-     goes out fast and comes back slow. 300ms out on --e-back, which overruns
-     the reading by a couple of degrees the way a real movement overshoots, and
-     450ms home on the settling curve. Written as a literal because the ladder
-     has no rung above --t-5 and inventing one for a single study would be
-     worse than saying so here. */
-  .x-needle-arm{position:absolute; left:50%; bottom:1px; width:1px; height:10px;
-    margin-left:-.5px; background:currentColor; transform-origin:50% 100%;
-    transform:rotate(-34deg);
-    transition:transform 450ms var(--e-quint)}
-  .x-needle:hover .x-needle-arm,
-  .x-needle:focus-visible .x-needle-arm{
-    transform:rotate(30deg);
-    transition:transform var(--t-4) var(--e-back);
-  }
 
   /* 104 Bevel flip — the only state it has is pressed. */
   .x-bevel{
@@ -6178,23 +5699,6 @@ document.addEventListener("DOMContentLoaded", function () {
     transform:none;
   }
   .x-bevel:active .lbl{transform:translate(1px,1px)}
-
-  /* 105 Dotted focus — the state the other 104 never show you. */
-  /* Added to the house outline, never instead of it: a 1px dotted line at
-     --ink measures well under the 3:1 a focus indicator owes, and the ring the
-     page already draws is what carries that. What the dotted rect adds is the
-     thing the outline lost when it moved outside the plate — a mark ON the
-     control saying the keyboard is here, which is what it meant in 1995.
-     steps(1) because a focus indicator that fades in has, for part of its
-     fade, failed to indicate focus. */
-  .x-dotted::after{
-    content:""; position:absolute; inset:4px; pointer-events:none;
-    border:1px dotted var(--ink-hover);
-    border-radius:calc(var(--btn-r) - 4px);
-    opacity:0; transition:opacity var(--t-1) steps(1,end);
-  }
-  .x-dotted:focus-visible::after{opacity:1}
-  .x-dotted .lbl{position:relative}
 </style>
 
 
@@ -6208,7 +5712,7 @@ document.addEventListener("DOMContentLoaded", function () {
      width and height, which are layout properties and cost a reflow a frame.
 
      But the tutorial button carries something this page has almost none of.
-     A hundred and eight studies in, exactly one lights a plate — card 107's
+     Eighty-nine studies in, exactly one lights a plate — card 104's
      bevel, which puts two light sources on the four EDGES and nothing on the
      face between them. No card lights the SURFACE. Graphite states
      elevation as lightness and forbids shadow as depth, so the whole page
@@ -6625,58 +6129,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .btn.z-slab::before{display:none}
   }
 
-  /* 115 Word bow — the distance from the middle of the word sets how FAR
-     each letter travels, not when it starts. Card 24 already takes that
-     measurement and spends it on DELAY: same distance, turned into an order of
-     arrival, and 24's own claim is that this is enough to stop the word reading
-     as a queue. Take it further — spend the measurement on amplitude instead —
-     and there is no order left to read either way: every letter leaves on the
-     same frame, the middle travels furthest, the ends do not move, and the word
-     deforms as one object under load — a struck string rather than a queue.
-     The ends are not idle. They take the ROTATION the middle does not: --r is
-     1 minus --a, so the letters that cannot displace pivot instead, which is
-     what the ends of a bowed object do. That observation is the gallery's, and
-     it is the best thing in it.
-     What the gallery cannot do is any other word. Its amplitudes are written as
-     nth-child(1) through (6), so the effect exists for six letters and silently
-     flattens the moment a client writes a seventh — and the ends stop being the
-     ends. The measurement belongs to the word, so it is taken from the word:
-     the script reads how many characters there actually are and normalises the
-     distance across them, which is the same argument card 110 makes about a
-     radius.
-     The floor is the LABEL, and it has to be in the markup to be one. Written
-     with an empty .lbl and filled from the .sr span, this card rendered an
-     empty pill for anyone without JS — and in a component, for the frame before
-     it mounts. «--a is 0 and the label sits still» described something that
-     never got as far as existing. So the text ships in both spans: the script
-     clears .lbl and rebuilds it from .sr, which it never touches, so running
-     twice changes nothing and running never leaves a readable button. */
-  .z-bow .z-bow-c{
-    display:inline-block;
-    --a:0; --s:1; --r:calc(1 - var(--a));
-    transform:translateY(0) rotate(0.001deg);
-    transition:transform var(--t-4) var(--e-out);
-  }
-  .z-bow:hover .z-bow-c,
-  .z-bow:focus-visible .z-bow-c{
-    transform:translateY(calc(-7px * var(--a))) rotate(calc(-9deg * var(--r) * var(--s,1)));
-  }
-  @media (prefers-reduced-motion: reduce){
-    .z-bow .z-bow-c,
-    .z-bow:hover .z-bow-c,
-    .z-bow:focus-visible .z-bow-c{transform:none; transition:none}
-    /* Stopping there was the bug: this card IS amplitude, so taking the movement
-       away took the whole answer with it and the hover said nothing at all —
-       measured, zero pixels changed, where the other five here change between
-       one and twelve per cent. Compliance is not silence. The state change moves
-       to the surface instead, the only way this page has ever stated a change
-       without motion:
-       a step up the ladder. */
-    .btn.z-bow{transition:background-color var(--t-3) ease}
-    .btn.z-bow:hover,
-    .btn.z-bow:focus-visible{background:var(--bg-3)}
-  }
-
   /* 116 Stack fan — the plate lifts and three more appear under
      it, fanned. They are not shadows and this card is not an exception to
      section L: a shadow is an absence of light and would be invisible on a
@@ -6818,33 +6270,12 @@ document.addEventListener("DOMContentLoaded", function () {
      notice them. Width, padding, gap, font-size and letter-spacing are
      measured, and a hug-content button that changes any of them shoves every
      sibling in its auto-layout. Card 124 is the one that had to be rebuilt for
-     it: it grows the label with scale() and not with card 38's tracking.
+     it: it grows the label with scale() and not with letter-spacing.
 
-     All seven are pure CSS. The global reduced-motion clamp stops both clocks,
+     All six are pure CSS. The global reduced-motion clamp stops both clocks,
      which leaves each of them at its end state — the fill full, the marks
-     closed, the corner square — and that is the correct answer for every one.
-
-     118 Under load — 48 x 02. Continuous corners x Small shrink.
-     The corner squares off and the plate gives at the same instant, on one
-     curve at one rung, because they are the same event. .btn.c-chassis and not
-     .c-chassis: the radius has to beat --btn-r on .btn, the way card 48 does. */
-  .btn.c-chassis{
-    border-radius:20px;
-    corner-shape:superellipse(1);
-    transition:corner-shape var(--t-4) var(--e-out),
-               transform var(--t-4) var(--e-out),
-               background-color var(--t-3) ease;
-  }
-  .btn.c-chassis:hover, .btn.c-chassis:focus-visible{
-    corner-shape:superellipse(5);
-    transform:scale(.972);
-    background-color:color-mix(in srgb,var(--ink-hover) 88%,var(--bg));
-  }
-  /* The press still has somewhere to go, which is the whole reason card 02 is
-     a defensible hover in the first place. */
-  .btn.c-chassis:active{transform:scale(.955); transition-duration:var(--t-1)}
-
-  /* 119 Swell — 15 x 01. Label roll x Small grow.
+     closed, the corner square — and that is the correct answer for every one. */
+  /* 119 Swell — 15 x a plate grow. Label roll against a scaling plate.
      Rule 3 is what makes this legible: the label moves on Y and the plate
      scales, so the eye never folds them into a single movement. */
   .c-swell{transition:transform var(--t-5) var(--e-quint)}
@@ -6976,7 +6407,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1) var(--t-4)}
   .c-crest .lbl{position:relative; z-index:1}
 
-  /* 124 Closing marks — 13 x 38. Crop marks x Tracking trade.
+  /* 124 Closing marks — 13 x a growing label. Crop marks against type opening up.
      The brackets close IN while the label grows. Marks out and label open is
      two channels saying the same word twice; a frame tightening against type
      expanding is a tension, and the tension is what makes it read as one
@@ -6986,7 +6417,7 @@ document.addEventListener("DOMContentLoaded", function () {
      and vanish into it, and a registration mark that is invisible at rest has
      nothing to close in FROM. The marks are the frame here.
 
-     And the label grows on a TRANSFORM, not on card 38's letter-spacing.
+     And the label grows on a TRANSFORM, not on letter-spacing.
      Tracking changes the label's width, a hug-content button is as wide as its
      label, and a button that changes width moves every sibling after it in the
      stack. scale() is painted and never measured, so the box is untouched. */
@@ -7015,58 +6446,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-regis:hover .marks i:nth-child(4),
   .c-regis:focus-visible .marks i:nth-child(4){transform:translate(5px,-4px)}
 </style>
-
-
-<script>
-  // 115 Word bow — the amplitude is normalised across the letters that are
-  // actually there. The gallery writes six of them into the stylesheet; a label
-  // is whatever the client typed, so the count is read rather than assumed.
-  (function(){
-    document.querySelectorAll('.z-bow').forEach(function(btn){
-      var host = btn.querySelector('.lbl');
-      var name = btn.querySelector('.sr');
-      if (!host || !name) return;
-      var text = name.textContent;
-      // Split once, at build time for the page and at mount for a component.
-      // The accessible name is the .sr span; these spans are decoration and are
-      // hidden from the tree by the .lbl's own aria-hidden.
-      //
-      // Array.from and not split(''), which splits by UTF-16 CODE UNIT and so
-      // cuts every non-BMP character in half: one emoji came back as two lone
-      // surrogates, two boxes where a client had typed one glyph. The count is
-      // the whole mechanism here — it is what the amplitude is normalised
-      // across — so a count that is wrong is an effect that is wrong, not just
-      // a rendering slip.
-      var chars = Array.from(text);
-      host.textContent = '';
-      chars.forEach(function(ch){
-        var s = document.createElement('span');
-        s.className = 'z-bow-c';
-        // A space cannot be an inline-block of zero width and still hold the
-        // word apart: it keeps its own box and simply never moves.
-        s.textContent = ch === ' ' ? ' ' : ch;
-        host.appendChild(s);
-      });
-      // 1 at the middle of the word, 0 at both ends, linear between. A word of
-      // one letter has no ends to measure against and stays still.
-      var n = chars.length, mid = (n - 1) / 2;
-      [].forEach.call(host.children, function(s, i){
-        var a = mid > 0 ? 1 - Math.abs(i - mid) / mid : 0;
-        s.style.setProperty('--a', a.toFixed(3));
-        // The pivot runs the other way and is signed, so the two halves of the
-        // word lean apart rather than all one way — the ends of a bowed object
-        // rotate away from its middle.
-        //
-        // Zero for a single letter, which is what «stays still» above actually
-        // requires: --r is 1 minus --a, so a lone character came out with NO
-        // displacement and FULL rotation — it sat there at nine degrees, the
-        // one case the comment claimed was handled. A word of one has no ends
-        // to lean away from, so it does not lean.
-        s.style.setProperty('--s', n === 1 ? '0' : (i < mid ? '1' : '-1'));
-      });
-    });
-  })();
-</script>
 
   <footer class="foot">
     <p><b>variant</b> builds on the canvas &nbsp;·&nbsp; <b>code</b> needs an override</p>
@@ -7162,7 +6541,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","17":"moves|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","35":"fades tone|hover","36":"moves tone|press","38":"moves type|hover","39":"moves|hover","40":"moves shape|press","41":"tone shape|hover","42":"moves fades tone|loop press","43":"moves tone|press","44":"moves fades tone|hover","45":"moves tone|press","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","68":"tone|hover","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","101":"shape|hover","103":"moves|hover","104":"moves tone|press","105":"fades|hover","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","115":"moves tone|js","116":"moves tone|press","117":"moves tone|press","118":"moves tone shape|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","01":"moves|press","02":"moves|press","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press","06":"tone|loop"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape|hover","42":"moves fades tone|loop press","43":"moves tone|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -7620,9 +6999,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // The label ON a fill. With no text colour chosen this is the computed
       // black-or-white it always was. With one chosen it is that colour
       // re-fitted against the fill, because a reader who picks a label colour
-      // means the label — not «the label except on the filled ones». Cards 01
-      // and 02 are both solid, so anything else makes the swatch look broken
-      // on the first two studies on the page.
+      // means the label — not «the label except on the filled ones». The page
+      // opens on solid plates, so anything else makes the swatch look broken
+      // on the first studies a reader sees.
       function labelOn(rgb){
         return fitted.text ? fitOn(look.text, 4.5, rgb).hex : onTop(rgb);
       }
@@ -8295,9 +7674,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function trimScript(text, keys){
       // A header is `// NN Name — …`: a padded number AND the em dash, both on
       // the first line — every header in the page carries both. Digits alone
-      // are not a header: card 115's own commentary opens a line with «1 at
-      // the middle of the word», and splitting on bare digits cut its init in
-      // half there, handing Framer an IIFE that never closes.
+      // are not a header: a study's own commentary once opened a line with
+      // «1 at the middle of the word», and splitting on bare digits cut its
+      // init in half there, handing Framer an IIFE that never closes.
       var parts = text.split(/\n(?=[ \t]*\/\/ \d{2,3} [^\n]*—)/), body;
       if (parts.length < 2 || parts[0].trim()){
         body = text;
@@ -9301,7 +8680,7 @@ document.addEventListener("DOMContentLoaded", function () {
      been checked and found not to need one. */
   (function(){
     // One long label for the whole page, so two studies stay comparable — the
-    // same argument that has cards 01 and 02 sharing «See the plan». A study
+    // same argument that has a compared pair share one label. A study
     // whose own label length IS the effect overrides it with data-long.
     var LONG  = 'Download the full specification';
     // «built» is the fourth position and carries no class: it is what a study
@@ -9337,8 +8716,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* One frame with transitions and idle loops off. Without it every switch
-       fires the effect it is switching — card 04 blooms, card 06 restarts its
-       breath — and the page would read as though pressing Outline were a hover.
+       fires the effect it is switching — card 04 blooms, card 42's edge light
+       restarts — and the page would read as though pressing Outline were a hover.
        The reflow between is what makes the guard land; rAF releases it. */
     function still(btns, mutate){
       btns.forEach(function(b){ b.classList.add('bhl-swap'); });
