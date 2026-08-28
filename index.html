@@ -482,6 +482,16 @@
     font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
   .foot p{margin:0}
   .foot b{font-weight:500; color:var(--ink-mid)}
+  /* The specs above are what the page is; this is who made it. A library that
+     invites you to take the code should not make you read the URL bar to find
+     out whose it is or whether you may. Its own line, because it answers a
+     different question than the five above it. */
+  .foot-by{flex-basis:100%; margin-top:14px}
+  .foot a{color:var(--ink-mid); text-decoration:underline;
+    text-decoration-color:var(--ink-low); text-underline-offset:3px;
+    transition:color var(--t-2) var(--ease), text-decoration-color var(--t-2) var(--ease)}
+  .foot a:hover{color:var(--ink-hi); text-decoration-color:var(--ink-mid)}
+  .foot a:focus-visible{outline:2px solid var(--ink-low); outline-offset:3px; border-radius:2px}
 
   /* ============ verktygsrad + favoriter ============ */
   .tools{
@@ -6683,6 +6693,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <p><b>instant</b> press on pointer-down &nbsp;·&nbsp; <b>interruptible</b> turns from wherever it is</p>
     <p><b>asymmetric</b> exit one rung down &nbsp;·&nbsp; <b>reduced-motion</b> end state, no travel</p>
     <p><b>durations</b> 83 / 133 / 200 / 300 / 450 ms</p>
+    <p class="foot-by"><b>built by</b> Sanna Granqvist &nbsp;·&nbsp;
+      <a href="https://github.com/granqvistsanna-web/button-hover-lab">source on GitHub</a>
+      &nbsp;·&nbsp; MIT licensed, so take what you need</p>
   </footer>
 </div>
 
@@ -8372,13 +8385,32 @@ document.addEventListener("DOMContentLoaded", function () {
     // is what you want if you would rather own the source than reference it.
     // A study added since the last sync has no URL yet; rather than copy
     // nothing, it falls back to the code file and says so.
+    // Option-click hands over the code file instead of the URL, which is worth
+    // knowing BEFORE you click rather than discovering afterwards — and a hint
+    // in a title attribute is a hint nobody reads. So the control renames
+    // itself while the key is held: hold Option and «Framer» becomes «Code
+    // file», which is the whole explanation, delivered at the moment it
+    // applies. Tracked once for the page rather than per button, and released
+    // on blur — hold Option, switch app, and the keyup lands somewhere else.
+    var ALT = false, altFns = [];
+    function setAlt(on){
+      if (ALT === on) return;
+      ALT = on;
+      altFns.forEach(function(f){ f(); });
+    }
+    addEventListener('keydown', function(e){ if (e.key === 'Alt') setAlt(true); });
+    addEventListener('keyup',   function(e){ if (e.key === 'Alt') setAlt(false); });
+    addEventListener('blur',    function(){ setAlt(false); });
+
     var ACTIONS = [
       {cls:'copy',           icon:ICON,
+       label:function(){ return 'CSS'; },
        title:function(n){ return 'Copy the CSS for “' + n + '”'; },
        run:function(card, n){
          return {text: asCss(parts(card)), said: n + ' — CSS copied'};
        }},
       {cls:'copy copy--fr',  icon:FRAMER,
+       label:function(alt){ return alt ? 'Code file' : 'Framer'; },
        title:function(n){ return 'Copy “' + n + '” for Framer — paste the URL straight onto a canvas. Option-click for the code file.'; },
        run:function(card, n, ev){
          var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
@@ -8398,36 +8430,65 @@ document.addEventListener("DOMContentLoaded", function () {
       var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
       var name = (card.querySelector('h3') || {textContent:''}).textContent.replace(num, '').trim();
 
+      // One box holding both, so the pair is laid out by the flow rather than
+      // by a second hard-coded left offset that every label-width change would
+      // have to be remeasured against.
+      var pair = document.createElement('div');
+      pair.className = 'copy-pair';
+
       ACTIONS.forEach(function(a){
         var b = document.createElement('button');
         b.className = a.cls;
         b.type = 'button';
-        b.innerHTML = a.icon;
+        // Icon and label are separate boxes because the done state swaps only
+        // the icon; writing the whole button's innerHTML took the name with it.
+        var ic = document.createElement('span');
+        ic.className = 'copy-i';
+        ic.innerHTML = a.icon;
+        var lb = document.createElement('span');
+        lb.className = 'copy-lbl';
+        lb.textContent = a.label(ALT);
+        b.appendChild(ic); b.appendChild(lb);
+        // The visible name is inside the accessible one ("CSS", "Framer"), so
+        // voice control still reaches it by what it says. WCAG 2.5.3.
         b.title = a.title(name);
         b.setAttribute('aria-label', b.title);
+        // While the button is confirming, the confirmation owns the label.
+        var rest = function(){ if (!b.hasAttribute('data-done')) lb.textContent = a.label(ALT); };
+        altFns.push(rest);
         var t = null;
         b.addEventListener('click', function(ev){
           var r = a.run(card, name, ev);
           put(r.text).then(function(){
             clearTimeout(t);
-            b.innerHTML = DONE;
+            ic.innerHTML = DONE;
+            lb.textContent = 'Copied';
             b.setAttribute('data-done', '1');
             live.textContent = r.said;
             t = setTimeout(function(){
-              b.innerHTML = a.icon;
+              ic.innerHTML = a.icon;
               b.removeAttribute('data-done');
+              rest();
               live.textContent = '';
             }, 1400);
           }, function(){
-            live.textContent = 'Could not copy — the clipboard was refused';
+            // A refusal used to be announced once and then left standing for
+            // the rest of the visit, with nothing to try instead. It now says
+            // so on the control, names the way out, and clears itself.
+            clearTimeout(t);
+            lb.textContent = 'Failed';
+            live.textContent = 'Could not copy — the clipboard was refused. Option-click hands over the same effect as a code file, or open the page over https.';
+            t = setTimeout(function(){ rest(); live.textContent = ''; }, 3200);
           });
         });
-        // Ahead of the favourite star, which an earlier block already appended
-        // at the other corner: appending after it would make the tab order jump
-        // right, then back to the far left. DOM order is now left to right.
-        var star = stage.querySelector('.fav');
-        if (star) stage.insertBefore(b, star); else stage.appendChild(b);
+        pair.appendChild(b);
       });
+
+      // Ahead of the favourite star, which an earlier block already appended
+      // at the other corner: appending after it would make the tab order jump
+      // right, then back to the far left. DOM order is now left to right.
+      var star = stage.querySelector('.fav');
+      if (star) stage.insertBefore(pair, star); else stage.appendChild(pair);
     });
   })();
 });
@@ -8682,7 +8743,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/TheSmallGrow-HnmhiG.js","02":"https://framer.com/m/TheSmallShrink-ajrWou.js","03":"https://framer.com/m/ItGrowsFromWhereYouCameIn-eog6DN.js","04":"https://framer.com/m/TheBloom-RWpsxN.js","05":"https://framer.com/m/LitFromWithin-L0zX6y.js","06":"https://framer.com/m/ItBreathesUntilYouArrive-SNdPrk.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/ItDoesNotRotate-v0HRfP.js","101":"https://framer.com/m/TheSameGreyACoarserGrid-kBmNEv.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/TheNeedleSwings-2whx8G.js","104":"https://framer.com/m/OutsetThenInset-D8qete.js","105":"https://framer.com/m/TheDottedRectangle-9Oml2p.js","109":"https://framer.com/m/TheLightStaysPut-XOHMW8.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/TheCircleKnowsTheCorner-TeYLAk.js","111":"https://framer.com/m/TheFillIsThePress-cG4lhD.js","112":"https://framer.com/m/TheLabelDoesntNeedTelling-PejF0I.js","113":"https://framer.com/m/TheLurchIsTheHonestPart-PSdO7O.js","114":"https://framer.com/m/ThePlateHasAThickness-EUDhRm.js","115":"https://framer.com/m/TheWordBows-MM7F2k.js","116":"https://framer.com/m/ItWasAStackAllAlong-btPUfT.js","117":"https://framer.com/m/TheShadowDoesntMove-zfWtgA.js","12":"https://framer.com/m/DotBecomesArrow-78XLOF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/TheSecondLine-0blJk6.js","17":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","18":"https://framer.com/m/TheCaret-wBPSsy.js","19":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","20":"https://framer.com/m/TheRollLetterByLetter-sNO7gA.js","21":"https://framer.com/m/ALiftNotARoll-c54JXV.js","22":"https://framer.com/m/ItLandsPastItsMark-kEuiBa.js","23":"https://framer.com/m/WordByWord-4yeMBa.js","24":"https://framer.com/m/FromTheMiddleOut-YwEFzr.js","25":"https://framer.com/m/InNoParticularOrder-prs1vH.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/TheLantern-JhIelK.js","34":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","35":"https://framer.com/m/TheTubeConverges-Mzevog.js","36":"https://framer.com/m/TwoFrames-Xkk1by.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","39":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/FillingTheMeasure-LXrYgI.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/TheKey-SCe6ZA.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/TheLineGauge-h9qIsP.js","47":"https://framer.com/m/TheDataPlate-xAARQs.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","53":"https://framer.com/m/TheSettle-2TMnOM.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/TheRealUnderline-wBkGEc.js","58":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","59":"https://framer.com/m/TheExitRemembers-y2VaAw.js","60":"https://framer.com/m/TheOthersRecede-uWvqi9.js","61":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/ThePair-XMHcLD.js","65":"https://framer.com/m/TheDividerYields-BQHpVA.js","66":"https://framer.com/m/ThePiecesPart-ySk8HW.js","67":"https://framer.com/m/TheMarkWalksThePlate-RYjUHt.js","68":"https://framer.com/m/TheyTradeFill-OyLZbP.js","69":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","70":"https://framer.com/m/TheMarkHinges-RXuV8I.js","71":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","72":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","73":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","74":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/TheWave-vZigVg.js","77":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","78":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","79":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/TheRiser-ctCJqg.js","83":"https://framer.com/m/ItGoesToWork-UWy42D.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/NothingButThePress-sHz8KT.js","87":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","88":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","89":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","90":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/ThePiecesJoin-sc1diW.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js","96":"https://framer.com/m/TheFillHasNoEdge-bwR0MA.js","97":"https://framer.com/m/SetOnAFourPixelGrid-4aMdig.js","98":"https://framer.com/m/TheCornerComesOffInCells-tgUzyJ.js","99":"https://framer.com/m/FourFramesNotATween-owuQxD.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","03":"https://framer.com/m/PointerGrow-ME4MH3.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","112":"https://framer.com/m/LabelInvert-6hT78F.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","114":"https://framer.com/m/SlabTilt-EhjPDw.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","18":"https://framer.com/m/Caret-jaEoJL.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/RigidType-uIZjQw.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","53":"https://framer.com/m/Settle-tqN4oW.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","58":"https://framer.com/m/TempoMatch-635kCX.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","71":"https://framer.com/m/MarkTuck-kfXjPa.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/LiquidFill-jSU3AX.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/PressOnly-R9jcC9.js","87":"https://framer.com/m/Overrun-RkqEDr.js","88":"https://framer.com/m/OverflowLoop-3a9HPU.js","89":"https://framer.com/m/InstantInvert-5xuQNW.js","90":"https://framer.com/m/HatchExit-64V6Gr.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","99":"https://framer.com/m/SpriteArrow-qOQ29q.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 
 </body>
