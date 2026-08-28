@@ -1271,7 +1271,7 @@
                     </button>
                   </div>
                   <h3><span class="num">41</span>Inset fill</h3>
-                    <p>The plate sits an even five pixels inside its own measure and grows out to the hairline on hover — on two concentric capsules a uniform inset is the only band that is provably even at every point.</p>
+                    <p>The plate sits an even three pixels inside its own measure and grows out to the hairline on hover, deepening a shade as it lands — on two concentric capsules a uniform inset is the only band that is provably even at every point.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
@@ -2759,22 +2759,27 @@ document.addEventListener("DOMContentLoaded", function () {
      drawn on top of a solid ink capsule, which is the loudest thing in the
      version before this one.
 
-     The reserve is 5px on every side. It was 3px top and bottom against 10px
-     at the ends, which is a 3.3:1 band, and on two concentric capsules that
-     does not read as a reserve — it reads as a plate that has slipped. The
-     geometry is worth being exact about: for a capsule of height H the radius
-     is H/2, so a uniform inset d leaves an inner capsule of radius H/2 - d and
-     the gap between the two is exactly d at every point on the outline, caps
-     included. Uniform is not approximately even here, it is provably even, and
-     nothing else is. So the balanced band is the round number and there was no
-     ratio to tune.
+     The reserve is 3px on every side. It was 5px, and before that 3px top and
+     bottom against 10px at the ends — a 3.3:1 band that read as a plate which
+     had slipped rather than as a reserve. The geometry is worth being exact
+     about: for a capsule of height H the radius is H/2, so a uniform inset d
+     leaves an inner capsule of radius H/2 - d and the gap between the two is
+     exactly d at every point on the outline, caps included. Uniform is not
+     approximately even here, it is provably even, and nothing else is — so the
+     only thing left to choose is how wide the band is.
 
-     What that costs is honest: the horizontal travel halves, 10px to 5px. The
-     card is named for the measure and the measure is horizontal, so the
-     temptation was to keep the ends wider and call the imbalance emphasis. It
-     is not emphasis at rest — a rest state is a picture, and that one was
-     lopsided. The gesture gives up 5px and gains 2px in the other axis, which
-     is a smaller movement in a straighter line. */
+     3px is the narrower reading of the same idea. At 5px the band was a margin
+     the plate sat in; at 3px it is a seated edge, a line's worth of air that
+     the hover closes. The travel is 3px in both axes now, the smallest move
+     that still resolves as the plate arriving at a boundary already drawn.
+
+     AND THE PLATE DARKENS AS IT ARRIVES. At rest and at full cover the same
+     white would mean the only thing hover changed is a 3px band — too small a
+     difference to carry a state on its own once the trim has handed over. The
+     hover shade is the page's own: --ink-hover mixed 90% with the ground, the
+     same compound .sheen and .magnet use, so a project that recolours the
+     hover control recolours this too. It rides the plate's own duration and
+     curve, so the growth and the deepening are one move rather than two. */
   .g-measure{padding:17px 34px; color:var(--ink-on-fill)}
   /* --line-ctl and not --line. The card is named for a RESERVED MEASURE and
      the trim is the only thing that states it, and at --line's 8% alpha on this
@@ -2791,11 +2796,15 @@ document.addEventListener("DOMContentLoaded", function () {
   .g-measure .g-measure-plate{
     position:absolute; inset:0; background:var(--ink);
     border-radius:inherit; pointer-events:none;
-    clip-path:inset(5px round 999px);
-    transition:clip-path var(--t-5) var(--e-out);
+    clip-path:inset(3px round 999px);
+    transition:clip-path var(--t-5) var(--e-out),
+               background-color var(--t-5) var(--e-out);
   }
   .g-measure:hover .g-measure-plate,
-  .g-measure:focus-visible .g-measure-plate{clip-path:inset(0px round 999px)}
+  .g-measure:focus-visible .g-measure-plate{
+    clip-path:inset(0px round 999px);
+    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg));
+  }
   /* The trim holds until the plate reaches it, then hands over. Undelayed, the
      boundary was gone at 300ms while the plate did not land until 450 — 150ms
      of a button with no boundary and no arrival, which is the one stretch where
