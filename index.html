@@ -43,10 +43,16 @@
     --muted:var(--ink-low);
     --line:var(--hairline);
     --line-soft:var(--hairline);
-    /* .36, not .16. This is the CONTROL BOUNDARY token and it has to clear 3:1 —
-       card 51's own note is why it exists at all. At .16 it composites to #3c3c3c
-       and measures 1.63:1 on bg-1, which is not a boundary. .36 gives 3.36:1 on
-       bg-1 and 3.29:1 on bg-0, restoring the 3.16:1 the old dark theme had. */
+    /* .36, not .16. This is the CONTROL BOUNDARY token and it has to clear 3:1.
+       At .16 it composites to #3c3c3c and measures 1.63:1 on bg-1, which is not
+       a boundary. .36 gives 3.36:1 on bg-1 and 3.29:1 on bg-0, restoring the
+       3.16:1 the old dark theme had.
+       THE MEASUREMENT LIVES HERE, at the token, and every card that reaches for
+       a control boundary points at this comment. It used to live in card 51's
+       note; that study was cut on 2026-08-28 and the argument outlived it,
+       which is the whole reason a token has a comment and not just a value:
+       --line clears 1.24:1 in dark and is not a boundary at all, --line-ctl
+       clears 3.52 light and 3.16 dark. */
     --line-ctl:rgba(255,255,255,.36);
     /* The inverse pair IS the accent — no hue anywhere on the page. */
     --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
@@ -488,7 +494,7 @@
      order — so no pair falls back to interpolating matrices, and the label is
      transformed at rest too so its rasterisation never switches mid-lift.
      --line-ctl and not --line: this is a control boundary and has to clear 3:1,
-     which is card 51's note and the reason the token exists. */
+     which is the reason the token exists — the measurement is at the token. */
   /* ONE CURVE. The transform ran --e-quint while the background and the border
      ran plain `ease` — two easings inside one gesture, which is the thing rule 1
      exists to forbid. On a single channel nobody sees the seam, which is why it
@@ -1380,7 +1386,7 @@
   <h2>Whole button</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn g-measure">
                       <span class="g-measure-trim" aria-hidden="true"></span>
@@ -1393,7 +1399,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn g-key">Sign up</button>
                   </div>
@@ -1402,7 +1408,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-nolong data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-nolong data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn lift"><span class="lbl"><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>D</span><span>D</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>o</span><span>o</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>w</span><span>w</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>n</span><span>n</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>l</span><span>l</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>o</span><span>o</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>a</span><span>a</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>d</span><span>d</span></span></span></span><span class="sr">Download</span></button>
                     </div>
@@ -1411,7 +1417,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--solid magnet"><span class="m-lbl">Keep in touch</span></button>
                     </div>
@@ -1420,16 +1426,8 @@
                     <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                   </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn i-give"><span class="i-give-lbl">Download the specification</span></button>
-                  </div>
-                  <h3><span class="num">51</span>Rigid type</h3>
-                  <p>The press compresses the plate while the label counter-scales by exactly the inverse, so the type stays rigid and only the material moves.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-                </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid i-mass"><span class="i-mass-lbl">Continue to review</span><i class="i-mass-block" aria-hidden="true"></i></button>
                   </div>
@@ -1438,7 +1436,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line t-report" data-state="idle"><span class="t-report-fill" aria-hidden="true"></span><span class="lbl">Publish</span></button>
                   </div>
@@ -1447,7 +1445,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
                     <span class="sr t-mark-live" role="status"></span>
@@ -1457,7 +1455,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line t-hold" data-state="idle"><span class="t-hold-fill" aria-hidden="true"><span class="t-hold-over">Hold to delete</span></span><span class="lbl">Hold to delete</span></button>
                   </div>
@@ -1466,7 +1464,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-order">
                       <i class="j-order-dot" aria-hidden="true"></i>
@@ -1481,7 +1479,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line q-true"><span class="lbl">Send the file</span></button>
                   </div>
@@ -1490,7 +1488,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:27:15+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:27:15+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid q-riser"><span class="lbl">Press to start</span></button>
                   </div>
@@ -1499,7 +1497,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line o-quiet"><span class="lbl">See the work</span></button>
                   </div>
@@ -1508,7 +1506,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:27:46+02:00">
               <div class="stage">
                 <button type="button" class="btn z-lurch"><span class="lbl">Run the export</span></button>
               </div>
@@ -1517,7 +1515,7 @@
               <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
             </article>
 
-    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:27:46+02:00">
               <div class="stage">
                 <button type="button" class="btn z-stack"><span class="lbl">Duplicate the layout</span></button>
               </div>
@@ -1526,7 +1524,7 @@
               <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
             </article>
 
-    <article class="spec" data-added="2026-08-27T18:53:44+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T18:53:44+02:00" data-updated="2026-08-28T21:27:46+02:00">
               <div class="stage">
                 <button type="button" class="btn btn--solid z-gum"><span class="lbl">I want this</span></button>
               </div>
@@ -1542,7 +1540,7 @@
   <h2>Fill</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--line sweep"><span class="lbl">See all work</span></button>
                     </div>
@@ -1551,7 +1549,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                   </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--line shutter"><span class="lbl">What we do</span></button>
                     </div>
@@ -1560,7 +1558,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
                   </article>
 
-    <article class="spec" data-versions="built fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn inkfill"><span class="lbl">Start a project</span></button>
                     </div>
@@ -1569,7 +1567,7 @@
                     <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                   </article>
 
-    <article class="spec" data-versions="built outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn sheen"><span class="lbl">Watch the showreel</span></button>
                     </div>
@@ -1578,7 +1576,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-dir" data-j-dir="idle">
                       <i class="j-dir-tile" aria-hidden="true"><span class="j-dir-on">See the work</span></i><span class="lbl">See the work</span>
@@ -1589,7 +1587,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line o-step"><span class="o-step-fill" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="lbl">Start the build</span></button>
                   </div>
@@ -1598,7 +1596,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line w-dither"><span class="lbl">Render the frame</span></button>
                   </div>
@@ -1607,7 +1605,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:27:46+02:00">
               <div class="stage">
                 <button type="button" class="btn y-reach"><span class="lbl">Send the brief</span></button>
               </div>
@@ -1616,7 +1614,7 @@
               <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
             </article>
 
-    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:27:46+02:00">
               <div class="stage">
                 <button type="button" class="btn y-hold" data-state="idle"><span class="lbl">Add to the project</span></button>
                 <span class="sr y-hold-live" role="status"></span>
@@ -1633,7 +1631,7 @@
   <h2>Border, corner and rule</h2>
   <div class="grid">
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn corners">Read the report<i aria-hidden="true"></i></button>
                     </div>
@@ -1642,7 +1640,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--text uline">More insights</button>
                     </div>
@@ -1651,7 +1649,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn e-draw">Read the manifesto
                       <svg class="e-draw-frame" aria-hidden="true"><rect class="e-draw-guide" pathLength="40"/><rect class="e-draw-ink" pathLength="40"/><rect class="e-draw-nib" pathLength="40"/></svg>
@@ -1662,7 +1660,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn e-chamfer"><span class="lbl">Our method</span></button>
                   </div>
@@ -1671,7 +1669,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line e-reg">Subscribe</button>
                   </div>
@@ -1680,7 +1678,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--text s-mid"><span class="lbl">Read the note</span></button>
                   </div>
@@ -1689,7 +1687,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
                   </div>
@@ -1698,7 +1696,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--text l-gauge">Measure twice<i class="l-gauge-rule" aria-hidden="true"></i></button>
                   </div>
@@ -1707,7 +1705,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid l-corner">Open the spec sheet</button>
                   </div>
@@ -1716,7 +1714,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--text i-beam">Open the engineering brief
                       <svg class="i-beam-rule" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true">
@@ -1729,7 +1727,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line i-rule"><span class="i-rule-lbl">Open the pricing brief</span></button>
                   </div>
@@ -1738,7 +1736,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn w-corner"><span class="lbl">Open the sheet</span></button>
                   </div>
@@ -1754,7 +1752,7 @@
   <h2>Label</h2>
   <div class="grid">
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--solid roll"><span class="track"><span class="inner"><span>Book a meeting</span><span aria-hidden="true">Book a meeting</span></span></span></button>
                     </div>
@@ -1763,7 +1761,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid h-second">
                       <span class="h-second-stack">
@@ -1778,7 +1776,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid h-marq">
                       <span class="h-marq-clip"><span class="h-marq-txt">Sign up for the breakfast seminar in Gothenburg</span></span>
@@ -1789,7 +1787,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid e-count">See open roles
                       <span class="e-count-n" aria-hidden="true"></span>
@@ -1813,7 +1811,7 @@
   <h2>Label, per character</h2>
   <div class="grid">
 
-    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line u-roll"><span class="lbl"><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>G</span><span>G</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>e</span><span>e</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>i</span><span>i</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>n</span><span>n</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>o</span><span>o</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>u</span><span>u</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>c</span><span>c</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>h</span><span>h</span></span></span></span><span class="sr">Get in touch</span></button>
                   </div>
@@ -1822,7 +1820,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid u-lift"><span class="lbl"><span class="u-lift-c" aria-hidden="true">S</span><span class="u-lift-c" aria-hidden="true">e</span><span class="u-lift-c" aria-hidden="true">e</span> <span class="u-lift-c" aria-hidden="true">a</span><span class="u-lift-c" aria-hidden="true">l</span><span class="u-lift-c" aria-hidden="true">l</span> <span class="u-lift-c" aria-hidden="true">w</span><span class="u-lift-c" aria-hidden="true">o</span><span class="u-lift-c" aria-hidden="true">r</span><span class="u-lift-c" aria-hidden="true">k</span></span><span class="sr">See all work</span></button>
                   </div>
@@ -1831,7 +1829,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line u-land"><span class="lbl"><span class="u-land-c" aria-hidden="true">B</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">k</span> <span class="u-land-c" aria-hidden="true">a</span> <span class="u-land-c" aria-hidden="true">c</span><span class="u-land-c" aria-hidden="true">a</span><span class="u-land-c" aria-hidden="true">l</span><span class="u-land-c" aria-hidden="true">l</span></span><span class="sr">Book a call</span></button>
                   </div>
@@ -1840,7 +1838,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid u-words"><span class="lbl"><span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>Start</span><span>Start</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>your</span><span>your</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>free</span><span>free</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>trial</span><span>trial</span></span></span></span><span class="sr">Start your free trial</span></button>
                   </div>
@@ -1849,7 +1847,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line u-centre"><span class="lbl"><span class="u-centre-c" aria-hidden="true">R</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">a</span><span class="u-centre-c" aria-hidden="true">d</span> <span class="u-centre-c" aria-hidden="true">t</span><span class="u-centre-c" aria-hidden="true">h</span><span class="u-centre-c" aria-hidden="true">e</span> <span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">p</span><span class="u-centre-c" aria-hidden="true">o</span><span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">t</span></span><span class="sr">Read the report</span></button>
                   </div>
@@ -1858,7 +1856,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T11:27:15+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T11:27:15+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid u-shuffle"><span class="lbl"><span class="u-shuffle-c" aria-hidden="true">O</span><span class="u-shuffle-c" aria-hidden="true">p</span><span class="u-shuffle-c" aria-hidden="true">e</span><span class="u-shuffle-c" aria-hidden="true">n</span> <span class="u-shuffle-c" aria-hidden="true">t</span><span class="u-shuffle-c" aria-hidden="true">h</span><span class="u-shuffle-c" aria-hidden="true">e</span> <span class="u-shuffle-c" aria-hidden="true">m</span><span class="u-shuffle-c" aria-hidden="true">a</span><span class="u-shuffle-c" aria-hidden="true">p</span></span><span class="sr">Open the map</span></button>
                   </div>
@@ -1867,7 +1865,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line e-wave">
                       <span class="e-wave-stack">
@@ -1882,7 +1880,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-resolve">
                       <span class="j-resolve-lbl" aria-hidden="true">Request the audit</span>
@@ -1894,7 +1892,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line q-jitter"><span aria-hidden="true"><span class="q-jitter-l">S</span><span class="q-jitter-l">k</span><span class="q-jitter-l">e</span><span class="q-jitter-l">t</span><span class="q-jitter-l">c</span><span class="q-jitter-l">h</span> <span class="q-jitter-l">i</span><span class="q-jitter-l">t</span> <span class="q-jitter-l">o</span><span class="q-jitter-l">u</span><span class="q-jitter-l">t</span></span><span class="sr">Sketch it out</span></button>
                   </div>
@@ -1910,7 +1908,7 @@
   <h2>Icon</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--solid relay">Next step
                         <span class="slot" aria-hidden="true">
@@ -1924,7 +1922,7 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                     <div class="stage">
                       <button type="button" class="btn btn--line dotm">
                         <span class="slot" aria-hidden="true">
@@ -1938,7 +1936,7 @@
                   </article>
 
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid i-anti"><span class="lbl">Continue</span>
                       <span class="i-anti-slot" aria-hidden="true">
@@ -1951,7 +1949,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid i-space">View the index
                       <span aria-hidden="true">
@@ -1964,7 +1962,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid i-throw"><span class="lbl">Send the brief</span>
                       <span class="i-throw-slot" aria-hidden="true"><i class="i-throw-mark"></i></span>
@@ -1975,7 +1973,7 @@
                   <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn p-part"><span class="p-part-row"><span class="p-part-plate">Start the brief</span><span class="p-part-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
                   </div>
@@ -1984,7 +1982,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn p-walk"><span class="p-walk-row"><span class="p-walk-plate">Send the file</span><span class="p-walk-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
                   </div>
@@ -1993,7 +1991,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate"><span class="p-cycle-lbl"><span>Take the tour</span><span aria-hidden="true">Take the tour</span></span></span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
                   </div>
@@ -2002,7 +2000,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn p-hinge"><span class="p-hinge-row"><span class="p-hinge-plate">Book a call</span><span class="p-hinge-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
                   </div>
@@ -2011,7 +2009,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid j-out">Read the case
                       <span class="j-out-slot" aria-hidden="true">
@@ -2024,7 +2022,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-optic">
                       <span class="j-optic-group">
@@ -2040,7 +2038,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
                   </div>
@@ -2049,7 +2047,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:37:15+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:37:15+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line n-cross"><span class="n-cross-row"><span class="n-cross-mark" aria-hidden="true"><svg class="icon n-cross-glyph n-cross-glyph--go" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon n-cross-glyph n-cross-glyph--land" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span><span class="n-cross-lbl">Read the note</span></span></button>
                   </div>
@@ -2058,7 +2056,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T20:37:15+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T20:37:15+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn n-join"><span class="n-join-stack"><span class="n-join-ghost" aria-hidden="true"><span class="n-join-plate">Book the studio</span><span class="n-join-mark"></span></span><span class="n-join-row"><span class="n-join-plate">Book the studio</span><span class="n-join-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
                   </div>
@@ -2067,7 +2065,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid w-grid"><span class="lbl">Advance</span><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></button>
                   </div>
@@ -2077,7 +2075,7 @@
                 </article>
 
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line w-redraw"><span class="lbl">Change the mark</span><span class="w-redraw-box" aria-hidden="true"><span class="w-redraw-cell w-redraw-n"></span><span class="w-redraw-cell w-redraw-w"></span><span class="w-redraw-cell w-redraw-c"></span><span class="w-redraw-cell w-redraw-e"></span><span class="w-redraw-cell w-redraw-s"></span></span></button>
                   </div>
@@ -2093,7 +2091,7 @@
   <h2>Material and light</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line v-bloom"><span class="lbl">Go live</span></button>
                   </div>
@@ -2102,7 +2100,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line v-inner"><span class="lbl">Press to arm</span></button>
                   </div>
@@ -2111,7 +2109,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage f-ruta">
                     <button type="button" class="btn f-glas"><i class="f-glas-yta" aria-hidden="true"></i><span class="lbl">Book a walkthrough</span></button>
                   </div>
@@ -2120,7 +2118,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn f-motljus">Read the annual report<i class="f-sol" aria-hidden="true"></i></button>
                   </div>
@@ -2129,7 +2127,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn f-lykta"><span class="lbl">See the case</span></button>
                   </div>
@@ -2138,7 +2136,7 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn s-bevel"><span class="lbl">Save changes</span></button>
                   </div>
@@ -2147,7 +2145,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn s-sprite"><span class="lbl">Insert coin</span></button>
                   </div>
@@ -2156,7 +2154,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn l-knurl"><i class="l-knurl-grip" aria-hidden="true"></i><span class="lbl">Adjust the exposure</span></button>
                   </div>
@@ -2165,7 +2163,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <span class="l-plate-wrap" data-copy-root>
                       <button type="button" class="btn btn--line l-plate" aria-keyshortcuts="Meta+K">Open the console</button>
@@ -2177,7 +2175,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn x-bevel"><span class="lbl">OK</span></button>
                   </div>
@@ -2186,7 +2184,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-28T21:27:46+02:00">
               <div class="stage">
                 <button type="button" class="btn y-lit"><span class="lbl">Start a project</span></button>
               </div>
@@ -2202,7 +2200,7 @@
   <h2>Button groups</h2>
   <div class="grid">
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <div class="k-row k-recede" data-copy-root>
                       <button type="button" class="btn btn--text k-recede-i">Work</button>
@@ -2215,7 +2213,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec spec--wide" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec spec--wide" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <div class="k-row k-ind" data-copy-root>
                       <button type="button" class="btn btn--text k-ind-i" aria-current="page">Overview</button>
@@ -2230,7 +2228,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <div class="k-row k-share" data-copy-root>
                       <button type="button" class="btn btn--line k-share-i">Design</button>
@@ -2243,7 +2241,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec spec--wide" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec spec--wide" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <div class="k-row k-rep" data-copy-root>
                       <button type="button" class="btn btn--text k-rep-i">Index</button>
@@ -2258,7 +2256,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec spec--wide" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec spec--wide" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <div class="k-row k-pair" data-copy-root>
                       <button type="button" class="btn k-pair-a">Book a call</button>
@@ -2270,7 +2268,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <div class="k-row k-div" data-copy-root>
                       <button type="button" class="btn btn--text k-div-i">Day</button>
@@ -2291,7 +2289,7 @@
   <h2>Two at once</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid c-swell"><span class="track"><span class="inner"><span>Start the trial</span><span aria-hidden="true">Start the trial</span></span></span></button>
                   </div>
@@ -2300,7 +2298,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid c-mass"><span class="track"><span class="inner"><span>Book a call</span><span aria-hidden="true">Book a call</span></span></span></button>
                   </div>
@@ -2309,7 +2307,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line c-tide"><span class="lbl"><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>C</span><span>C</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>o</span><span>o</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>t</span><span>t</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>i</span><span>i</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>u</span><span>u</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>e</span><span>e</span></span></span></span><span class="sr">Continue</span></button>
                   </div>
@@ -2318,7 +2316,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line c-relay"><span class="lbl">Send the file</span>
                         <span class="slot" aria-hidden="true">
@@ -2332,7 +2330,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn c-crest"><span class="lbl">Download the pack</span></button>
                   </div>
@@ -2341,7 +2339,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:20:11+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
                     <button type="button" class="btn c-regis"><span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">View the plate</span></button>
                   </div>
@@ -2790,7 +2788,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .f-kant .lbl{ position:relative; z-index:1 }
   .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 24%, var(--line)) }
-  /* .btn carried, so the press beats the hover pair's (0,2,0) — card 51's note. */
+  /* .btn carried, so the press beats the hover pair's (0,2,0): a bare :active
+     is (0,1,0) and would lose to any two-class hover on the same element. */
   .btn.f-kant:active{ border-color:var(--ink-hover); transition-duration:var(--t-1) }
   .f-kant .f-kant-lamp{ display:none }
   @supports (offset-path: border-box){
@@ -3129,24 +3128,6 @@ document.addEventListener("DOMContentLoaded", function () {
      scale(1) — rather than left to `none`. Interpolating between `none` and a
      function list makes the browser fall back to matrix interpolation, which
      travels a straight chord instead of the intended path. */
-
-  /* 51 Rigid type — the press compresses the plate and
-     the label counter-scales by exactly 1/0.97, so the composite on the type is
-     1.000000 and only the material moves. Down on --t-1 (never remapped, so a
-     press reads instant), up on --t-3 restored by :hover — fast down, slow up.
-
-     The rest border is --line-ctl, not --line: this plate is a control boundary
-     and needs 3:1. Measured on the stage, --line clears 1.24:1 in dark, which
-     is not a boundary at all; --line-ctl clears 3.52 light and 3.16 dark. */
-  .btn.i-give{
-    background:var(--lift-bg); border:1px solid var(--line-ctl);
-    transition:transform var(--t-3) var(--e-out), border-color var(--t-3) ease;
-  }
-  .i-give .i-give-lbl{display:inline-block; transform:scale(1); transition:transform var(--t-3) var(--e-out)}
-  /* .btn.i-give above is (0,2,0), so the hover has to carry .btn too or it loses. */
-  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 40%,var(--line-ctl))}
-  .btn.i-give:active{transition-duration:var(--t-1)}
-  .btn.i-give:active .i-give-lbl{transform:scale(1.030928); transition-duration:var(--t-1)}
 
   /* 52 Two masses — same distance, same instant, different rates. The light
      block takes --t-2 and the heavy label --t-5, so the space between them
@@ -4932,8 +4913,8 @@ document.addEventListener("DOMContentLoaded", function () {
      it.
      The lit edge is the control boundary, so it is --ink-low and not
      --ink-faint: 5.19:1 on the panel against --ink-faint's 2.81:1, which is
-     under the 3:1 a boundary owes. That is card 51's argument and the reason
-     --line-ctl exists at all. */
+     under the 3:1 a boundary owes. That is the reason --line-ctl exists at
+     all; the measurement is at the token. */
   .btn.s-bevel{
     background:var(--bg-3); color:var(--ink-text);
     border:2px solid; border-radius:0; padding:13px 26px;
@@ -6805,7 +6786,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape|hover","42":"moves fades tone|loop press","43":"moves tone|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -9173,7 +9154,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","118":"https://framer.com/m/UnderLoad-AZpSNc.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/RigidType-uIZjQw.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","118":"https://framer.com/m/UnderLoad-AZpSNc.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-sync">{"01":"39b0743b2e97b7fe","02":"b6fb9d117ed5d0a8","04":"052d9f3049595c15","05":"6a6ef3ff53f05d11","06":"d7fbdb752067a897","07":"30d7e81bcb291444","08":"b18fb05039f42c1b","09":"a58dd86120011280","10":"6b70676fec9bb069","100":"3b62648f7228625f","101":"324427910de0baf2","102":"60045aa3a0e2966e","103":"1d6584e94e3d759a","104":"85d41b21c927fd1b","105":"86b10ab9984d0f2d","109":"31705cf1adade5df","11":"2df4e5d6c20ada25","110":"bf7e00d6831c06fd","111":"479dc73e5534c476","112":"3159b44123691b7d","113":"911e2f58bb971b3d","115":"bb7c54d49306df25","116":"2b7719648aca1d80","117":"6bebdca6eca354aa","118":"9425eb98c9db348c","119":"cff9b05a71f6adfd","12":"7649aaa1ce4a10bd","120":"43c35d58dc2a35f0","121":"ce7dd6de6445c072","122":"e5f5722f90dea966","123":"86388659a4264785","124":"ef3f7543edc51700","13":"061685f49319a585","14":"2096b32de4bb6059","15":"33bc52452d8f65e4","16":"4d57eabe7c7769da","17":"f8c8d764f788ea0c","18":"05db475d16956a07","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"8af10e080edcb135","22":"3c2f66b2d0dc001c","23":"8697bc21b15fe94a","24":"9d50756385d7de1d","25":"08d2d9129eb0f983","26":"f355f7982de387c3","27":"fe8b324c0aa6c3f5","28":"7f4a82c0a08fff8d","29":"6cf478bfb81de238","30":"24519cf7324357d1","31":"6d9a0e5bf7fffb34","32":"73e0b150704da705","33":"99ed5894ff9842d4","34":"961c6b4f376b0fc7","35":"2f22e2e56b7cfd79","36":"35f391fab5986376","38":"66bc781c50a135d5","39":"5de9785acd540790","40":"fec7a43a92e2b106","41":"815604ea00244430","42":"08ffe91005d84371","43":"0a2be8889390ef32","44":"3a40b17528135165","45":"097428f64d35838b","46":"c182b57339f42759","47":"3b5c3ca48d390583","48":"f9a398fbb446f0e7","49":"43cb7dbbb5fbcf16","50":"5ad61f99d0bb7db6","51":"ad62aeaec27520ee","52":"ae71bb2b3e131413","54":"8205a8bbf937a5d0","55":"73b1fa94c0d15025","56":"71935e3073f02ff9","57":"6250a732a285180d","59":"3c2cec803d63d7a3","60":"eda487992b495274","61":"4af340b875abca83","62":"1f3e32df5dc6e4f3","63":"fc16de7400fc778f","64":"6a7bf547ba6428ad","65":"bb074d9ff48c8979","66":"151789399842672e","67":"d8d21cdad6baca01","68":"e5b94c1bcbf46bd8","69":"c40c2f7d5f778fd6","70":"8c925c7ea2923c09","72":"17ed17abd9424ade","73":"9a5df520b53b43ef","74":"306722b8cf5faedd","75":"159a306c94d27a74","77":"d21b44c7cbc9144b","78":"71d8ff0f652c7875","79":"16647d36cdf267ef","80":"2d1a8f1a2f96496b","81":"57118a2fd2038bae","82":"a6f21a3fe2557942","83":"bc409b9d7f56097c","84":"d7a0c5ec71b946ee","85":"7c1b6a1e8fe5c4c6","86":"81284da018e963e7","88":"fb060889432376bc","91":"f5be1423169132de","92":"ffdf6bc941049f64","93":"380580cf40d13669","94":"7ad7179bd5b1b858","96":"3ef9937c85d46054","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2","99":"8868f8cf7d171bca"}</script>
