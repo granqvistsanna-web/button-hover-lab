@@ -6853,7 +6853,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ? cards.length + ' studies'
         : shown + ' of ' + cards.length;
       var filtered = state.fav || state.q || state.changes.length || state.answers.length
-                  || look.colour || look.radius !== PILL;
+                  || look.text || look.accent || look.hover || look.radius !== PILL;
       reset.hidden = !filtered;
       paintRail();
     }
