@@ -447,6 +447,24 @@
     "url": "https://framer.com/m/FixedShadow-4DP8tM.js"
   },
   {
+    "num": "118",
+    "name": "Under load",
+    "comp": "UnderLoad",
+    "file": "UnderLoad.tsx",
+    "hash": "a99bb65e2ee21890",
+    "id": "C09iaWd",
+    "url": "https://framer.com/m/UnderLoad-AZpSNc.js"
+  },
+  {
+    "num": "119",
+    "name": "Swell",
+    "comp": "Swell",
+    "file": "Swell.tsx",
+    "hash": "ea2440b369c97f90",
+    "id": "yuODOIH",
+    "url": "https://framer.com/m/Swell-Vi6nJO.js"
+  },
+  {
     "num": "12",
     "name": "Dot becomes arrow",
     "comp": "DotBecomesArrow",
@@ -464,6 +482,51 @@
     "hash": "5803d6d21455cd01",
     "id": "PZLsdhi",
     "url": "https://framer.com/m/DotToArrow-MO7en3.js"
+  },
+  {
+    "num": "120",
+    "name": "Lands first",
+    "comp": "LandsFirst",
+    "file": "LandsFirst.tsx",
+    "hash": "912f0a55e056a1ec",
+    "id": "VKpVvFc",
+    "url": "https://framer.com/m/LandsFirst-RZyfnF.js"
+  },
+  {
+    "num": "121",
+    "name": "Tide",
+    "comp": "Tide",
+    "file": "Tide.tsx",
+    "hash": "f9226aca0035fe6d",
+    "id": "mC6p93r",
+    "url": "https://framer.com/m/Tide-xiidAm.js"
+  },
+  {
+    "num": "122",
+    "name": "Leading edge",
+    "comp": "LeadingEdge",
+    "file": "LeadingEdge.tsx",
+    "hash": "2a83eb3b141f2982",
+    "id": "CSz6HA7",
+    "url": "https://framer.com/m/LeadingEdge-6fteXU.js"
+  },
+  {
+    "num": "123",
+    "name": "Crest",
+    "comp": "Crest",
+    "file": "Crest.tsx",
+    "hash": "a503fd7a2d835699",
+    "id": "TtZ5exs",
+    "url": "https://framer.com/m/Crest-YJ9shJ.js"
+  },
+  {
+    "num": "124",
+    "name": "Closing marks",
+    "comp": "ClosingMarks",
+    "file": "ClosingMarks.tsx",
+    "hash": "6fc4f4c3eec50db6",
+    "id": "GQkpC6J",
+    "url": "https://framer.com/m/ClosingMarks-NNfGBF.js"
   },
   {
     "num": "13",
@@ -488,7 +551,7 @@
     "name": "Label roll",
     "comp": "LabelRoll",
     "file": "LabelRoll.tsx",
-    "hash": "eec56cc0df309fb2",
+    "hash": "51a402c6b62acfed",
     "id": "QxhgXtv",
     "url": "https://framer.com/m/LabelRoll-p0eOmG.js"
   },
@@ -1304,7 +1367,7 @@
     "name": "Split apart",
     "comp": "SplitApart",
     "file": "SplitApart.tsx",
-    "hash": "0eb702142e09ce7a",
+    "hash": "50054de30d09c127",
     "id": "buAEufy",
     "url": "https://framer.com/m/SplitApart-JyH30m.js"
   },
@@ -1361,7 +1424,7 @@
     "name": "Clipped relay",
     "comp": "ClippedRelay",
     "file": "ClippedRelay.tsx",
-    "hash": "bde7b36b207daaa9",
+    "hash": "569ecb941474d922",
     "id": "Nyg__Yu",
     "url": "https://framer.com/m/ClippedRelay-ZLi59f.js"
   },
@@ -1730,7 +1793,17 @@
     "file": "PressOnly.tsx",
     "hash": "8f920a7cc61ddc02",
     "id": "kgWwrJC",
-    "url": "https://framer.com/m/PressOnly-R9jcC9.js"
+    "url": "https://framer.com/m/PressOnly-R9jcC9.js",
+    "retired": true
+  },
+  {
+    "num": "86",
+    "name": "Hairline only",
+    "comp": "HairlineOnly",
+    "file": "HairlineOnly.tsx",
+    "hash": "de6b6dd69965723a",
+    "id": "Mn0UhiO",
+    "url": "https://framer.com/m/HairlineOnly-0zuI7w.js"
   },
   {
     "num": "87",
