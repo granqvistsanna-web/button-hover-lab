@@ -513,19 +513,66 @@
      state the ladder never lengthens, and a delayed press is a broken button.
      background-color and not the `background` shorthand: the shorthand resets
      background-image with it, and the toolbar can put one there. */
+  /* SHORTER, BECAUSE A LEAD IS PAID FOR TWICE. --t-3 with a --d-2 lead spends
+     300ms getting to the top: 200 of movement and 100 of waiting for it to
+     start, and the delay lands on the one channel the eye is actually watching.
+     A gesture reads as lag when the thing you are looking at has not begun a
+     third of the way through it. One rung down on both — --t-2 and --d-1 — puts
+     the whole thing at 183ms and keeps the ORDER, which is the card, because
+     50ms is well above the ~40ms at which two starts stop being one start.
+     Nothing else changes: same curve on all three, same opposite-sided delays,
+     same reversed exit. */
   .lift{background-color:var(--bg-2); border:1px solid var(--line-ctl);
     transform:translateY(0) rotate(0.001deg) scale(1);
-    transition:transform var(--t-3) var(--e-quint),
-               background-color var(--t-3) var(--e-quint) var(--d-2),
-               border-color var(--t-3) var(--e-quint) var(--d-2)}
+    transition:transform var(--t-2) var(--e-quint),
+               background-color var(--t-2) var(--e-quint) var(--d-1),
+               border-color var(--t-2) var(--e-quint) var(--d-1)}
   .lift:hover,
   .lift:focus-visible{transform:translateY(-2px) rotate(0.001deg) scale(1);
     background-color:var(--bg-3);
     border-color:color-mix(in srgb,var(--ink) 22%,var(--line-ctl));
-    transition-delay:var(--d-2), 0s, 0s}
+    transition-delay:var(--d-1), 0s, 0s}
   .lift:active{transform:translateY(0) rotate(0.001deg) scale(.98);
     background-color:var(--bg-4);
     transition-duration:var(--t-1); transition-delay:0s}
+
+  /* THE LABEL ROLLS PER CHARACTER, and the stagger is not a number anybody
+     chose — it is the rise's own lead, divided. The light leaves at 0 and the
+     plate leaves at --d-1; spread eight characters across exactly that interval,
+     --d-1/7 to a step, and the first character leaves WITH the light while the
+     last leaves WITH the plate. Every column runs the same --t-2, so the last
+     one lands on the same frame the plate lands on: the word finishes when the
+     object finishes. A subordinate channel that never owns the last frame, and
+     not one invented millisecond in it.
+
+     It also survives the ladder. --d-1 and --t-2 are both read off the element,
+     so the exit is the same sentence one rung shorter — 83ms columns spread
+     across the same 50ms — and nothing has to be restated to make that happen.
+
+     The machinery is card 20's verbatim, and so are its two traps.
+     vertical-align:bottom, or eight inline-blocks with overflow hidden take
+     their baseline from the bottom margin edge and the whole label drops a
+     descender below the line it sits on. An explicit 1.25em height, or
+     overflow:hidden does not shrink the wrapper to one row and the plate
+     stands two rows tall. The split's kerning cost is paid in BOTH states, so
+     the box is constant and rule 5 holds; the 1.25em box makes this plate
+     taller than it was, once, and not on hover. */
+  .lift .lift-roll-c{display:inline-block; overflow:hidden; vertical-align:bottom;
+    height:1.25em; line-height:1.25}
+  .lift .lift-roll-i{display:block;
+    transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-2) var(--e-quint) calc(var(--i) * var(--d-1) / 7)}
+  .lift .lift-roll-i > span{display:block; line-height:1.25}
+  .lift:hover .lift-roll-i,
+  .lift:focus-visible .lift-roll-i{transform:translateY(-50%) rotate(0.001deg)}
+  .lift .lift-roll-c:nth-child(1){--i:0}
+  .lift .lift-roll-c:nth-child(2){--i:1}
+  .lift .lift-roll-c:nth-child(3){--i:2}
+  .lift .lift-roll-c:nth-child(4){--i:3}
+  .lift .lift-roll-c:nth-child(5){--i:4}
+  .lift .lift-roll-c:nth-child(6){--i:5}
+  .lift .lift-roll-c:nth-child(7){--i:6}
+  .lift .lift-roll-c:nth-child(8){--i:7}
 
   /* 50 Magnetisk */
   /* The pull is driven by pointer POSITION, so a keyboard has nothing to aim
@@ -1314,12 +1361,12 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T20:21:44+02:00">
+    <article class="spec" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-28T20:21:44+02:00" data-nolong>
                     <div class="stage">
-                      <button type="button" class="btn lift">Download</button>
+                      <button type="button" class="btn lift"><span class="lbl"><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>D</span><span>D</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>o</span><span>o</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>w</span><span>w</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>n</span><span>n</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>l</span><span>l</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>o</span><span>o</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>a</span><span>a</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>d</span><span>d</span></span></span></span><span class="sr">Download</span></button>
                     </div>
                     <h3><span class="num">49</span>Elevation step</h3>
-                    <p>The button lifts 2 px and the shadow deepens; the press pushes it back down.</p>
+                    <p>The plate lights first and rises a beat later, and the label rolls over one character at a time across exactly that beat &mdash; the last letter lands on the frame the plate does.</p>
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
