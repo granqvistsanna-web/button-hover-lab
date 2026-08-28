@@ -4050,7 +4050,7 @@ document.addEventListener("DOMContentLoaded", function () {
      their radius so the pair reads as a single object rather than a docking.
      A hidden copy at the rest spacing reserves the width, so the pair closes
      INWARD and the group's own box never moves. */
-  .n-join{padding:0; background:none; border:0; border-radius:999px}
+  .n-join{padding:0; background:none; border:0; border-radius:999px; --n-join-tuck:8px}
   .n-join .n-join-stack{display:inline-grid}
   /* align-items:stretch, not center: a fixed 46px mark against a plate whose
      height comes from its padding leaves a half-pixel step at the seam, and a
@@ -4066,14 +4066,30 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .n-join .n-join-plate{padding:15px 26px; border-radius:999px; transform:translateX(0)}
   .n-join .n-join-mark{display:grid; place-items:center; width:46px; border-radius:999px; transform:translateX(0)}
-  /* The facing corners go to a true zero and the mark closes the exact
-     --pair-gap it was given, so the two backgrounds meet without a seam to
-     find. The travel is derived from the token and not written out, so the
-     seam cannot come apart the next time the spacing is judged. */
+  /* The facing corners go to a true zero and each half moves --n-join-tuck
+     toward the other, which is more than the --pair-gap between them, so the
+     two backgrounds overlap rather than merely meet and there is no seam left
+     to find at any subpixel or any zoom.
+
+     The tuck is what makes the closed state read as one object instead of one
+     object with a hole in it. The seam stacks two paddings — the plate's own 26
+     and the 16px halo the mark keeps around a 14px arrow — so an untucked join
+     lands on 26 / 42 / 16 and puts its widest gap in the middle of the thing it
+     is claiming is single. Tucked, it lands on 26 / 31 / 16, and card 66 opens
+     from exactly that capsule. The travel stays derived rather than written out:
+     the seam cannot come apart the next time the spacing is judged as long as
+     2 × tuck > --pair-gap, which is the number's only constraint.
+
+     Both halves move, and by the same 8, so the closed capsule stays centred in
+     the width the ghost reserved. Closing on the mark alone would have hung it
+     off to one side of a box that never moves, which is the sort of thing only
+     the card underneath it makes visible. */
   .n-join:hover .n-join-plate,
-  .n-join:focus-visible .n-join-plate{border-radius:999px 0 0 999px}
+  .n-join:focus-visible .n-join-plate{border-radius:999px 0 0 999px;
+    transform:translateX(var(--n-join-tuck))}
   .n-join:hover .n-join-mark,
-  .n-join:focus-visible .n-join-mark{transform:translateX(calc(-1 * var(--pair-gap))); border-radius:0 999px 999px 0}
+  .n-join:focus-visible .n-join-mark{border-radius:0 999px 999px 0;
+    transform:translateX(calc(-1 * var(--n-join-tuck)))}
 
   /* 94 Ticker label — a label that fits perfectly well loops anyway. Card 19
      moves a label only when it is genuinely clipped and holds still otherwise;
@@ -4377,7 +4393,13 @@ document.addEventListener("DOMContentLoaded", function () {
      8px tuck on the mark alone would hang the whole capsule 8px left of the
      stage's centre. Padding would have moved the box itself and reflowed the
      stage; this is two transforms on the rung already declared above, and the
-     hover releases both to 0 — one gesture, both halves, which is the name. */
+     hover releases both to 0 — one gesture, both halves, which is the name.
+
+     The one constraint on the number is 2 × tuck > --pair-gap: below that the
+     halves stop short of each other and the capsule they are supposed to arrive
+     as has a seam down the middle of it. 8 against 5 overlaps by 11. Card 93's
+     joined state carries the same 8, because it is the same state and the
+     mirror has to hold on the side it is read from too. */
   .p-part{padding:0; background:none; border:0; border-radius:999px; --p-part-tuck:8px}
   .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-part .p-part-plate,
