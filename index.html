@@ -1177,7 +1177,7 @@
   <h2>Whole button</h2>
   <div class="grid">
 
-    <article class="spec" data-versions="fill outline link">
+    <article class="spec" data-versions="fill outline">
                   <div class="stage">
                     <button type="button" class="btn btn--solid v-grow"><span class="lbl">See the plan</span></button>
                   </div>
@@ -1186,7 +1186,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link">
+    <article class="spec" data-versions="fill outline">
                   <div class="stage">
                     <button type="button" class="btn btn--solid v-shrink"><span class="lbl">See the plan</span></button>
                   </div>
@@ -1943,8 +1943,8 @@
                     </button>
                   </div>
                   <h3><span class="num">78</span>Corner exit</h3>
-                  <p>The mark turns to point out of the page and travels along that same diagonal, so the way it rotates and the way it moves say one thing.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+                  <p>The mark lifts, turns to point out of the page, and leaves along the line it is now pointing down &mdash; the travel runs on the glyph&rsquo;s own rotated axis, so the way it turns and the way it moves are one statement rather than two that happen to agree.</p>
+                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
     <article class="spec" data-versions="fill outline link">
@@ -2290,7 +2290,7 @@
                     <button type="button" class="btn btn--solid c-mass"><span class="track"><span class="inner"><span>Book a call</span><span aria-hidden="true">Book a call</span></span></span></button>
                   </div>
                   <h3><span class="num">120</span>Lands first</h3>
-                  <p>The same two ingredients as 119, argued from card 52 instead: one curve, DIFFERENT rungs. The label is light and lands at 200ms; the plate is heavy and is still settling at 450ms. The compound is the gap between the two arrivals, and nothing rotates.</p>
+                  <p>The same two ingredients as 119, argued from card 52 instead: one curve, DIFFERENT rungs. The label is light and lands at 200ms; the plate is heavy and is still settling at 450ms, darkening a step as it goes. The compound is the gap between the two arrivals, and nothing rotates.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -3524,21 +3524,48 @@ document.addEventListener("DOMContentLoaded", function () {
   .j-order:hover .j-order-lbl, .j-order:focus-visible .j-order-lbl{transform:translateX(4px); transition-delay:var(--d-1)}
   .j-order:hover .j-order-mark, .j-order:focus-visible .j-order-mark{transform:translateX(4px); transition-delay:var(--d-2)}
 
-  /* 78 Corner exit — the mark rotates to point out of the page and
-     travels along that same diagonal, so the direction it turns and the
-     direction it moves are the same statement. Both states carry the identical
-     function list, translate() then rotate(), in that order: swap the order and
-     the browser interpolates the composed matrices instead, and the arrow cuts
-     a straight chord rather than swinging. The 14px slot is fixed; the travel
-     borrows from the plate's own padding. */
+  /* 78 Corner exit — the mark lifts, turns to point out of the page, and
+     leaves along the line it is now pointing down.
+
+     THE VERSION BEFORE THIS ONE CLAIMED A SWING AND DREW A STRAIGHT LINE. A
+     single element interpolating translate(4px,-4px) gives x and y the same
+     curve and the same clock, so the path is a chord; sampled frame by frame,
+     x and y agreed to the decimal the whole way down. The rotation swung and
+     the travel did not, which is the one thing this card says they both do.
+
+     THREE PROPERTIES, THREE CLOCKS, STILL ONE ELEMENT. translate, rotate and
+     transform are separate animatable properties and compose in that order, so
+     each carries its own duration and delay without a wrapper span:
+
+       translate   the LIFT, straight up, and the first thing to go
+       rotate      the TURN, running alongside the lift
+       transform   the DEPARTURE — and because transform composes AFTER rotate,
+                   its translateX runs along the glyph's OWN rotated axis. The
+                   card's sentence stops being asserted in a comment and
+                   becomes geometry: it travels in the direction it points.
+
+     The departure waits one --d-1, so the first fifty milliseconds are pure
+     vertical and the path bends out to the corner from there instead of setting
+     off on the diagonal. The rest side reverses the order — the departure comes
+     home first, the lift drops in last — so the exit retraces the arc rather
+     than cutting back across it.
+
+     --e-out and not --e-quint: quint spent 3.9 of the old 4px inside the first
+     120ms of a 300ms transition and left the remaining 180ms with nothing in
+     them, which is what a 4px move on a 45° turn was doing wrong before any of
+     the above. Travel is 4.2px out and 8.2px up, about 9px of arc; the 14px
+     slot is fixed and all of it borrows from the plate's own padding. */
   .j-out .j-out-slot{position:relative; display:block; width:14px; height:14px}
   .j-out .j-out-mark{
     position:absolute; top:0; left:0;
-    transform:translate(0px,0px) rotate(0deg);
-    transition:transform var(--t-4) var(--e-quint);
+    translate:0 0; rotate:0deg; transform:translateX(0px);
+    transition:translate var(--t-2) var(--e-out) var(--d-1),
+               rotate    var(--t-3) var(--e-out) var(--d-1),
+               transform var(--t-3) var(--e-out);
   }
   .j-out:hover .j-out-mark, .j-out:focus-visible .j-out-mark{
-    transform:translate(4px,-4px) rotate(-45deg);
+    translate:0 -4px; rotate:-45deg; transform:translateX(6px);
+    transition-delay:0s, 0s, var(--d-1);
   }
 
   /* 79 Optical centre — the mark's space is reserved from the start,
@@ -4051,8 +4078,15 @@ document.addEventListener("DOMContentLoaded", function () {
      thing the eye was given. It is card 94's point about a loop applied to a
      pair: this is judged on SPEED, not on duration. The label is on --t-3 now,
      which is 110px/s, and it parks while the mark is still crossing. The mark
-     keeps --t-5 and stays the last thing moving in both directions,
-     which is the right subject for a card about the mark changing sides.
+     is on --t-4 and stays the last thing moving in both directions, which is
+     the right subject for a card about the mark changing sides.
+
+     IT WAS ON --t-5 AND THE CARD READ AS A STALL. Sampled frame by frame, the
+     enter ran 500ms end to end and the arrow was not on screen for 257 of them
+     — over half an interaction showing an empty pair of slots, which is long
+     enough to read as a fault rather than as a crossing. Dropping one rung puts
+     the whole gesture at 350ms and the dark stretch at about 160, and it costs
+     the card nothing it was using: the crossing itself is never visible.
 
      WHAT THE STAGGER COULD NOT FIX, AND WHAT DOES: the arrow used to pass over
      the label's glyphs, 14px of full overlap for about 200ms on the way in.
@@ -4076,10 +4110,15 @@ document.addEventListener("DOMContentLoaded", function () {
      so a --t-2 fade would still be visible over the type it was supposed to
      clear.
 
-     The arrival is held to --t-4 and the return to the same token one rung down,
-     which is 93% and 97% of the way home under quint — far enough that the glyph
-     lights up in its slot rather than over the label, close enough that a few
-     pixels of travel are left to see. THE ORDER SURVIVES THE DISAPPEARANCE,
+     WHEN THE ARRIVAL MAY BE LIT IS NOT A TASTE DECISION, it is the gap. The
+     mark ends 107px along and the label, having stepped 22px aside, ends 8px
+     short of it — so the glyph's box is clear of the label's last letter only
+     over the final 8px, which is 92% of the travel. Nothing may light before
+     that frame. Under quint 92% falls at 44% of the run, and --t-3 is the first
+     rung past it: the arrival is lit at 95% of the way home with 6px still to
+     cover, and the return at 98.5% one rung down. Held at --t-4 before, it lit
+     with 3.6px left and 150ms to spend on them, which is a glyph appearing
+     parked. THE ORDER SURVIVES THE DISAPPEARANCE,
      which was the risk: on the way in the label vacates and the slot it leaves
      fills afterwards; on the way out the mark goes dark first and the label is
      home before it comes back. The stagger is now read off two slots emptying
@@ -4094,14 +4133,14 @@ document.addEventListener("DOMContentLoaded", function () {
   .n-cross .n-cross-mark{transform:translateX(0)}
   .n-cross .n-cross-lbl{transition:transform var(--t-3) var(--e-quint)}
   .n-cross .n-cross-mark{position:relative; display:block; width:14px; height:14px;
-    transition:transform var(--t-5) var(--e-quint)}
+    transition:transform var(--t-4) var(--e-quint)}
   .n-cross .n-cross-glyph{position:absolute; inset:0}
   /* rest — the exit: the mark comes home, then the label follows it back */
   .n-cross .n-cross-mark{transition-delay:0s}
   .n-cross .n-cross-lbl{transition-delay:var(--d-1)}
   /* rest — the exit again: the arrival layer goes dark as the mark breaks away,
      the departure layer is lit again once it is nearly home. */
-  .n-cross .n-cross-glyph--go{opacity:1; transition:opacity var(--t-1) var(--e-out) var(--t-4)}
+  .n-cross .n-cross-glyph--go{opacity:1; transition:opacity var(--t-1) var(--e-out) var(--t-3)}
   .n-cross .n-cross-glyph--land{opacity:0; transition:opacity var(--t-1) var(--e-out)}
   /* Gated on the measure: without a real number the label would shift and the
      mark would stand still, which is worse than doing nothing. */
@@ -4116,7 +4155,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .n-cross.n-is-set:hover .n-cross-glyph--go,
   .n-cross.n-is-set:focus-visible .n-cross-glyph--go{opacity:0; transition-delay:0s}
   .n-cross.n-is-set:hover .n-cross-glyph--land,
-  .n-cross.n-is-set:focus-visible .n-cross-glyph--land{opacity:1; transition-delay:var(--t-4)}
+  .n-cross.n-is-set:focus-visible .n-cross-glyph--land{opacity:1; transition-delay:var(--t-3)}
 
   /* 93 Pieces join — two plates converge into one capsule. Card 52 opens a
      three-pixel gap between label and block and calls them two masses; this is
@@ -5885,6 +5924,22 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.v-grow:hover,
   .btn.v-grow:focus-visible{transform:scale(1.02) rotate(0.001deg)}
   .btn.v-grow:active{transform:scale(.99) rotate(0.001deg); transition-duration:var(--t-1)}
+  /* The label carries the exact inverse on the same curve and the same rung, so
+     parent x child is identity at the label's centre and the BACKGROUND is the
+     only thing that changes size. The plate is what the card is about; two
+     percent is not enough movement to buy by resampling the type for it, and a
+     label that grows with its plate is a different effect wearing this one's
+     name. 1/1.02 and 1/.99, to eight places, because a rounded inverse leaves
+     the type drifting a fraction of a pixel at the hover's far end.
+     THERE IS NO LINK VERSION: a link has no plate to grow, so the mechanism
+     has nothing to act on and the study declares fill and outline only. */
+  .btn.v-grow .lbl{
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .btn.v-grow:hover .lbl,
+  .btn.v-grow:focus-visible .lbl{transform:scale(.98039216) rotate(0.001deg)}
+  .btn.v-grow:active .lbl{transform:scale(1.01010101) rotate(0.001deg); transition-duration:var(--t-1)}
 
   /* 02 Small shrink — the same gesture inverted, on the same label, and the
      one you can actually put in a row. It never crosses its own boundary, so a
@@ -5901,6 +5956,19 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.v-shrink:hover,
   .btn.v-shrink:focus-visible{transform:scale(.98) rotate(0.001deg)}
   .btn.v-shrink:active{transform:scale(.96) rotate(0.001deg); transition-duration:var(--t-1)}
+  /* Counter-scaled the same way as 01, and for the same reason — the pair only
+     compares if the two differ in the one thing they are about. It matters more
+     on this side: a label shrinking with its plate is the reading that makes
+     the withdrawal look like the button retreating from the pointer, and the
+     plate alone is the honest version of the argument the copy makes.
+     Fill and outline only, for 01's reason. */
+  .btn.v-shrink .lbl{
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .btn.v-shrink:hover .lbl,
+  .btn.v-shrink:focus-visible .lbl{transform:scale(1.02040816) rotate(0.001deg)}
+  .btn.v-shrink:active .lbl{transform:scale(1.04166667) rotate(0.001deg); transition-duration:var(--t-1)}
 
   /* 04 Bloom — the first light on this page that leaves the plate. Cards 31,
      32, 33 and 42 all work inside the boundary: a blur under the surface, a
@@ -6996,13 +7064,24 @@ document.addEventListener("DOMContentLoaded", function () {
      One curve, different rungs. The label is light and lands on --t-3; the
      plate is heavy and is still settling on --t-5. The compound is the gap
      between the two arrivals, which is why nothing here rotates and there is
-     no spring anywhere — the whole effect is the timing. */
-  .c-mass{transition:transform var(--t-5) var(--e-quint)}
+     no spring anywhere — the whole effect is the timing.
+
+     THE PLATE ALSO DARKENS, and it is on the plate's rung and not its own. A
+     third arrival time would cost the card the one thing it is for; a tone that
+     lands with the mass reads as the same heavy object settling, so the pair of
+     arrivals stays a pair. The step is card 10's, mixed the same way — the
+     hover colour ten per cent of the way to the canvas — so a swatch chosen in
+     the toolbar darkens with the plate instead of being ignored by it, and the
+     press keeps the whole thing on --t-1 so the tone answers as fast as the
+     scale does. */
+  .c-mass{transition:transform var(--t-5) var(--e-quint),
+                     background-color var(--t-5) var(--e-quint)}
   .c-mass .track{display:block; overflow:hidden; height:1.25em}
   .c-mass .inner{display:block; transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-3) var(--e-quint)}
   .c-mass .inner span{display:block; line-height:1.25}
-  .c-mass:hover, .c-mass:focus-visible{transform:scale(.964) rotate(0.001deg)}
+  .c-mass:hover, .c-mass:focus-visible{transform:scale(.964) rotate(0.001deg);
+    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .c-mass:hover .inner,
   .c-mass:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg)}
   .c-mass:active{transform:scale(.945) rotate(0.001deg); transition-duration:var(--t-1)}
@@ -9493,7 +9572,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","112":"https://framer.com/m/LabelInvert-6hT78F.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","118":"https://framer.com/m/UnderLoad-AZpSNc.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","18":"https://framer.com/m/Caret-jaEoJL.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/RigidType-uIZjQw.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","88":"https://framer.com/m/OverflowLoop-3a9HPU.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","99":"https://framer.com/m/SpriteArrow-qOQ29q.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"01":"5ad3b47fee570887","02":"e73efecb61ad0417","04":"9fecd5686e812d5a","05":"3a0af21d71eb2c94","06":"0c5864766e4df772","07":"daebd5a94a35b92e","08":"e04301faafe4e6e3","09":"0b19bfc0646de13b","10":"1d4299eafd8c0e67","100":"e6c2cb041e771802","101":"720c21cf40e32d81","102":"65e4e21ea0962814","103":"afb70091ea1acc53","104":"d5dc272b82629fbb","105":"bb21893cf76321b4","109":"7e21a41da9b10a1f","11":"7fab66fd520f8d1c","110":"47c76be10b2d3757","111":"944cad916ce39117","112":"def361e120bf4083","113":"33299379f21fc46f","115":"bc7f0f54e634f31c","116":"eb1942b3d3447a59","117":"9a3bf499e8c1337a","118":"a99bb65e2ee21890","119":"ea2440b369c97f90","12":"5803d6d21455cd01","120":"912f0a55e056a1ec","121":"f9226aca0035fe6d","122":"2a83eb3b141f2982","123":"a503fd7a2d835699","124":"6fc4f4c3eec50db6","13":"6dd5f181167d4c02","14":"251daaa82430fd4e","15":"51a402c6b62acfed","16":"2f6ad7b4488c00a5","17":"d8b7355680be2a50","18":"71e3908cf131369f","19":"3b2f979354830a1e","20":"e9101d28da149120","21":"a6dc3ba69c73d366","22":"b48f48cf6eded820","23":"5613c77751289e20","24":"b8ba06ec3cd73d54","25":"f4d1dc83429ac4c6","26":"d4994a3f03b9574c","27":"00302f360fcf0d57","28":"5d8ad11951265616","29":"c967604c6f7025a4","30":"297440ee9e43d753","31":"88d9cb257949cfd7","32":"ded692f45e6a2f49","33":"39cdc3a6c509aff5","34":"3c1288acd63699b0","35":"95cd41c372b2d0cf","36":"446e080273ac77aa","38":"6569515d41e6e462","39":"bb5ec90bdb503248","40":"bb979167f9731077","41":"a7be8ee0d5b69cea","42":"3cdb244a88e24078","43":"0059394d9ddcb2ca","44":"11bef83113b47c59","45":"2e8470dcdc574d95","46":"99e10e3b26533156","47":"f58f7603815d21f3","48":"38c7a32662032d65","49":"6872c91050ff23db","50":"69a431dd39d1ed75","51":"e7a3bc65792e39b2","52":"15d05884ef3e8d6d","54":"c8aac49739f0ecab","55":"defb43289fc13395","56":"977a2193fb4094a9","57":"45d0a5b48037f484","59":"287addcf64ec1d38","60":"1d28c5a9827973a6","61":"0b03edbe4968e28f","62":"f00cad116565f164","63":"f52702164b198d36","64":"784cae9ef5330bf0","65":"f63b9ff99f3e097d","66":"50054de30d09c127","67":"fde94f341f490399","68":"64c4c545dc883b33","69":"569ecb941474d922","70":"b5ff753d328811c7","72":"3a800a6a43d54c94","73":"0ba66fc07635f63e","74":"ba245879fec6f5df","75":"89cdce77570ba3ec","77":"e2f14717a14ed077","78":"35fd95f0248fea3a","79":"002a33e4aaf97fd3","80":"6955d44776e806ce","81":"67e301a5fa0c0112","82":"405dca3089afdf0f","83":"776f5560cae1f18d","84":"7e44c61d2cffe304","85":"b7d0da2a8e4f0bf9","86":"de6b6dd69965723a","88":"4e635811d54f2bb4","91":"04990cc3ee70865a","92":"5107b4b4b465b2f4","93":"d67dbfeb91aacb60","94":"0db5e8f2bd1e5160","96":"e1057b1730dd0ca7","97":"164e8a429b1a0444","98":"da23b3609386f5a1","99":"da08a4aa2c4b5cd1"}</script>
+<script type="application/json" id="bhl-framer-sync">{"01":"39b0743b2e97b7fe","02":"b6fb9d117ed5d0a8","04":"052d9f3049595c15","05":"6a6ef3ff53f05d11","06":"d7fbdb752067a897","07":"30d7e81bcb291444","08":"b18fb05039f42c1b","09":"a58dd86120011280","10":"6b70676fec9bb069","100":"3b62648f7228625f","101":"324427910de0baf2","102":"60045aa3a0e2966e","103":"1d6584e94e3d759a","104":"85d41b21c927fd1b","105":"86b10ab9984d0f2d","109":"31705cf1adade5df","11":"2df4e5d6c20ada25","110":"bf7e00d6831c06fd","111":"479dc73e5534c476","112":"3159b44123691b7d","113":"911e2f58bb971b3d","115":"bb7c54d49306df25","116":"2b7719648aca1d80","117":"6bebdca6eca354aa","118":"9425eb98c9db348c","119":"cff9b05a71f6adfd","12":"7649aaa1ce4a10bd","120":"43c35d58dc2a35f0","121":"ce7dd6de6445c072","122":"e5f5722f90dea966","123":"86388659a4264785","124":"ef3f7543edc51700","13":"061685f49319a585","14":"2096b32de4bb6059","15":"33bc52452d8f65e4","16":"4d57eabe7c7769da","17":"f8c8d764f788ea0c","18":"05db475d16956a07","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"8af10e080edcb135","22":"3c2f66b2d0dc001c","23":"8697bc21b15fe94a","24":"9d50756385d7de1d","25":"08d2d9129eb0f983","26":"f355f7982de387c3","27":"fe8b324c0aa6c3f5","28":"7f4a82c0a08fff8d","29":"6cf478bfb81de238","30":"24519cf7324357d1","31":"6d9a0e5bf7fffb34","32":"73e0b150704da705","33":"99ed5894ff9842d4","34":"961c6b4f376b0fc7","35":"2f22e2e56b7cfd79","36":"35f391fab5986376","38":"66bc781c50a135d5","39":"5de9785acd540790","40":"fec7a43a92e2b106","41":"815604ea00244430","42":"08ffe91005d84371","43":"0a2be8889390ef32","44":"3a40b17528135165","45":"097428f64d35838b","46":"c182b57339f42759","47":"3b5c3ca48d390583","48":"f9a398fbb446f0e7","49":"43cb7dbbb5fbcf16","50":"5ad61f99d0bb7db6","51":"ad62aeaec27520ee","52":"ae71bb2b3e131413","54":"8205a8bbf937a5d0","55":"73b1fa94c0d15025","56":"71935e3073f02ff9","57":"6250a732a285180d","59":"3c2cec803d63d7a3","60":"eda487992b495274","61":"4af340b875abca83","62":"1f3e32df5dc6e4f3","63":"fc16de7400fc778f","64":"6a7bf547ba6428ad","65":"bb074d9ff48c8979","66":"151789399842672e","67":"d8d21cdad6baca01","68":"e5b94c1bcbf46bd8","69":"c40c2f7d5f778fd6","70":"8c925c7ea2923c09","72":"17ed17abd9424ade","73":"9a5df520b53b43ef","74":"306722b8cf5faedd","75":"159a306c94d27a74","77":"d21b44c7cbc9144b","78":"71d8ff0f652c7875","79":"16647d36cdf267ef","80":"2d1a8f1a2f96496b","81":"57118a2fd2038bae","82":"a6f21a3fe2557942","83":"bc409b9d7f56097c","84":"d7a0c5ec71b946ee","85":"7c1b6a1e8fe5c4c6","86":"81284da018e963e7","88":"fb060889432376bc","91":"f5be1423169132de","92":"ffdf6bc941049f64","93":"380580cf40d13669","94":"7ad7179bd5b1b858","96":"3ef9937c85d46054","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2","99":"8868f8cf7d171bca"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 </body>
