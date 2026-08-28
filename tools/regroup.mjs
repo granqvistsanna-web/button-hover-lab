@@ -32,7 +32,7 @@ const GROUPS = [
   ['char',     'Label, per character'],
   ['icon',     'Icon'],
   ['material', 'Material and light'],
-  ['row',      'Buttons in a row'],
+  ['row',      'Button groups'],
 ];
 
 // The two material aliases were declared on the SECTION, which made a card's
@@ -165,7 +165,7 @@ const GROUP_OF = {
   'Coarse dither': 'material',
   'Bevel flip': 'material',
 
-  // Buttons in a row — siblings react to the one you are on.
+  // Button groups — siblings react to the one you are on.
   'Others recede': 'row',
   'Travelling rule': 'row',
   'Conserved compression': 'row',

@@ -14,7 +14,7 @@
     "name": "Small grow",
     "comp": "SmallGrow",
     "file": "SmallGrow.tsx",
-    "hash": "92507bd39db217c9",
+    "hash": "5ad3b47fee570887",
     "id": "cXdZkij",
     "url": "https://framer.com/m/SmallGrow-5RpDrp.js"
   },
@@ -33,7 +33,7 @@
     "name": "Small shrink",
     "comp": "SmallShrink",
     "file": "SmallShrink.tsx",
-    "hash": "1f63ad2786bb6355",
+    "hash": "e73efecb61ad0417",
     "id": "TJXVg7z",
     "url": "https://framer.com/m/SmallShrink-uXOo62.js"
   },
@@ -54,7 +54,8 @@
     "file": "PointerGrow.tsx",
     "hash": "65115214d7f5f993",
     "id": "y7HOtes",
-    "url": "https://framer.com/m/PointerGrow-ME4MH3.js"
+    "url": "https://framer.com/m/PointerGrow-ME4MH3.js",
+    "retired": true
   },
   {
     "num": "04",
@@ -71,7 +72,7 @@
     "name": "Bloom",
     "comp": "Bloom",
     "file": "Bloom.tsx",
-    "hash": "15a5de87473494e0",
+    "hash": "9fecd5686e812d5a",
     "id": "aCScK4P",
     "url": "https://framer.com/m/Bloom-G3JcE2.js"
   },
@@ -90,7 +91,7 @@
     "name": "Inner light",
     "comp": "InnerLight",
     "file": "InnerLight.tsx",
-    "hash": "879b4dcaed164d5a",
+    "hash": "3a0af21d71eb2c94",
     "id": "oDQNH_X",
     "url": "https://framer.com/m/InnerLight-5G2vNs.js"
   },
@@ -109,7 +110,7 @@
     "name": "Idle breath",
     "comp": "IdleBreath",
     "file": "IdleBreath.tsx",
-    "hash": "af6872c5b0c9acde",
+    "hash": "0c5864766e4df772",
     "id": "gPEZtcs",
     "url": "https://framer.com/m/IdleBreath-rbxnj2.js"
   },
@@ -118,7 +119,7 @@
     "name": "Directional sweep",
     "comp": "DirectionalSweep",
     "file": "DirectionalSweep.tsx",
-    "hash": "27c183ccbea6f598",
+    "hash": "daebd5a94a35b92e",
     "id": "shoZdod",
     "url": "https://framer.com/m/DirectionalSweep-dlV5mD.js"
   },
@@ -138,7 +139,7 @@
     "name": "Shutter",
     "comp": "Shutter",
     "file": "Shutter.tsx",
-    "hash": "e82870eea53a8cd9",
+    "hash": "e04301faafe4e6e3",
     "id": "HdOeXZK",
     "url": "https://framer.com/m/Shutter-8E8j3M.js"
   },
@@ -147,7 +148,7 @@
     "name": "Ink fill",
     "comp": "InkFill",
     "file": "InkFill.tsx",
-    "hash": "ffe4aeb1610dc1ae",
+    "hash": "0b19bfc0646de13b",
     "id": "jtNca0O",
     "url": "https://framer.com/m/InkFill-GW6yhu.js"
   },
@@ -156,7 +157,7 @@
     "name": "Sheen",
     "comp": "Sheen",
     "file": "Sheen.tsx",
-    "hash": "ede2ed708911227d",
+    "hash": "1d4299eafd8c0e67",
     "id": "LiiEjhn",
     "url": "https://framer.com/m/Sheen-eN4I5o.js"
   },
@@ -175,7 +176,7 @@
     "name": "Plus to X",
     "comp": "PlusToX",
     "file": "PlusToX.tsx",
-    "hash": "4e31d76466883c66",
+    "hash": "e6c2cb041e771802",
     "id": "e_FagEn",
     "url": "https://framer.com/m/PlusToX-mkFexy.js"
   },
@@ -194,7 +195,7 @@
     "name": "Coarse dither",
     "comp": "CoarseDither",
     "file": "CoarseDither.tsx",
-    "hash": "8f2cef08eb1211e0",
+    "hash": "720c21cf40e32d81",
     "id": "NixgRzo",
     "url": "https://framer.com/m/CoarseDither-xphCi7.js"
   },
@@ -203,7 +204,7 @@
     "name": "Split-flap",
     "comp": "SplitFlap",
     "file": "SplitFlap.tsx",
-    "hash": "dce33381a12e665f",
+    "hash": "65e4e21ea0962814",
     "id": "DyASXZH",
     "url": "https://framer.com/m/SplitFlap-TL6aml.js"
   },
@@ -222,7 +223,7 @@
     "name": "Needle swing",
     "comp": "NeedleSwing",
     "file": "NeedleSwing.tsx",
-    "hash": "f946c8d20c4cfeb5",
+    "hash": "afb70091ea1acc53",
     "id": "Wc_EVkn",
     "url": "https://framer.com/m/NeedleSwing-tGB1s7.js"
   },
@@ -241,7 +242,7 @@
     "name": "Bevel flip",
     "comp": "BevelFlip",
     "file": "BevelFlip.tsx",
-    "hash": "673b97863488a6aa",
+    "hash": "d5dc272b82629fbb",
     "id": "qAT9qNr",
     "url": "https://framer.com/m/BevelFlip-HI5Wtd.js"
   },
@@ -260,7 +261,7 @@
     "name": "Dotted focus",
     "comp": "DottedFocus",
     "file": "DottedFocus.tsx",
-    "hash": "6af5359cc34833a9",
+    "hash": "bb21893cf76321b4",
     "id": "FT_xqLE",
     "url": "https://framer.com/m/DottedFocus-f5LnRJ.js"
   },
@@ -279,7 +280,7 @@
     "name": "Fixed light",
     "comp": "FixedLight",
     "file": "FixedLight.tsx",
-    "hash": "ea11fe2b13668506",
+    "hash": "7e21a41da9b10a1f",
     "id": "fkBqVsy",
     "url": "https://framer.com/m/FixedLight-NwHXW1.js"
   },
@@ -288,7 +289,7 @@
     "name": "Arrow relay",
     "comp": "ArrowRelay",
     "file": "ArrowRelay.tsx",
-    "hash": "5872ce94c53354e6",
+    "hash": "7fab66fd520f8d1c",
     "id": "wvkpMY8",
     "url": "https://framer.com/m/ArrowRelay-NcEpRz.js"
   },
@@ -307,7 +308,7 @@
     "name": "Measured ripple",
     "comp": "MeasuredRipple",
     "file": "MeasuredRipple.tsx",
-    "hash": "d7d0770df7fd040a",
+    "hash": "47c76be10b2d3757",
     "id": "KZjqHoy",
     "url": "https://framer.com/m/MeasuredRipple-b5XOMp.js"
   },
@@ -326,7 +327,7 @@
     "name": "Press fill",
     "comp": "PressFill",
     "file": "PressFill.tsx",
-    "hash": "728f10479e11c086",
+    "hash": "944cad916ce39117",
     "id": "XPpTlti",
     "url": "https://framer.com/m/PressFill-lXFzHB.js"
   },
@@ -345,7 +346,7 @@
     "name": "Label invert",
     "comp": "LabelInvert",
     "file": "LabelInvert.tsx",
-    "hash": "af4eccc4f326aa78",
+    "hash": "def361e120bf4083",
     "id": "ntXKXRg",
     "url": "https://framer.com/m/LabelInvert-6hT78F.js"
   },
@@ -364,7 +365,7 @@
     "name": "Honest progress",
     "comp": "HonestProgress",
     "file": "HonestProgress.tsx",
-    "hash": "1d8812514c710715",
+    "hash": "33299379f21fc46f",
     "id": "USA_0nJ",
     "url": "https://framer.com/m/HonestProgress-yKMem2.js"
   },
@@ -385,7 +386,8 @@
     "file": "SlabTilt.tsx",
     "hash": "e5f70ea0175071de",
     "id": "lMderKT",
-    "url": "https://framer.com/m/SlabTilt-EhjPDw.js"
+    "url": "https://framer.com/m/SlabTilt-EhjPDw.js",
+    "retired": true
   },
   {
     "num": "115",
@@ -402,7 +404,7 @@
     "name": "Word bow",
     "comp": "WordBow",
     "file": "WordBow.tsx",
-    "hash": "8609bf8d1022b0c0",
+    "hash": "bc7f0f54e634f31c",
     "id": "ffvPKdP",
     "url": "https://framer.com/m/WordBow-FhvP9i.js"
   },
@@ -421,7 +423,7 @@
     "name": "Stack fan",
     "comp": "StackFan",
     "file": "StackFan.tsx",
-    "hash": "8a44b61e0b5ea19c",
+    "hash": "eb1942b3d3447a59",
     "id": "YsyyN09",
     "url": "https://framer.com/m/StackFan-9jMPfx.js"
   },
@@ -440,7 +442,7 @@
     "name": "Fixed shadow",
     "comp": "FixedShadow",
     "file": "FixedShadow.tsx",
-    "hash": "39b58e91fd4a8793",
+    "hash": "9a3bf499e8c1337a",
     "id": "A8SsgLU",
     "url": "https://framer.com/m/FixedShadow-4DP8tM.js"
   },
@@ -459,7 +461,7 @@
     "name": "Dot to arrow",
     "comp": "DotToArrow",
     "file": "DotToArrow.tsx",
-    "hash": "6db8171d532da887",
+    "hash": "5803d6d21455cd01",
     "id": "PZLsdhi",
     "url": "https://framer.com/m/DotToArrow-MO7en3.js"
   },
@@ -468,7 +470,7 @@
     "name": "Crop marks",
     "comp": "CropMarks",
     "file": "CropMarks.tsx",
-    "hash": "a61b93dc8db35fd1",
+    "hash": "6dd5f181167d4c02",
     "id": "NHrbnsb",
     "url": "https://framer.com/m/CropMarks-fjWU0F.js"
   },
@@ -477,7 +479,7 @@
     "name": "Directional underline",
     "comp": "DirectionalUnderline",
     "file": "DirectionalUnderline.tsx",
-    "hash": "508db79c365c62b4",
+    "hash": "251daaa82430fd4e",
     "id": "Kk20xgr",
     "url": "https://framer.com/m/DirectionalUnderline-IatvfH.js"
   },
@@ -486,7 +488,7 @@
     "name": "Label roll",
     "comp": "LabelRoll",
     "file": "LabelRoll.tsx",
-    "hash": "c4cd036a2249faf9",
+    "hash": "eec56cc0df309fb2",
     "id": "QxhgXtv",
     "url": "https://framer.com/m/LabelRoll-p0eOmG.js"
   },
@@ -505,7 +507,7 @@
     "name": "Second line",
     "comp": "SecondLine",
     "file": "SecondLine.tsx",
-    "hash": "be0ad1f8c5c6459f",
+    "hash": "2f6ad7b4488c00a5",
     "id": "Acz_rE8",
     "url": "https://framer.com/m/SecondLine-qDloVf.js"
   },
@@ -524,7 +526,7 @@
     "name": "Ellipsis arrow",
     "comp": "EllipsisArrow",
     "file": "EllipsisArrow.tsx",
-    "hash": "3e70cc3cfcd053c8",
+    "hash": "d8b7355680be2a50",
     "id": "tADZTwB",
     "url": "https://framer.com/m/EllipsisArrow-vzwuNQ.js"
   },
@@ -543,7 +545,7 @@
     "name": "Caret",
     "comp": "Caret",
     "file": "Caret.tsx",
-    "hash": "3ae072b6b1534b6a",
+    "hash": "71e3908cf131369f",
     "id": "SXxQo0c",
     "url": "https://framer.com/m/Caret-jaEoJL.js"
   },
@@ -562,7 +564,7 @@
     "name": "Overflow only",
     "comp": "OverflowOnly",
     "file": "OverflowOnly.tsx",
-    "hash": "cb9fd50e1381d8c9",
+    "hash": "3b2f979354830a1e",
     "id": "gmzaAko",
     "url": "https://framer.com/m/OverflowOnly-4AJUwh.js"
   },
@@ -592,7 +594,7 @@
     "name": "Letter roll",
     "comp": "LetterRoll",
     "file": "LetterRoll.tsx",
-    "hash": "5c7330d1cb97cee4",
+    "hash": "e9101d28da149120",
     "id": "JgWhZS3",
     "url": "https://framer.com/m/LetterRoll-n85vF0.js"
   },
@@ -611,7 +613,7 @@
     "name": "Letter lift",
     "comp": "LetterLift",
     "file": "LetterLift.tsx",
-    "hash": "c45f4baef20773c3",
+    "hash": "a6dc3ba69c73d366",
     "id": "zPnJ_KR",
     "url": "https://framer.com/m/LetterLift-zzLBHY.js"
   },
@@ -630,7 +632,7 @@
     "name": "Overshoot",
     "comp": "Overshoot",
     "file": "Overshoot.tsx",
-    "hash": "3452045ddcb5039e",
+    "hash": "b48f48cf6eded820",
     "id": "ulMMcQp",
     "url": "https://framer.com/m/Overshoot-3MqZJ1.js"
   },
@@ -660,7 +662,7 @@
     "name": "Word roll",
     "comp": "WordRoll",
     "file": "WordRoll.tsx",
-    "hash": "ec4b387646cb804b",
+    "hash": "5613c77751289e20",
     "id": "hBlwoY0",
     "url": "https://framer.com/m/WordRoll-B2vdSb.js"
   },
@@ -679,7 +681,7 @@
     "name": "Middle out",
     "comp": "MiddleOut",
     "file": "MiddleOut.tsx",
-    "hash": "782ce34f56058c5a",
+    "hash": "b8ba06ec3cd73d54",
     "id": "PwsNIAS",
     "url": "https://framer.com/m/MiddleOut-B90dcq.js"
   },
@@ -698,7 +700,7 @@
     "name": "Random stagger",
     "comp": "RandomStagger",
     "file": "RandomStagger.tsx",
-    "hash": "226dff75272323fa",
+    "hash": "f4d1dc83429ac4c6",
     "id": "XTkQMSt",
     "url": "https://framer.com/m/RandomStagger-XvyEO0.js"
   },
@@ -707,7 +709,7 @@
     "name": "Weight wave",
     "comp": "WeightWave",
     "file": "WeightWave.tsx",
-    "hash": "bab80ef583b32a98",
+    "hash": "d4994a3f03b9574c",
     "id": "eq_MniK",
     "url": "https://framer.com/m/WeightWave-w7rPq4.js"
   },
@@ -716,7 +718,7 @@
     "name": "Drawn outline",
     "comp": "DrawnOutline",
     "file": "DrawnOutline.tsx",
-    "hash": "0ac33a6f81e6d553",
+    "hash": "00302f360fcf0d57",
     "id": "q2li4Fz",
     "url": "https://framer.com/m/DrawnOutline-cmxkyg.js"
   },
@@ -725,7 +727,7 @@
     "name": "Chamfered corner",
     "comp": "ChamferedCorner",
     "file": "ChamferedCorner.tsx",
-    "hash": "d99702ca5bedbfc3",
+    "hash": "5d8ad11951265616",
     "id": "jLl3Fb3",
     "url": "https://framer.com/m/ChamferedCorner-lvjej9.js"
   },
@@ -734,7 +736,7 @@
     "name": "In register",
     "comp": "InRegister",
     "file": "InRegister.tsx",
-    "hash": "d951e1ce9ce0b562",
+    "hash": "c967604c6f7025a4",
     "id": "iYLueK8",
     "url": "https://framer.com/m/InRegister-QpqTov.js"
   },
@@ -743,7 +745,7 @@
     "name": "Counter",
     "comp": "Counter",
     "file": "Counter.tsx",
-    "hash": "d36e9d469104fec6",
+    "hash": "297440ee9e43d753",
     "id": "toueHrX",
     "url": "https://framer.com/m/Counter-R61N2D.js"
   },
@@ -752,7 +754,7 @@
     "name": "Frosted glass",
     "comp": "FrostedGlass",
     "file": "FrostedGlass.tsx",
-    "hash": "8c61043a6580aef5",
+    "hash": "88d9cb257949cfd7",
     "id": "PM9fXQu",
     "url": "https://framer.com/m/FrostedGlass-7KQ8UZ.js"
   },
@@ -761,7 +763,7 @@
     "name": "Backlight",
     "comp": "Backlight",
     "file": "Backlight.tsx",
-    "hash": "6822edc9aede84aa",
+    "hash": "ded692f45e6a2f49",
     "id": "eiaQCQI",
     "url": "https://framer.com/m/Backlight-68rjpP.js"
   },
@@ -780,7 +782,7 @@
     "name": "Lantern",
     "comp": "Lantern",
     "file": "Lantern.tsx",
-    "hash": "c22f6ce5683b0356",
+    "hash": "39cdc3a6c509aff5",
     "id": "ScugwGb",
     "url": "https://framer.com/m/Lantern-ha7Vi5.js"
   },
@@ -799,7 +801,7 @@
     "name": "Light flip",
     "comp": "LightFlip",
     "file": "LightFlip.tsx",
-    "hash": "85be69c66b3f7bc8",
+    "hash": "3c1288acd63699b0",
     "id": "W8BCmdC",
     "url": "https://framer.com/m/LightFlip-Qxmx4k.js"
   },
@@ -818,7 +820,7 @@
     "name": "CRT converge",
     "comp": "CRTConverge",
     "file": "CRTConverge.tsx",
-    "hash": "8ae2fbc385756c02",
+    "hash": "95cd41c372b2d0cf",
     "id": "GLJHXLM",
     "url": "https://framer.com/m/CRTConverge-42JlA3.js"
   },
@@ -837,7 +839,7 @@
     "name": "Sprite swap",
     "comp": "SpriteSwap",
     "file": "SpriteSwap.tsx",
-    "hash": "286d0e6255213074",
+    "hash": "446e080273ac77aa",
     "id": "gHXCfGt",
     "url": "https://framer.com/m/SpriteSwap-rN9hP9.js"
   },
@@ -848,7 +850,8 @@
     "file": "ItPrints.tsx",
     "hash": "c3f94c3ed5770880",
     "id": "g8vMM_N",
-    "url": "https://framer.com/m/ItPrints-d0SyuT.js"
+    "url": "https://framer.com/m/ItPrints-d0SyuT.js",
+    "retired": true
   },
   {
     "num": "37",
@@ -876,7 +879,7 @@
     "name": "Tracking trade",
     "comp": "TrackingTrade",
     "file": "TrackingTrade.tsx",
-    "hash": "5603051c5adb90d0",
+    "hash": "6569515d41e6e462",
     "id": "K1ITtjX",
     "url": "https://framer.com/m/TrackingTrade-Fj2mCp.js"
   },
@@ -895,7 +898,7 @@
     "name": "Centre underline",
     "comp": "CentreUnderline",
     "file": "CentreUnderline.tsx",
-    "hash": "c015c6674459d787",
+    "hash": "bb5ec90bdb503248",
     "id": "IApkGEI",
     "url": "https://framer.com/m/CentreUnderline-cONb3R.js"
   },
@@ -904,7 +907,7 @@
     "name": "Diagonal radius",
     "comp": "DiagonalRadius",
     "file": "DiagonalRadius.tsx",
-    "hash": "caf9aac7f8d1e8fb",
+    "hash": "bb979167f9731077",
     "id": "OI9M5kz",
     "url": "https://framer.com/m/DiagonalRadius-QprZXR.js"
   },
@@ -923,7 +926,7 @@
     "name": "Inset fill",
     "comp": "InsetFill",
     "file": "InsetFill.tsx",
-    "hash": "b7b30dc79d4b471e",
+    "hash": "a7be8ee0d5b69cea",
     "id": "FAWbmag",
     "url": "https://framer.com/m/InsetFill-iP3HaW.js"
   },
@@ -932,7 +935,7 @@
     "name": "Edge light",
     "comp": "EdgeLight",
     "file": "EdgeLight.tsx",
-    "hash": "043182bedc3a0d31",
+    "hash": "3cdb244a88e24078",
     "id": "UZyindW",
     "url": "https://framer.com/m/EdgeLight-eEskv2.js"
   },
@@ -951,7 +954,7 @@
     "name": "Keycap",
     "comp": "Keycap",
     "file": "Keycap.tsx",
-    "hash": "0aaca8c2fab79a2f",
+    "hash": "0059394d9ddcb2ca",
     "id": "sqJwqC_",
     "url": "https://framer.com/m/Keycap-UCXvh9.js"
   },
@@ -960,7 +963,7 @@
     "name": "Knurling",
     "comp": "Knurling",
     "file": "Knurling.tsx",
-    "hash": "0f57331f80f79a54",
+    "hash": "11bef83113b47c59",
     "id": "eP0ZwNm",
     "url": "https://framer.com/m/Knurling-8R1JoN.js"
   },
@@ -969,7 +972,7 @@
     "name": "Deboss",
     "comp": "Deboss",
     "file": "Deboss.tsx",
-    "hash": "4254c1c8f828e56a",
+    "hash": "2e8470dcdc574d95",
     "id": "YUvzHp3",
     "url": "https://framer.com/m/Deboss-n6GzCh.js"
   },
@@ -988,7 +991,7 @@
     "name": "Line gauge",
     "comp": "LineGauge",
     "file": "LineGauge.tsx",
-    "hash": "d921e747cd2c72e0",
+    "hash": "99e10e3b26533156",
     "id": "t08MSyo",
     "url": "https://framer.com/m/LineGauge-Y5x2vf.js"
   },
@@ -1007,7 +1010,7 @@
     "name": "Shortcut plate",
     "comp": "ShortcutPlate",
     "file": "ShortcutPlate.tsx",
-    "hash": "8beb9d72b7993b88",
+    "hash": "f58f7603815d21f3",
     "id": "nKSTs5E",
     "url": "https://framer.com/m/ShortcutPlate-Mp5c1f.js"
   },
@@ -1016,7 +1019,7 @@
     "name": "Continuous corners",
     "comp": "ContinuousCorners",
     "file": "ContinuousCorners.tsx",
-    "hash": "e8784573b6983220",
+    "hash": "38c7a32662032d65",
     "id": "CLgJ0B3",
     "url": "https://framer.com/m/ContinuousCorners-Mfkc9u.js"
   },
@@ -1025,7 +1028,7 @@
     "name": "Elevation step",
     "comp": "ElevationStep",
     "file": "ElevationStep.tsx",
-    "hash": "2941dde682599eef",
+    "hash": "6872c91050ff23db",
     "id": "Vkcwb1a",
     "url": "https://framer.com/m/ElevationStep-AKmCza.js"
   },
@@ -1034,7 +1037,7 @@
     "name": "Magnetic",
     "comp": "Magnetic",
     "file": "Magnetic.tsx",
-    "hash": "a933ed4716f15b45",
+    "hash": "69a431dd39d1ed75",
     "id": "Fynt5Ez",
     "url": "https://framer.com/m/Magnetic-SmTIHx.js"
   },
@@ -1053,7 +1056,7 @@
     "name": "Rigid type",
     "comp": "RigidType",
     "file": "RigidType.tsx",
-    "hash": "561ef169aa56db94",
+    "hash": "e7a3bc65792e39b2",
     "id": "DGGVysf",
     "url": "https://framer.com/m/RigidType-uIZjQw.js"
   },
@@ -1062,7 +1065,7 @@
     "name": "Two masses",
     "comp": "TwoMasses",
     "file": "TwoMasses.tsx",
-    "hash": "c98f6b5246cd145b",
+    "hash": "15d05884ef3e8d6d",
     "id": "zgJW3fX",
     "url": "https://framer.com/m/TwoMasses-Sb7Tcx.js"
   },
@@ -1083,14 +1086,15 @@
     "file": "Settle.tsx",
     "hash": "74f48c73abbee34c",
     "id": "Pyo5mlv",
-    "url": "https://framer.com/m/Settle-tqN4oW.js"
+    "url": "https://framer.com/m/Settle-tqN4oW.js",
+    "retired": true
   },
   {
     "num": "54",
     "name": "Anticipation",
     "comp": "Anticipation",
     "file": "Anticipation.tsx",
-    "hash": "7c6cc8d275f0564b",
+    "hash": "c8aac49739f0ecab",
     "id": "cZJ3mqD",
     "url": "https://framer.com/m/Anticipation-r4w6lE.js"
   },
@@ -1109,7 +1113,7 @@
     "name": "Rule bend",
     "comp": "RuleBend",
     "file": "RuleBend.tsx",
-    "hash": "7a60853211973863",
+    "hash": "defb43289fc13395",
     "id": "q627I7H",
     "url": "https://framer.com/m/RuleBend-LmMRFt.js"
   },
@@ -1118,7 +1122,7 @@
     "name": "Re-spacing",
     "comp": "ReSpacing",
     "file": "ReSpacing.tsx",
-    "hash": "0b2c5f946b263a8b",
+    "hash": "977a2193fb4094a9",
     "id": "blssYB4",
     "url": "https://framer.com/m/ReSpacing-9XNknM.js"
   },
@@ -1137,7 +1141,7 @@
     "name": "Real underline",
     "comp": "RealUnderline",
     "file": "RealUnderline.tsx",
-    "hash": "d41b6d3d41c0995e",
+    "hash": "45d0a5b48037f484",
     "id": "psesjWa",
     "url": "https://framer.com/m/RealUnderline-c0quS1.js"
   },
@@ -1169,7 +1173,8 @@
     "file": "TempoMatch.tsx",
     "hash": "3a619e3ce97a5923",
     "id": "PzluAUM",
-    "url": "https://framer.com/m/TempoMatch-635kCX.js"
+    "url": "https://framer.com/m/TempoMatch-635kCX.js",
+    "retired": true
   },
   {
     "num": "59",
@@ -1186,7 +1191,7 @@
     "name": "Exit velocity",
     "comp": "ExitVelocity",
     "file": "ExitVelocity.tsx",
-    "hash": "4bd4b65ca212216d",
+    "hash": "287addcf64ec1d38",
     "id": "CP60zsh",
     "url": "https://framer.com/m/ExitVelocity-x9fTRv.js"
   },
@@ -1205,7 +1210,7 @@
     "name": "Others recede",
     "comp": "OthersRecede",
     "file": "OthersRecede.tsx",
-    "hash": "b30f49f9112d1ed4",
+    "hash": "1d28c5a9827973a6",
     "id": "Of47GSr",
     "url": "https://framer.com/m/OthersRecede-ob1mJ6.js"
   },
@@ -1224,7 +1229,7 @@
     "name": "Travelling rule",
     "comp": "TravellingRule",
     "file": "TravellingRule.tsx",
-    "hash": "2e690fb7f9a6f82c",
+    "hash": "0b03edbe4968e28f",
     "id": "SMcsP7y",
     "url": "https://framer.com/m/TravellingRule-BgOJad.js"
   },
@@ -1233,7 +1238,7 @@
     "name": "Conserved compression",
     "comp": "ConservedCompression",
     "file": "ConservedCompression.tsx",
-    "hash": "237e462b8a8a1330",
+    "hash": "f00cad116565f164",
     "id": "vtXfVai",
     "url": "https://framer.com/m/ConservedCompression-qOYXER.js"
   },
@@ -1242,7 +1247,7 @@
     "name": "Repulsion",
     "comp": "Repulsion",
     "file": "Repulsion.tsx",
-    "hash": "5f07d7cc896e30cf",
+    "hash": "f52702164b198d36",
     "id": "nbde5rt",
     "url": "https://framer.com/m/Repulsion-8kbI6W.js"
   },
@@ -1261,7 +1266,7 @@
     "name": "Emphasis trade",
     "comp": "EmphasisTrade",
     "file": "EmphasisTrade.tsx",
-    "hash": "f9eca4788f648d6b",
+    "hash": "784cae9ef5330bf0",
     "id": "MbFgjEv",
     "url": "https://framer.com/m/EmphasisTrade-U0W05r.js"
   },
@@ -1280,7 +1285,7 @@
     "name": "Divider yields",
     "comp": "DividerYields",
     "file": "DividerYields.tsx",
-    "hash": "5b4026d5546555f2",
+    "hash": "f63b9ff99f3e097d",
     "id": "Wbi8mzy",
     "url": "https://framer.com/m/DividerYields-rfq3hJ.js"
   },
@@ -1299,7 +1304,7 @@
     "name": "Split apart",
     "comp": "SplitApart",
     "file": "SplitApart.tsx",
-    "hash": "ff99cef6f4aa62dc",
+    "hash": "0eb702142e09ce7a",
     "id": "buAEufy",
     "url": "https://framer.com/m/SplitApart-JyH30m.js"
   },
@@ -1318,7 +1323,7 @@
     "name": "Mark walk",
     "comp": "MarkWalk",
     "file": "MarkWalk.tsx",
-    "hash": "638b6acceba74ccf",
+    "hash": "fde94f341f490399",
     "id": "cFk46nZ",
     "url": "https://framer.com/m/MarkWalk-UvFGfv.js"
   },
@@ -1337,7 +1342,7 @@
     "name": "Fill swap",
     "comp": "FillSwap",
     "file": "FillSwap.tsx",
-    "hash": "ff7df8dc1a9d940a",
+    "hash": "64c4c545dc883b33",
     "id": "wswjR10",
     "url": "https://framer.com/m/FillSwap-v9ARmg.js"
   },
@@ -1356,7 +1361,7 @@
     "name": "Clipped relay",
     "comp": "ClippedRelay",
     "file": "ClippedRelay.tsx",
-    "hash": "dbab3d40f98527fd",
+    "hash": "bde7b36b207daaa9",
     "id": "Nyg__Yu",
     "url": "https://framer.com/m/ClippedRelay-ZLi59f.js"
   },
@@ -1375,7 +1380,7 @@
     "name": "Mark hinge",
     "comp": "MarkHinge",
     "file": "MarkHinge.tsx",
-    "hash": "6dd6d71c28327c04",
+    "hash": "b5ff753d328811c7",
     "id": "bC026NB",
     "url": "https://framer.com/m/MarkHinge-UBCtBT.js"
   },
@@ -1396,7 +1401,8 @@
     "file": "MarkTuck.tsx",
     "hash": "a95f78640f72a9e4",
     "id": "AzTFoEo",
-    "url": "https://framer.com/m/MarkTuck-kfXjPa.js"
+    "url": "https://framer.com/m/MarkTuck-kfXjPa.js",
+    "retired": true
   },
   {
     "num": "72",
@@ -1413,7 +1419,7 @@
     "name": "Status button",
     "comp": "StatusButton",
     "file": "StatusButton.tsx",
-    "hash": "1841d50b95654812",
+    "hash": "3a800a6a43d54c94",
     "id": "Ecy8kTD",
     "url": "https://framer.com/m/StatusButton-ChYL00.js"
   },
@@ -1432,7 +1438,7 @@
     "name": "Plate to check",
     "comp": "PlateToCheck",
     "file": "PlateToCheck.tsx",
-    "hash": "c42279a440ad0cca",
+    "hash": "0ba66fc07635f63e",
     "id": "VAYXGL5",
     "url": "https://framer.com/m/PlateToCheck-kB2KHh.js"
   },
@@ -1451,7 +1457,7 @@
     "name": "Hold to confirm",
     "comp": "HoldToConfirm",
     "file": "HoldToConfirm.tsx",
-    "hash": "1fc9f281155ef2b9",
+    "hash": "ba245879fec6f5df",
     "id": "ADAz2F7",
     "url": "https://framer.com/m/HoldToConfirm-R6YcFY.js"
   },
@@ -1460,7 +1466,7 @@
     "name": "Directional fill",
     "comp": "DirectionalFill",
     "file": "DirectionalFill.tsx",
-    "hash": "f50cb14a3e910bd0",
+    "hash": "89cdce77570ba3ec",
     "id": "AJ2VL5Q",
     "url": "https://framer.com/m/DirectionalFill-fpvcPF.js"
   },
@@ -1492,7 +1498,8 @@
     "file": "LiquidFill.tsx",
     "hash": "be89a95e1076821e",
     "id": "xPw57Bn",
-    "url": "https://framer.com/m/LiquidFill-jSU3AX.js"
+    "url": "https://framer.com/m/LiquidFill-jSU3AX.js",
+    "retired": true
   },
   {
     "num": "77",
@@ -1509,7 +1516,7 @@
     "name": "Wave through",
     "comp": "WaveThrough",
     "file": "WaveThrough.tsx",
-    "hash": "fe6a4d45dd89ad6b",
+    "hash": "e2f14717a14ed077",
     "id": "Nlwv1VH",
     "url": "https://framer.com/m/WaveThrough-2M4wmy.js"
   },
@@ -1539,7 +1546,7 @@
     "name": "Corner exit",
     "comp": "CornerExit",
     "file": "CornerExit.tsx",
-    "hash": "1676e283a08eab3e",
+    "hash": "35fd95f0248fea3a",
     "id": "hnqaP4h",
     "url": "https://framer.com/m/CornerExit-nHkglt.js"
   },
@@ -1558,7 +1565,7 @@
     "name": "Optical centre",
     "comp": "OpticalCentre",
     "file": "OpticalCentre.tsx",
-    "hash": "3ac37f6632396cd9",
+    "hash": "002a33e4aaf97fd3",
     "id": "IjW8kd_",
     "url": "https://framer.com/m/OpticalCentre-wAtwP6.js"
   },
@@ -1567,7 +1574,7 @@
     "name": "Resolve",
     "comp": "Resolve",
     "file": "Resolve.tsx",
-    "hash": "1e713fe276d9af6d",
+    "hash": "6955d44776e806ce",
     "id": "uQvVYfX",
     "url": "https://framer.com/m/Resolve-QdqmRV.js"
   },
@@ -1586,7 +1593,7 @@
     "name": "Straightens up",
     "comp": "StraightensUp",
     "file": "StraightensUp.tsx",
-    "hash": "d2ae799cc19f18c8",
+    "hash": "67e301a5fa0c0112",
     "id": "BfIg9IP",
     "url": "https://framer.com/m/StraightensUp-PMQhjy.js"
   },
@@ -1625,7 +1632,7 @@
     "name": "Riser",
     "comp": "Riser",
     "file": "Riser.tsx",
-    "hash": "55b13c43c287954a",
+    "hash": "405dca3089afdf0f",
     "id": "nmrc2gw",
     "url": "https://framer.com/m/Riser-PKOmNa.js"
   },
@@ -1654,7 +1661,7 @@
     "name": "Working state",
     "comp": "WorkingState",
     "file": "WorkingState.tsx",
-    "hash": "cbe9e764cdaab21c",
+    "hash": "776f5560cae1f18d",
     "id": "rEcgYWh",
     "url": "https://framer.com/m/WorkingState-oODTfM.js"
   },
@@ -1673,7 +1680,7 @@
     "name": "One full turn",
     "comp": "OneFullTurn",
     "file": "OneFullTurn.tsx",
-    "hash": "ba43db42f4a0b3a3",
+    "hash": "7e44c61d2cffe304",
     "id": "AmJzXok",
     "url": "https://framer.com/m/OneFullTurn-ctOCpO.js"
   },
@@ -1682,7 +1689,7 @@
     "name": "Nervous type",
     "comp": "NervousType",
     "file": "NervousType.tsx",
-    "hash": "5bdc6125bc746adb",
+    "hash": "b7d0da2a8e4f0bf9",
     "id": "BU_Rcyw",
     "url": "https://framer.com/m/NervousType-7TInHS.js"
   },
@@ -1721,7 +1728,7 @@
     "name": "Press only",
     "comp": "PressOnly",
     "file": "PressOnly.tsx",
-    "hash": "9a42780b56a54d98",
+    "hash": "8f920a7cc61ddc02",
     "id": "kgWwrJC",
     "url": "https://framer.com/m/PressOnly-R9jcC9.js"
   },
@@ -1742,7 +1749,8 @@
     "file": "Overrun.tsx",
     "hash": "58645ce12fa48690",
     "id": "rVKQsya",
-    "url": "https://framer.com/m/Overrun-RkqEDr.js"
+    "url": "https://framer.com/m/Overrun-RkqEDr.js",
+    "retired": true
   },
   {
     "num": "88",
@@ -1759,7 +1767,7 @@
     "name": "Overflow loop",
     "comp": "OverflowLoop",
     "file": "OverflowLoop.tsx",
-    "hash": "bed34d3174532e89",
+    "hash": "4e635811d54f2bb4",
     "id": "lF9tKg1",
     "url": "https://framer.com/m/OverflowLoop-3a9HPU.js"
   },
@@ -1780,7 +1788,8 @@
     "file": "InstantInvert.tsx",
     "hash": "214ce89104e64ba1",
     "id": "uPk9Bw6",
-    "url": "https://framer.com/m/InstantInvert-5xuQNW.js"
+    "url": "https://framer.com/m/InstantInvert-5xuQNW.js",
+    "retired": true
   },
   {
     "num": "90",
@@ -1799,14 +1808,15 @@
     "file": "HatchExit.tsx",
     "hash": "880cb17a41423350",
     "id": "f1T8dMp",
-    "url": "https://framer.com/m/HatchExit-64V6Gr.js"
+    "url": "https://framer.com/m/HatchExit-64V6Gr.js",
+    "retired": true
   },
   {
     "num": "91",
     "name": "Stepped fill",
     "comp": "SteppedFill",
     "file": "SteppedFill.tsx",
-    "hash": "36d9b048f2e13341",
+    "hash": "04990cc3ee70865a",
     "id": "A0oDXRi",
     "url": "https://framer.com/m/SteppedFill-6Em9QG.js"
   },
@@ -1815,7 +1825,7 @@
     "name": "Changes sides",
     "comp": "ChangesSides",
     "file": "ChangesSides.tsx",
-    "hash": "5d492e0c2353ca3a",
+    "hash": "5107b4b4b465b2f4",
     "id": "uKgEoMc",
     "url": "https://framer.com/m/ChangesSides-0nQCL2.js"
   },
@@ -1834,7 +1844,7 @@
     "name": "Pieces join",
     "comp": "PiecesJoin",
     "file": "PiecesJoin.tsx",
-    "hash": "095d63f80f22773e",
+    "hash": "eb56883060a60ef0",
     "id": "vvB835h",
     "url": "https://framer.com/m/PiecesJoin-9opG0u.js"
   },
@@ -1843,7 +1853,7 @@
     "name": "Ticker label",
     "comp": "TickerLabel",
     "file": "TickerLabel.tsx",
-    "hash": "50a628d3f8961d2a",
+    "hash": "0db5e8f2bd1e5160",
     "id": "OewVWB4",
     "url": "https://framer.com/m/TickerLabel-1JFxFP.js"
   },
@@ -1854,7 +1864,8 @@
     "file": "StruckThrough.tsx",
     "hash": "70da81dcaad8004b",
     "id": "xheoS87",
-    "url": "https://framer.com/m/StruckThrough-P16etM.js"
+    "url": "https://framer.com/m/StruckThrough-P16etM.js",
+    "retired": true
   },
   {
     "num": "96",
@@ -1871,7 +1882,7 @@
     "name": "Halftone fill",
     "comp": "HalftoneFill",
     "file": "HalftoneFill.tsx",
-    "hash": "199563ed061443d1",
+    "hash": "e1057b1730dd0ca7",
     "id": "ZK6APcO",
     "url": "https://framer.com/m/HalftoneFill-RQmpfe.js"
   },
@@ -1890,7 +1901,7 @@
     "name": "Grid steps",
     "comp": "GridSteps",
     "file": "GridSteps.tsx",
-    "hash": "94ec4ba9764de7b5",
+    "hash": "164e8a429b1a0444",
     "id": "z_9_2qd",
     "url": "https://framer.com/m/GridSteps-TQQ3A5.js"
   },
@@ -1909,7 +1920,7 @@
     "name": "Cell chamfer",
     "comp": "CellChamfer",
     "file": "CellChamfer.tsx",
-    "hash": "e187d0df222a7875",
+    "hash": "da23b3609386f5a1",
     "id": "a27lHnP",
     "url": "https://framer.com/m/CellChamfer-srwdEx.js"
   },
@@ -1928,7 +1939,7 @@
     "name": "Sprite arrow",
     "comp": "SpriteArrow",
     "file": "SpriteArrow.tsx",
-    "hash": "8c44995b09a98766",
+    "hash": "da08a4aa2c4b5cd1",
     "id": "A9gE9yi",
     "url": "https://framer.com/m/SpriteArrow-qOQ29q.js"
   }
