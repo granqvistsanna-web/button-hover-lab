@@ -353,10 +353,24 @@ function translate (rec) {
   if (row) flags.push('the effect reaches for a sibling button — it is a row or pair, and HoverEffect '
                     + 'lives inside a single frame, so this is NOT portable as-is')
 
-  // A child element of the lab's own markup that Framer has no counterpart for.
-  const orphan = [...new Set([...css.matchAll(/\.bhl-([\w-]+)/g)].map(m => m[1]))]
-  if (orphan.length) flags.push(`the effect styles the lab's own \`${orphan.join(', ')}\` element(s), `
-                    + 'which do not exist inside a Framer frame — NOT portable as-is')
+  // A CLASSED DESCENDANT is the tell that an effect needs markup, and markup is
+  // the one thing HoverEffect cannot supply. It stamps exactly one class on the
+  // frame it finds and appends empty <i> layers; it never reaches into the
+  // label, which in Framer is the user's own text layer.
+  //
+  // This started as a check for `.bhl-` house classes and that was too narrow.
+  // The per-character studies carry their own scaffolding — card 20's label is
+  // a hand-authored nest of `.u-roll-c > .u-roll-i > span`, one per letter,
+  // each letter written twice — and those classes are neither house nor the
+  // effect key, so they sailed through and the whole Label group was reported
+  // portable. Every one of those rules would match nothing inside a frame: the
+  // effect installs, reports success and does visibly nothing. Any class that
+  // is not .momo-fx blocks, whatever its prefix.
+  const orphan = [...new Set([...css.matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]))]
+    .filter(c => c !== 'momo-fx')
+  if (orphan.length) flags.push(`the effect styles \`.${orphan.join(', .')}\` — HoverEffect stamps one `
+                    + 'class on the frame and can add only empty <i> layers, so it cannot create these. '
+                    + 'The rules would match nothing and the effect would do nothing — NOT portable as-is')
 
   // Charter rule 1: the frame's fill, radius and padding stay the user's. An
   // effect whose REST rule paints the frame's own background or border is
