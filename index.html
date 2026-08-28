@@ -1301,7 +1301,7 @@
                     </button>
                   </div>
                   <h3><span class="num">41</span>Inset fill</h3>
-                    <p>The plate sits an even three pixels inside its own measure and grows out to the hairline on hover, deepening a shade as it lands — on two concentric capsules a uniform inset is the only band that is provably even at every point.</p>
+                    <p>The plate sits an even four pixels inside its own measure and grows out to the hairline on hover, deepening a shade as it lands — on two concentric capsules a uniform inset is the only band that is provably even at every point.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
@@ -2789,27 +2789,38 @@ document.addEventListener("DOMContentLoaded", function () {
      drawn on top of a solid ink capsule, which is the loudest thing in the
      version before this one.
 
-     The reserve is 3px on every side. It was 5px, and before that 3px top and
-     bottom against 10px at the ends — a 3.3:1 band that read as a plate which
-     had slipped rather than as a reserve. The geometry is worth being exact
-     about: for a capsule of height H the radius is H/2, so a uniform inset d
-     leaves an inner capsule of radius H/2 - d and the gap between the two is
-     exactly d at every point on the outline, caps included. Uniform is not
-     approximately even here, it is provably even, and nothing else is — so the
-     only thing left to choose is how wide the band is.
+     The reserve is 4px on every side. It has been 5px and it has been 3px, and
+     before either of those 3px top and bottom against 10px at the ends — a
+     3.3:1 band that read as a plate which had slipped rather than as a reserve.
+     The geometry is worth being exact about: for a capsule of height H the
+     radius is H/2, so a uniform inset d leaves an inner capsule of radius
+     H/2 - d and the gap between the two is exactly d at every point on the
+     outline, caps included. Uniform is not approximately even here, it is
+     provably even, and nothing else is — so the only thing left to choose is
+     how wide the band is, and that is a judgement rather than a derivation.
 
-     3px is the narrower reading of the same idea. At 5px the band was a margin
-     the plate sat in; at 3px it is a seated edge, a line's worth of air that
-     the hover closes. The travel is 3px in both axes now, the smallest move
-     that still resolves as the plate arriving at a boundary already drawn.
+     4px is where the judgement landed, and the two it sits between are the
+     argument for it. At 5px the band is a margin the plate sits in; at 3px it
+     is a hairline of air that reads as tolerance rather than as a reserve. 4px
+     is a band you can see is deliberate at a glance and still cannot mistake
+     for padding — and on a 49px capsule it is a sixth of the radius, so the
+     inner capsule keeps an obvious family resemblance to the outer one.
 
      AND THE PLATE DARKENS AS IT ARRIVES. At rest and at full cover the same
-     white would mean the only thing hover changed is a 3px band — too small a
-     difference to carry a state on its own once the trim has handed over. The
-     hover shade is the page's own: --ink-hover mixed 90% with the ground, the
-     same compound .sheen and .magnet use, so a project that recolours the
-     hover control recolours this too. It rides the plate's own duration and
-     curve, so the growth and the deepening are one move rather than two. */
+     white would mean the only thing hover changed is a 4px band — too small a
+     difference to carry a state on its own once the trim has handed over.
+
+     THE SHADE IS 86% AGAINST THE GROUND, which was 90%. Written as a mix with
+     --bg rather than as a literal, so a project that recolours the hover
+     control gets a proportional darkening of whatever colour arrives — the
+     same form .sheen and .magnet use. With the control at its default it
+     resolves to 210.2, #d2d2d2, and that number is not arbitrary either: the
+     ink ladder's rung runs from --ink-hi's 242 to --ink-mid's 179, and 210.2
+     is 0.504 of the way down it — half a rung, to within half a per cent.
+     90% landed at #dbdbdb, 0.36 of a rung, and a third of a rung under a
+     plate that has just gained a pixel of travel is not enough of an arrival.
+     It rides the plate's own duration and curve, so the growth and the
+     deepening are one move rather than two. */
   .g-measure{padding:17px 34px; color:var(--ink-on-fill)}
   /* --line-ctl and not --line. The card is named for a RESERVED MEASURE and
      the trim is the only thing that states it, and at --line's 8% alpha on this
@@ -2826,14 +2837,14 @@ document.addEventListener("DOMContentLoaded", function () {
   .g-measure .g-measure-plate{
     position:absolute; inset:0; background:var(--ink);
     border-radius:inherit; pointer-events:none;
-    clip-path:inset(3px round 999px);
+    clip-path:inset(4px round 999px);
     transition:clip-path var(--t-5) var(--e-out),
                background-color var(--t-5) var(--e-out);
   }
   .g-measure:hover .g-measure-plate,
   .g-measure:focus-visible .g-measure-plate{
     clip-path:inset(0px round 999px);
-    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg));
+    background:color-mix(in srgb,var(--ink-hover) 86%,var(--bg));
   }
   /* The trim holds until the plate reaches it, then hands over. Undelayed, the
      boundary was gone at 300ms while the plate did not land until 450 — 150ms
