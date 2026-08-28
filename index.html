@@ -145,6 +145,11 @@
      Graphite's answer is a wide card, not a squeezed one. */
   .spec--wide{grid-column:span 2}
   @media (max-width: 760px){ .spec--wide{grid-column:auto} }
+  /* The stage wants the width; the prose does not. Spanning two columns took
+     the description with it and ran it to 79ch — about 105 characters a line,
+     where the eye starts losing its place on the way back. Capped at the
+     lede's own measure rather than a new number invented for three cards. */
+  .spec--wide>p{max-width:62ch}
   /* One stage height for all one hundred and five, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
@@ -8379,6 +8384,40 @@ document.addEventListener("DOMContentLoaded", function () {
       return framerUrls[num];
     }
 
+    /* ---- Is the module still the demo? ---------------------------------
+       The URL above is versionless so that a later edit reaches the next
+       person who pastes it. The cost of that is a promise this page could
+       not keep: paste one and you get whatever was last pushed, which is
+       not necessarily the effect you just hovered, and nothing on the card
+       said so. It is the one place the whole «nothing is authored twice»
+       architecture leaked.
+       It does not have to leak. sync stamps the hash of the code it pushed;
+       the page builds that same code with the same generator and hashes it
+       the same way. Equal means the module IS the demo. Different means the
+       page has moved on since the last sync — so the card says so, before
+       the paste rather than after it, and points at the Option-click path,
+       which is generated live and therefore always current.
+       Derived, like everything else here: no card carries a hand-set flag
+       that could go stale on its own. */
+    var syncStamps = null;
+    function stampedHash(num){
+      if (syncStamps === null){
+        var el = document.getElementById('bhl-framer-sync');
+        try { syncStamps = el ? JSON.parse(el.textContent) : {}; }
+        catch (e) { syncStamps = {}; }
+      }
+      return syncStamps[num];
+    }
+    // Truncated to the same 16 hex digits the sync tool keeps.
+    function sha16(text){
+      if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve(null);
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function(buf){
+        return [].map.call(new Uint8Array(buf), function(x){
+          return ('0' + x.toString(16)).slice(-2);
+        }).join('').slice(0, 16);
+      }, function(){ return null; });
+    }
+
     // Two actions, one collector. The left one is the CSS as authored, for
     // reading and for any target that is not Framer. The right one hands over
     // the module URL — option-click it for the whole code file instead, which
@@ -8409,14 +8448,22 @@ document.addEventListener("DOMContentLoaded", function () {
        run:function(card, n){
          return {text: asCss(parts(card)), said: n + ' — CSS copied'};
        }},
-      {cls:'copy copy--fr',  icon:FRAMER,
-       label:function(alt){ return alt ? 'Code file' : 'Framer'; },
-       title:function(n){ return 'Copy “' + n + '” for Framer — paste the URL straight onto a canvas. Option-click for the code file.'; },
+      {cls:'copy copy--fr',  icon:FRAMER, syncAware:true,
+       // The asterisk is the printer's mark for «see the note», which is what
+       // it is: the title and the confirmation both carry the note.
+       label:function(alt, behind){ return alt ? 'Code file' : (behind ? 'Framer*' : 'Framer'); },
+       title:function(n, behind){
+         return 'Copy “' + n + '” for Framer — paste the URL straight onto a canvas. Option-click for the code file.' +
+                (behind ? ' This module is behind the demo above; the code file is current.' : '');
+       },
        run:function(card, n, ev){
          var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
          var url = framerUrl(num);
          if (url && !ev.altKey){
-           return {text: url, said: n + ' — Framer URL copied, paste it onto a canvas'};
+           return {text: url,
+                   said: n + (card.getAttribute('data-sync') === 'behind'
+                     ? ' — Framer URL copied, but this module is behind the demo. Option-click hands over the current code instead.'
+                     : ' — Framer URL copied, paste it onto a canvas')};
          }
          return {text: asFramer(parts(card)),
                  said: n + (url ? ' — Framer code file copied'
@@ -8435,6 +8482,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // have to be remeasured against.
       var pair = document.createElement('div');
       pair.className = 'copy-pair';
+      var restFns = [];
 
       ACTIONS.forEach(function(a){
         var b = document.createElement('button');
@@ -8447,15 +8495,21 @@ document.addEventListener("DOMContentLoaded", function () {
         ic.innerHTML = a.icon;
         var lb = document.createElement('span');
         lb.className = 'copy-lbl';
-        lb.textContent = a.label(ALT);
+        lb.textContent = a.label(ALT, false);
         b.appendChild(ic); b.appendChild(lb);
         // The visible name is inside the accessible one ("CSS", "Framer"), so
         // voice control still reaches it by what it says. WCAG 2.5.3.
-        b.title = a.title(name);
+        b.title = a.title(name, false);
         b.setAttribute('aria-label', b.title);
         // While the button is confirming, the confirmation owns the label.
-        var rest = function(){ if (!b.hasAttribute('data-done')) lb.textContent = a.label(ALT); };
+        var rest = function(){
+          var behind = card.getAttribute('data-sync') === 'behind';
+          b.title = a.title(name, behind);
+          b.setAttribute('aria-label', b.title);
+          if (!b.hasAttribute('data-done')) lb.textContent = a.label(ALT, behind);
+        };
         altFns.push(rest);
+        restFns.push(rest);
         var t = null;
         b.addEventListener('click', function(ev){
           var r = a.run(card, name, ev);
@@ -8465,6 +8519,15 @@ document.addEventListener("DOMContentLoaded", function () {
             lb.textContent = 'Copied';
             b.setAttribute('data-done', '1');
             live.textContent = r.said;
+            // On touch there is no hover, so a first tap can land while the
+            // check is still in flight and be told the reassuring version. If
+            // it comes back «behind» with that announcement still standing,
+            // correct it rather than let the wrong one stand.
+            if (a.syncAware) checkSync().then(function(){
+              if (live.textContent !== r.said) return;
+              var late = a.run(card, name, ev);
+              if (late.said !== r.said) live.textContent = late.said;
+            });
             t = setTimeout(function(){
               ic.innerHTML = a.icon;
               b.removeAttribute('data-done');
@@ -8489,6 +8552,35 @@ document.addEventListener("DOMContentLoaded", function () {
       // right, then back to the far left. DOM order is now left to right.
       var star = stage.querySelector('.fav');
       if (star) stage.insertBefore(pair, star); else stage.appendChild(pair);
+
+      // Building the payload costs a few milliseconds per card, so the answer
+      // is worked out for the card you are actually looking at rather than for
+      // all 114 at load. Hovering or tabbing into a card is the earliest
+      // moment the answer can matter, and it is comfortably before the click.
+      var checking = null;
+      function checkSync(){
+        if (checking) return checking;
+        var want = stampedHash(num);
+        // Never synced at all: the copy path already falls back to the code
+        // file and says so, which is a better answer than an asterisk.
+        if (!want) return (checking = Promise.resolve());
+        checking = new Promise(function(done){
+          var run = function(){
+            var code;
+            try { code = asFramer(parts(card)); } catch (e) { return done(); }
+            sha16(code).then(function(got){
+              if (got && got !== want) card.setAttribute('data-sync', 'behind');
+              restFns.forEach(function(f){ f(); });
+              done();
+            });
+          };
+          if (window.requestIdleCallback) requestIdleCallback(run, {timeout:1200});
+          else setTimeout(run, 0);
+        });
+        return checking;
+      }
+      card.addEventListener('pointerenter', checkSync);
+      card.addEventListener('focusin', checkSync);
     });
   })();
 });
@@ -8745,6 +8837,9 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","03":"https://framer.com/m/PointerGrow-ME4MH3.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","112":"https://framer.com/m/LabelInvert-6hT78F.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","114":"https://framer.com/m/SlabTilt-EhjPDw.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","18":"https://framer.com/m/Caret-jaEoJL.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/RigidType-uIZjQw.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","53":"https://framer.com/m/Settle-tqN4oW.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","58":"https://framer.com/m/TempoMatch-635kCX.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","71":"https://framer.com/m/MarkTuck-kfXjPa.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/LiquidFill-jSU3AX.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/PressOnly-R9jcC9.js","87":"https://framer.com/m/Overrun-RkqEDr.js","88":"https://framer.com/m/OverflowLoop-3a9HPU.js","89":"https://framer.com/m/InstantInvert-5xuQNW.js","90":"https://framer.com/m/HatchExit-64V6Gr.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","99":"https://framer.com/m/SpriteArrow-qOQ29q.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
+<!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
+<script type="application/json" id="bhl-framer-sync">{"01":"92507bd39db217c9","02":"1f63ad2786bb6355","03":"65115214d7f5f993","04":"15a5de87473494e0","05":"879b4dcaed164d5a","06":"af6872c5b0c9acde","07":"27c183ccbea6f598","08":"e82870eea53a8cd9","09":"ffe4aeb1610dc1ae","10":"ede2ed708911227d","100":"4e31d76466883c66","101":"8f2cef08eb1211e0","102":"dce33381a12e665f","103":"f946c8d20c4cfeb5","104":"673b97863488a6aa","105":"6af5359cc34833a9","109":"ea11fe2b13668506","11":"5872ce94c53354e6","110":"d7d0770df7fd040a","111":"728f10479e11c086","112":"af4eccc4f326aa78","113":"1d8812514c710715","114":"e5f70ea0175071de","115":"8609bf8d1022b0c0","116":"8a44b61e0b5ea19c","117":"39b58e91fd4a8793","12":"6db8171d532da887","13":"a61b93dc8db35fd1","14":"508db79c365c62b4","15":"c4cd036a2249faf9","16":"be0ad1f8c5c6459f","17":"3e70cc3cfcd053c8","18":"3ae072b6b1534b6a","19":"cb9fd50e1381d8c9","20":"5c7330d1cb97cee4","21":"c45f4baef20773c3","22":"3452045ddcb5039e","23":"ec4b387646cb804b","24":"782ce34f56058c5a","25":"226dff75272323fa","26":"bab80ef583b32a98","27":"0ac33a6f81e6d553","28":"d99702ca5bedbfc3","29":"d951e1ce9ce0b562","30":"d36e9d469104fec6","31":"8c61043a6580aef5","32":"6822edc9aede84aa","33":"c22f6ce5683b0356","34":"85be69c66b3f7bc8","35":"8ae2fbc385756c02","36":"286d0e6255213074","37":"c3f94c3ed5770880","38":"5603051c5adb90d0","39":"c015c6674459d787","40":"caf9aac7f8d1e8fb","41":"b7b30dc79d4b471e","42":"043182bedc3a0d31","43":"0aaca8c2fab79a2f","44":"0f57331f80f79a54","45":"4254c1c8f828e56a","46":"d921e747cd2c72e0","47":"8beb9d72b7993b88","48":"e8784573b6983220","49":"2941dde682599eef","50":"a933ed4716f15b45","51":"561ef169aa56db94","52":"c98f6b5246cd145b","53":"74f48c73abbee34c","54":"7c6cc8d275f0564b","55":"7a60853211973863","56":"0b2c5f946b263a8b","57":"d41b6d3d41c0995e","58":"3a619e3ce97a5923","59":"4bd4b65ca212216d","60":"b30f49f9112d1ed4","61":"2e690fb7f9a6f82c","62":"237e462b8a8a1330","63":"5f07d7cc896e30cf","64":"f9eca4788f648d6b","65":"5b4026d5546555f2","66":"ff99cef6f4aa62dc","67":"638b6acceba74ccf","68":"ff7df8dc1a9d940a","69":"dbab3d40f98527fd","70":"6dd6d71c28327c04","71":"a95f78640f72a9e4","72":"1841d50b95654812","73":"c42279a440ad0cca","74":"1fc9f281155ef2b9","75":"f50cb14a3e910bd0","76":"be89a95e1076821e","77":"fe6a4d45dd89ad6b","78":"1676e283a08eab3e","79":"3ac37f6632396cd9","80":"1e713fe276d9af6d","81":"d2ae799cc19f18c8","82":"55b13c43c287954a","83":"cbe9e764cdaab21c","84":"ba43db42f4a0b3a3","85":"5bdc6125bc746adb","86":"9a42780b56a54d98","87":"58645ce12fa48690","88":"bed34d3174532e89","89":"214ce89104e64ba1","90":"880cb17a41423350","91":"36d9b048f2e13341","92":"5d492e0c2353ca3a","93":"095d63f80f22773e","94":"50a628d3f8961d2a","95":"70da81dcaad8004b","96":"199563ed061443d1","97":"94ec4ba9764de7b5","98":"e187d0df222a7875","99":"8c44995b09a98766"}</script>
+<!-- BHL:FRAMER-SYNC end -->
 
 </body>
 </html>

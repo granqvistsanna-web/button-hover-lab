@@ -222,10 +222,22 @@ function inject (manifest) {
   const dupes = rows.map(m => m.num).filter((n, i, a) => a.indexOf(n) !== i)
   if (dupes.length) throw new Error(`two studies claim the same number: ${dupes.join(', ')}`)
   const map = "{" + rows.map(m => JSON.stringify(m.num) + ":" + JSON.stringify(m.url)).join(",") + "}"
+  // The same rows keyed to the hash of the code that was pushed for them. The
+  // URL is versionless on purpose, so it silently follows the module and a
+  // visitor cannot tell whether what they are pasting still matches the demo
+  // they just hovered. The page can: it generates the code with the same
+  // generator this harvest read, hashes it the same way, and compares. What is
+  // published here is only ever what sync actually pushed, so a difference at
+  // runtime means the page moved on since — which is precisely the thing worth
+  // saying out loud.
+  const sync = "{" + rows.map(m => JSON.stringify(m.num) + ":" + JSON.stringify(m.hash)).join(",") + "}"
   const html = fs.readFileSync(INDEX, 'utf8')
   const re = /(<!-- BHL:FRAMER-URLS start[^>]*-->\n<script type="application\/json" id="bhl-framer-urls">)[\s\S]*?(<\/script>)/
   if (!re.test(html)) throw new Error('the BHL:FRAMER-URLS block is missing from index.html')
+  const reSync = /(<!-- BHL:FRAMER-SYNC start[^>]*-->\n<script type="application\/json" id="bhl-framer-sync">)[\s\S]*?(<\/script>)/
+  if (!reSync.test(html)) throw new Error('the BHL:FRAMER-SYNC block is missing from index.html')
   const next = html.replace(re, (_, a, b) => a + map + b)
+                   .replace(reSync, (_, a, b) => a + sync + b)
   if (next === html) { say('map unchanged'); return }
   fs.writeFileSync(INDEX, next)
   const retired = manifest.length - rows.length
