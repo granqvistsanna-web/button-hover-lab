@@ -589,8 +589,39 @@
      at and reduced motion has no business moving the plate at all. Both fall
      through to the house fallback in rule four — a plain colour change — which
      is why this is the one card whose focus state is not its hover state. */
-  .magnet{will-change:transform; transition:transform var(--t-1) var(--e-out), background var(--t-3) ease}
-  .magnet .m-lbl{display:inline-block; will-change:transform}
+
+  /* THE SPRING WRITES A VARIABLE, NOT A TRANSFORM, and that is the whole
+     reason the press exists on this card at all. .btn:active is a bare
+     transform:scale(.97) in a stylesheet, and an inline `transform` outranks
+     every stylesheet rule there is — so for as long as the loop wrote
+     btn.style.transform the press was not merely swallowed, it was
+     unreachable. Measured with the pointer held down, the button rendered
+     matrix(1,0,0,1,8,-4.725): the hover value, with no scale in it anywhere.
+     Written to --mx/--my and read back through the `translate` property, the
+     pull and the press are two different properties that compose instead of
+     replacing one another, and the press is a CSS rule again like every other
+     card's. `rotate` carries the house rasterisation hint in all three states,
+     so the type does not change weight the frame the plate starts to move.
+
+     One more thing falls out of it: the spring becomes the only curve on the
+     pull. A transition on `transform` was smearing the integrator by up to
+     0.94px — a second easing on a channel that already had one, which is
+     exactly what rule 1 is about. */
+  .magnet{
+    translate:var(--mx,0px) var(--my,0px);
+    rotate:0.001deg;
+    scale:1;
+    will-change:translate;
+    transition:scale var(--t-1) var(--e-out),
+               background-color var(--t-3) var(--e-out)}
+  /* transform:none, or .btn:active's shorthand lands a SECOND scale on top of
+     this one and the press reads .94 instead of .97. */
+  .magnet:active{transform:none; scale:.97}
+  /* The parallax is stated here rather than written twice a frame by the loop:
+     one source for the displacement, and the half is a number you can read in
+     the stylesheet instead of a .5 buried inside a paint call. */
+  .magnet .m-lbl{display:inline-block;
+    translate:calc(var(--mx,0px) * .5) calc(var(--my,0px) * .5)}
   .magnet:focus-visible{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
   @media (prefers-reduced-motion: reduce){
     .magnet:hover{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
@@ -6680,28 +6711,56 @@ document.addEventListener("DOMContentLoaded", function () {
     b.addEventListener('pointerleave', set);
   });
 
-  // 50 Magnetic — critically damped spring (k=170, c≈2√k), interruptible with velocity preserved
+  // 50 Magnetic — critically damped spring, interruptible with velocity preserved
   (function(){
     var rm = matchMedia('(prefers-reduced-motion: reduce)');
     document.querySelectorAll('.magnet').forEach(function(btn){
-      var lbl = btn.querySelector('.m-lbl');
       var x=0, y=0, vx=0, vy=0, tx=0, ty=0, raf=null, last=null;
-      var k=170, c=26;
+      // Critical damping IS 2√k, so it is derived and not typed. The old 26
+      // against a k of 170 was 26.08 rounded down, and a spring 0.3% underdamped
+      // is a spring whose single claim is only nearly true.
+      var k=170, w0=Math.sqrt(k), c=2*w0;
+      // ONE FIELD, ONE NUMBER. This was two gains and two clamps — .22 across,
+      // .3 down, capped at 8px and 6px — and the cap is where the card stopped
+      // being a magnet. 8px was reached 36.6px out from centre on a button whose
+      // half-width is 76.33, so across 52% of its own face, pointing further did
+      // nothing whatever: measured 8.00, 8.00, 8.00, 8.00 at four positions
+      // between there and the rim. A field does not have a plateau.
+      // The plate now travels an eighth of the way to the pointer on both axes,
+      // which is the same fraction OF ITSELF in each direction, and nothing
+      // clamps — with the pointer necessarily inside the button, the geometry
+      // is the clamp. And the reach did not shrink to buy that: measured 2px
+      // inside each edge, 9.29px at the left or right rim, 2.56px at top or
+      // bottom, and no corner at all — the radius is 999px, so on a pill the far
+      // corner of the box is off the button and the two ends ARE the extremes.
+      // 9.29px is, to the hundredth, what the old pair of caps peaked at.
+      // Same reach, no plateau.
+      var PULL = 1/8;
+      // Stop when the next frame could not paint a different pixel. The old test
+      // ran until |offset| + |velocity in px/s| fell under 0.05, which lands at
+      // 0.0036px — a 280th of a device pixel — and cost 480ms of animation
+      // frames after the plate had visibly arrived: an 867ms homecoming whose
+      // last 55% was nothing at all.
+      var EPS = 0.5 / (window.devicePixelRatio || 1);
       // The RESTING rect, cached. Read inside the move handler it would carry the
       // displacement this effect is applying, so the button chases its own centre:
-      // x = .22(p - c - x) settles at .22/1.22, an attraction 18% weaker than the
-      // number says, with a forced layout on every event to pay for it. Measured
-      // with the transform undone, so a re-entry mid-spring still reads rest.
+      // x = PULL(p - c - x) settles short of the target, with a forced layout on
+      // every event to pay for it. Measured with the offset suspended, so a
+      // re-entry mid-spring still reads rest.
       var rest = null;
       function measure(){
-        var t = btn.style.transform;
-        btn.style.transform = '';
+        var mx = btn.style.getPropertyValue('--mx'), my = btn.style.getPropertyValue('--my');
+        btn.style.removeProperty('--mx'); btn.style.removeProperty('--my');
         rest = btn.getBoundingClientRect();
-        btn.style.transform = t;
+        if (mx) btn.style.setProperty('--mx', mx);
+        if (my) btn.style.setProperty('--my', my);
       }
       function paint(){
-        btn.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-        lbl.style.transform = 'translate(' + (x*.5) + 'px,' + (y*.5) + 'px)';
+        btn.style.setProperty('--mx', x + 'px');
+        btn.style.setProperty('--my', y + 'px');
+      }
+      function clear(){
+        btn.style.removeProperty('--mx'); btn.style.removeProperty('--my');
       }
       function tick(t){
         if (last===null) last=t;
@@ -6709,20 +6768,19 @@ document.addEventListener("DOMContentLoaded", function () {
         vx += (k*(tx-x) - c*vx)*dt;  vy += (k*(ty-y) - c*vy)*dt;
         x += vx*dt;  y += vy*dt;
         // at rest = arrived AT the target and still — not merely near the origin
-        if (Math.abs(tx-x)+Math.abs(ty-y)+Math.abs(vx)+Math.abs(vy) > .05) {
+        if (Math.abs(tx-x)+Math.abs(ty-y) > EPS || Math.abs(vx)+Math.abs(vy) > EPS*w0) {
           paint();
           raf = requestAnimationFrame(tick);
           return;
         }
         x=tx; y=ty; vx=vy=0; raf=null; last=null;
-        if (tx===0 && ty===0) { btn.style.transform=''; lbl.style.transform=''; }
-        else paint();
+        if (tx===0 && ty===0) clear(); else paint();
       }
       function start(){ if(!raf){ last=null; raf=requestAnimationFrame(tick); } }
       function home(){
         if (raf){ cancelAnimationFrame(raf); raf=null; }
         x=y=vx=vy=tx=ty=0; last=null;
-        btn.style.transform=''; lbl.style.transform='';
+        clear();
       }
       addEventListener('resize', function(){ rest=null; }, {passive:true});
       addEventListener('scroll', function(){ rest=null; }, {passive:true});
@@ -6732,8 +6790,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // stands the effect down here rather than on the next reload.
         if (rm.matches){ home(); return; }
         if (!rest) measure();
-        tx = Math.max(-8, Math.min(8, (e.clientX - rest.left - rest.width/2) * .22));
-        ty = Math.max(-6, Math.min(6, (e.clientY - rest.top - rest.height/2) * .3));
+        tx = (e.clientX - rest.left - rest.width/2)  * PULL;
+        ty = (e.clientY - rest.top  - rest.height/2) * PULL;
         start();
       });
       btn.addEventListener('pointerleave', function(){ tx=0; ty=0; start(); });
