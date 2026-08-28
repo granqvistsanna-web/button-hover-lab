@@ -59,13 +59,21 @@ await tab.waitForFunction(() => {
 const { map, counts, total } = await tab.evaluate(() => {
   const map = {}, counts = {};
   const cards = [].slice.call(document.querySelectorAll('.spec'));
+  // window.__bhlDerived and NOT the cards' own data-changes. The rail wears the
+  // STAMP now, so data-changes is this file's previous output read back — stamp
+  // from that and the manifest re-stamps itself for ever, and a correction to
+  // the derivation can never reach the build. Ask the derivation directly.
+  // Fall back to the DOM only if the page predates the export.
+  const derived = window.__bhlDerived || null;
   cards.forEach(c => {
-    map[c.dataset.id] = c.dataset.changes + '|' + c.dataset.answers;
-    (c.dataset.changes + ' ' + c.dataset.answers).split(/\s+/).forEach(k => {
+    const tags = (derived && derived[c.dataset.id]) ||
+                 (c.dataset.changes + '|' + c.dataset.answers);
+    map[c.dataset.id] = tags;
+    tags.replace('|', ' ').split(/\s+/).forEach(k => {
       if (k) counts[k] = (counts[k] || 0) + 1;
     });
   });
-  return { map, counts, total: cards.length };
+  return { map, counts, total: cards.length, from: derived ? 'derivation' : 'DOM' };
 });
 await browser.close();
 

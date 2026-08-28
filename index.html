@@ -1785,7 +1785,17 @@
               <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
             </article>
 
-    <article class="spec" data-versions="fill outline link">
+            <!-- No data-versions, and the reason is not surface-lock: the bow works
+                 on a fill, an outline or a link alike. It is the SWAPPER.
+                 labelNodes() takes .lbl when there is one, and apply() then writes
+                 text into it, which flattens a label that has been split into
+                 per-character spans. The swapper's own note promises a
+                 per-character card is safe, but that promise only covers cards
+                 whose label is a bare text node. Declared here, the versions axis
+                 silently un-bowed the word on the first switch and the demo went
+                 back to being an ordinary button. Until labelNodes() learns to
+                 leave a split label alone, the absence is the honest signal. -->
+            <article class="spec">
           <div class="stage">
             <button type="button" class="btn btn--line z-bow"><span class="lbl" aria-hidden="true">Tune the ensemble</span><span class="sr">Tune the ensemble</span></button>
           </div>
