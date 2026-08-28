@@ -288,6 +288,17 @@
   .tools .vers-long[aria-pressed="true"]{border-color:var(--line-ctl)}
 
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
+  /* Off-screen rather than clipped, because it has to be able to come BACK:
+     a .sr-style clip cannot be undone by :focus without also undoing the
+     1px box. */
+  .skip{
+    position:absolute; left:-9999px; top:0; z-index:60;
+    padding:11px 16px; border-radius:var(--r-sm);
+    background:var(--bg-2); border:1px solid var(--line-ctl);
+    color:var(--ink-hi); font:500 15px/1 var(--font-ui); text-decoration:none;
+  }
+  .skip:focus{left:16px; top:16px}
+  #studies{scroll-margin-top:120px}
   .icon{display:block; width:14px; height:14px}
 
   /* 15 Textrull */
@@ -686,6 +697,11 @@
   .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
     background:none; border:0; padding:6px 2px; cursor:pointer}
   .tools-reset:hover{color:var(--ink-hi)}
+  /* In the empty state it is the only thing to do, so it looks like a control
+     rather than the panel's quiet afterthought. */
+  .tools-reset--inline{color:var(--ink-mid); background:var(--bg-2);
+    padding:7px 12px; border-radius:var(--r-xs)}
+  .tools-reset--inline:hover{background:var(--bg-3)}
   .tools-reset:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
 
   /* Deterministic instead of a cyclic percentage: minmax(min(320px,100%),1fr)
@@ -1045,6 +1061,11 @@
 </head>
 <body>
 <div class="wrap">
+  <!-- Every card costs five or six tab stops and there are one hundred and
+       fourteen of them, so the panel is fifteen presses of overhead paid on
+       arrival. This is the standard way out of that, and the only element on
+       the page that is invisible until it is focused. -->
+  <a class="skip" href="#studies">Skip to the studies</a>
   <header>
     <h1>Button Hover Lab</h1>
     <!-- The count is never written by hand here — a hand-typed number went
@@ -1151,6 +1172,7 @@
     </div>
   </nav>
 
+    <div id="studies" tabindex="-1"></div>
     <section class="sect">
   <h2>Whole button</h2>
   <div class="grid">
@@ -7041,7 +7063,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var empty = document.createElement('p');
     empty.className = 'tools-empty';
     empty.hidden = true;
-    empty.textContent = 'Nothing matches this filter.';
+    // Naming the control would be a signpost; carrying it is an exit. It is a
+    // second button rather than a moved one — the panel's Reset has to stay
+    // where the filters are — and it forwards to that one so the two can never
+    // clear different things.
+    empty.append('Nothing matches this filter. ');
+    var emptyReset = document.createElement('button');
+    emptyReset.type = 'button';
+    emptyReset.className = 'tools-reset tools-reset--inline';
+    emptyReset.textContent = 'Reset the filters';
+    emptyReset.addEventListener('click', function(){ reset.click(); });
+    empty.appendChild(emptyReset);
     // Before the first section, not after the toolbar: the rail sits between
     // them now, and «nothing matches» belongs with the grid it is about.
     var firstSect = document.querySelector('.sect');
@@ -7397,6 +7429,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // is tagged «it moves» because a rule of its own transitions a transform,
     // and «needs JS» because its own chip says so — so the facets cannot drift
     // out of step with the studies the way a hand-typed tag would.
+    // The stamped build is the source of truth and the derived tags are the
+    // CHECK. That is the other way round from how this started, and the reason
+    // is that deriving happens by RACING the CSSOM at load: the DS sheet is
+    // cross-origin and a stylesheet that has not parsed yet reports no rules
+    // rather than an error, so the same production URL served «a loop = 60 of
+    // 113» on one visit and 4 on the next, with nothing on screen saying which
+    // was wrong. A page whose promise is that nothing can drift cannot serve a
+    // taxonomy that drifts with the network.
+    // tools/facet-manifest.mjs runs the same derivation at build time with
+    // every sheet present, so a card that is stamped takes its stamp. A card
+    // that is NOT stamped — a study added since the last run — still takes
+    // what it can derive, which is what made the facets self-filing in the
+    // first place. Either way the mismatch is reported by the tripwire below.
+    var MANIFEST = (function(){
+      var el = document.getElementById('facet-manifest');
+      if (!el) return null;
+      try { var m = JSON.parse(el.textContent); return Object.keys(m).length ? m : null; }
+      catch(e){ return null; }
+    })();
+    var DERIVED = {};
     var rail = document.querySelector('.rail');
     var railToggle = document.querySelector('.rail-toggle');
     var qEl = document.querySelector('.rail-q');
@@ -7518,8 +7570,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (loop)  answers.push('loop');
         if (press) answers.push('press');
         if (!answers.length) answers.push('hover');
-        card.dataset.changes = changes.join(' ');
-        card.dataset.answers = answers.join(' ');
+        var derived = changes.join(' ') + '|' + answers.join(' ');
+        DERIVED[card.dataset.id] = derived;
+        var stamped = MANIFEST && MANIFEST[card.dataset.id];
+        var use = (typeof stamped === 'string' ? stamped : derived).split('|');
+        card.dataset.changes = use[0] || '';
+        card.dataset.answers = use[1] || '';
         // What the search reads. Built once — the alternative is lowercasing
         // four nodes per card on every keystroke.
         card.dataset.hay = (
@@ -7698,10 +7754,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // The taxonomy above is DERIVED, so a bug in tag() mis-files studies in
     // silence — the rail shows wrong numbers as confidently as right ones.
-    // #facet-manifest holds the tags as they stood when last stamped; any
-    // difference is shouted to the console and flagged on <html>, and the
-    // page otherwise carries on: the manifest is a tripwire, not a second
-    // source of truth.
+    // #facet-manifest holds the tags as they stood when last stamped, and the
+    // rail is now WEARING them (see MANIFEST above). This compares them
+    // against what this load managed to derive, so the two failure modes stay
+    // distinguishable: a stylesheet that did not arrive in time reports every
+    // card at once, and a study whose CSS genuinely changed reports one.
+    // Either way it is shouted to the console and flagged on <html>, and the
+    // page carries on showing the stamped taxonomy rather than the raced one.
     (function(){
       var man = document.getElementById('facet-manifest');
       if (!man) return;
@@ -7712,7 +7771,8 @@ document.addEventListener("DOMContentLoaded", function () {
       var drift = [], seen = {};
       cards.forEach(function(card){
         seen[card.dataset.id] = 1;
-        var got = card.dataset.changes + '|' + card.dataset.answers;
+        var got = DERIVED[card.dataset.id];
+        if (got === undefined) return;
         if (!(card.dataset.id in want)) drift.push(card.dataset.id + ' unstamped');
         else if (want[card.dataset.id] !== got)
           drift.push(card.dataset.id + ': stamped "' + want[card.dataset.id] +
@@ -9013,7 +9073,11 @@ document.addEventListener("DOMContentLoaded", function () {
       var n = want
         ? cards.filter(function(c){ return c.set[want]; }).length
         : cards.length;
-      read.textContent = n + ' of ' + total + ' follow';
+      // «114 of 114 follow» beside «As built» is a riddle: nothing is being
+      // followed, that IS the studies. Each branch now says its own sentence.
+      read.textContent = want
+        ? n + ' of ' + total + ' offer it'
+        : total + ' as built';
     }
     function global(){
       cards.forEach(function(c){ c.local = null; c.longLocal = null; apply(c); });
