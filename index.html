@@ -2819,24 +2819,68 @@ document.addEventListener("DOMContentLoaded", function () {
     transition-delay:calc(var(--t-5) - var(--t-4))}
   .g-measure .lbl{position:relative}
 
-  /* 43 Keycap — a hard bottom edge, a real depression on press */
+  /* 43 Keycap — a switch REGISTERS BEFORE IT BOTTOMS OUT, and that is the card.
+     A real switch actuates about 2mm into 4mm of travel: the key has already
+     sent the character while the cap is still moving. Nothing else on this page
+     asks WHEN a button becomes committed — 111 places the press and 113 is
+     honest about progress, but neither times the actuation. So the state change
+     fires at 60% of the stroke, on a 0ms duration, because a switch registers
+     and does not fade. One press, two beats, and the second one arrives before
+     the movement stops.
+
+     THE TRAVEL BUDGET IS ONE NUMBER: the cap always travels exactly its own
+     riser height and always lands with the riser fully spent. Rest is 3px of
+     riser and a 3px stroke; hover stands the cap to the top of its travel — 4px
+     of riser, plate up 1 — and the stroke from there is 4. That is what gives
+     the hover something physical to do. Before this it moved two shades of
+     border and nothing else, so the object the card goes to the trouble of
+     building never did anything a cap does: a press study filed in a hover lab.
+
+     THE FOOT NEVER MOVES, in any of the three states, and the arithmetic is the
+     claim: bottom + 0 + 3 at rest, bottom − 1 + 4 hovered, bottom + 3 + 0
+     pressed. The cap stands up and sinks; the housing it stands on does not.
+
+     DOWN IS LINEAR, UP IS --e-out. Both directions were --e-out, which is
+     backwards for a hard stop — decelerating into a bottom-out is foam, and a
+     keycap is plastic hitting plastic. Linear arrives at speed and stops dead.
+     The return keeps the eased curve because a spring does decelerate.
+
+     Hysteresis was considered and declined. A real switch releases higher than
+     it actuates, so the commit should clear early on the way up — but the
+     release is painted by the rest declaration, which also paints rest←hover,
+     and a 0ms colour there would snap the hover instead of easing it. The
+     down stroke carries the thesis and that is where a finger feels it.
+
+     The house scale(.97) press is deliberately overridden rather than composed:
+     a key goes DOWN, it does not shrink. This is one of the few places on the
+     page where dropping the shared press is the honest answer. */
   .g-key{
     background:var(--lift-bg);
     border:1px solid var(--line-ctl);
     box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 20%,var(--line));
+    transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-2) var(--e-out), box-shadow var(--t-2) var(--e-out),
                background-color var(--t-3) ease, border-color var(--t-3) ease;
   }
   .g-key:hover,
   .g-key:focus-visible{
+    transform:translateY(-1px) rotate(0.001deg);
     border-color:color-mix(in srgb,var(--ink) 32%,var(--line));
-    box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 34%,var(--line));
+    box-shadow:0 4px 0 color-mix(in srgb,var(--ink) 34%,var(--line));
   }
   .btn.g-key:active{
-    transform:translateY(2px);
-    background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
-    box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 34%,var(--line)),
+    transform:translateY(3px) rotate(0.001deg);
+    box-shadow:0 0 0 color-mix(in srgb,var(--ink) 34%,var(--line)),
                inset 0 2px 3px rgba(var(--shadow-rgb),.2);
+    background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
+    border-color:color-mix(in srgb,var(--ink) 55%,var(--line));
+    /* The stroke is continuous; the commit is not. Both colours carry a 0ms
+       duration and a delay of 60% of the stroke, so they land as a step while
+       the cap is still travelling the last 40%. */
+    transition:transform var(--t-1) linear,
+               box-shadow var(--t-1) linear,
+               background-color 0ms linear calc(var(--t-1) * .6),
+               border-color 0ms linear calc(var(--t-1) * .6);
   }
 </style>
 
