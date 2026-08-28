@@ -222,8 +222,8 @@ captures the full ladder into its own aliases — it is not a `.btn`, so it stil
 values — and hands them back to every button in the row while any one of them is hovered.
 
 Five documented exceptions. Three of them are loops, which are rhythms and not transitions,
-so the ladder does not apply and the 450 ms ceiling does not either: the caret blinks on
-1.1 s, *Ticker label* runs 5.4 s, and *Too long to sit still* runs 5 s. A loop is judged on
+so the ladder does not apply and the 450 ms ceiling does not either: *Working state* runs
+2.4 s, *Idle breath* runs 4.2 s, and *CRT converge* drifts on 5.6 s. A loop is judged on
 its speed rather than its duration — long enough that the eye is not chased, slow enough to
 be read. The overflow marquee travels in proportion to the distance clipped
 (160 ms + 2.2 ms/px, capped at 600) so the label moves at a constant *speed*; a fixed rung
@@ -312,6 +312,30 @@ extraction has to make up the difference:
 Studies added since the last sync have no URL yet. Those fall back to the code file and say
 so in the confirmation, rather than copying nothing.
 
+## Order
+
+The panel sorts as well as filters. Five orders: the nine groups as authored, **latest
+update**, **recently added**, name A–Z, and number.
+
+The two date orders are the reason `tools/dates.mjs` exists. A date is the one fact a card
+cannot state about itself — it is a fact about the file, not about the button — so it is read
+out of the repository's own history and stamped onto the article as `data-added` /
+`data-updated`, the way `#facet-manifest` stamps the tags. Nothing is typed by hand.
+
+Identity is the **effect class**, not the number and not the title. Both of those have been
+rewritten wholesale — 76 studies were renamed in a single commit, and the numbers are
+reflowed by every regroup — so keying on either would report the whole page as added on the
+day of the rename. `v-grow` is still `v-grow` through all of it. A commit counts against a
+study only when that study's own markup came out different, so a sweep that touches every
+card does not reset all 103 dates to today.
+
+Sorting **moves the cards** rather than setting `order` on the grid. `order` reorders paint
+and not the document, so a reordered page would still be tabbed and read aloud in source
+order — an order only the sighted get, which is the opposite of what the rest of this page
+argues. Each card remembers its own slot, so «grouped» is a restoration and not a rebuild.
+
+    node tools/dates.mjs           # stamp; re-runnable, --check writes nothing
+
 ## Notes on the build
 
 Single file, no dependencies, no build step — `tools/sync-framer.mjs` is the one exception,
@@ -322,7 +346,7 @@ the page and into `framer-components.json`. It skips any study whose content has
 moved, so published URLs stay put, and it never deletes a code file that no study claims any
 more — somebody may already have pasted it. One linked stylesheet — the Graphite Console
 tokens, which carry self-hosted Geist and Geist Mono — and everything else is CSS, with
-small vanilla-JS loops in 14 of the 105 cards, only
+small vanilla-JS loops in 14 of the 103 cards, only
 where CSS genuinely cannot reach — a critically damped spring, a pointer-driven gradient, a
 per-character weight ripple, an overflow measurement, a velocity handoff, a pointer-speed
 reading, and the edge the pointer crossed.

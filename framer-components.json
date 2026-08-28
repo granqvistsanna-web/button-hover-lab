@@ -206,7 +206,8 @@
     "file": "SplitFlap.tsx",
     "hash": "60045aa3a0e2966e",
     "id": "DyASXZH",
-    "url": "https://framer.com/m/SplitFlap-TL6aml.js"
+    "url": "https://framer.com/m/SplitFlap-TL6aml.js",
+    "retired": true
   },
   {
     "num": "103",
@@ -348,7 +349,8 @@
     "file": "LabelInvert.tsx",
     "hash": "3159b44123691b7d",
     "id": "ntXKXRg",
-    "url": "https://framer.com/m/LabelInvert-6hT78F.js"
+    "url": "https://framer.com/m/LabelInvert-6hT78F.js",
+    "retired": true
   },
   {
     "num": "113",
@@ -610,7 +612,8 @@
     "file": "Caret.tsx",
     "hash": "05db475d16956a07",
     "id": "SXxQo0c",
-    "url": "https://framer.com/m/Caret-jaEoJL.js"
+    "url": "https://framer.com/m/Caret-jaEoJL.js",
+    "retired": true
   },
   {
     "num": "19",
@@ -1745,7 +1748,8 @@
     "file": "OneFullTurn.tsx",
     "hash": "d7a0c5ec71b946ee",
     "id": "AmJzXok",
-    "url": "https://framer.com/m/OneFullTurn-ctOCpO.js"
+    "url": "https://framer.com/m/OneFullTurn-ctOCpO.js",
+    "retired": true
   },
   {
     "num": "85",
@@ -1842,7 +1846,8 @@
     "file": "OverflowLoop.tsx",
     "hash": "fb060889432376bc",
     "id": "lF9tKg1",
-    "url": "https://framer.com/m/OverflowLoop-3a9HPU.js"
+    "url": "https://framer.com/m/OverflowLoop-3a9HPU.js",
+    "retired": true
   },
   {
     "num": "89",
@@ -1928,7 +1933,8 @@
     "file": "TickerLabel.tsx",
     "hash": "7ad7179bd5b1b858",
     "id": "OewVWB4",
-    "url": "https://framer.com/m/TickerLabel-1JFxFP.js"
+    "url": "https://framer.com/m/TickerLabel-1JFxFP.js",
+    "retired": true
   },
   {
     "num": "95",
@@ -2014,6 +2020,7 @@
     "file": "SpriteArrow.tsx",
     "hash": "8868f8cf7d171bca",
     "id": "A9gE9yi",
-    "url": "https://framer.com/m/SpriteArrow-qOQ29q.js"
+    "url": "https://framer.com/m/SpriteArrow-qOQ29q.js",
+    "retired": true
   }
 ]
