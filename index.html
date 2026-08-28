@@ -332,14 +332,28 @@
   .shutter:hover .lbl,
   .shutter:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
 
-  /* 09 Ink fill */
+  /* 09 Ink fill — the fill grows from the point the pointer crossed, and the
+     radius is a guess: 240% of the plate. Card 110 is the argument against that
+     guess and should be read next to this one. What the guess costs HERE is the
+     label. A radius that overshoots covers the label early and by a different
+     amount on every plate width, so a colour swap delayed against the fill
+     cannot land — and this one was delayed by --d-2, which put the label a
+     measured 125ms behind the ink that was already under it: light type on a
+     light plate, invisible, every time you arrived.
+     So the swap leads the front instead of chasing it. In on --t-1 with no
+     delay, which is the one rung the ladder never lengthens on hover, so the
+     type is dark before the ink reaches it. Out on --t-3 with no delay: the
+     REST declaration is what paints the exit, and a slower return crossfades
+     through the retreating front rather than racing it back to light while the
+     front still covers half the word. */
   .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
   .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink-hover); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
   .inkfill:hover::before,
   .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
-  .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
+  .inkfill .lbl{position:relative; transition:color var(--t-3) ease}
   .inkfill:hover .lbl,
-  .inkfill:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
+  .inkfill:focus-visible .lbl{color:var(--on-ink-hover);
+    transition-duration:var(--t-1); transition-delay:0ms}
 
   /* 10 Sheen */
   .sheen{background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
@@ -1449,7 +1463,7 @@
     <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-27T13:06:15+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-dir" data-j-dir="idle">
-                      <i class="j-dir-tile" aria-hidden="true"></i><span class="lbl">See the work</span>
+                      <i class="j-dir-tile" aria-hidden="true"><span class="j-dir-on">See the work</span></i><span class="lbl">See the work</span>
                     </button>
                   </div>
                   <h3><span class="num">75</span>Directional fill</h3>
@@ -3297,19 +3311,35 @@ document.addEventListener("DOMContentLoaded", function () {
      is forced, and only then is the target set. */
   .btn.j-dir{overflow:hidden}
   .j-dir .j-dir-tile{
-    position:absolute; inset:0; pointer-events:none;
+    /* z-index, because the tile now carries type. Both are positioned and the
+       label is later in the DOM, so at z-index auto the light original painted
+       ON TOP of the dark copy and every glyph came back haloed. */
+    position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1;
     background:var(--ink-hover);
     --j-x:0%; --j-y:100%;
     transform:translate(var(--j-x), var(--j-y));
     transition:transform var(--t-5) var(--e-quint);
   }
-  /* The label's turn back is choreographed to FINISH as the tile clears, not
-     to start there. Delaying by the tile's full rung left the label sitting
-     light on an already-empty plate for the whole 83ms of its own colour
-     change; the tile's duration less the colour's puts the label back to ink
-     exactly as the last of the fill leaves the frame. */
-  .j-dir .lbl{position:relative; transition:color var(--t-1) ease}
-  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
+  /* The label does not change colour. A second copy of it lives INSIDE the
+     tile and carries the tile's own translate back out, so it lands exactly on
+     top of the real label and is clipped by the tile's edge — the type turns at
+     the FRONT, per pixel, rather than on a clock aimed at it.
+     This replaces a delay that never worked. The delay was written on the
+     :hover rule, and the hover rule paints the ENTER; the exit was therefore
+     undelayed, and the label went back to light in 83ms while the tile still
+     needed 300 to leave. Measured: 75ms of light type on a light tile every
+     time the pointer left, under a comment claiming the opposite.
+     The two transforms are exact negatives on one duration and one curve, so
+     they cancel at every frame of the interpolation and not just at its ends.
+     The copy is inside an aria-hidden tile, so the accessible name is still the
+     one label. */
+  .j-dir .j-dir-on{
+    position:absolute; inset:0; display:grid; place-items:center;
+    white-space:nowrap; color:var(--on-ink-hover);
+    transform:translate(calc(-1 * var(--j-x)), calc(-1 * var(--j-y)));
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .j-dir .lbl{position:relative}
 
   /* 76 Liquid fill — the fill rises with a curved leading edge that flattens as it
      lands, so it reads as liquid finding its level rather than a rectangle
@@ -3487,15 +3517,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.j-dir').forEach(function(btn){
       var tile = btn.querySelector('.j-dir-tile');
       if (!tile) return;
+      // The label copy counter-translates, so it is a SECOND transition on the
+      // same values and the snap has to suppress both. Suppressing only the
+      // tile left the copy sliding across the plate on its own for a rung.
+      var on = tile.querySelector('.j-dir-on');
 
       function place(dir, animate){
-        if (!animate) tile.style.transition = 'none';
+        if (!animate){
+          tile.style.transition = 'none';
+          if (on) on.style.transition = 'none';
+        }
         tile.style.setProperty('--j-x', OFF[dir][0]);
         tile.style.setProperty('--j-y', OFF[dir][1]);
         if (!animate){
           void tile.offsetWidth;              // forced reflow — without it the
           tile.style.transition = '';         // jump animates and the tile
-        }                                     // enters from the LAST edge
+          if (on) on.style.transition = '';   // enters from the LAST edge
+        }
       }
       function enter(dir){
         place(dir, false);
@@ -6541,7 +6579,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape|hover","42":"moves fades tone|loop press","43":"moves tone|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape|hover","42":"moves fades tone|loop press","43":"moves tone|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
