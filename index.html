@@ -489,13 +489,43 @@
      transformed at rest too so its rasterisation never switches mid-lift.
      --line-ctl and not --line: this is a control boundary and has to clear 3:1,
      which is card 51's note and the reason the token exists. */
-  .lift{background:var(--bg-2); border:1px solid var(--line-ctl);
+  /* ONE CURVE. The transform ran --e-quint while the background and the border
+     ran plain `ease` — two easings inside one gesture, which is the thing rule 1
+     exists to forbid. On a single channel nobody sees the seam, which is why it
+     survived; put the three side by side on one object and the plate arrives on
+     a curve its own colour is not on. All three take --e-quint now.
+
+     AND THE LIGHT LEADS THE RISE. Three channels firing at one instant is three
+     declarations saying the same word, and the card's thesis is that elevation
+     IS lightness — the 2px is corroboration, not the claim. So the light goes
+     first and the plate follows it up a beat later: --d-2, half the light's own
+     rung, close enough to read as one gesture and far enough that the order is
+     never in doubt.
+
+     THE DELAYS ARE ON OPPOSITE SIDES, and that is what makes the exit the same
+     sentence read backwards. Going in, the :hover rule delays the TRANSFORM, so
+     the light leads. Coming out, the rest declaration paints the exit and it
+     delays the COLOUR, so the rise collapses first and the light drains after
+     it. One value, two rules, and neither direction is the other one running
+     in reverse by accident.
+
+     :active clears both delays outright. A press may never wait — it is the one
+     state the ladder never lengthens, and a delayed press is a broken button.
+     background-color and not the `background` shorthand: the shorthand resets
+     background-image with it, and the toolbar can put one there. */
+  .lift{background-color:var(--bg-2); border:1px solid var(--line-ctl);
     transform:translateY(0) rotate(0.001deg) scale(1);
-    transition:transform var(--t-4) var(--e-quint),background var(--t-3) ease,border-color var(--t-3) ease}
+    transition:transform var(--t-3) var(--e-quint),
+               background-color var(--t-3) var(--e-quint) var(--d-2),
+               border-color var(--t-3) var(--e-quint) var(--d-2)}
   .lift:hover,
-  .lift:focus-visible{transform:translateY(-2px) rotate(0.001deg) scale(1); background:var(--bg-3);
-    border-color:color-mix(in srgb,var(--ink) 22%,var(--line-ctl))}
-  .lift:active{transform:translateY(0) rotate(0.001deg) scale(.98); background:var(--bg-4); transition-duration:var(--t-1)}
+  .lift:focus-visible{transform:translateY(-2px) rotate(0.001deg) scale(1);
+    background-color:var(--bg-3);
+    border-color:color-mix(in srgb,var(--ink) 22%,var(--line-ctl));
+    transition-delay:var(--d-2), 0s, 0s}
+  .lift:active{transform:translateY(0) rotate(0.001deg) scale(.98);
+    background-color:var(--bg-4);
+    transition-duration:var(--t-1); transition-delay:0s}
 
   /* 50 Magnetisk */
   /* The pull is driven by pointer POSITION, so a keyboard has nothing to aim
