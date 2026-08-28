@@ -51,6 +51,29 @@
     /* The inverse pair IS the accent — no hue anywhere on the page. */
     --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
     --on-ink:var(--inverse-ink);
+    /* ---- The three colour roles ----------------------------------------
+       --ink was doing two jobs at once: the label at REST, and the fill that
+       ARRIVES on hover. On a monochrome page that is one colour and the
+       overload is invisible. Give the toolbar a text swatch and a hover
+       swatch and the two jobs come apart, so each needs its own name.
+
+       Both alias back to --ink. That is the safety property, not tidiness:
+       every site this pass did not reclassify keeps resolving to exactly the
+       colour it resolved to before, so a missed rule is a rule that still
+       works. The toolbar overrides these on the root only when a swatch is
+       actually set, and the Copy buttons resolve the alias either way. */
+    --ink-text:var(--ink);          /* the label, at rest                  */
+    --ink-hover:var(--ink);         /* the colour that arrives on hover    */
+    --on-ink-hover:var(--on-ink);   /* the label once that colour is under it */
+    /* The label on a FILLED plate — cards 01 and 02 are both btn--solid, and
+       every plate and mark study lands here too. It cannot simply read
+       --ink-text: a label sitting on the accent has to contrast with the
+       accent, not with the card behind it. So the toolbar re-fits the chosen
+       text colour against the fill and writes the result here, and when no
+       text colour is chosen this stays the computed black-or-white it always
+       was. Note --on-ink is NOT that label: it doubles as a plain dark fill in
+       cards 31 and 44's inverting pairs, which is why this needs its own name. */
+    --ink-on-fill:var(--on-ink);
     --shadow-rgb:0,0,0;
     /* The button radius, as one token the whole page reads. It is here in the
        alias block rather than inline on .btn so the toolbar has one property to
@@ -152,7 +175,7 @@
        one hundred and five demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
-    color:var(--ink); background:none; border:0; border-radius:var(--btn-r);
+    color:var(--ink-text); background:none; border:0; border-radius:var(--btn-r);
     padding:15px 28px; cursor:pointer;
     transition:transform var(--t-1) var(--e-out);
   }
@@ -167,7 +190,7 @@
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
-  .btn--solid{background:var(--ink); color:var(--on-ink)}
+  .btn--solid{background:var(--ink); color:var(--ink-on-fill)}
   .btn--line{border:1px solid var(--ink)}
   .btn--text{padding:8px 4px; border-radius:2px}
 
@@ -272,35 +295,35 @@
 
   /* 07 Riktad svep */
   .sweep{overflow:hidden}
-  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
+  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
   .sweep:hover::before,
   .sweep:focus-visible::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .sweep:hover .lbl,
-  .sweep:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .sweep:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 08 Slutare */
   .shutter{overflow:hidden}
-  .shutter::before{content:""; position:absolute; inset:0; background:var(--accent); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
+  .shutter::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
   .shutter:hover::before,
   .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
   .shutter:hover .lbl,
-  .shutter:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--d-1)}
+  .shutter:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
 
   /* 09 Ink fill */
   .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
-  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
+  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink-hover); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
   .inkfill:hover::before,
   .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-2) ease}
   .inkfill:hover .lbl,
-  .inkfill:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .inkfill:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 10 Sheen */
-  .sheen{background:var(--ink); color:var(--on-ink); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  .sheen{background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
-  .sheen:focus-visible{background:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
   .sheen:hover::after,
   .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
@@ -446,9 +469,9 @@
      is why this is the one card whose focus state is not its hover state. */
   .magnet{will-change:transform; transition:transform var(--t-1) var(--e-out), background var(--t-3) ease}
   .magnet .m-lbl{display:inline-block; will-change:transform}
-  .magnet:focus-visible{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+  .magnet:focus-visible{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
   @media (prefers-reduced-motion: reduce){
-    .magnet:hover{background:color-mix(in srgb,var(--ink) 88%,var(--bg))}
+    .magnet:hover{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
   }
 
   /* ============ footer ============ */
@@ -499,7 +522,7 @@
        than leaving the single effect that ignores the preference. */
     .f-glas .f-glas-yta{-webkit-backdrop-filter:none !important; backdrop-filter:none !important}
     .f-glas:hover .f-glas-yta,
-    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink) 13%, transparent)}
+    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink-hover) 13%, transparent)}
     /* Same answer for the toolbar: keep the lift, drop the see-through. */
     .tools[data-stuck]{background:var(--bg-1);
       -webkit-backdrop-filter:none !important; backdrop-filter:none !important}
@@ -517,15 +540,26 @@
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Two knobs that restyle all one hundred and five studies at once. Both are written as
+     Four knobs that restyle all one hundred and five studies at once. All are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
      the whole reason they are tokens and not a class.
 
-     The primary re-points --ink and --accent and nothing else. Every effect
-     reads its colour through those two, and no page chrome reads either, so
-     the tint stops at the stage edge and the toolbar stays graphite.
+     Three colours, because a monochrome page hides the fact that --ink was
+     doing three jobs: TEXT is the label at rest, ACCENT is the fill and the
+     mark, HOVER is whatever arrives when you point at it. Set all three the
+     same and the page behaves exactly as it did when there was one swatch.
+
+     Each is fitted before it is written. A dark-only page cannot take a dark
+     colour in any of the three roles — the label would go under AA, the fill
+     would vanish into the panel — so lightness is walked up until the role
+     clears its threshold: 4.5:1 for text, 3:1 for a fill or a border, both
+     measured on the card. Hue and saturation survive. The readout says when a
+     colour moved, so the fit is never silent.
+
+     No page chrome reads any of the three, so the tint stops at the stage edge
+     and the toolbar stays graphite whatever is set.
 
      Radius is deliberately partial. Six studies fix or animate their own
      corner — 09 Corners, 13 Draw, 14 Chamfer, 22 Diagonal radius, 23 Rule
@@ -538,6 +572,18 @@
      second line, which reads as a column rule for a layout that has no columns. */
   .tools-sep{width:1px; height:26px; align-self:center; flex:none;
     background:var(--hairline); margin:0 -6px}
+  /* Caption and swatch as one <label>, so the caption IS the accessible name
+     and the hit target is the pair rather than 28 square pixels. Three of these
+     sit on one line: the toolbar is sticky and every row it grows costs the
+     reader viewport for the whole page. */
+  .set-pair{display:inline-flex; align-items:center; gap:7px; cursor:pointer}
+  .set-cap{font-size:11px; font-weight:600; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-low); transition:color var(--t-2) ease}
+  .set-pair:hover .set-cap{color:var(--ink-mid)}
+  /* The marker the fit puts up when it had to move a colour. Inline with the
+     caption rather than in the shared readout, because with three swatches a
+     single readout cannot say WHICH one moved. */
+  .set-cap b{font-weight:400; color:var(--ink-mid); cursor:help}
   /* A native colour input, stripped back to the swatch. It is the only control
      on the page that opens something the page does not draw, so it is worth
      letting the OS own it rather than rebuilding a picker badly. */
@@ -833,10 +879,24 @@
 
   <div class="tools" role="group" aria-label="Restyle the studies">
     <div class="tools-row">
-      <span class="tools-lbl">Primary</span>
-      <input class="set-swatch" type="color" value="#ffffff"
-             aria-label="Primary colour, applied to every study"
-             aria-describedby="set-contrast">
+      <label class="set-pair">
+        <span class="set-cap" data-cap="text">Text</span>
+        <input class="set-swatch" type="color" data-set="text" value="#ffffff"
+               aria-label="Label text colour, applied to every study"
+               aria-describedby="set-contrast">
+      </label>
+      <label class="set-pair">
+        <span class="set-cap" data-cap="accent">Accent</span>
+        <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
+               aria-label="Fill and mark colour, applied to every study"
+               aria-describedby="set-contrast">
+      </label>
+      <label class="set-pair">
+        <span class="set-cap" data-cap="hover">Hover</span>
+        <input class="set-swatch" type="color" data-set="hover" value="#ffffff"
+               aria-label="The colour that arrives on hover, applied to every study"
+               aria-describedby="set-contrast">
+      </label>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
     <div class="tools-sep" aria-hidden="true"></div>
@@ -2082,7 +2142,7 @@
   /* rect.e-draw-nib, not .e-draw-nib: the shared rect rule below is 0-2-1 and this
      was 0-2-0, so this element's whole transition list lost the cascade and the
      opacity half of it never ran at all. Matching the rect makes it 0-3-1. */
-  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink); stroke-width:2.5; stroke-linecap:round;
+  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink-hover); stroke-width:2.5; stroke-linecap:round;
     stroke-dasharray:2 80; stroke-dashoffset:calc(var(--draw) - 41); opacity:0;
     transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0), opacity var(--t-5) linear}
   /* 0s, not a duration: a pen is at full weight the moment it touches down. The
@@ -2100,7 +2160,7 @@
   .e-draw:focus-visible{--draw:0.5}
 
   /* 28 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
-  .e-chamfer{border-radius:0; color:var(--on-ink)}
+  .e-chamfer{border-radius:0; color:var(--ink-on-fill)}
   .e-chamfer::before{
     content:""; position:absolute; inset:0; background:var(--ink);
     clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -2266,7 +2326,7 @@ document.addEventListener("DOMContentLoaded", function () {
                background-color var(--t-5) var(--e-out), box-shadow var(--t-5) var(--e-out);
   }
   .f-glas .lbl{ position:relative }
-  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink) 22%, var(--line)) }
+  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 22%, var(--line)) }
   .f-glas:hover .f-glas-yta, .f-glas:focus-visible .f-glas-yta{
     background-color:color-mix(in srgb, var(--ink) 7%, transparent);
     box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 65%, transparent);
@@ -2397,9 +2457,9 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
   }
   .f-kant .lbl{ position:relative; z-index:1 }
-  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink) 24%, var(--line)) }
+  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 24%, var(--line)) }
   /* .btn carried, so the press beats the hover pair's (0,2,0) — card 51's note. */
-  .btn.f-kant:active{ border-color:var(--accent); transition-duration:var(--t-1) }
+  .btn.f-kant:active{ border-color:var(--ink-hover); transition-duration:var(--t-1) }
   .f-kant .f-kant-lamp{ display:none }
   @supports (offset-path: border-box){
     .f-kant .f-kant-lamp{
@@ -2507,7 +2567,7 @@ document.addEventListener("DOMContentLoaded", function () {
      is not emphasis at rest — a rest state is a picture, and that one was
      lopsided. The gesture gives up 5px and gains 2px in the other axis, which
      is a smaller movement in a straighter line. */
-  .g-measure{padding:17px 34px; color:var(--on-ink)}
+  .g-measure{padding:17px 34px; color:var(--ink-on-fill)}
   .g-measure .g-measure-trim{
     position:absolute; inset:0; border:1px solid var(--line);
     border-radius:inherit; pointer-events:none;
@@ -2596,7 +2656,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-caret{gap:7px}
   .h-caret .h-caret-slot{position:relative; display:block; width:1.5px; height:1em}
   .h-caret .h-caret-bar{
-    position:absolute; inset:0; background:var(--accent); border-radius:1px;
+    position:absolute; inset:0; background:var(--ink-hover); border-radius:1px;
     opacity:0; transform:scaleY(.35); transform-origin:50% 100%;
     transition:opacity var(--t-2) ease, transform var(--t-4) var(--e-quint);
   }
@@ -2717,7 +2777,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .i-give .i-give-lbl{display:inline-block; transform:scale(1); transition:transform var(--t-3) var(--e-out)}
   /* .btn.i-give above is (0,2,0), so the hover has to carry .btn too or it loses. */
-  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink) 40%,var(--line-ctl))}
+  .btn.i-give:hover, .btn.i-give:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 40%,var(--line-ctl))}
   .btn.i-give:active{transition-duration:var(--t-1)}
   .btn.i-give:active .i-give-lbl{transform:scale(1.030928); transition-duration:var(--t-1)}
 
@@ -2824,7 +2884,7 @@ document.addEventListener("DOMContentLoaded", function () {
     d:path("M0 2 Q60 2 120 2");
     transition:d var(--t-4) var(--e-quint);
   }
-  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--ink)}
+  .i-beam:hover .i-beam-rule, .i-beam:focus-visible .i-beam-rule{color:var(--ink-hover)}
   .i-beam:hover .i-beam-rule path, .i-beam:focus-visible .i-beam-rule path{
     d:path("M0 2 Q60 12 120 2");
   }
@@ -2854,7 +2914,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-rule .i-rule-lbl{
     text-decoration-line:underline;
     text-decoration-skip-ink:auto;
-    text-decoration-color:color-mix(in srgb,var(--ink) 42%,transparent);
+    text-decoration-color:color-mix(in srgb,var(--ink-text) 42%,transparent);
     text-decoration-thickness:1px;
     text-underline-offset:.26em;
     transition:text-decoration-thickness var(--t-4) var(--e-quint),
@@ -2864,7 +2924,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-rule:hover .i-rule-lbl, .i-rule:focus-visible .i-rule-lbl{
     text-decoration-thickness:2px;
     text-underline-offset:.12em;
-    text-decoration-color:var(--ink);
+    text-decoration-color:var(--ink-text);
   }
 
   /* 58 It matches your tempo — the carrier is deliberately the plainest thing
@@ -2880,7 +2940,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:background-color var(--i-rung) var(--e-out),
                color var(--i-rung) var(--e-out), transform var(--t-1) var(--e-out);
   }
-  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink); color:var(--on-ink)}
+  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink-hover); color:var(--on-ink-hover)}
 
   /* 59 The exit remembers — the return home is handed the pointer's exit
      velocity and settled by a critically damped spring (omega 20 rad/s), so a
@@ -3068,7 +3128,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.j-dir{overflow:hidden}
   .j-dir .j-dir-tile{
     position:absolute; inset:0; pointer-events:none;
-    background:var(--ink);
+    background:var(--ink-hover);
     --j-x:0%; --j-y:100%;
     transform:translate(var(--j-x), var(--j-y));
     transition:transform var(--t-5) var(--e-quint);
@@ -3079,7 +3139,7 @@ document.addEventListener("DOMContentLoaded", function () {
      change; the tile's duration less the colour's puts the label back to ink
      exactly as the last of the fill leaves the frame. */
   .j-dir .lbl{position:relative; transition:color var(--t-1) ease}
-  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-1)}
+  .j-dir:hover .lbl, .j-dir:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
 
   /* 76 The wave — the fill rises with a curved leading edge that flattens as it
      lands, so it reads as liquid finding its level rather than a rectangle
@@ -3095,7 +3155,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.j-wave{overflow:hidden}
   .j-wave .j-wave-fill{
     position:absolute; left:-12%; right:-12%; bottom:0; height:100%;
-    pointer-events:none; background:var(--ink);
+    pointer-events:none; background:var(--ink-hover);
     border-radius:56% 44% 0% 0% / 34% 34% 0% 0%;
     transform:translateY(100%);
     transition:transform var(--t-5) var(--e-quint), border-radius var(--t-5) var(--e-out) var(--d-2);
@@ -3106,7 +3166,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   /* Same rule as 78: the colour lands as the fill clears, not after it. */
   .j-wave .lbl{position:relative; transition:color var(--t-1) ease}
-  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
+  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 77 In one order, out another — the one thing a gesture variant cannot do at
      all: its exit is always its entrance played backwards. Here the rest-state
@@ -3180,7 +3240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     border-radius:6px; padding:16px 24px;
   }
   .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
-  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink)}
+  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink-text)}
 </style>
 
 
@@ -3410,18 +3470,18 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:background-color var(--t-3) ease, color var(--t-3) ease, border-color var(--t-3) ease,
                transform var(--t-1) var(--e-out);
   }
-  .k-pair .k-pair-a{background-color:var(--ink); color:var(--on-ink)}
+  .k-pair .k-pair-a{background-color:var(--ink); color:var(--ink-on-fill)}
   .k-pair .k-pair-b{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
-    color:var(--ink); border-color:var(--line-ctl);
+    color:var(--ink-text); border-color:var(--line-ctl);
   }
-  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 90%,var(--bg))}
+  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-a{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
-    color:var(--ink); border-color:var(--line-ctl);
+    color:var(--ink-text); border-color:var(--line-ctl);
   }
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-b{
-    background-color:var(--ink); color:var(--on-ink); border-color:transparent;
+    background-color:var(--ink-hover); color:var(--on-ink-hover); border-color:transparent;
   }
 
   /* 65 The divider yields — the two hairlines touching the hovered segment
@@ -3441,7 +3501,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--line-ctl);
     transition:opacity var(--t-3) ease;
   }
-  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink) 7%,transparent)}
+  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 7%,transparent)}
   .k-div .k-div-i:is(:hover,:focus-visible)::before,
   .k-div .k-div-i:is(:hover,:focus-visible) + .k-div-i::before{opacity:0}
 </style>
@@ -3492,14 +3552,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .l-knurl .l-knurl-grip{
     position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    color:var(--ink); opacity:0;
+    color:var(--ink-hover); opacity:0;
     background-image:repeating-linear-gradient(72deg, currentColor 0 1px, transparent 1px 6px);
     -webkit-mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
     mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
     transition:opacity var(--t-4) var(--e-out);
   }
   .l-knurl .lbl{position:relative}
-  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
   .l-knurl:hover .l-knurl-grip, .l-knurl:focus-visible .l-knurl-grip{opacity:.17}
 
   /* 45 Deboss — a letterpress impression, or a stamped nameplate. The exact
@@ -3513,7 +3573,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--lift-bg); border:1px solid var(--line-ctl);
     transition:border-color var(--t-3) ease;
   }
-  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink) 38%,var(--line-ctl))}
+  .btn.l-deboss:hover, .btn.l-deboss:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
   .l-deboss .l-deboss-lbl{
     display:inline-block;
     text-shadow:0 -1px 0 transparent, 0 1px 0 transparent;
@@ -3521,7 +3581,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.l-deboss:active{transform:scale(1)}
   .btn.l-deboss:active .l-deboss-lbl{
-    color:color-mix(in srgb,var(--ink) 70%,var(--lift-bg));
+    color:color-mix(in srgb,var(--ink-text) 70%,var(--lift-bg));
     /* The shadow does most of the work and the highlight is a bonus. That was
        written when a light mode existed and the highlight collapsed in it —
        --l-lys and --lift-bg landed five values apart, so a plate that was
@@ -3551,7 +3611,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:clip-path var(--t-5) var(--e-quint), color var(--t-3) ease;
   }
   .l-gauge:hover .l-gauge-rule, .l-gauge:focus-visible .l-gauge-rule{
-    clip-path:inset(0 0 0 0); color:var(--ink);
+    clip-path:inset(0 0 0 0); color:var(--ink-hover);
   }
 
   /* 47 The data plate — the small engraved plate on a machine, and the first
@@ -3572,7 +3632,7 @@ document.addEventListener("DOMContentLoaded", function () {
     position-area:top center; margin-bottom:8px;
     position-try-fallbacks:flip-block;
     font:500 10px/1 var(--mono); letter-spacing:.1em;
-    color:var(--on-ink); background:var(--ink);
+    color:var(--on-ink-hover); background:var(--ink-hover);
     padding:5px 7px; border-radius:5px; pointer-events:none;
     display:none; opacity:0;
     transition:opacity var(--t-2) var(--e-out), display var(--t-2) allow-discrete;
@@ -3736,7 +3796,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .n-join .n-join-row{justify-self:start}
   .n-join .n-join-plate,
   .n-join .n-join-mark{
-    background:var(--ink); color:var(--on-ink);
+    background:var(--ink); color:var(--ink-on-fill);
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint);
   }
   .n-join .n-join-plate{padding:15px 26px; border-radius:999px; transform:translateX(0)}
@@ -3934,9 +3994,9 @@ document.addEventListener("DOMContentLoaded", function () {
      It goes imperceptible once the plate turns white, which is fine — a white
      plate on a dark card is its own edge. */
   .o-plate{border:1px solid var(--line-ctl); border-radius:var(--r-md);
-    background:var(--lift-bg); color:var(--ink);
+    background:var(--lift-bg); color:var(--ink-text);
     transition:background var(--t-3) ease,color var(--t-3) ease}
-  .o-plate:hover,.o-plate:focus-visible{background:var(--accent); color:var(--on-accent)}
+  .o-plate:hover,.o-plate:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
 
   /* 90 The hatch withdraws — the surface inverts and the hatching leaves by
      the trailing edge rather than fading where it stands. The inversion is
@@ -3949,7 +4009,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Boundary for the same reason as card 89. The hatch is not one: it is the
      thing that leaves. */
   .o-hatch{position:relative; overflow:hidden; border:1px solid var(--line-ctl);
-    background:var(--lift-bg); color:var(--ink);
+    background:var(--lift-bg); color:var(--ink-text);
     transition:background var(--t-3) ease,color var(--t-3) ease}
   .o-hatch::before{content:""; position:absolute; inset:0; pointer-events:none;
     background:repeating-linear-gradient(135deg,
@@ -3957,7 +4017,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-4) var(--e-quint),opacity var(--t-2) ease}
   .o-hatch:hover::before,
   .o-hatch:focus-visible::before{transform:translateX(101%); opacity:0}
-  .o-hatch:hover,.o-hatch:focus-visible{background:var(--accent); color:var(--on-accent)}
+  .o-hatch:hover,.o-hatch:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
   .o-hatch .lbl{position:relative}
 
   /* 91 Stepped fill — the only new mechanism in the set. Six columns rise from
@@ -4022,7 +4082,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-step:hover .o-step-fill span:nth-child(6),
   .o-step:focus-visible .o-step-fill span:nth-child(6){transition-delay:calc(var(--t-stagger) * 5)}
   .o-step:hover .lbl,
-  .o-step:focus-visible .lbl{color:var(--on-accent); transition-delay:var(--t-2)}
+  .o-step:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--t-2)}
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
      card would still arrive in sequence with nothing animating between the
      steps — six jumps instead of one. These are the delays this section adds,
@@ -4075,7 +4135,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-part{padding:0; background:none; border:0; border-radius:999px}
   .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-part .p-part-plate,
-  .p-part .p-part-mark{background:var(--ink); color:var(--on-ink);
+  .p-part .p-part-mark{background:var(--ink); color:var(--ink-on-fill);
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
   .p-part .p-part-plate{padding:15px 26px; border-radius:999px 0 0 999px}
   .p-part .p-part-mark{display:grid; place-items:center; width:46px;
@@ -4105,7 +4165,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-walk{padding:0; background:none; border:0; border-radius:999px}
   .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-walk .p-walk-plate,
-  .p-walk .p-walk-mark{background:var(--ink); color:var(--on-ink); border-radius:999px;
+  .p-walk .p-walk-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px;
     position:relative; transform:translateX(0);
     transition:transform var(--t-5) var(--e-quint)}
   .p-walk .p-walk-plate{padding:15px 26px; z-index:0}
@@ -4127,15 +4187,15 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-trade .p-trade-mark{border-radius:999px;
     transition:background-color var(--t-3) var(--e-out), color var(--t-3) var(--e-out),
       box-shadow var(--t-3) var(--e-out)}
-  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--on-ink);
+  .p-trade .p-trade-plate{padding:15px 26px; background:var(--ink); color:var(--ink-on-fill);
     box-shadow:inset 0 0 0 1px transparent}
   .p-trade .p-trade-mark{display:grid; place-items:center; width:46px;
-    background:none; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line-ctl)}
+    background:none; color:var(--ink-text); box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .p-trade:hover .p-trade-plate,
-  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink);
+  .p-trade:focus-visible .p-trade-plate{background:none; color:var(--ink-text);
     box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .p-trade:hover .p-trade-mark,
-  .p-trade:focus-visible .p-trade-mark{background:var(--ink); color:var(--on-ink);
+  .p-trade:focus-visible .p-trade-mark{background:var(--ink-hover); color:var(--on-ink-hover);
     box-shadow:inset 0 0 0 1px transparent}
 
   /* 69 The arrow leaves, the plates stay — the two masses hold perfectly still
@@ -4167,7 +4227,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-cycle{padding:0; background:none; border:0; border-radius:999px}
   .p-cycle .p-cycle-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-cycle .p-cycle-plate,
-  .p-cycle .p-cycle-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-cycle .p-cycle-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
   .p-cycle .p-cycle-plate{padding:15px 26px}
   .p-cycle .p-cycle-mark{display:grid; place-items:center; width:46px; overflow:hidden}
   .p-cycle .p-cycle-cyc{display:grid; width:100%; justify-items:center}
@@ -4209,7 +4269,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-hinge{padding:0; background:none; border:0; border-radius:999px}
   .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
   .p-hinge .p-hinge-plate,
-  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
   .p-hinge .p-hinge-plate{padding:15px 26px}
   .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
     transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
@@ -4224,7 +4284,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-slip{padding:0; background:none; border:0; border-radius:999px}
   .p-slip .p-slip-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-slip .p-slip-plate,
-  .p-slip .p-slip-mark{background:var(--ink); color:var(--on-ink); border-radius:999px}
+  .p-slip .p-slip-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
   .p-slip .p-slip-plate{padding:15px 26px; position:relative; z-index:1}
   .p-slip .p-slip-mark{display:grid; place-items:center; width:46px;
     position:relative; z-index:0; transform:translateX(0);
@@ -4375,7 +4435,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser::before,
   .btn.q-riser::after{
     content:""; position:absolute; top:100%; width:26px; height:0;
-    background:var(--ink); border-radius:0 0 3px 3px;
+    background:var(--ink-hover); border-radius:0 0 3px 3px;
     transition:height var(--t-3) var(--e-out);
   }
   .btn.q-riser::before{left:17%}
@@ -4679,9 +4739,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.s-sprite .lbl{position:relative; z-index:1}
   .btn.s-sprite:hover,
-  .btn.s-sprite:focus-visible{color:var(--on-ink)}
+  .btn.s-sprite:focus-visible{color:var(--on-ink-hover)}
   .btn.s-sprite:hover::after,
-  .btn.s-sprite:focus-visible::after{background:var(--ink)}
+  .btn.s-sprite:focus-visible::after{background:var(--ink-hover)}
   .btn.s-sprite:active{transform:none}
   .btn.s-sprite:active::after{background:var(--ink-mid)}
 
@@ -4853,7 +4913,7 @@ document.addEventListener("DOMContentLoaded", function () {
     width:100%; transition:width var(--t-run) linear;
   }
   .btn.t-report[data-state="done"]{
-    background:var(--ink); color:var(--on-ink); border-color:var(--ink);
+    background:var(--ink); color:var(--ink-on-fill); border-color:var(--ink);
   }
 
   /* 73 The plate becomes the mark — the plate collapses to a square and the
@@ -4932,7 +4992,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.t-hold .t-hold-fill{
     position:absolute; left:0; top:0; bottom:0; width:0; z-index:2;
-    background:var(--ink); overflow:hidden;
+    background:var(--ink-hover); overflow:hidden;
     transition:width var(--t-3) var(--e-out);
   }
   /* Above the label, not behind it. The plate's own label stays white for the
@@ -4945,7 +5005,7 @@ document.addEventListener("DOMContentLoaded", function () {
      label, and nowrap so it never reflows as the fill narrows it. */
   .btn.t-hold .t-hold-over{
     position:absolute; left:28px; top:50%; transform:translateY(-50%);
-    white-space:nowrap; color:var(--on-ink);
+    white-space:nowrap; color:var(--on-ink-hover);
   }
   .btn.t-hold[data-state="holding"] .t-hold-fill{
     width:100%; transition:width var(--t-hold) linear;
@@ -5517,7 +5577,7 @@ document.addEventListener("DOMContentLoaded", function () {
      versions. */
   .btn.v-inner.btn--line{border-color:var(--line-ctl)}
   .btn.v-inner.btn--line:hover,
-  .btn.v-inner.btn--line:focus-visible{border-color:var(--ink)}
+  .btn.v-inner.btn--line:focus-visible{border-color:var(--ink-hover)}
   /* And the fill version inverts, because a white plate cannot be lit brighter:
      --ink IS the plate, and an inset white glow on it measures four units. So
      the arm is the same statement — «the edge is live» — in the only ink the
@@ -5846,7 +5906,7 @@ document.addEventListener("DOMContentLoaded", function () {
      fade, failed to indicate focus. */
   .x-dotted::after{
     content:""; position:absolute; inset:4px; pointer-events:none;
-    border:1px dotted var(--ink);
+    border:1px dotted var(--ink-hover);
     border-radius:calc(var(--btn-r) - 4px);
     opacity:0; transition:opacity var(--t-1) steps(1,end);
   }
@@ -6461,7 +6521,7 @@ document.addEventListener("DOMContentLoaded", function () {
      a step down from the face and a step up from the stage, which is card
      114's rule for a surface that faces away. One box-shadow, drawn at the
      plate's own radius, so the toolbar's radius slider never unseats it.
-     The hue is the toolbar's job, not this card's: feed the Primary control
+     The hue is the toolbar's job, not this card's: feed the Accent swatch
      #ff90e8 and the original reassembles itself — pink plate, computed black
      label — without this stylesheet naming a colour the page has never
      allowed. The rest-side shadow is already there at offset zero, hidden
@@ -6551,7 +6611,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <button type="button" class="btn btn--solid z-gum"><span class="lbl">I want this</span></button>
       </div>
       <h3><span class="num">117</span>The shadow doesn't move</h3>
-      <p>Gumroad's checkout button, quoted in graphite. The plate slides up-left four pixels while its shadow grows down-right by the same four on the same rung, so the two cancel frame by frame: the shadow never moves — it is the seat the plate slid off, and pressing sets the plate back into it. The source locks that pair with transition:all, which is structurally right and pays by arming every property it never names; here the lock is the same two tokens written twice, and its 140ms is half a frame off this page's second rung. The seat is not black — card 116 already said why an absence of light cannot be drawn here — so it takes the ladder, below the face and above the stage. The pink is the toolbar's job: feed the Primary control #ff90e8 and the original reassembles itself, computed black label and all.</p>
+      <p>Gumroad's checkout button, quoted in graphite. The plate slides up-left four pixels while its shadow grows down-right by the same four on the same rung, so the two cancel frame by frame: the shadow never moves — it is the seat the plate slid off, and pressing sets the plate back into it. The source locks that pair with transition:all, which is structurally right and pays by arming every property it never names; here the lock is the same two tokens written twice, and its 140ms is half a frame off this page's second rung. The seat is not black — card 116 already said why an absence of light cannot be drawn here — so it takes the ladder, below the face and above the stage. The pink is the toolbar's job: feed the Accent swatch #ff90e8 and the original reassembles itself, computed black label and all.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -6799,18 +6859,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // ---- Global settings: primary and radius ---------------------------
+    // ---- Global settings: three colours and a radius --------------------
     // Written as inline custom properties on the root element. That is not
     // decoration: the Copy buttons resolve their alias chains against the
     // computed root, so anything set here travels into the copied snippet and
     // the page never hands out CSS that contradicts what is on screen.
     var SET_KEY = 'knapplabbet-utseende';
     var PILL    = 28;                       // the top of the slider IS the pill
-    var swatch  = tools.querySelector('.set-swatch');
     var range   = tools.querySelector('.set-range');
     var readC   = tools.querySelector('[data-read="colour"]');
     var readR   = tools.querySelector('[data-read="radius"]');
-    var look    = {colour:'', radius:PILL};  // '' — the page's own monochrome
 
     // The panel colour is read off a rendered card rather than off the --bg-1
     // token, because the token arrives from a stylesheet this page does not own
@@ -6821,21 +6879,19 @@ document.addEventListener("DOMContentLoaded", function () {
       return m ? [+m[0], +m[1], +m[2]] : [20, 20, 20];
     }
     var PANEL = rgbOf(cards[0], 'backgroundColor');
-    // White is the default primary, and it is graphite's white rather than
-    // #ffffff — the system ships --ink-hi at a shade under pure, because pure
-    // white on near-black glares. Measured off a rendered button instead of
-    // named here, so it stays correct if the ladder is ever retuned, and read
-    // BEFORE the first paint, while the root still carries no override.
+    // White is the default for all three, and it is graphite's white rather
+    // than #ffffff — the system ships --ink-hi at a shade under pure, because
+    // pure white on near-black glares. Still measured rather than named, so it
+    // stays correct if the ladder is ever retuned, and still read BEFORE the
+    // first paint while the root carries no override.
     //
-    // Ask for the TOKEN, not for whatever element happens to be first. This
-    // read used to be rgbOf(document.querySelector('.btn'), 'color'), which
-    // silently coupled the default to DOM order: once the reorder put a
-    // btn--solid first, its `color` was --on-ink — near-black. The swatch
-    // opened on #101010, the readout claimed 1.1:1 instead of 16:1, and the
-    // input handed that value straight back, repainting all 105 studies grey
-    // the moment the picker was opened and closed again. A probe that asks for
-    // var(--ink) and nothing else cannot be broken by reordering or by a
-    // variant change.
+    // Measured off a PROBE, not off the first .btn. The first button on the
+    // page is a solid one, so its computed colour is --on-ink — near-black —
+    // and reading the default off it put #101010 in the swatch and 1.1:1 in
+    // the readout. A probe that asks for var(--ink) and nothing else cannot be
+    // wrong-footed by whichever variant happens to sort first, and computed
+    // colour still comes back as rgb() whatever syntax the token was authored
+    // in, which was the reason for measuring instead of naming.
     var probe = document.createElement('span');
     probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink)';
     document.body.appendChild(probe);
@@ -6846,6 +6902,40 @@ document.addEventListener("DOMContentLoaded", function () {
     // into storage, so an affected visitor is not stuck grey forever.
     var BAD_COLOUR = getComputedStyle(document.documentElement)
                        .getPropertyValue('--on-ink').trim().toLowerCase();
+
+    // The three roles --ink used to play at once, and what each has to clear
+    // against the card to stay legible.
+    //
+    //   min   4.5 is the AA floor for text. 3 is WCAG 1.4.11 for a non-text
+    //         boundary, which is the same argument --line-ctl already makes a
+    //         few hundred lines up. ACCENT is held to 4.5 rather than 3 even
+    //         though it is a fill token: card 31's --f-lys and card 44's
+    //         --l-lys are local pair aliases fed from --ink, and both put it
+    //         behind a label. One token reaching text by a route this pass
+    //         cannot see is enough to make the stricter floor the honest one.
+    //   set   the tokens the role writes.
+    //   set   the tokens the role writes directly. The label-on-a-fill tokens
+    //         are NOT here: they depend on the text colour and on the fill at
+    //         once, so paint() derives them after all three have been fitted.
+    var ROLES = [
+      {key:'text',   min:4.5, set:['--ink-text']},
+      {key:'accent', min:4.5, set:['--ink', '--accent']},
+      {key:'hover',  min:3,   set:['--ink-hover']}
+    ];
+    // '' — unset, meaning the page's own monochrome. Unset is not «follow
+    // another swatch»: leaving the token off the root lets the authored alias
+    // stand, and the aliases are deliberately uneven. --ink-text is pinned to
+    // --ink-hi so the label never drifts when only the accent is picked, while
+    // --ink-hover is pinned to --ink so hover DOES follow the accent until it
+    // is given a colour of its own. That is the behaviour a reader expects
+    // from each: text stays put, hover goes along.
+    var look = {text:'', accent:'', hover:'', radius:PILL};
+    var swatches = {}, caps = {};
+    ROLES.forEach(function(r){
+      swatches[r.key] = tools.querySelector('.set-swatch[data-set="' + r.key + '"]');
+      caps[r.key]     = tools.querySelector('.set-cap[data-cap="' + r.key + '"]');
+      caps[r.key].setAttribute('data-label', caps[r.key].textContent);
+    });
 
     function chan(c){ c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
     function lum(c){ return .2126 * chan(c[0]) + .7152 * chan(c[1]) + .0722 * chan(c[2]); }
@@ -6878,47 +6968,116 @@ document.addEventListener("DOMContentLoaded", function () {
             : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
       return [(t[0] + m) * 255, (t[1] + m) * 255, (t[2] + m) * 255];
     }
-    // A dark-only page cannot take a dark accent: --ink colours label text as
-    // well as fills, so a navy primary would put nine cards' labels under AA on
-    // the panel. Hue and saturation are kept and lightness is walked up until
-    // the label clears 4.5:1 — at worst that lands on white, which is where the
-    // page started. The readout says when it moved, so the fit is never silent.
-    function fit(hex){
-      var hsl = toHsl(toRgb(hex)), rgb = toRgb(hex), moved = false;
-      while (ratio(rgb, PANEL) < 4.5 && hsl[2] < 1){
-        hsl[2] = Math.min(1, hsl[2] + .01);
-        rgb = fromHsl(hsl[0], hsl[1], hsl[2]);
-        moved = true;
+    // Hue and saturation are kept and lightness is walked until the colour
+    // clears its floor against whatever it is sitting on. BOTH directions are
+    // tried and the smaller move wins, because this now fits against fills as
+    // well as against the card: on the dark panel the only way out is up, but
+    // a label on a near-white accent has to go DOWN, and a one-way walk would
+    // send it to white on white. Whichever direction is chosen, the caption
+    // says it moved, so the fit is never silent.
+    function fitOn(hex, min, bg){
+      var base = toRgb(hex);
+      if (ratio(base, bg) >= min){
+        return {rgb: base, hex: toHex(base), moved: false, ratio: ratio(base, bg)};
       }
-      return {rgb: rgb, hex: toHex(rgb), moved: moved, ratio: ratio(rgb, PANEL)};
+      var hsl = toHsl(base), best = null;
+      [1, -1].forEach(function(dir){
+        var l = hsl[2];
+        for (var i = 0; i < 100; i++){
+          l += dir * .01;
+          if (l < 0 || l > 1) break;
+          var rgb = fromHsl(hsl[0], hsl[1], l);
+          if (ratio(rgb, bg) >= min){
+            var d = Math.abs(l - hsl[2]);
+            if (!best || d < best.d) best = {rgb: rgb, d: d};
+            break;
+          }
+        }
+      });
+      // Neither direction clears it, which on a mid-grey background can happen
+      // at 4.5:1 for any hue. Take the extreme that gets closest — black or
+      // white — rather than leaving something illegible on screen.
+      if (!best){
+        var w = [255, 255, 255], b = [0, 0, 0];
+        best = {rgb: ratio(w, bg) >= ratio(b, bg) ? w : b};
+      }
+      return {rgb: best.rgb, hex: toHex(best.rgb), moved: true, ratio: ratio(best.rgb, bg)};
     }
-    // Text ON the primary. The fit above guarantees the primary is lighter than
-    // the panel, so this resolves to black in practice — it is computed anyway
-    // rather than assumed, because the guarantee lives in another function.
+    // The card is what the three swatches are fitted against.
+    function fit(hex, min){ return fitOn(hex, min, PANEL); }
+    // Text ON a fitted colour. The fit above guarantees the colour is lighter
+    // than the panel, so this resolves to black in practice — it is computed
+    // anyway rather than assumed, because the guarantee lives in another
+    // function and this one should survive that function changing.
     function onTop(rgb){
       return ratio(rgb, [0, 0, 0]) >= ratio(rgb, [255, 255, 255]) ? '#000000' : '#ffffff';
     }
 
     function paint(){
       var root = document.documentElement.style;
-      if (look.colour){
-        var f = fit(look.colour);
-        root.setProperty('--ink', f.hex);
-        root.setProperty('--accent', f.hex);
-        root.setProperty('--on-ink', onTop(f.rgb));
-        root.setProperty('--on-accent', onTop(f.rgb));
-        readC.innerHTML = f.ratio.toFixed(1) + ':1' + (f.moved ? ' <b>↑</b>' : '');
-        readC.title = f.moved
-          ? 'Lightened to ' + f.hex + ' so the label clears 4.5:1 on the panel. A dark page cannot carry a dark accent.'
-          : 'Label contrast on the panel.';
-      } else {
-        ['--ink', '--accent', '--on-ink', '--on-accent'].forEach(function(k){ root.removeProperty(k); });
-        swatch.value = WHITE;
-        readC.textContent = ratio(WHITE_RGB, PANEL).toFixed(1) + ':1';
-        readC.title = 'The default primary: ' + WHITE + ', graphite\u2019s white. '
-                    + 'It is left as an alias rather than written to the root, so a copied '
-                    + 'snippet still reads --ink-hi and follows the system it lands in.';
+      var textRatio = null, moved = 0;
+
+      // Pass one: fit each swatch against the card, independently of the others.
+      var fitted = {};
+      ROLES.forEach(function(r){ fitted[r.key] = look[r.key] ? fit(look[r.key], r.min) : null; });
+
+      // What a label actually sits on. Unset falls through the same alias chain
+      // the stylesheet uses — hover follows the accent, the accent follows the
+      // page's own white — so these are the real backgrounds either way.
+      var accentRgb = fitted.accent ? fitted.accent.rgb : WHITE_RGB;
+      var hoverRgb  = fitted.hover  ? fitted.hover.rgb  : accentRgb;
+
+      // The label ON a fill. With no text colour chosen this is the computed
+      // black-or-white it always was. With one chosen it is that colour
+      // re-fitted against the fill, because a reader who picks a label colour
+      // means the label — not «the label except on the filled ones». Cards 01
+      // and 02 are both solid, so anything else makes the swatch look broken
+      // on the first two studies on the page.
+      function labelOn(rgb){
+        return fitted.text ? fitOn(look.text, 4.5, rgb).hex : onTop(rgb);
       }
+
+      // Pass two: write. Each token is written only while something it depends
+      // on is set, so an untouched toolbar still leaves every alias standing.
+      var anyColour = !!(fitted.text || fitted.accent || fitted.hover);
+      ROLES.forEach(function(r){
+        var cap = caps[r.key], sw = swatches[r.key], label = cap.getAttribute('data-label');
+        var f = fitted[r.key];
+        if (f){
+          r.set.forEach(function(p){ root.setProperty(p, f.hex); });
+          cap.innerHTML = label + (f.moved ? ' <b>↑</b>' : '');
+          cap.title = f.moved
+            ? label + ' moved to ' + f.hex + ', so it clears ' + r.min
+              + ':1 on the card. A dark page cannot carry a dark colour.'
+            : label + ': ' + f.ratio.toFixed(1) + ':1 on the card.';
+          if (f.moved) moved++;
+          if (r.key === 'text') textRatio = f.ratio;
+        } else {
+          r.set.forEach(function(p){ root.removeProperty(p); });
+          sw.value  = WHITE;
+          cap.textContent = label;
+          cap.title = label + ' is unset: ' + WHITE + ', graphite’s white. It is left as '
+                    + 'an alias rather than written to the root, so a copied snippet still '
+                    + 'reads the system token and follows the system it lands in.';
+        }
+      });
+      if (anyColour){
+        root.setProperty('--on-ink',      labelOn(accentRgb));
+        root.setProperty('--on-accent',   labelOn(accentRgb));
+        root.setProperty('--ink-on-fill', labelOn(accentRgb));
+        root.setProperty('--on-ink-hover', labelOn(hoverRgb));
+      } else {
+        ['--on-ink', '--on-accent', '--ink-on-fill', '--on-ink-hover']
+          .forEach(function(p){ root.removeProperty(p); });
+      }
+      // One number, and it is the label's, because the label is the only one
+      // of the three that can put a reader below AA. The fills report
+      // themselves in their own captions.
+      if (textRatio === null) textRatio = ratio(WHITE_RGB, PANEL);
+      readC.textContent = textRatio.toFixed(1) + ':1';
+      readC.title = 'Label contrast on the card.'
+                  + (moved ? ' ' + moved + (moved > 1 ? ' colours were' : ' colour was')
+                             + ' lightened to stay legible — see the ↑.' : '');
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
       // Written here and nowhere else, for the reason in the CSS: the filled
@@ -6929,30 +7088,46 @@ document.addEventListener("DOMContentLoaded", function () {
     function saveLook(){
       try { localStorage.setItem(SET_KEY, JSON.stringify(look)); } catch(e){}
     }
+    var HEX = /^#[0-9a-f]{6}$/i;
     try {
       var stored = JSON.parse(localStorage.getItem(SET_KEY));
       if (stored && typeof stored === 'object'){
+        // A visitor who set a primary under the one-swatch toolbar has
+        // {colour, radius} in storage. That one swatch drove label and fill
+        // together, so replaying it across all three roles reproduces exactly
+        // what they left on screen rather than dropping their setting.
         // An override equal to the default is not an override — and neither is
-        // the inverse ink the swatch used to seed itself with, which nobody
-        // could have meant and which only ever rendered as fitted grey.
-        if (typeof stored.colour === 'string' && /^#[0-9a-f]{6}$/i.test(stored.colour)
-            && stored.colour.toLowerCase() !== WHITE.toLowerCase()
-            && stored.colour.toLowerCase() !== BAD_COLOUR) look.colour = stored.colour;
+        // the inverse ink the old swatch once seeded itself with, which nobody
+        // could have meant and which only ever rendered as fitted grey. Both
+        // are discarded on load, per role too, so an affected visitor comes
+        // back to white instead of grey three times over.
+        var meant = function(v){
+          return typeof v === 'string' && HEX.test(v)
+              && v.toLowerCase() !== WHITE.toLowerCase()
+              && v.toLowerCase() !== BAD_COLOUR;
+        };
+        if (meant(stored.colour)){
+          look.text = look.accent = look.hover = stored.colour;
+        }
+        ROLES.forEach(function(r){
+          if (meant(stored[r.key])) look[r.key] = stored[r.key];
+        });
         if (typeof stored.radius === 'number' && stored.radius >= 0 && stored.radius <= PILL) look.radius = stored.radius;
       }
     } catch(e){}
-    if (look.colour) swatch.value = look.colour;
-    range.value = look.radius;
-
-    swatch.addEventListener('input', function(){
-      // Choosing the default is a way back to it, not an override to store: the
-      // page keeps --ink as an alias so a copied snippet still reads --ink-hi.
-      // It also makes opening the picker and closing it a no-op, which is what
-      // a visitor who changed nothing expects.
-      var v = swatch.value.toLowerCase();
-      look.colour = (v === WHITE.toLowerCase()) ? '' : swatch.value;
-      paint(); saveLook(); apply();
+    ROLES.forEach(function(r){
+      if (look[r.key]) swatches[r.key].value = look[r.key];
+      swatches[r.key].addEventListener('input', function(){
+        // Choosing the default is a way back to it, not an override to store:
+        // the page keeps the authored aliases, so a copied snippet still reads
+        // the monochrome tokens. It also makes opening a picker and closing it
+        // a no-op, which is what a visitor who changed nothing expects.
+        var v = swatches[r.key].value.toLowerCase();
+        look[r.key] = (v === WHITE.toLowerCase()) ? '' : swatches[r.key].value;
+        paint(); saveLook(); apply();
+      });
     });
+    range.value = look.radius;
     range.addEventListener('input', function(){
       look.radius = +range.value; paint(); saveLook(); apply();
     });
@@ -6967,9 +7142,9 @@ document.addEventListener("DOMContentLoaded", function () {
       state = {fav:false, q:'', changes:[], answers:[]};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
-      look  = {colour:'', radius:PILL};
+      look  = {text:'', accent:'', hover:'', radius:PILL};
       range.value  = PILL;
-      paint();
+      paint();   // clears all three swatches back to WHITE on its unset branch
       saveLook();
       favBtn.setAttribute('aria-pressed', 'false');
       apply();
@@ -7365,7 +7540,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // pointer speed once for two of them — and slicing that would break it, so
     // a preamble means the whole block is handed over.
     function trimScript(text, keys){
-      var parts = text.split(/\n(?=[ \t]*\/\/ \d+ )/), body;
+      // A header is `// NN Name — …`: a padded number AND the em dash, both on
+      // the first line — every header in the page carries both. Digits alone
+      // are not a header: card 115's own commentary opens a line with «1 at
+      // the middle of the word», and splitting on bare digits cut its init in
+      // half there, handing Framer an IIFE that never closes.
+      var parts = text.split(/\n(?=[ \t]*\/\/ \d{2,3} [^\n]*—)/), body;
       if (parts.length < 2 || parts[0].trim()){
         body = text;
       } else {
@@ -8439,7 +8619,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","12":"https://framer.com/m/DotBecomesArrow-78XLOF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/TheSecondLine-0blJk6.js","17":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","18":"https://framer.com/m/TheCaret-wBPSsy.js","19":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/TheLantern-JhIelK.js","34":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","39":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","43":"https://framer.com/m/TheKey-SCe6ZA.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/TheLineGauge-h9qIsP.js","47":"https://framer.com/m/TheDataPlate-xAARQs.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","55":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/TheRealUnderline-wBkGEc.js","58":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","60":"https://framer.com/m/TheOthersRecede-uWvqi9.js","61":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/ThePair-XMHcLD.js","65":"https://framer.com/m/TheDividerYields-BQHpVA.js","66":"https://framer.com/m/ThePiecesPart-ySk8HW.js","68":"https://framer.com/m/TheyTradeFill-OyLZbP.js","69":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","70":"https://framer.com/m/TheMarkHinges-RXuV8I.js","71":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","72":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","73":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","74":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/TheWave-vZigVg.js","77":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","78":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","79":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","83":"https://framer.com/m/ItGoesToWork-UWy42D.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/NothingButThePress-sHz8KT.js","87":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","88":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","89":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","90":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","93":"https://framer.com/m/ThePiecesJoin-sc1diW.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/TheSmallGrow-HnmhiG.js","02":"https://framer.com/m/TheSmallShrink-ajrWou.js","03":"https://framer.com/m/ItGrowsFromWhereYouCameIn-eog6DN.js","04":"https://framer.com/m/TheBloom-RWpsxN.js","05":"https://framer.com/m/LitFromWithin-L0zX6y.js","06":"https://framer.com/m/ItBreathesUntilYouArrive-SNdPrk.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/ItDoesNotRotate-v0HRfP.js","101":"https://framer.com/m/TheSameGreyACoarserGrid-kBmNEv.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/TheNeedleSwings-2whx8G.js","104":"https://framer.com/m/OutsetThenInset-D8qete.js","105":"https://framer.com/m/TheDottedRectangle-9Oml2p.js","109":"https://framer.com/m/TheLightStaysPut-XOHMW8.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/TheCircleKnowsTheCorner-TeYLAk.js","111":"https://framer.com/m/TheFillIsThePress-cG4lhD.js","112":"https://framer.com/m/TheLabelDoesntNeedTelling-PejF0I.js","113":"https://framer.com/m/TheLurchIsTheHonestPart-PSdO7O.js","114":"https://framer.com/m/ThePlateHasAThickness-EUDhRm.js","115":"https://framer.com/m/TheWordBows-MM7F2k.js","116":"https://framer.com/m/ItWasAStackAllAlong-btPUfT.js","117":"https://framer.com/m/TheShadowDoesntMove-zfWtgA.js","12":"https://framer.com/m/DotBecomesArrow-78XLOF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/TheSecondLine-0blJk6.js","17":"https://framer.com/m/ThreeDotsBecomeAnArrow-d0jvZ9.js","18":"https://framer.com/m/TheCaret-wBPSsy.js","19":"https://framer.com/m/OnlyWhenItDoesntFit-iFIq1g.js","20":"https://framer.com/m/TheRollLetterByLetter-sNO7gA.js","21":"https://framer.com/m/ALiftNotARoll-c54JXV.js","22":"https://framer.com/m/ItLandsPastItsMark-kEuiBa.js","23":"https://framer.com/m/WordByWord-4yeMBa.js","24":"https://framer.com/m/FromTheMiddleOut-YwEFzr.js","25":"https://framer.com/m/InNoParticularOrder-prs1vH.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/TheLantern-JhIelK.js","34":"https://framer.com/m/TheLightSourceFlips-NAY7oj.js","35":"https://framer.com/m/TheTubeConverges-Mzevog.js","36":"https://framer.com/m/TwoFrames-Xkk1by.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TheMeasureAbsorbsTheTracking-h4a0EX.js","39":"https://framer.com/m/NoDirectionAtAll-o7wENC.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/FillingTheMeasure-LXrYgI.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/TheKey-SCe6ZA.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/TheLineGauge-h9qIsP.js","47":"https://framer.com/m/TheDataPlate-xAARQs.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/ThePlateGivesTheTypeDoesnt-ZyGKeY.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","53":"https://framer.com/m/TheSettle-2TMnOM.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/TheRuleTakesTheLoad-yaC81p.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/TheRealUnderline-wBkGEc.js","58":"https://framer.com/m/ItMatchesYourTempo-yOE1Qb.js","59":"https://framer.com/m/TheExitRemembers-y2VaAw.js","60":"https://framer.com/m/TheOthersRecede-uWvqi9.js","61":"https://framer.com/m/TheTravellingIndicator-OAAkHD.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/ThePair-XMHcLD.js","65":"https://framer.com/m/TheDividerYields-BQHpVA.js","66":"https://framer.com/m/ThePiecesPart-ySk8HW.js","67":"https://framer.com/m/TheMarkWalksThePlate-RYjUHt.js","68":"https://framer.com/m/TheyTradeFill-OyLZbP.js","69":"https://framer.com/m/TheArrowLeavesThePlatesStay-aziC4p.js","70":"https://framer.com/m/TheMarkHinges-RXuV8I.js","71":"https://framer.com/m/TheMarkSlipsBehind-Dy9MUR.js","72":"https://framer.com/m/ItReportsOnItself-UWJJzz.js","73":"https://framer.com/m/ThePlateBecomesTheMark-Jj711d.js","74":"https://framer.com/m/ItAsksYouToMeanIt-MI2Oe0.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/TheWave-vZigVg.js","77":"https://framer.com/m/InOneOrderOutAnother-18NMCZ.js","78":"https://framer.com/m/ItLeavesByTheCorner-SrmbTA.js","79":"https://framer.com/m/TheOpticalCentreHolds-fsTrIz.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/TheRiser-ctCJqg.js","83":"https://framer.com/m/ItGoesToWork-UWy42D.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/NothingButThePress-sHz8KT.js","87":"https://framer.com/m/OverrunsItsMeasure-dmN6vY.js","88":"https://framer.com/m/TooLongToSitStill-Bjw0f6.js","89":"https://framer.com/m/ThePlateHasNoDirection-WLYcBc.js","90":"https://framer.com/m/TheHatchWithdraws-PoZMeK.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/ThePiecesJoin-sc1diW.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js","96":"https://framer.com/m/TheFillHasNoEdge-bwR0MA.js","97":"https://framer.com/m/SetOnAFourPixelGrid-4aMdig.js","98":"https://framer.com/m/TheCornerComesOffInCells-tgUzyJ.js","99":"https://framer.com/m/FourFramesNotATween-owuQxD.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 
 </body>
