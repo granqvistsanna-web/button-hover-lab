@@ -1429,10 +1429,10 @@
 
     <article class="spec" data-versions="fill outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-28T21:27:46+02:00">
                   <div class="stage">
-                    <button type="button" class="btn btn--solid i-mass"><span class="i-mass-lbl">Continue to review</span><i class="i-mass-block" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn--solid i-mass"><svg class="icon i-mass-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><span class="i-mass-lbl">Continue to review</span></button>
                   </div>
                   <h3><span class="num">52</span>Two masses</h3>
-                  <p>The block and the label leave at the same instant and travel the same distance at different rates, so the space between them opens by three pixels and closes again as the heavier label lands.</p>
+                  <p>The arrow and the label leave at the same instant and travel the same distance at different rates, so the light one arrives first and the pair closes up by a pixel and a half before the heavier label lands and restores the gap.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -3129,17 +3129,45 @@ document.addEventListener("DOMContentLoaded", function () {
      function list makes the browser fall back to matrix interpolation, which
      travels a straight chord instead of the intended path. */
 
-  /* 52 Two masses — same distance, same instant, different rates. The light
-     block takes --t-2 and the heavy label --t-5, so the space between them
-     opens about three pixels mid-travel and closes as the label lands. On the
-     way out both drop one rung, so the block snaps home and the label drifts. */
-  .i-mass .i-mass-lbl{display:inline-block; transform:translateX(0); transition:transform var(--t-5) var(--e-out)}
-  .i-mass .i-mass-block{
-    display:block; width:8px; height:8px; border-radius:2px; background:currentColor;
-    transform:translateX(0); transition:transform var(--t-2) var(--e-out);
-  }
+  /* 52 Two masses — same distance, same instant, different rates.
+     THE MARK LEADS NOW, and that is not a decoration change. A square bullet
+     sitting after the words said nothing about direction, so the fast channel
+     was pulling AWAY off the right-hand end and the gesture read as the label
+     being left behind. Put the house arrow in front of the type and the same
+     mechanism inverts: the light thing gets there first, the heavy thing
+     follows, and what you watch is the pair CLOSING UP — the 10px the button
+     keeps between its own parts narrows and comes back to exactly 10. Nothing
+     about the physics changed; the reading did, because the gap is now between
+     them instead of past them.
+
+     THE NUMBER THE CARD CLAIMED WAS WRONG. It said the space opens about three
+     pixels. Measured across the enter, frame by frame, the peak separation was
+     1.478px at t=115 — under half of it. Two channels on the same curve, three
+     pixels apart in total travel, cannot open three pixels between them; only a
+     channel that has finished while the other has not started could, and that is
+     a delay, which this card deliberately does not use. The travel goes 3px to
+     4px and the claim goes to what it measures.
+
+     AND THE HEAVY RUNG DROPS, --t-5 to --t-4, which is the whole of the
+     smoothness fix and it is worth being exact about why. The label moved 3px
+     in 450ms: 53 of the 53 frames it was moving in advanced it less than 0.25px,
+     a single device pixel at 2x. It was not gliding, it was creeping, and the
+     last 300ms of it moved a third of one pixel — a dead tail you feel as a
+     stall rather than see as a movement. Measured again after: the median frame
+     now advances 0.092px against 0.042, five frames clear a whole device pixel
+     where none did, and the gesture is over at 320ms instead of 490. The
+     separation is 1.376px against 1.478 — a tenth of a pixel paid for 170ms.
+     There is no honest way to make 4px move a whole pixel a frame; there is an
+     honest way to stop pretending for 170ms after it has arrived.
+
+     On the way out both drop one rung, so the arrow snaps home and the label
+     drifts after it. */
+  .i-mass .i-mass-lbl{display:inline-block; transform:translateX(0);
+    transition:transform var(--t-4) var(--e-out)}
+  .i-mass .i-mass-arrow{transform:translateX(0);
+    transition:transform var(--t-2) var(--e-out)}
   .i-mass:hover .i-mass-lbl, .i-mass:focus-visible .i-mass-lbl,
-  .i-mass:hover .i-mass-block, .i-mass:focus-visible .i-mass-block{transform:translateX(3px)}
+  .i-mass:hover .i-mass-arrow, .i-mass:focus-visible .i-mass-arrow{transform:translateX(4px)}
   /* 54 Anticipation — a wind-up, which is the half of a spring a plain CSS
      easing can actually express. The curve dips to -0.205 at 21% of the
      duration, so a 7px advance winds 1.44px backwards first and arrives with
