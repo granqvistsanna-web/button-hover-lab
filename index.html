@@ -105,7 +105,7 @@
     --pair-gap: 5px;
     /* A third curve, and the only one that leaves the 0-1 range. Card 54's
        wind-up dips BELOW zero inline; this is the same admission at the other
-       end, and it reopens the question card 53 was retired over — a damped
+       end, and it reopens a question this page had closed — a damped
        spring written as a linear() curve, taken out because a sliding dash has
        no mass to justify it. A hinge does: hardware that swings about a fixed
        pin arrives at a stop, and overrunning it by a couple of degrees is what
@@ -1718,7 +1718,7 @@
                 <button type="button" class="btn btn--line u-land"><span class="lbl"><span class="u-land-c" aria-hidden="true">B</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">o</span><span class="u-land-c" aria-hidden="true">k</span> <span class="u-land-c" aria-hidden="true">a</span> <span class="u-land-c" aria-hidden="true">c</span><span class="u-land-c" aria-hidden="true">a</span><span class="u-land-c" aria-hidden="true">l</span><span class="u-land-c" aria-hidden="true">l</span></span><span class="sr">Book a call</span></button>
               </div>
               <h3><span class="num">22</span>Overshoot</h3>
-              <p>The bounce, and the one card here that wants to read as one — card 53 tunes its overshoot down precisely so it doesn't. What keeps it usable is that the letters overlap: 26ms against a 300ms rung bounces the word, where 60ms would bounce nine letters.</p>
+              <p>The bounce, and the one card here that wants to read as one. What keeps it usable is that the letters overlap: 26ms against a 300ms rung bounces the word, where 60ms would bounce nine letters.</p>
               <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
             </article>
 
@@ -1859,15 +1859,6 @@
               </div>
               <h3><span class="num">18</span>Caret</h3>
                 <p>A caret lights up out of the baseline after the label, as if the button were a field about to be typed into, then blinks at a calm rate.</p>
-              <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-            </article>
-
-    <article class="spec" data-versions="fill outline link">
-              <div class="stage">
-                <button type="button" class="btn btn--line i-settle"><span class="i-settle-slot" aria-hidden="true"><i class="i-settle-stop"></i><i class="i-settle-dash"></i></span>See the schedule</button>
-              </div>
-              <h3><span class="num">53</span>Settle</h3>
-              <p>The bar slides into its slot on a damped spring written as a linear() easing curve, overruns the hairline stop by four pixels and settles back flush against it — one overshoot, no second bounce.</p>
               <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
             </article>
 
@@ -3469,8 +3460,22 @@ document.addEventListener("DOMContentLoaded", function () {
     font:500 13px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
     border-radius:6px; padding:16px 24px;
   }
-  .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
-  .j-resolve:hover .j-resolve-lbl, .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink-text)}
+  /* The label sits at full strength at rest. The soft-to-text lift that used
+     to live here was doing two jobs and only one of them was real: it told a
+     reduced-motion visitor the button answers, and it dimmed the label for
+     everybody else so the churn had somewhere to arrive at. The churn does not
+     need that runway — it is legible against a label already at full ink — and
+     a label held under strength until you point at it reads as disabled, which
+     is the one thing a primary action must never read as. So the dim moves
+     into the only place it was ever load-bearing. */
+  .j-resolve .j-resolve-lbl{color:var(--ink-text)}
+  @media (prefers-reduced-motion: reduce){
+    /* The script returns before it starts a frame here, so this colour shift
+       IS the effect, exactly as it has always been. Unchanged, just scoped. */
+    .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
+    .j-resolve:hover .j-resolve-lbl,
+    .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink-text)}
+  }
 </style>
 
 
@@ -4487,7 +4492,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
      The opening takes --e-back and overruns the 34 degrees by two, because a
      hinge has a stop and this is what reaching one looks like; the token's own
-     note carries the argument, including that it reopens card 53. The CLOSE
+     note carries the argument. The CLOSE
      keeps --e-quint, exactly as card 54 keeps the plain curve on the way out:
      the stop is at 0deg and it is the plate, so a hinge cannot overshoot
      shut. Only the timing function is stated on the hover side, so the
@@ -4735,34 +4740,49 @@ document.addEventListener("DOMContentLoaded", function () {
      settles while you are pointing at it. Card 26 also works letter by letter,
      but it moves WEIGHT, and only where the pointer actually is; this moves
      geometry, everywhere at once, and asks for no pointer position at all.
-     The tilt is not random and cannot be: CSS has no randomness. The angles
-     and the start offsets are a fixed set of seven, sized so the pattern does
-     not repeat inside a label of normal length. It READS as random, which is
-     the only claim the card makes — the honest description of the mechanism is
-     seven values on a cycle.
+     The tilt is not random and cannot be: CSS has no randomness. The angles,
+     the vertical offsets and the start delays are three fixed sets of seven,
+     sized so the pattern does not repeat inside a label of normal length. It
+     READS as random, which is the only claim the card makes — the honest
+     description of the mechanism is three values on a seven-letter cycle.
      The visible letters are aria-hidden and an .sr copy carries the accessible
      name, the way card 80 does. Eleven one-character spans would otherwise be
      announced one at a time. */
   .q-jitter .q-jitter-l{display:inline-block; transform:rotate(0.001deg)}
-  .q-jitter .q-jitter-l:nth-child(7n+1){--q-a:-11deg;   animation-delay:-.05s}
-  .q-jitter .q-jitter-l:nth-child(7n+2){--q-a:9.5deg;  animation-delay:-.31s}
-  .q-jitter .q-jitter-l:nth-child(7n+3){--q-a:-7deg;   animation-delay:-.17s}
-  .q-jitter .q-jitter-l:nth-child(7n+4){--q-a:13deg;    animation-delay:-.44s}
-  .q-jitter .q-jitter-l:nth-child(7n+5){--q-a:-14deg; animation-delay:-.09s}
-  .q-jitter .q-jitter-l:nth-child(7n+6){--q-a:8deg;  animation-delay:-.38s}
-  .q-jitter .q-jitter-l:nth-child(7n+7){--q-a:-9deg;   animation-delay:-.23s}
-  /* .62s is off the ladder for the same reason the other loops here are. */
+  .q-jitter .q-jitter-l:nth-child(7n+1){--q-a:-15deg;  --q-y:-1.4px; animation-delay:-.05s}
+  .q-jitter .q-jitter-l:nth-child(7n+2){--q-a:13deg;   --q-y:1.1px;  animation-delay:-.31s}
+  .q-jitter .q-jitter-l:nth-child(7n+3){--q-a:-10deg;  --q-y:1.6px;  animation-delay:-.17s}
+  .q-jitter .q-jitter-l:nth-child(7n+4){--q-a:18deg;   --q-y:-.8px;  animation-delay:-.44s}
+  .q-jitter .q-jitter-l:nth-child(7n+5){--q-a:-19deg;  --q-y:1.3px;  animation-delay:-.09s}
+  .q-jitter .q-jitter-l:nth-child(7n+6){--q-a:11deg;   --q-y:-1.7px; animation-delay:-.38s}
+  .q-jitter .q-jitter-l:nth-child(7n+7){--q-a:-12deg;  --q-y:.9px;   animation-delay:-.23s}
+  /* .48s is off the ladder for the same reason the other loops here are, and
+     it is shorter than the .62s this ran at first. Three changes make the
+     effect legible where it used to be a suggestion, and they compound rather
+     than repeat: the sway now runs from -a THROUGH ZERO to +a instead of from
+     upright to a, which doubles the distance travelled without doubling the
+     worst angle any letter reaches; the angles themselves are about a third
+     wider; and each letter carries a vertical offset of its own, so the line
+     of the word breaks as well as the letters leaning. Tilt alone reads as a
+     typeface with a slant. Tilt against a broken baseline reads as a hand. */
   .q-jitter:hover .q-jitter-l,
-  .q-jitter:focus-visible .q-jitter-l{animation:q-waver .62s ease-in-out infinite alternate}
-  @keyframes q-waver{to{transform:rotate(var(--q-a,4deg))}}
+  .q-jitter:focus-visible .q-jitter-l{animation:q-waver .48s ease-in-out infinite alternate}
+  /* translateY BEFORE rotate: the other order would spin the offset with the
+     letter and the bob would stop being vertical. */
+  @keyframes q-waver{
+    from{transform:translateY(calc(var(--q-y,1px) * -1)) rotate(calc(var(--q-a,4deg) * -1))}
+    to{transform:translateY(var(--q-y,1px)) rotate(var(--q-a,4deg))}
+  }
 
   @media (prefers-reduced-motion: reduce){
     /* Two loops in this section now, and the global clamp turns a loop into a
        blur rather than into stillness, so each is stopped outright. Card 18 is
        the precedent for what happens next: the end state remains, the motion
        does not. So the mark stays turned and the ring stays visible, and the
-       letters hold the tilt they were going to waver around, which is the
-       hand-drawn look the card is about, just standing still.
+       letters hold one end of the sway rather than its midpoint — the midpoint
+       is upright now that the swing runs through zero, and upright is the one
+       picture that would say nothing — which is the hand-drawn look the card
+       is about, just standing still.
 
        Card 84 is not a loop any more, but it needs this block more than the
        loops do. Its end state is a full revolution, and a full revolution
@@ -4777,7 +4797,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .q-jitter .q-jitter-l{animation:none !important}
     .q-jitter:hover .q-jitter-l,
     .q-jitter:focus-visible .q-jitter-l{animation:none !important;
-      transform:rotate(var(--q-a,4deg))}
+      transform:translateY(var(--q-y,1px)) rotate(var(--q-a,4deg))}
   }
 </style>
 
@@ -5508,20 +5528,20 @@ document.addEventListener("DOMContentLoaded", function () {
   .u-lift .u-lift-c:nth-child(10){--i:9}
 
   /* 22 Overshoot — the bounce, and the one card on the page that
-     wants to be read as one. Card 53 samples an underdamped spring and then
-     tunes the second lobe down to 0.43% precisely SO THAT it never reads as a
+     wants to be read as one. A damped spring can be sampled and its second
+     lobe tuned down to 0.43% precisely SO THAT it never reads as a
      bounce; this keeps the lobe. The curve overshoots to 1.34 and settles
      through one visible return, so a 4px lift arrives 1.4px past its mark and
      comes back.
      Two things keep it usable rather than childish. The overshoot is a fraction
-     of a pixel more than card 53 allows itself, not a fraction of the travel —
+     of a pixel, not a fraction of the travel —
      at 4px the eye reads the RETURN, not the distance. And the stagger is 26ms
      against a 300ms rung, so the letters overlap heavily and the word bounces
      as a word; at 60ms it becomes ten separate bounces and looks like a
      children's app. That is the whole difference between this and the thing
      nobody wants on a button.
      The spring is damping ratio .38, omega 15 rad/s, sampled at 24 steps: one
-     34% overshoot and one 6% return, where card 53 keeps 16% and 0.43%. It
+     34% overshoot and one 6% return, where a curve tuned not to bounce keeps
      lives in @keyframes u-overshoot above, on the rise, and the character then
      comes back down to the baseline rather than parking on its mark. */
   .u-land .u-land-c{display:inline-block; transform:translateY(0) rotate(0.001deg)}
@@ -6950,7 +6970,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","17":"moves|hover","18":"moves fades|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","35":"fades tone|hover","36":"moves tone|press","38":"moves type|hover","39":"moves|hover","40":"moves shape|hover","41":"tone shape|hover","42":"moves fades tone seq|press","43":"moves tone|press","44":"moves fades tone|hover","45":"moves tone|press","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","53":"moves|hover","54":"moves|hover","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","68":"tone|hover","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","84":"moves|hover","85":"moves seq|loop","86":"tone|hover","88":"moves shape|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","94":"moves|loop","96":"shape|hover","97":"moves|hover","98":"shape|hover","99":"moves|hover","100":"moves seq|hover","101":"shape|hover","102":"moves seq|hover","103":"moves|hover","104":"moves tone|press","105":"fades|hover","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","112":"moves fades|hover","113":"moves fades|hover","115":"moves tone|js","116":"moves tone|press","117":"moves tone|press","01":"moves|press","02":"moves|press","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press","06":"tone|loop"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","17":"moves|hover","18":"moves fades|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","35":"fades tone|hover","36":"moves tone|press","38":"moves type|hover","39":"moves|hover","40":"moves shape|hover","41":"tone shape|hover","42":"moves fades tone seq|press","43":"moves tone|press","44":"moves fades tone|hover","45":"moves tone|press","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|hover","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","68":"tone|hover","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","84":"moves|hover","85":"moves seq|loop","86":"tone|hover","88":"moves shape|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","94":"moves|loop","96":"shape|hover","97":"moves|hover","98":"shape|hover","99":"moves|hover","100":"moves seq|hover","101":"shape|hover","102":"moves seq|hover","103":"moves|hover","104":"moves tone|press","105":"fades|hover","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","112":"moves fades|hover","113":"moves fades|hover","115":"moves tone|js","116":"moves tone|press","117":"moves tone|press","01":"moves|press","02":"moves|press","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press","06":"tone|loop"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -9160,10 +9180,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","03":"https://framer.com/m/PointerGrow-ME4MH3.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","112":"https://framer.com/m/LabelInvert-6hT78F.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","114":"https://framer.com/m/SlabTilt-EhjPDw.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","18":"https://framer.com/m/Caret-jaEoJL.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","37":"https://framer.com/m/ItPrints-d0SyuT.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/RigidType-uIZjQw.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","53":"https://framer.com/m/Settle-tqN4oW.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","58":"https://framer.com/m/TempoMatch-635kCX.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","71":"https://framer.com/m/MarkTuck-kfXjPa.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","76":"https://framer.com/m/LiquidFill-jSU3AX.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/PressOnly-R9jcC9.js","87":"https://framer.com/m/Overrun-RkqEDr.js","88":"https://framer.com/m/OverflowLoop-3a9HPU.js","89":"https://framer.com/m/InstantInvert-5xuQNW.js","90":"https://framer.com/m/HatchExit-64V6Gr.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","95":"https://framer.com/m/StruckThrough-P16etM.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","99":"https://framer.com/m/SpriteArrow-qOQ29q.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"01":"https://framer.com/m/SmallGrow-5RpDrp.js","02":"https://framer.com/m/SmallShrink-uXOo62.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","06":"https://framer.com/m/IdleBreath-rbxnj2.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","101":"https://framer.com/m/CoarseDither-xphCi7.js","102":"https://framer.com/m/SplitFlap-TL6aml.js","103":"https://framer.com/m/NeedleSwing-tGB1s7.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","105":"https://framer.com/m/DottedFocus-f5LnRJ.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","112":"https://framer.com/m/LabelInvert-6hT78F.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","115":"https://framer.com/m/WordBow-FhvP9i.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","17":"https://framer.com/m/EllipsisArrow-vzwuNQ.js","18":"https://framer.com/m/Caret-jaEoJL.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","35":"https://framer.com/m/CRTConverge-42JlA3.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","38":"https://framer.com/m/TrackingTrade-Fj2mCp.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","40":"https://framer.com/m/DiagonalRadius-QprZXR.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","45":"https://framer.com/m/Deboss-n6GzCh.js","46":"https://framer.com/m/LineGauge-Y5x2vf.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","51":"https://framer.com/m/RigidType-uIZjQw.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","68":"https://framer.com/m/FillSwap-v9ARmg.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","77":"https://framer.com/m/WaveThrough-2M4wmy.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","81":"https://framer.com/m/StraightensUp-PMQhjy.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","84":"https://framer.com/m/OneFullTurn-ctOCpO.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/PressOnly-R9jcC9.js","88":"https://framer.com/m/OverflowLoop-3a9HPU.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","94":"https://framer.com/m/TickerLabel-1JFxFP.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","99":"https://framer.com/m/SpriteArrow-qOQ29q.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"01":"92507bd39db217c9","02":"1f63ad2786bb6355","03":"65115214d7f5f993","04":"15a5de87473494e0","05":"879b4dcaed164d5a","06":"af6872c5b0c9acde","07":"27c183ccbea6f598","08":"e82870eea53a8cd9","09":"ffe4aeb1610dc1ae","10":"ede2ed708911227d","100":"4e31d76466883c66","101":"8f2cef08eb1211e0","102":"dce33381a12e665f","103":"f946c8d20c4cfeb5","104":"673b97863488a6aa","105":"6af5359cc34833a9","109":"ea11fe2b13668506","11":"5872ce94c53354e6","110":"d7d0770df7fd040a","111":"728f10479e11c086","112":"af4eccc4f326aa78","113":"1d8812514c710715","114":"e5f70ea0175071de","115":"8609bf8d1022b0c0","116":"8a44b61e0b5ea19c","117":"39b58e91fd4a8793","12":"6db8171d532da887","13":"a61b93dc8db35fd1","14":"508db79c365c62b4","15":"c4cd036a2249faf9","16":"be0ad1f8c5c6459f","17":"3e70cc3cfcd053c8","18":"3ae072b6b1534b6a","19":"cb9fd50e1381d8c9","20":"5c7330d1cb97cee4","21":"c45f4baef20773c3","22":"3452045ddcb5039e","23":"ec4b387646cb804b","24":"782ce34f56058c5a","25":"226dff75272323fa","26":"bab80ef583b32a98","27":"0ac33a6f81e6d553","28":"d99702ca5bedbfc3","29":"d951e1ce9ce0b562","30":"d36e9d469104fec6","31":"8c61043a6580aef5","32":"6822edc9aede84aa","33":"c22f6ce5683b0356","34":"85be69c66b3f7bc8","35":"8ae2fbc385756c02","36":"286d0e6255213074","37":"c3f94c3ed5770880","38":"5603051c5adb90d0","39":"c015c6674459d787","40":"caf9aac7f8d1e8fb","41":"b7b30dc79d4b471e","42":"043182bedc3a0d31","43":"0aaca8c2fab79a2f","44":"0f57331f80f79a54","45":"4254c1c8f828e56a","46":"d921e747cd2c72e0","47":"8beb9d72b7993b88","48":"e8784573b6983220","49":"2941dde682599eef","50":"a933ed4716f15b45","51":"561ef169aa56db94","52":"c98f6b5246cd145b","53":"74f48c73abbee34c","54":"7c6cc8d275f0564b","55":"7a60853211973863","56":"0b2c5f946b263a8b","57":"d41b6d3d41c0995e","58":"3a619e3ce97a5923","59":"4bd4b65ca212216d","60":"b30f49f9112d1ed4","61":"2e690fb7f9a6f82c","62":"237e462b8a8a1330","63":"5f07d7cc896e30cf","64":"f9eca4788f648d6b","65":"5b4026d5546555f2","66":"ff99cef6f4aa62dc","67":"638b6acceba74ccf","68":"ff7df8dc1a9d940a","69":"dbab3d40f98527fd","70":"6dd6d71c28327c04","71":"a95f78640f72a9e4","72":"1841d50b95654812","73":"c42279a440ad0cca","74":"1fc9f281155ef2b9","75":"f50cb14a3e910bd0","76":"be89a95e1076821e","77":"fe6a4d45dd89ad6b","78":"1676e283a08eab3e","79":"3ac37f6632396cd9","80":"1e713fe276d9af6d","81":"d2ae799cc19f18c8","82":"55b13c43c287954a","83":"cbe9e764cdaab21c","84":"ba43db42f4a0b3a3","85":"5bdc6125bc746adb","86":"9a42780b56a54d98","87":"58645ce12fa48690","88":"bed34d3174532e89","89":"214ce89104e64ba1","90":"880cb17a41423350","91":"36d9b048f2e13341","92":"5d492e0c2353ca3a","93":"095d63f80f22773e","94":"50a628d3f8961d2a","95":"70da81dcaad8004b","96":"199563ed061443d1","97":"94ec4ba9764de7b5","98":"e187d0df222a7875","99":"8c44995b09a98766"}</script>
+<script type="application/json" id="bhl-framer-sync">{"01":"5ad3b47fee570887","02":"e73efecb61ad0417","04":"9fecd5686e812d5a","05":"3a0af21d71eb2c94","06":"0c5864766e4df772","07":"daebd5a94a35b92e","08":"e04301faafe4e6e3","09":"0b19bfc0646de13b","10":"1d4299eafd8c0e67","100":"e6c2cb041e771802","101":"720c21cf40e32d81","102":"65e4e21ea0962814","103":"afb70091ea1acc53","104":"d5dc272b82629fbb","105":"bb21893cf76321b4","109":"7e21a41da9b10a1f","11":"7fab66fd520f8d1c","110":"47c76be10b2d3757","111":"944cad916ce39117","112":"def361e120bf4083","113":"33299379f21fc46f","115":"bc7f0f54e634f31c","116":"eb1942b3d3447a59","117":"9a3bf499e8c1337a","12":"5803d6d21455cd01","13":"6dd5f181167d4c02","14":"251daaa82430fd4e","15":"eec56cc0df309fb2","16":"2f6ad7b4488c00a5","17":"d8b7355680be2a50","18":"71e3908cf131369f","19":"3b2f979354830a1e","20":"e9101d28da149120","21":"a6dc3ba69c73d366","22":"b48f48cf6eded820","23":"5613c77751289e20","24":"b8ba06ec3cd73d54","25":"f4d1dc83429ac4c6","26":"d4994a3f03b9574c","27":"00302f360fcf0d57","28":"5d8ad11951265616","29":"c967604c6f7025a4","30":"297440ee9e43d753","31":"88d9cb257949cfd7","32":"ded692f45e6a2f49","33":"39cdc3a6c509aff5","34":"3c1288acd63699b0","35":"95cd41c372b2d0cf","36":"446e080273ac77aa","38":"6569515d41e6e462","39":"bb5ec90bdb503248","40":"bb979167f9731077","41":"a7be8ee0d5b69cea","42":"3cdb244a88e24078","43":"0059394d9ddcb2ca","44":"11bef83113b47c59","45":"2e8470dcdc574d95","46":"99e10e3b26533156","47":"f58f7603815d21f3","48":"38c7a32662032d65","49":"6872c91050ff23db","50":"69a431dd39d1ed75","51":"e7a3bc65792e39b2","52":"15d05884ef3e8d6d","54":"c8aac49739f0ecab","55":"defb43289fc13395","56":"977a2193fb4094a9","57":"45d0a5b48037f484","59":"287addcf64ec1d38","60":"1d28c5a9827973a6","61":"0b03edbe4968e28f","62":"f00cad116565f164","63":"f52702164b198d36","64":"784cae9ef5330bf0","65":"f63b9ff99f3e097d","66":"0eb702142e09ce7a","67":"fde94f341f490399","68":"64c4c545dc883b33","69":"bde7b36b207daaa9","70":"b5ff753d328811c7","72":"3a800a6a43d54c94","73":"0ba66fc07635f63e","74":"ba245879fec6f5df","75":"89cdce77570ba3ec","77":"e2f14717a14ed077","78":"35fd95f0248fea3a","79":"002a33e4aaf97fd3","80":"6955d44776e806ce","81":"67e301a5fa0c0112","82":"405dca3089afdf0f","83":"776f5560cae1f18d","84":"7e44c61d2cffe304","85":"b7d0da2a8e4f0bf9","86":"8f920a7cc61ddc02","88":"4e635811d54f2bb4","91":"04990cc3ee70865a","92":"5107b4b4b465b2f4","93":"eb56883060a60ef0","94":"0db5e8f2bd1e5160","96":"e1057b1730dd0ca7","97":"164e8a429b1a0444","98":"da23b3609386f5a1","99":"da08a4aa2c4b5cd1"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 </body>
