@@ -70,9 +70,39 @@ function findChrome () {
 // linked Graphite Console stylesheet loads the way it does in production; the
 // copied token values are read from computed style and would otherwise fall
 // back to the inlined copy in <head>.
+//
+// Serving it is not enough on its own, because the generator does not only
+// read computed VALUES: it reads the token layer out of
+// document.styleSheets[].cssRules, which is what lets a copied snippet carry
+// its own aliases into a project that has never heard of Graphite Console.
+// cssRules is same-origin only. On the live site the sheet and the page share
+// an origin and it reads; from this server the sheet is cross-origin and every
+// read throws SecurityError, silently, into the generator's own catch. So the
+// sheet is fetched once and re-served from here and the absolute href is
+// rewritten to point at the local copy. Without that the harvest pushes a
+// snippet two alias lines shorter than the one a visitor copies from the same
+// button, which breaks the one promise this tool exists to keep — and the sync
+// stamp can then never agree with the page that recomputes it, so every card
+// on the live site reads Framer* forever. Measured 2026-08-28 on card 67:
+// 13 227 bytes harvested against 13 472 generated in production.
 async function harvest () {
-  const html = fs.readFileSync(INDEX, 'utf8')
-  const server = http.createServer((_, res) => {
+  let html = fs.readFileSync(INDEX, 'utf8')
+  let sheet = null
+  const link = html.match(/<link\b[^>]*rel="stylesheet"[^>]*href="(https?:\/\/[^"]+)"[^>]*>/i)
+  if (link) {
+    const res = await fetch(link[1])
+    if (!res.ok) throw new Error(`token sheet ${link[1]} answered ${res.status}`)
+    sheet = await res.text()
+    html = html.replace(link[0], link[0].replace(link[1], '/tokens.css'))
+    say(`token sheet re-served same-origin from ${link[1]} (${sheet.length} bytes)`)
+  } else {
+    say('no absolute stylesheet link in the page — nothing to re-serve')
+  }
+  const server = http.createServer((req, res) => {
+    if (sheet !== null && req.url.split('?')[0] === '/tokens.css') {
+      res.writeHead(200, { 'content-type': 'text/css; charset=utf-8' })
+      return res.end(sheet)
+    }
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
     res.end(html)
   })
@@ -247,7 +277,13 @@ function inject (manifest) {
 /* ---- run --------------------------------------------------------------- */
 const payload = await harvest()
 say(`${payload.length} studies, ${payload.filter(p => /@ts-nocheck/.test(p.code)).length} carrying an init script`)
-if (DRY) { say('dry run — nothing written'); process.exit(0) }
+if (DRY) {
+  // Left on disk so a dry run can be inspected: the whole point of one is to
+  // see what WOULD be pushed, and the counts alone cannot show that.
+  fs.writeFileSync('/tmp/bhl-payload.json', JSON.stringify(payload))
+  say('dry run — nothing written; payload at /tmp/bhl-payload.json')
+  process.exit(0)
+}
 const { stats, manifest } = sync(payload)
 say(`framer: created=${stats.created} updated=${stats.updated} unchanged=${stats.skipped}`)
 if (stats.orphans.length) say(`orphaned code files (left alone on purpose): ${stats.orphans.join(', ')}`)
