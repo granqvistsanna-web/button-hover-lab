@@ -79,6 +79,9 @@
        alias block rather than inline on .btn so the toolbar has one property to
        write and the Copy buttons have one to resolve. */
     --btn-r:999px;
+    /* The left panel's width, as one token: body reserves it as padding and
+       the panel claims it as its own width, so the two cannot disagree. */
+    --rail-w:268px;
     --mono:var(--font-mono);
     --e-quint:cubic-bezier(0.22,1,0.36,1);
     --e-out:cubic-bezier(0.33,1,0.68,1);
@@ -655,7 +658,12 @@
     padding:9px 13px; cursor:pointer;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
   }
+  /* The glyph is the same mark the per-card control uses, so the toggle and
+     the thing it filters on are recognisably one pair. */
+  .fav-only::before{content:"★"; font-size:11px; line-height:1; color:var(--ink-low)}
   .fav-only:hover{background:var(--bg-3); color:var(--ink-hi)}
+  .fav-only:hover::before,
+  .fav-only[aria-pressed="true"]::before{color:inherit}
   .fav-only[aria-pressed="true"]{background:var(--inverse-bg); color:var(--inverse-ink)}
   .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .tools-count{font:400 12.5px/1 var(--mono); color:var(--ink-low);
@@ -756,54 +764,132 @@
       transition-delay:0ms !important; animation-delay:0ms !important}
   }
 
-  /* ============ the rail ============
-     One hundred and five studies is past the point where a filter row can hold the
+  /* ============ the left panel ============
+     One hundred and fourteen studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
-     primary and radius, the two things that rewrite every card and every
-     copied snippet — and everything that FINDS a card moved here: the search,
-     the two axes that were already there, the derived facets, the sections,
-     the count and the reset.
+     the three colours and the radius, the things that rewrite every card and
+     every copied snippet — and everything that FINDS a card lives here: the
+     search, the two axes, the sections, the count and the reset.
 
-     Nothing in this rail is authored twice. The facet names are fixed but
+     Nothing in this panel is authored twice. The facet names are fixed but
      their membership and their counts are read off the live stylesheet at
-     load, the way the Copy buttons read it: a card is tagged «it moves»
+     load, the way the Copy buttons read it: a card is tagged «movement»
      because a rule of its own transitions a transform, not because someone
      typed a chip. Add a card and it files itself.
 
-     One element, two shapes. At 1300px and up the wrap becomes a two-column
-     grid and this sits in column one, sticky, always open. Below that it is a
-     disclosure under the toolbar, closed until asked for, because a rail that
+     One element, two shapes. At 1360px and up this IS the page's left edge:
+     full height, flush to the viewport, a hairline for its right wall, no
+     radius and no floating gap, so the grid sits beside it rather than under
+     it. It used to be a 216px rounded card parked in the left margin, and a
+     bordered card with air on all four sides reads as a widget that has come
+     loose from the page rather than as part of its frame. Below 1360 it is a
+     disclosure under the toolbar, closed until asked for, because a panel that
      eats a third of a laptop screen is worse than a button. Same DOM either
-     way — a rail that rebuilt itself on resize would lose the filter you had
-     just set. */
+     way — a panel that rebuilt itself on resize would lose the filter you had
+     just set.
+
+     Inside, the shape is a console: a header holding the search, a body that
+     scrolls, and a status bar pinned to the foot. The count moved into that
+     bar for the reason it was put at the top in the first place — a count you
+     have to scroll to is no use at the moment you tick a box, and pinned to
+     the foot it cannot be scrolled away from at all. */
   .rail{
+    display:flex; flex-direction:column;
     border:1px solid var(--hairline); border-radius:var(--r-md);
-    background:var(--bg-1); padding:16px 15px 14px;
+    background:var(--bg-1); padding:14px 13px 12px;
   }
   /* :not([hidden]) on every display rule, not a bare .rail — the nav ships
      with the hidden attribute and JS takes it off once the facets are built.
-     A bare .rail{display:block} in a media query outranks the UA's
+     A bare .rail{display:flex} in a media query outranks the UA's
      [hidden]{display:none} and the empty shell flashes up before the script
      has filled it. */
-  .rail-grp{margin-bottom:16px}
-  .rail-grp:last-of-type{margin-bottom:0}
-  .rail-lbl{display:block; margin-bottom:7px;
+  .rail-head{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
+  .rail-lbl{display:block; margin:0 0 7px 7px;
     font:600 11px/1 var(--font-ui); letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
   .rail-q{
-    width:100%; padding:8px 10px; border-radius:var(--r-sm);
+    /* max-width, because as a disclosure the panel is the full column and a
+       search field a thousand pixels wide invites a sentence rather than the
+       one word this looks for. In the panel the header is 228px and the cap
+       never bites. */
+    flex:1 1 190px; min-width:0; max-width:440px;
+    padding:8px 10px; border-radius:var(--r-sm);
     border:1px solid var(--line-ctl); background:var(--bg-0);
     color:var(--ink-hi); font:400 13.5px/1.2 var(--font-ui);
   }
   .rail-q::placeholder{color:var(--ink-faint)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
-  .rail-list{list-style:none; display:flex; flex-direction:column; gap:1px}
+
+  /* ---- The two facet groups, as dropdowns -----------------------------
+     Ten checkboxes under two headings held the panel open at all times and
+     pushed the eighteen sections — the thing you actually navigate with —
+     below the fold on a laptop. Shut, each group is one row and the section
+     list is in view. A group that holds a live filter carries the number of
+     boxes ticked on its own summary, so a filter can never be applied out of
+     sight; the count in the status bar and the Reset button are the second and
+     third places the same fact is stated. */
+  .rail-drop{border-top:1px solid var(--hairline)}
+  .rail-sum{
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+    list-style:none; padding:12px 7px;
+    font:600 11px/1 var(--font-ui); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-low);
+    transition:color var(--t-1) var(--ease);
+  }
+  .rail-sum::-webkit-details-marker{display:none}
+  .rail-sum:hover{color:var(--ink-hi)}
+  .rail-sum:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px;
+    border-radius:6px; color:var(--ink-hi)}
+  .rail-sum-t{flex:1; min-width:0}
+  /* The chevron is drawn, not typed. A ▾ glyph sits on a different baseline in
+     every face and rotating one about its own box never lands where the eye
+     expects; two borders on a square do, and they scale with the row. */
+  .rail-sum::after{
+    content:""; width:6px; height:6px; flex:none; margin-right:3px;
+    border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+    transform:rotate(-45deg);
+    transition:transform var(--t-2) var(--ease);
+  }
+  .rail-drop[open] > .rail-sum::after{transform:translateY(-2px) rotate(45deg)}
+  /* How many boxes are ticked inside. --ink-low would read as another label;
+     the accent pair is the page's one piece of emphasis and this is the one
+     thing in the panel that has to survive being glanced at. */
+  .rail-sum-n{
+    font:400 10px/1 var(--mono); letter-spacing:0;
+    min-width:16px; height:16px; padding:0 4px; border-radius:var(--r-pill);
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--accent); color:var(--on-accent);
+  }
+  /* display:inline-flex on the line above outranks the UA's [hidden] rule, so
+     an empty group printed a literal 0 next to its name. */
+  .rail-sum-n[hidden]{display:none}
+  /* One line saying what the group is asking, because «What changes» and
+     «How it runs» are only obvious once you already know the answer.
+     --ink-low and not --ink-faint: faint composites to 3.0:1 on this panel,
+     which is under AA for body text, and the note on the counts settled that
+     argument already. */
+  .rail-hint{margin:2px 7px 10px; font:400 12px/1.45 var(--font-ui); color:var(--ink-low)}
+  @media (prefers-reduced-motion: no-preference){
+    /* Fade and rise, no scale — the house rule for anything that appears.
+       Height cannot be animated on a <details> without either a script or
+       ::details-content, and a disclosure that only moves its own contents is
+       honest about which of the two happened. */
+    .rail-drop[open] > :not(summary){animation:rail-in var(--t-3) var(--e-out) both}
+  }
+  @keyframes rail-in{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
+
+  .rail-list{list-style:none; display:flex; flex-direction:column; gap:1px;
+    margin-bottom:10px}
   .rail-list label{
     display:flex; align-items:center; gap:8px;
     padding:5px 7px; border-radius:6px; cursor:pointer;
     font:400 13px/1.3 var(--font-ui); color:var(--ink-mid);
   }
   .rail-list label:hover{background:var(--bg-2); color:var(--ink-hi)}
+  /* A ticked row reads as ticked without the pointer on it. The 13px box is
+     the only other signal and it is 13px; on a list of ten rows scanned at a
+     glance that is not enough to say which two are doing the filtering. */
+  .rail-list label:has(input:checked){color:var(--ink-hi)}
   .rail-list input{
     appearance:none; width:13px; height:13px; flex:none; margin:0;
     border:1px solid var(--line-ctl); border-radius:3px; background:none;
@@ -828,6 +914,13 @@
   /* A facet that can no longer match anything says so by going quiet, and
      stays clickable — it is still how you turn it back off. */
   .rail-list label[data-empty]{color:var(--ink-faint)}
+
+  /* ---- Sections -------------------------------------------------------
+     Not a dropdown, and that is deliberate. It is the navigation rather than a
+     filter, the scroll spy marks the section you are in on it, and a marker
+     inside a shut disclosure marks nothing. */
+  .rail-grp{padding-top:14px; border-top:1px solid var(--hairline)}
+  .rail-hint + .rail-list{margin-top:0}
   .rail-sects{list-style:none; display:flex; flex-direction:column; gap:1px}
   .rail-sects a{
     display:flex; gap:8px; align-items:baseline;
@@ -841,11 +934,12 @@
      and the same attribute does the styling, so the two cannot disagree. */
   .rail-sects a[aria-current="true"]{color:var(--ink-hi); background:var(--bg-2)}
   .rail-sects a[hidden]{display:none}
-  /* At the top, not the foot. The rail scrolls inside itself as soon as the
-     section list outgrows the viewport, and a count you have to scroll to is
-     no use at the moment you tick a box. */
-  .rail-top{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
-    margin:12px 0 16px; padding-bottom:14px; border-bottom:1px solid var(--hairline)}
+
+  /* ---- The status bar -------------------------------------------------- */
+  .rail-foot{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+    margin-top:12px; padding-top:12px; border-top:1px solid var(--hairline)}
+  .rail-foot .tools-reset{margin-left:auto}
+
   .rail-toggle{
     display:inline-flex; align-items:center; gap:7px;
     padding:7px 12px; border:1px solid var(--line-ctl); border-radius:var(--r-sm);
@@ -860,31 +954,46 @@
      top of a section is the top of its box. */
   .sect{scroll-margin-top:120px}
 
-  /* 1360px, and the number is not arbitrary: 1352 of shell plus a hair, so the
-     centring arithmetic below is always valid. Under that the rail is the
-     disclosure instead, which is also why the breakpoint is generous — a
-     216px rail squeezed against a 1004px grid is worse than a button.
+  /* 1360px, and the number is what the two columns need rather than a round
+     figure: 268 of panel plus the 1060 the grid was drawn against, plus its
+     gutters. Under that the panel is the disclosure instead, and the
+     breakpoint is generous on purpose — a 268px column squeezed against a
+     1000px grid is worse than a button.
 
-     The rail is FIXED rather than a sticky grid item, and that is the second
-     attempt. As a grid item in row one it sized the row: the rail is taller
-     than the header, so the toolbar and every card started below the fold.
-     grid-row:1/-1 does not fix it either, because with no explicit rows -1
-     resolves back to line 1. Fixed takes the rail out of flow entirely, the
-     wrap just carries padding where it used to be, and nothing the rail does
-     can push the grid around. */
+     The panel is FIXED, and that is the second attempt. As a grid item in row
+     one it sized the row: the panel is taller than the header, so the toolbar
+     and every card started below the fold. grid-row:1/-1 does not fix it
+     either, because with no explicit rows -1 resolves back to line 1. Fixed
+     takes it out of flow entirely, the padding on body carries the space where
+     it used to be, and nothing the panel does can push the grid around.
+     The padding is on BODY rather than on .wrap, which is the change that
+     makes it read as a wall: the panel is measured from the viewport edge, not
+     from a centred column's left margin, so it no longer drifts inward as the
+     window widens. */
   @media (min-width: 1360px){
-    .wrap{max-width:1352px; padding-left:292px}   /* 18 gutter + 216 rail + 48 gap */
+    body{padding-left:var(--rail-w)}
+    .wrap{max-width:1180px}
     .rail:not([hidden]){
-      display:block; position:fixed; top:22px; width:216px;
-      /* the wrap's own left edge, plus its gutter */
-      left:calc(50% - 676px + 28px);
-      max-height:calc(100vh - 44px); overflow-y:auto; overscroll-behavior:contain;
+      display:flex; position:fixed; inset:0 auto 0 0; z-index:30;
+      width:var(--rail-w); padding:0;
+      background:var(--bg-1);
+      border:0; border-right:1px solid var(--hairline); border-radius:0;
     }
+    .rail-head{padding:20px 20px 16px; border-bottom:1px solid var(--hairline)}
+    /* min-height:0 is what lets the body actually scroll: a flex item's
+       automatic minimum size is its content, so without it the body grows past
+       the panel and the status bar is pushed off the bottom of the screen. */
+    .rail-body{flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+      padding:0 13px 20px}
+    .rail-drop:first-of-type{border-top:0}
+    .rail-grp{padding:14px 0 0}
+    .rail-foot{margin:0; padding:13px 20px; background:var(--bg-1);
+      border-top:1px solid var(--hairline)}
     .rail-toggle{display:none}
   }
   @media (max-width: 1359px){
     .rail:not([hidden]){display:none; margin-top:12px}
-    .rail:not([hidden])[data-open]{display:block}
+    .rail:not([hidden])[data-open]{display:flex}
     /* As a panel it has the whole column to work with, so the lists flow into
        as many columns as fit instead of running one item per row — eighteen
        sections stacked is most of a phone screen, and the point of the
@@ -894,7 +1003,7 @@
       display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
       gap:1px 16px;
     }
-    .rail[data-open] .rail-grp{margin-bottom:18px}
+    .rail-head{margin-bottom:4px}
   }
   /* Smooth only where it is wanted: a jump is a big travel and the clamp at
      the foot of this stylesheet cannot reach scroll-behavior. */
@@ -961,28 +1070,53 @@
     </div>
   </div>
 
+  <!-- The left panel. Everything that finds a card; nothing that restyles one.
+       Its two shapes and the reasoning behind each are in the stylesheet, at
+       «the left panel». Three regions, in the order a console has them: a
+       header with the search, a body that scrolls, a status bar at the foot. -->
   <nav class="rail" id="rail" hidden aria-label="Find a study">
-    <div class="rail-grp">
-      <label class="rail-lbl" for="rail-q">Find</label>
+    <div class="rail-head">
+      <label class="sr" for="rail-q">Find a study</label>
       <input class="rail-q" id="rail-q" type="search" autocomplete="off"
-             placeholder="name, word or number">
-    </div>
-    <div class="rail-top">
+             placeholder="Name, word or number">
       <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
+    </div>
+
+    <div class="rail-body">
+      <!-- The old headings said «What changes» and «Answers to», which read as
+           the start of a sentence the labels underneath never finished — «it
+           moves», «a press of its own». Both axes now name the thing rather
+           than narrate it: a property on one side, a requirement on the other,
+           one or two words each, so the two lists can be read as columns. -->
+      <details class="rail-drop" data-facet="changes">
+        <summary class="rail-sum">
+          <span class="rail-sum-t">What changes</span>
+          <span class="rail-sum-n" aria-hidden="true" hidden></span>
+          <span class="sr rail-sum-sr"></span>
+        </summary>
+        <p class="rail-hint">The properties a study animates. Two ticks ask for either.</p>
+        <ul class="rail-list"></ul>
+      </details>
+
+      <details class="rail-drop" data-facet="answers">
+        <summary class="rail-sum">
+          <span class="rail-sum-t">How it runs</span>
+          <span class="rail-sum-n" aria-hidden="true" hidden></span>
+          <span class="sr rail-sum-sr"></span>
+        </summary>
+        <p class="rail-hint">What has to happen before the effect plays.</p>
+        <ul class="rail-list"></ul>
+      </details>
+
+      <div class="rail-grp">
+        <span class="rail-lbl">Sections</span>
+        <ul class="rail-sects"></ul>
+      </div>
+    </div>
+
+    <div class="rail-foot">
       <span class="tools-count" aria-live="polite"></span>
       <button type="button" class="tools-reset" hidden>Reset</button>
-    </div>
-    <div class="rail-grp" data-facet="changes">
-      <span class="rail-lbl">What changes</span>
-      <ul class="rail-list"></ul>
-    </div>
-    <div class="rail-grp" data-facet="answers">
-      <span class="rail-lbl">Answers to</span>
-      <ul class="rail-list"></ul>
-    </div>
-    <div class="rail-grp">
-      <span class="rail-lbl">Sections</span>
-      <ul class="rail-sects"></ul>
     </div>
   </nav>
 
@@ -6949,6 +7083,22 @@ document.addEventListener("DOMContentLoaded", function () {
     var BAD_COLOUR = getComputedStyle(document.documentElement)
                        .getPropertyValue('--on-ink').trim().toLowerCase();
 
+    // WHITE above is MEASURED — graphite ships its white a shade under pure, so
+    // it comes back #f2f2f2. Pure #ffffff means the same thing to a visitor and
+    // is the easier one to land on: the swatch markup ships it, and the top
+    // corner of every OS colour picker is it. Recognising only the measured
+    // spelling as «unset» made #ffffff a real override, and a real override is
+    // written to the root as a LITERAL — which is what --ink-hover's alias to
+    // --ink exists to avoid. Pinned that way, the arriving fill stayed white
+    // while the label, the border and the plate all took the accent: cards 07,
+    // 08 and 09 are the whole point of this page and the colour never reached
+    // them. Worse, saveLook() persisted it, so the page came back broken.
+    // Both spellings mean unset, on entry and on load.
+    function isUnset(v){
+      v = String(v).toLowerCase();
+      return v === WHITE.toLowerCase() || v === '#ffffff';
+    }
+
     // The three roles --ink used to play at once, and what each has to clear
     // against the card to stay legible.
     //
@@ -7149,7 +7299,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // back to white instead of grey three times over.
         var meant = function(v){
           return typeof v === 'string' && HEX.test(v)
-              && v.toLowerCase() !== WHITE.toLowerCase()
+              && !isUnset(v)
               && v.toLowerCase() !== BAD_COLOUR;
         };
         if (meant(stored.colour)){
@@ -7169,7 +7319,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // the monochrome tokens. It also makes opening a picker and closing it
         // a no-op, which is what a visitor who changed nothing expects.
         var v = swatches[r.key].value.toLowerCase();
-        look[r.key] = (v === WHITE.toLowerCase()) ? '' : swatches[r.key].value;
+        look[r.key] = isUnset(v) ? '' : swatches[r.key].value;
         paint(); saveLook(); apply();
       });
     });
@@ -7207,19 +7357,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Which declaration means what. The order matters only for reading: a card
     // that transitions a transform AND a colour carries both tags.
+    // The labels name the thing; they do not describe it. «it moves» and «a
+    // press of its own» were a voice, and a voice in a filter list is one more
+    // sentence to parse per row — nine words across the two groups where two
+    // will do. The KEYS are untouched: #facet-manifest stamps those, and a
+    // renamed key would read as drift the next time the tripwire runs.
     var CHANGES = [
-      {k:'moves', label:'it moves',       re:/^(transform|translate|rotate|scale|offset-)/},
-      {k:'fades', label:'it fades',       re:/^opacity$/},
-      {k:'tone',  label:'tone or light',  re:/^(color|background|border-[a-z]+-color|box-shadow|text-shadow|outline|filter|backdrop-filter)/},
-      {k:'type',  label:'the type sets',  re:/^(letter-spacing|word-spacing|font-|text-decoration|text-emphasis)/},
-      {k:'shape', label:'its shape',      re:/^(border-[a-z-]*radius|clip-path|mask|-webkit-mask|corner-|width|height|padding|gap|grid-template|stroke|d$)/},
-      {k:'seq',   label:'in sequence',    re:/^(transition-delay|animation-delay)$/}
+      {k:'moves', label:'Movement',      re:/^(transform|translate|rotate|scale|offset-)/},
+      {k:'fades', label:'Opacity',       re:/^opacity$/},
+      {k:'tone',  label:'Colour, light', re:/^(color|background|border-[a-z]+-color|box-shadow|text-shadow|outline|filter|backdrop-filter)/},
+      {k:'type',  label:'Typography',    re:/^(letter-spacing|word-spacing|font-|text-decoration|text-emphasis)/},
+      {k:'shape', label:'Size, shape',   re:/^(border-[a-z-]*radius|clip-path|mask|-webkit-mask|corner-|width|height|padding|gap|grid-template|stroke|d$)/},
+      {k:'seq',   label:'Stagger',       re:/^(transition-delay|animation-delay)$/}
     ];
     var ANSWERS = [
-      {k:'hover', label:'a hover alone'},
-      {k:'press', label:'a press of its own'},
-      {k:'loop',  label:'a loop'},
-      {k:'js',    label:'needs JavaScript'}
+      {k:'hover', label:'Hover only'},
+      {k:'press', label:'Press state'},
+      {k:'loop',  label:'Loop, unprompted'},
+      {k:'js',    label:'Needs JavaScript'}
     ];
 
     // One flat list of every authored rule, @media and @supports included, so a
@@ -7416,6 +7571,21 @@ document.addEventListener("DOMContentLoaded", function () {
           row.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
           if (n) row.removeAttribute('data-empty'); else row.setAttribute('data-empty', '');
         });
+      });
+      // A shut group still says what it is doing. The badge is the number of
+      // boxes ticked inside it — without it a filter set before the group was
+      // collapsed is invisible, and «12 of 114» in the status bar names no
+      // cause. aria-hidden on the badge and the words in the .sr twin, so the
+      // summary reads as «What changes, 2 filters on» rather than as a digit
+      // glued to a heading.
+      [{key:'changes'}, {key:'answers'}].forEach(function(grp){
+        var d = rail.querySelector('[data-facet="' + grp.key + '"]');
+        if (!d) return;
+        var n = state[grp.key].length;
+        var badge = d.querySelector('.rail-sum-n');
+        var srn   = d.querySelector('.rail-sum-sr');
+        if (badge){ badge.textContent = n || ''; badge.hidden = !n; }
+        if (srn) srn.textContent = n ? (', ' + n + (n === 1 ? ' filter on' : ' filters on')) : '';
       });
       rail.querySelectorAll('.rail-sects a').forEach(function(a){
         var sect = document.getElementById(a.dataset.for);
