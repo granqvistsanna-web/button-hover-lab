@@ -4214,43 +4214,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-loop:focus-visible .o-loop-track{animation:o-loop-run 5s linear infinite}
   @keyframes o-loop-run{to{transform:translateX(-50%)}}
 
-  /* 89 Instant invert — the surface and the ink change places, and
-     nothing travels. Cards 09 and 75 both make the fill ARRIVE from somewhere,
-     a point or an edge; this argues that on a rectangle it should not, because
-     a straight edge gives a travelling fill a direction the shape did not ask
-     for. The radius is the moderate one rather than the pill for the same
-     reason: it is the shape the argument depends on. */
-  /* The plate alone is 1.13:1 against the card, so on the page's own rule it is
-     not a boundary. --line-ctl is what the head comment ships for exactly this.
-     It goes imperceptible once the plate turns white, which is fine — a white
-     plate on a dark card is its own edge. */
-  .o-plate{border:1px solid var(--line-ctl); border-radius:var(--r-md);
-    background:var(--lift-bg); color:var(--ink-text);
-    transition:background var(--t-3) ease,color var(--t-3) ease}
-  .o-plate:hover,.o-plate:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
-
-  /* 90 Hatch exit — the surface inverts and the hatching leaves by
-     the trailing edge rather than fading where it stands. The inversion is
-     card 89 again; the hatch is what is new. A fade would read as the pattern
-     being switched off, and a pattern that occupies the plate should have to
-     vacate it.
-
-     The hatch is a repeating gradient on ::before rather than an element, so
-     it costs no markup and cannot be read by a screen reader. */
-  /* Boundary for the same reason as card 89. The hatch is not one: it is the
-     thing that leaves. */
-  .o-hatch{position:relative; overflow:hidden; border:1px solid var(--line-ctl);
-    background:var(--lift-bg); color:var(--ink-text);
-    transition:background var(--t-3) ease,color var(--t-3) ease}
-  .o-hatch::before{content:""; position:absolute; inset:0; pointer-events:none;
-    background:repeating-linear-gradient(135deg,
-      color-mix(in srgb,var(--ink) 16%,transparent) 0 2px, transparent 2px 7px);
-    transition:transform var(--t-4) var(--e-quint),opacity var(--t-2) ease}
-  .o-hatch:hover::before,
-  .o-hatch:focus-visible::before{transform:translateX(101%); opacity:0}
-  .o-hatch:hover,.o-hatch:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
-  .o-hatch .lbl{position:relative}
-
   /* 91 Stepped fill — the only new mechanism in the set. Six columns rise from
      the bottom on a stagger, so the fill has a staircase edge on the way in
      and resolves to a flat plate. Every other fill on this page has a straight
