@@ -1506,7 +1506,7 @@
 
     <article class="spec">
                   <div class="stage">
-                    <button type="button" class="btn btn--solid g-radius">See the full case</button>
+                    <button type="button" class="btn btn--solid g-radius"><span class="lbl">See the full case</span></button>
                   </div>
                   <h3><span class="num">40</span>Diagonal radius</h3>
                     <p>The capsule keeps two corners and draws the other two in, so the plate changes body without moving.</p>
@@ -1854,7 +1854,7 @@
 
     <article class="spec" data-versions="fill outline link">
                   <div class="stage">
-                    <button type="button" class="btn btn--solid i-anti">Continue
+                    <button type="button" class="btn btn--solid i-anti"><span class="lbl">Continue</span>
                       <span class="i-anti-slot" aria-hidden="true">
                         <svg class="icon i-anti-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
                       </span>
@@ -1880,7 +1880,7 @@
 
     <article class="spec" data-versions="fill outline link">
                   <div class="stage">
-                    <button type="button" class="btn btn--solid i-throw">Send the brief
+                    <button type="button" class="btn btn--solid i-throw"><span class="lbl">Send the brief</span>
                       <span class="i-throw-slot" aria-hidden="true"><i class="i-throw-mark"></i></span>
                     </button>
                   </div>
@@ -2833,7 +2833,27 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:border-radius var(--t-5) var(--e-quint), transform var(--t-2) var(--e-out);
   }
   .g-radius:hover,
-  .g-radius:focus-visible{border-radius:5px 26px 5px 26px}
+  .g-radius:focus-visible{border-radius:5px 26px 5px 26px; transform:scale(.972) rotate(0.001deg)}
+  /* A shape change on its own reads as a state being set. The same change on a
+     plate that is also giving reads as the shape being PRESSED into its new
+     geometry — which is what the card is about. The transform runs on the
+     radius's own curve and rung, not on the --t-2 press value already declared
+     above, so the two arrive together.
+
+     The label counter-scales exactly, so this is the BACKGROUND changing size
+     and nothing else; a scaled label would resample the type for 2.8% of
+     movement it gains nothing from. */
+  .g-radius{transition:border-radius var(--t-5) var(--e-quint), transform var(--t-5) var(--e-quint)}
+  .g-radius .lbl{transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-5) var(--e-quint)}
+  .g-radius:hover .lbl,
+  .g-radius:focus-visible .lbl{transform:scale(1.0288066) rotate(0.001deg)}
+  /* The press was on --t-2 before this card gained a hover transform; keeping
+     it at the radius's 450ms would make a click feel like a decision. Back to
+     the snap rung. */
+  .g-radius:active{transform:scale(.95) rotate(0.001deg); transition-duration:var(--t-1)}
+  .g-radius:active .lbl{transform:scale(1.0526) rotate(0.001deg);
+    transition-duration:var(--t-1)}
 
   /* 41 Inset fill — the plate grows out to its reserved measure.
      The travel runs on --e-out rather than --e-quint, because quint covers
@@ -3118,6 +3138,39 @@ document.addEventListener("DOMContentLoaded", function () {
     transform:translateX(5px);
     transition-timing-function:cubic-bezier(.5,-.9,.25,1);
   }
+  /* The plate winds up with the arrow — and ONLY the plate. A scale on the
+     button drags its label and its mark along with it, which is a different
+     effect and a worse one: the type resamples and the arrow's 5px stops
+     meaning 5px. So the contents carry the exact inverse on the same curve and
+     the same rung, and cancel it frame by frame. Parent x child = identity all
+     the way through, so the label never leaves its rasterisation.
+
+     The curve is doing this for free. cubic-bezier(.5,-.9,.25,1) troughs at
+     -0.242, so a transition from 1 to .97 passes through 1.007 on the way down
+     — the plate swells a hair before it gives, which is the same wind-up the
+     arrow is performing, in the one property that costs the row nothing. */
+  .i-anti{transition:transform var(--t-3) var(--e-out)}
+  .i-anti .lbl, .i-anti .i-anti-slot{
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out);
+  }
+  .i-anti:hover, .i-anti:focus-visible{
+    transform:scale(.97) rotate(0.001deg);
+    transition-timing-function:cubic-bezier(.5,-.9,.25,1);
+  }
+  .i-anti:hover .lbl, .i-anti:focus-visible .lbl,
+  .i-anti:hover .i-anti-slot, .i-anti:focus-visible .i-anti-slot{
+    transform:scale(1.030928) rotate(0.001deg);
+    transition-timing-function:cubic-bezier(.5,-.9,.25,1);
+  }
+  /* The press, restated. .btn:active sits far above this at the same
+     specificity, so the :hover rule would otherwise swallow it and the button
+     would answer a click with nothing. The contents keep their counter, so a
+     press is still the BACKGROUND moving. */
+  .i-anti:active{transform:scale(.94) rotate(0.001deg); transition-duration:var(--t-1)}
+  .i-anti:active .lbl,
+  .i-anti:active .i-anti-slot{transform:scale(1.0638) rotate(0.001deg);
+    transition-duration:var(--t-1)}
 
   /* 55 Rule bend — the SVG path itself is interpolated (the CSS
      `d` property), so the line deflects like a loaded beam instead of being
@@ -3204,6 +3257,27 @@ document.addEventListener("DOMContentLoaded", function () {
      velocity, never the distance to the origin: at dt = 0 an origin test is
      already satisfied and the loop dies on its first frame. No CSS transition
      on the mark — the spring owns that transform outright. */
+  /* The plate grows 2.8% as the mark leaves — subordinate to the throw, which
+     stays the story; the plate only says it felt the launch. Label and mark
+     counter-scale exactly, so the BACKGROUND is the only thing that changes
+     size. That matters more here than anywhere else on the page: the card's
+     whole claim is a 2.5px overshoot, and a mark riding a growing plate would
+     have its overshoot silently scaled with it. */
+  .i-throw{transition:transform var(--t-4) var(--e-quint)}
+  .i-throw:hover, .i-throw:focus-visible{transform:scale(1.028) rotate(0.001deg)}
+  .i-throw .lbl, .i-throw .i-throw-slot{
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-quint);
+  }
+  .i-throw:hover .lbl, .i-throw:focus-visible .lbl,
+  .i-throw:hover .i-throw-slot,
+  .i-throw:focus-visible .i-throw-slot{transform:scale(.97276) rotate(0.001deg)}
+  /* A press has to go the other way from the grow, or the button answers a
+     click by doing more of what it was already doing. */
+  .i-throw:active{transform:scale(.99) rotate(0.001deg); transition-duration:var(--t-1)}
+  .i-throw:active .lbl,
+  .i-throw:active .i-throw-slot{transform:scale(1.0101) rotate(0.001deg);
+    transition-duration:var(--t-1)}
   .i-throw .i-throw-slot{position:relative; display:block; width:14px; height:14px}
   .i-throw .i-throw-mark{
     position:absolute; top:2px; left:2px; width:10px; height:10px;
@@ -7206,7 +7280,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","17":"moves|hover","18":"moves fades|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","35":"fades tone|hover","36":"moves tone|press","38":"moves type|hover","39":"moves|hover","40":"moves shape|hover","41":"tone shape|hover","42":"moves fades tone seq|press","43":"moves tone|press","44":"moves fades tone|hover","45":"moves tone|press","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|hover","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","68":"tone|hover","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","84":"moves|hover","85":"moves seq|loop","86":"tone|hover","88":"moves shape|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","94":"moves|loop","96":"shape|hover","97":"moves|hover","98":"shape|hover","99":"moves|hover","100":"moves seq|hover","101":"shape|hover","102":"moves seq|hover","103":"moves|hover","104":"moves tone|press","105":"fades|hover","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","112":"moves fades|hover","113":"moves fades|hover","115":"moves tone|js","116":"moves tone|press","117":"moves tone|press","118":"moves tone shape|press","119":"moves|press","120":"moves|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","01":"moves|press","02":"moves|press","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press","06":"tone|loop"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","17":"moves|hover","18":"moves fades|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","35":"fades tone|hover","36":"moves tone|press","38":"moves type|hover","39":"moves|hover","40":"moves shape|press","41":"tone shape|hover","42":"moves fades tone seq|press","43":"moves tone|press","44":"moves fades tone|hover","45":"moves tone|press","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","68":"tone|hover","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves tone seq|js","77":"moves seq|hover","78":"moves|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","84":"moves|hover","85":"moves seq|loop","86":"tone|hover","88":"moves shape|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","94":"moves|loop","96":"shape|hover","97":"moves|hover","98":"shape|hover","99":"moves|hover","100":"moves seq|hover","101":"shape|hover","102":"moves seq|hover","103":"moves|hover","104":"moves tone|press","105":"fades|hover","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","112":"moves fades|hover","113":"moves fades|hover","115":"moves tone|js","116":"moves tone|press","117":"moves tone|press","118":"moves tone shape|press","119":"moves|press","120":"moves|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","01":"moves|press","02":"moves|press","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press","06":"tone|loop"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
