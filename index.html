@@ -2776,8 +2776,15 @@ document.addEventListener("DOMContentLoaded", function () {
      lopsided. The gesture gives up 5px and gains 2px in the other axis, which
      is a smaller movement in a straighter line. */
   .g-measure{padding:17px 34px; color:var(--ink-on-fill)}
+  /* --line-ctl and not --line. The card is named for a RESERVED MEASURE and
+     the trim is the only thing that states it, and at --line's 8% alpha on this
+     ground the measure was not visible at all — the rest state read as a plate
+     with an unexplained dark halo rather than as a plate sitting inside its own
+     boundary. At 36% it is the page's control-boundary token, it clears 3:1,
+     and the hover finally shows what the copy has been claiming: the plate
+     grows out to a measure that was already drawn. */
   .g-measure .g-measure-trim{
-    position:absolute; inset:0; border:1px solid var(--line);
+    position:absolute; inset:0; border:1px solid var(--line-ctl);
     border-radius:inherit; pointer-events:none;
     transition:border-color var(--t-4) var(--e-out);
   }
@@ -2789,8 +2796,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .g-measure:hover .g-measure-plate,
   .g-measure:focus-visible .g-measure-plate{clip-path:inset(0px round 999px)}
+  /* The trim holds until the plate reaches it, then hands over. Undelayed, the
+     boundary was gone at 300ms while the plate did not land until 450 — 150ms
+     of a button with no boundary and no arrival, which is the one stretch where
+     neither state is being stated. The delay is the plate's rung less the
+     trim's own, so the two land together; both tokens are read on the :hover
+     side, where they resolve to 450 and 300.
+     Nothing is restated at rest on purpose: the REST declaration paints the
+     exit, so on the way out the measure re-marks itself immediately and the
+     plate withdraws into a boundary that is already there. */
   .g-measure:hover .g-measure-trim,
-  .g-measure:focus-visible .g-measure-trim{border-color:transparent}
+  .g-measure:focus-visible .g-measure-trim{border-color:transparent;
+    transition-delay:calc(var(--t-5) - var(--t-4))}
   .g-measure .lbl{position:relative}
 
   /* 43 Keycap — a hard bottom edge, a real depression on press */
