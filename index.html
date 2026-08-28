@@ -126,6 +126,8 @@
   /* ============ header ============ */
   h1{color:var(--ink-hi); font-size:clamp(34px,5vw,52px); font-weight:700;
     letter-spacing:-.02em; line-height:1.05; margin:6px 0 0; text-wrap:balance}
+  .lede{max-width:62ch; font-size:16px; color:var(--ink-mid); margin:10px 0 0}
+  .lede strong{color:var(--ink-hi); font-weight:600}
 
   /* ============ sections & cards ============ */
   .sect{margin-top:72px}
@@ -875,6 +877,10 @@
 <div class="wrap">
   <header>
     <h1>Button Hover Lab</h1>
+    <!-- The count is never written by hand here — a hand-typed number went
+         stale twice. JS fills it from cards.length; without JS the sentence
+         reads whole with no number. -->
+    <p class="lede">Button hover animations, actually built. <strong>Hover, tab and press any of them.</strong></p>
   </header>
 
   <div class="tools" role="group" aria-label="Restyle the studies">
@@ -6742,6 +6748,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<!-- A known-good copy of every card's derived tags, stamped by
+     tools/facet-manifest.mjs. The rail derives its facets from the live
+     CSSOM on every load; this is the tripwire that says when that
+     derivation stops matching the build it was checked against. Restamp
+     after adding or re-tagging a study: node tools/facet-manifest.mjs -->
+<script type="application/json" id="facet-manifest">{"10":"moves tone seq|hover","11":"moves|hover","12":"moves fades|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","17":"moves|hover","18":"moves fades seq|hover","19":"moves fades seq|js","20":"moves|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","35":"fades tone seq|hover","36":"moves tone|press","37":"fades tone seq|hover","38":"moves type|hover","39":"moves|hover","40":"moves shape|hover","41":"tone shape|hover","42":"moves fades tone seq|press","43":"moves tone|press","44":"moves fades tone|hover","45":"moves tone|press","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone|press","50":"moves tone|js","51":"moves tone|press","52":"moves|hover","53":"moves|hover","54":"moves|hover","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","58":"moves tone|js","59":"moves|js","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","68":"tone|hover","69":"|js loop","70":"moves|hover","71":"moves|hover","72":"moves tone shape seq|js","73":"moves fades tone shape|js","74":"shape seq|js","75":"moves tone seq|js","76":"moves tone shape seq|hover","77":"moves seq|hover","78":"moves|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades seq|hover","84":"moves seq|hover","85":"moves seq|loop","86":"tone|hover","87":"moves fades|hover","88":"moves shape seq|hover","89":"tone|hover","90":"moves fades tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","94":"moves seq|loop","95":"moves|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","99":"moves|hover","100":"moves|hover","101":"shape|hover","102":"moves seq|hover","103":"moves seq|hover","104":"moves tone|press","105":"fades|hover","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","112":"moves fades|hover","113":"moves fades|hover","114":"moves tone seq|press","115":"moves seq|js","116":"moves tone|press","117":"moves tone seq|press","01":"moves|press","02":"moves|press","03":"moves|js press","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone seq|js","04":"tone|hover","05":"tone|press","06":"tone seq|loop"}</script>
+
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
 // its own markup binds to nothing, in silence.
@@ -7428,6 +7441,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     tag();
+    // The lede's count, from the same list everything else counts. A
+    // hand-typed number in that sentence went stale twice; this one cannot.
+    var lede = document.querySelector('.lede');
+    if (lede && lede.firstChild && lede.firstChild.nodeType === 3){
+      lede.firstChild.textContent = cards.length + ' button hover animations, actually built. ';
+    }
+    // The taxonomy above is DERIVED, so a bug in tag() mis-files studies in
+    // silence — the rail shows wrong numbers as confidently as right ones.
+    // #facet-manifest holds the tags as they stood when last stamped; any
+    // difference is shouted to the console and flagged on <html>, and the
+    // page otherwise carries on: the manifest is a tripwire, not a second
+    // source of truth.
+    (function(){
+      var man = document.getElementById('facet-manifest');
+      if (!man) return;
+      var want;
+      try { want = JSON.parse(man.textContent); } catch(e){ return; }
+      var ids = Object.keys(want);
+      if (!ids.length) return;                    // not stamped yet
+      var drift = [], seen = {};
+      cards.forEach(function(card){
+        seen[card.dataset.id] = 1;
+        var got = card.dataset.changes + '|' + card.dataset.answers;
+        if (!(card.dataset.id in want)) drift.push(card.dataset.id + ' unstamped');
+        else if (want[card.dataset.id] !== got)
+          drift.push(card.dataset.id + ': stamped "' + want[card.dataset.id] +
+                     '" derived "' + got + '"');
+      });
+      ids.forEach(function(id){ if (!seen[id]) drift.push(id + ' gone'); });
+      if (drift.length){
+        document.documentElement.setAttribute('data-facet-drift', drift.length);
+        console.error('[facet-manifest] derived tags no longer match the stamped build (' +
+          drift.length + '):\n' + drift.join('\n'));
+      }
+    })();
     buildRail();
     spy();
 
