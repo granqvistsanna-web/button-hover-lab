@@ -58,6 +58,18 @@ export const VERSIONS = {
   // button is a THIRD surface arguing with the two inside it, so there is none.
   'p-part':'built', 'p-walk':'built', 'p-trade':'built', 'p-cycle':'built',
   'p-hinge':'built', 'p-slip':'built', 'n-join':'built',
+  // — Two at once ————————————————————————————————————————————————
+  // A compound is only as portable as its stricter half. 118 and 123 own their
+  // surface outright (a corner shape, a lit plate); 121 is absent on purpose — its label is
+  // per-letter spans inside .lbl, and the version bar's Long toggle writes
+  // textContent back over them, so it opts out the way card 20 does; 122's
+  // ellipse needs a surface,
+  // and a link has none. 124 sets its own border and radius, so a treatment on
+  // top of it is a third opinion. Only the two pure roll-plus-transform cards
+  // survive all three.
+  'c-chassis':'built', 'c-crest':'built', 'c-regis':'built',
+  'c-relay':'fill outline',
+  'c-swell':'fill outline link', 'c-mass':'fill outline link',
 };
 
 const F = new URL('../index.html', import.meta.url).pathname;

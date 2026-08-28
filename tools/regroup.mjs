@@ -33,6 +33,11 @@ const GROUPS = [
   ['icon',     'Icon'],
   ['material', 'Material and light'],
   ['row',      'Button groups'],
+  // The ninth group does not name a part, because a compound performs on two
+  // of them at once — which is exactly why it cannot be filed under either.
+  // It goes last for the same reason 'row' used to: it is the one group that
+  // presumes you have read the others.
+  ['compound', 'Two at once'],
 ];
 
 // The two material aliases were declared on the SECTION, which made a card's
@@ -182,6 +187,15 @@ const GROUP_OF = {
   'Word bow': 'char',
   'Stack fan': 'button',
   'Fixed shadow': 'button',
+
+  // Two at once — two mechanisms from the groups above, on one curve.
+  'Under load': 'compound',
+  'Swell': 'compound',
+  'Lands first': 'compound',
+  'Tide': 'compound',
+  'Leading edge': 'compound',
+  'Crest': 'compound',
+  'Closing marks': 'compound',
 };
 
 // ---- parsing ---------------------------------------------------------------
