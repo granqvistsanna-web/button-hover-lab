@@ -1545,10 +1545,10 @@
 
     <article class="spec" data-key="z-lurch" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
-                    <button type="button" class="btn z-lurch"><span class="lbl">Run the export</span></button>
+                    <button type="button" class="btn z-lurch"><span class="lbl"><span class="z-lurch-track"><span class="z-lurch-inner"><span class="z-lurch-row">Run the export</span><span class="z-lurch-row" aria-hidden="true">Exported</span></span></span></span></button>
                   </div>
                   <h3><span class="num">113</span>Honest progress</h3>
-                  <p>A progress bar that stalls at a quarter and then leaps, because real work is uneven and a linear bar is the one shape no job has. The gallery animates width in 1.2s of keyframes; this is one scaleX transition.</p>
+                  <p>A progress bar that stalls at a quarter and then leaps, because real work is uneven and a linear bar is the one shape no job has, and the label rolls to the finished state on the frame the bar lands. The gallery animates width in 1.2s of keyframes; this is one scaleX transition.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
@@ -6852,6 +6852,25 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Both on --ink-hover: the base and the fill are one colour or the
      black stops being exact. */
   .btn.z-lurch .lbl{position:relative; z-index:1; color:var(--ink-hover); mix-blend-mode:difference}
+  /* THE JOB FINISHES, which the bar on its own never said. A progress bar is
+     STATUS feedback and this card stopped there; the roll is the COMPLETION,
+     and a card whose whole subject is how real work behaves was missing the one
+     moment every real job has. It is card 15's idiom verbatim — a clipped track
+     and an inner carrying a hair of rotation, so the type does not visibly
+     change weight the frame it starts to move.
+
+     THE DELAY IS THE BAR'S OWN --t-5 and not a number invented to match it, so
+     the label cannot drift out of step with the thing it is reporting on: move
+     the bar's duration and the roll follows it. The rest side states 0ms, so the
+     label leaves at once instead of playing its arrival backwards — the
+     delay-asymmetry rule, and the reason both sides are written out. */
+  .btn.z-lurch .z-lurch-track{display:block; overflow:hidden; height:1.25em}
+  .btn.z-lurch .z-lurch-inner{display:block; transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-out) 0ms}
+  .btn.z-lurch .z-lurch-row{display:block; height:1.25em; line-height:1.25em}
+  .btn.z-lurch:hover .z-lurch-inner,
+  .btn.z-lurch:focus-visible .z-lurch-inner{
+    transform:translateY(-1.25em) rotate(0.001deg); transition-delay:var(--t-5)}
   @media (prefers-reduced-motion: reduce){
     .btn.z-lurch::before{
       transform:scaleX(1); opacity:0;
