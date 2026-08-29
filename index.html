@@ -189,8 +189,6 @@
      So it is taken off the screen the way a skip link is, not display:none.
      The gap goes to the grid_s own 24px, because a 128px hole with nothing
      in it reads as a mistake rather than a division. */
-  .sect{margin-top:24px}
-  .sect:first-of-type{margin-top:0}
   .sect>h2, .sect-intro{position:absolute; width:1px; height:1px; padding:0;
     margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0}
   /* The line under a section heading, and the heading needs it more now that
@@ -204,8 +202,19 @@
      deleted by the next run. */
   .sect-intro{max-width:62ch; font-size:14px; line-height:1.5;
     color:var(--ink-mid); margin:10px 0 0}
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
-    gap:24px; margin-top:0}
+  /* ONE grid for the whole feed, not one per section. With the headings gone
+     the nine sections read as a single continuous run, but each was still its
+     own grid — so five of the nine ended on a part-row and left a hole in the
+     middle of the feed with nothing to explain it. 8 cards in three columns is
+     two rows and a gap where the ninth card is not.
+     The sections stay in the DOM and keep doing their work: regroup.mjs still
+     parses them from the source, tools/library.mjs still reads the <h2> as
+     Family through closest(), and the rail still counts and filters by them.
+     They just stop generating boxes, so their cards land in the feed's own
+     column rhythm and the only part-row left is the last one on the page. */
+  .feed{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
+    gap:24px}
+  .sect, .sect>.grid{display:contents}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
      lightness — the card is bg-1 on bg-0 and carries no border and no shadow. */
   .spec{background:var(--bg-1); border-radius:var(--r-xl); overflow:hidden;
@@ -231,8 +240,13 @@
      natural width beats the stage (card 19's over-long label) sizes the column
      to max-content and gets centred in an area wider than the card — off to one
      side and clipped by the panel. minmax(0,1fr) pins the column to the stage. */
+  /* ONE gutter down the card. The stage was padded 24px and everything under
+     it 22px, so the demo sat two pixels wider than the title, the description
+     and the chips on both sides — a misalignment small enough to read as
+     softness rather than as a mistake, which is the kind that survives. The
+     text column takes the stage's 24. */
   .spec h3{display:flex; align-items:baseline; gap:10px;
-    border-top:1px solid var(--hairline); padding:17px 22px 0; margin:0 0 5px;
+    border-top:1px solid var(--hairline); padding:17px 24px 0; margin:0 0 5px;
     font-size:14.5px; font-weight:600; color:var(--ink-hi); letter-spacing:0}
   .num{font:400 11px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
@@ -242,7 +256,7 @@
      characters and three lines of this measure holds about 117, so the clamp
      lands on the sentence break rather than inside it. 37 of the 90 cards are
      one sentence and never grow a control at all. */
-  .spec p{padding:0 22px; margin:0 0 12px; font-size:13px; color:var(--ink-low)}
+  .spec p{padding:0 24px; margin:0 0 12px; font-size:13px; color:var(--ink-low)}
   .spec:not([data-open]) p{display:-webkit-box; -webkit-box-orient:vertical;
     -webkit-line-clamp:3; overflow:hidden}
   /* A search matches on the full text, clamped part included, so a hit whose
@@ -250,7 +264,7 @@
      the field has anything in it, every card is open. */
   body.is-searching .spec p{display:block; -webkit-line-clamp:none; overflow:visible}
   .chips{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
-    margin-top:auto; padding:0 22px 20px; font:400 11.5px/1.6 var(--mono)}
+    margin-top:auto; padding:0 24px 20px; font:400 11.5px/1.6 var(--mono)}
   /* --ink-faint measures 2.8:1 on the panel — under AA. Every chip is
      information, not decoration, so the ladder starts one step higher. */
   .chip{color:var(--ink-low)}
@@ -1010,7 +1024,7 @@
 
   /* Deterministic instead of a cyclic percentage: minmax(min(320px,100%),1fr)
      resolved stale and pinned a 303px floor, overflowing below ~356px. */
-  @media (max-width: 420px){ .grid{grid-template-columns:1fr} }
+  @media (max-width: 420px){ .feed{grid-template-columns:1fr} }
 
   @media (max-width: 520px){
     .tools{gap:10px; padding:12px 14px}
@@ -1347,7 +1361,7 @@
   .rail-toggle[aria-expanded="true"]::after{content:"▴"}
   /* A jump has to clear the sticky toolbar, and the browser's own idea of the
      top of a section is the top of its box. */
-  .sect{scroll-margin-top:120px}
+  .spec{scroll-margin-top:120px}
 
   /* 1360px, and the number is what the two columns need rather than a round
      figure: 268 of panel plus the 1060 the grid was drawn against, plus its
@@ -1548,6 +1562,7 @@
   </nav>
 
     <div id="studies" tabindex="-1"></div>
+    <div class="feed">
     <section class="sect">
   <h2>Plate</h2>
   <p class="sect-intro">The whole surface answers at once: it scales, lifts, leans, or argues with the pointer about its own weight.</p>
@@ -1968,8 +1983,6 @@
       <p>The same stagger with nothing masked and nothing duplicated: each character lifts 3px and returns. Here as the argument that card 20 is usually the wrong choice &mdash; a roll needs a mask, a duplicate and a deep enough box.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
-
-
 
     <article class="spec" data-key="u-centre" data-versions="link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T20:29:47+02:00">
       <div class="stage">
@@ -2544,6 +2557,7 @@
 
   </div>
 </section>
+    </div>
 <style>
   /* ============ Section F — The challengers ============ */
 
@@ -9230,6 +9244,17 @@ document.addEventListener("DOMContentLoaded", function () {
                       '<span class="sr"></span>';
         a.querySelector('.rail-name').textContent = h.textContent.trim();
         a.dataset.for = sect.id;
+        // A display:contents section is not a scroll target, and under a filter
+        // its first card may be hidden — so the link resolves to the first card
+        // still standing rather than to the section.
+        a.addEventListener('click', function(e){
+          var card = [].filter.call(sect.querySelectorAll('.spec'), function(c){
+            return c.offsetParent !== null;
+          })[0];
+          if (!card) return;
+          e.preventDefault();
+          card.scrollIntoView({block: 'start'});
+        });
         li.appendChild(a); ul.appendChild(li);
       });
       rail.hidden = false;
@@ -9328,12 +9353,18 @@ document.addEventListener("DOMContentLoaded", function () {
         var top = seen.slice().sort(function(a, b){
           return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
         })[0];
+        // The CARDS are observed, not the sections: a section is display:contents
+        // now and has no box, so IntersectionObserver would never report one and
+        // the rail's «where you are» would go quietly dead. The topmost visible
+        // card names its own section, which is a truer answer anyway — a section
+        // whose cards are all filtered out can no longer be reported as current.
+        var sect = top && top.closest('.sect');
         rail.querySelectorAll('.rail-sects a').forEach(function(a){
-          if (top && a.dataset.for === top.id) a.setAttribute('aria-current', 'true');
+          if (sect && a.dataset.for === sect.id) a.setAttribute('aria-current', 'true');
           else a.removeAttribute('aria-current');
         });
       }, {rootMargin: '-120px 0px -55% 0px'});
-      document.querySelectorAll('.sect').forEach(function(s){ io.observe(s); });
+      document.querySelectorAll('.sect .spec').forEach(function(c){ io.observe(c); });
     }
 
     tag();
