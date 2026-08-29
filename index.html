@@ -170,6 +170,17 @@
   .sect>h2{display:flex; align-items:baseline; gap:14px;
     font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
     color:var(--ink-low); padding-bottom:16px; border-bottom:1px solid var(--hairline)}
+  /* The line under a section heading. The headings name a part — «Label», «Two
+     at once» — and a part is not a criterion: two of them could not say what
+     they collect without being read as a sentence, and «Two at once» could not
+     say it at all. It sits BELOW the heading's hairline rather than beside the
+     heading, because it is a sentence and the heading is a label at 11px in
+     caps; on one line they would be two registers fighting. Measure is the
+     lede's, so the three widths on the page are one width.
+     Emitted by tools/regroup.mjs with the sections — authored here it would be
+     deleted by the next run. */
+  .sect-intro{max-width:62ch; font-size:14px; line-height:1.5;
+    color:var(--ink-mid); margin:16px 0 0}
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
     gap:24px; margin-top:28px}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
@@ -1446,6 +1457,7 @@
     <div id="studies" tabindex="-1"></div>
     <section class="sect">
   <h2>Whole button</h2>
+  <p class="sect-intro">The whole plate answers at once. It scales, lifts, leans, or takes on a state and says so.</p>
   <div class="grid">
 
     <article class="spec" data-key="g-measure" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -1575,6 +1587,7 @@
 
 <section class="sect">
   <h2>Fill</h2>
+  <p class="sect-intro">A fill arrives or leaves. What differs is where it comes from and whether you can see it travel.</p>
   <div class="grid">
 
     <article class="spec" data-key="sweep" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -1666,6 +1679,7 @@
 
 <section class="sect">
   <h2>Border, corner and rule</h2>
+  <p class="sect-intro">The outline does the work and the plate holds still: an underline, a rule, a drawn border, a corner that changes shape.</p>
   <div class="grid">
 
     <article class="spec" data-key="uline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -1789,6 +1803,7 @@
 
 <section class="sect">
   <h2>Label</h2>
+  <p class="sect-intro">The word moves as one piece, so the button can change what it says without changing size.</p>
   <div class="grid">
 
     <article class="spec" data-key="roll" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -1843,6 +1858,7 @@
 
 <section class="sect">
   <h2>Label, per character</h2>
+  <p class="sect-intro">The word is split and the parts move separately, which buys a stagger the whole label cannot make.</p>
   <div class="grid">
 
     <article class="spec" data-key="u-roll" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -1940,6 +1956,7 @@
 
 <section class="sect">
   <h2>Icon</h2>
+  <p class="sect-intro">A mark beside the label carries the gesture: an arrow travels, a shape redraws, a caret points.</p>
   <div class="grid">
 
     <article class="spec" data-key="relay" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -2121,6 +2138,7 @@
 
 <section class="sect">
   <h2>Material and light</h2>
+  <p class="sect-intro">The button behaves like a physical thing — lit, glazed, printed, knurled or cut — and hover changes the material, not the layout.</p>
   <div class="grid">
 
     <article class="spec" data-key="v-bloom" data-versions="fill outline" data-added="2026-08-27T11:32:34+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -2230,6 +2248,7 @@
 
 <section class="sect">
   <h2>Button groups</h2>
+  <p class="sect-intro">These need siblings to be read. Hovering one changes the others, so the row is the unit and a single button shows nothing.</p>
   <div class="grid">
 
     <article class="spec" data-key="k-recede" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -2319,6 +2338,7 @@
 
 <section class="sect">
   <h2>Two at once</h2>
+  <p class="sect-intro">Two mechanisms from the sections above, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.</p>
   <div class="grid">
 
     <article class="spec" data-key="c-swell" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T11:11:48+02:00">
@@ -3981,7 +4001,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.setAttribute('data-j-dir', 'idle');
       }
 
-      btn.addEventListener('pointerenter', function(e){ enter(nearestEdge(btn, e)); });
+      btn.addEventListener('pointerenter', function(e){ enter(crossedEdge(btn, e)); });
       btn.addEventListener('pointerleave', leave);
       // A keyboard crosses no edge, so it gets the reading direction.
       btn.addEventListener('focus', function(){ enter('left'); });
@@ -7401,8 +7421,17 @@ document.addEventListener("DOMContentLoaded", function () {
       return d;
     }
     // nearest point of the outline to the pointer, as a perimeter distance.
-    // pointerenter fires with the cursor a pixel or two past the border, so
-    // nearest IS the crossing point for every practical purpose.
+    // This is the right question WHILE THE POINTER IS INSIDE — the mark rides
+    // the outline abreast of the cursor, and nearest is what abreast means.
+    // It is the wrong question at the moment of entry, and the line above this
+    // one used to claim otherwise: «pointerenter fires with the cursor a pixel
+    // or two past the border, so nearest IS the crossing point». Measured on
+    // this page, an ordinary flick puts that first sample 28px in, against a
+    // 23.5px half-height — so a pointer arriving from the LEFT projected onto
+    // the TOP edge and the mark appeared on the wrong side of the button,
+    // every time, which is the one thing «appear where you came in» promises
+    // it will not do. The entry now reads the crossing point instead; nearest
+    // keeps the job it is actually correct for.
     function nearestS(g, px, py){
       var S = segs(g), Cs = cums(S), x = g.x, y = g.y, w = g.w, h = g.h, r = g.r;
       function fit(v, hi){ return Math.max(0, Math.min(hi, v)); }
@@ -7425,6 +7454,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // the short way round the 40-unit loop: (-20, 20]
     function wrap(d){ return d - 40 * Math.round(d / 40); }
+
+    // Where the pointer crossed the boundary, in viewport coordinates. Same
+    // reading card 75 makes and for the same reason — pointerenter reports the
+    // first sample inside, not the edge — but this card wants the POINT rather
+    // than which of the four sides it sits on, so the clip returns the meeting
+    // place and lets nearestS turn it into a perimeter distance. Falls back to
+    // the event when there is no travel to read: the pointer was already
+    // inside and the page moved under it.
+    var lastPt = null;
+    addEventListener('pointermove', function(e){
+      lastPt = {x:e.clientX, y:e.clientY};
+    }, {passive:true, capture:true});
+
+    function crossedPoint(btn, e){
+      var p = lastPt, r = btn.getBoundingClientRect();
+      if (!p) return {x:e.clientX, y:e.clientY};
+      var dx = e.clientX - p.x, dy = e.clientY - p.y;
+      if (!dx && !dy) return {x:e.clientX, y:e.clientY};
+      var tx = -Infinity, ty = -Infinity;
+      if (dx > 0) tx = (r.left - p.x) / dx; else if (dx < 0) tx = (r.right - p.x) / dx;
+      if (dy > 0) ty = (r.top  - p.y) / dy; else if (dy < 0) ty = (r.bottom - p.y) / dy;
+      var t = Math.max(tx, ty);
+      if (!isFinite(t) || t < 0 || t > 1) return {x:e.clientX, y:e.clientY};
+      return {x:p.x + dx * t, y:p.y + dy * t};
+    }
 
     document.querySelectorAll('.e-race').forEach(function(btn){
       if (rm.matches) return;                    // the CSS fade handles it
@@ -7471,8 +7525,8 @@ document.addEventListener("DOMContentLoaded", function () {
       function kick(){ if (raf === null){ last = performance.now(); raf = requestAnimationFrame(frame); } }
 
       btn.addEventListener('pointerenter', function(e){
-        var g = box(btn);
-        put(e.clientX - g.left + 1, e.clientY - g.top + 1);
+        var g = box(btn), c = crossedPoint(btn, e);
+        put(c.x - g.left + 1, c.y - g.top + 1);
         if (mode === 'off'){ pos = target; vel = 0; }   // appear where you came in
         mode = 'follow'; kick();
       });

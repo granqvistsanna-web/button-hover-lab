@@ -23,22 +23,39 @@ import { readFileSync, writeFileSync } from 'node:fs';
 const FILE = new URL('../index.html', import.meta.url);
 const CHECK = process.argv.includes('--check');
 
-// The eight groups, in reading order: the whole plate first because it is what
+// The nine groups, in reading order: the whole plate first because it is what
 // most sites ship, the row last because it is the only one that needs siblings.
+//
+// Each carries a standfirst, drawn under the heading's hairline. The headings
+// name a PART — «Label», «Icon», «Two at once» — and a part is not a criterion:
+// it says what the studies touch and not what they have in common or when you
+// would want one. «Two at once» could not say it at all; it was the one heading
+// on the page a reader could not decode from the heading, because it is the one
+// group that names a relationship rather than a thing. One sentence each, and
+// the sentence answers «why are these together», not «what is this».
 const GROUPS = [
-  ['button',   'Whole button'],
-  ['fill',     'Fill'],
-  ['edge',     'Border, corner and rule'],
-  ['label',    'Label'],
-  ['char',     'Label, per character'],
-  ['icon',     'Icon'],
-  ['material', 'Material and light'],
-  ['row',      'Button groups'],
+  ['button',   'Whole button',
+   'The whole plate answers at once. It scales, lifts, leans, or takes on a state and says so.'],
+  ['fill',     'Fill',
+   'A fill arrives or leaves. What differs is where it comes from and whether you can see it travel.'],
+  ['edge',     'Border, corner and rule',
+   'The outline does the work and the plate holds still: an underline, a rule, a drawn border, a corner that changes shape.'],
+  ['label',    'Label',
+   'The word moves as one piece, so the button can change what it says without changing size.'],
+  ['char',     'Label, per character',
+   'The word is split and the parts move separately, which buys a stagger the whole label cannot make.'],
+  ['icon',     'Icon',
+   'A mark beside the label carries the gesture: an arrow travels, a shape redraws, a caret points.'],
+  ['material', 'Material and light',
+   'The button behaves like a physical thing — lit, glazed, printed, knurled or cut — and hover changes the material, not the layout.'],
+  ['row',      'Button groups',
+   'These need siblings to be read. Hovering one changes the others, so the row is the unit and a single button shows nothing.'],
   // The ninth group does not name a part, because a compound performs on two
   // of them at once — which is exactly why it cannot be filed under either.
   // It goes last for the same reason 'row' used to: it is the one group that
   // presumes you have read the others.
-  ['compound', 'Two at once'],
+  ['compound', 'Two at once',
+   'Two mechanisms from the sections above, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.'],
 ];
 
 // The two material aliases were declared on the SECTION, which made a card's
@@ -382,8 +399,10 @@ const indent = (s, pad) => {
     .map((l, i) => (l.trim() ? pad + (i === 0 ? l : l.slice(strip)) : ''))
     .join('\n');
 };
-const rebuilt = GROUPS.map(([key, name]) => {
-  return `<section class="sect">\n  <h2>${name}</h2>\n  <div class="grid">\n\n`
+const rebuilt = GROUPS.map(([key, name, intro]) => {
+  if (!intro) throw new Error(`'${name}' has no standfirst`);
+  return `<section class="sect">\n  <h2>${name}</h2>\n`
+       + `  <p class="sect-intro">${intro}</p>\n  <div class="grid">\n\n`
        + bucket[key].map((c) => indent(c, '    ')).join('\n\n')
        + `\n\n  </div>\n</section>`;
 }).join('\n\n');
