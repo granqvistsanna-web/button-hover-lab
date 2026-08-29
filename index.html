@@ -8653,7 +8653,19 @@ document.addEventListener("DOMContentLoaded", function () {
       // Most cards are one button. A group card marks its wrapper with
       // data-copy-root, and then the row IS the deliverable — copying one
       // button out of a sibling effect would give you nothing that works.
-      var root = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
+      // THE MARKUP COMES FROM THE IDLE ROOT, NOT THE LIVE ONE. The copy path
+      // and the sync tripwire both run this on pointerenter — the one moment
+      // the card's own JS has just rewritten the button. Card 75 flips
+      // data-j-dir from "idle" to "top", 69 adds .p-cycle-run, 80 rebuilds its
+      // children; the clone below kept all of it, and .p-cycle-run also joined
+      // the keys list, so the collected CSS moved with it. The stamp is
+      // harvested with no pointer anywhere near, so the two could never agree,
+      // and 75, 80 and 69 read Framer* forever while their modules were current.
+      // Idle is the canonical state because idle is what the harvest can
+      // reproduce. Same argument as the inline styles a few lines down: the
+      // authored button is the deliverable, not the frame it was caught in.
+      var liveRoot = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
+      var root = card.__idleRoot || liveRoot;
       var btns = root.classList.contains('btn')
         ? [root] : [].slice.call(root.querySelectorAll('.btn'));
       var num = (card.querySelector('.num') || {}).textContent || '';
@@ -8818,7 +8830,10 @@ document.addEventListener("DOMContentLoaded", function () {
       var lblEl = root.querySelector('.lbl');
       var label = ((lblEl || root).textContent || '').trim();
       if (btns.length !== 1 || !label || label.length > 60 || /\n/.test(label)) label = '';
-      var box = root.getBoundingClientRect();
+      // Measured on the LIVE node on purpose: a detached clone has a zero rect,
+      // and Math.round(0) || 180 would quietly hand every study the fallback
+      // 180. This is the one value that has to come from the document.
+      var box = liveRoot.getBoundingClientRect();
 
       return {num:num, name:name, chips:chips, route:route, tokens:tokens,
               base:base, ats:ats, effectCss:effectCss, markup:markup, js:js,
@@ -9470,6 +9485,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.spec').forEach(function(card){
       var stage = card.querySelector('.stage');
       if (!stage || !card.querySelector('.btn')) return;
+      // The authored button, taken once, before a pointer has been near it.
+      // parts() reads this instead of the live node — see the note there.
+      var idleSrc = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
+      if (idleSrc && !card.__idleRoot) card.__idleRoot = idleSrc.cloneNode(true);
       var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
       var name = (card.querySelector('h3') || {textContent:''}).textContent.replace(num, '').trim();
 
