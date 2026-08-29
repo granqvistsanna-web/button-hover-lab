@@ -177,10 +177,22 @@
      ink-low is 5.55:1 and ink-faint is 3.00:1. Subtlety comes off the rule
      and the spacing, never off the contrast of the only wayfinding the page
      has. */
-  .sect{margin-top:128px}
-  .sect>h2{display:flex; align-items:baseline; gap:14px;
-    font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--ink-low); margin:0}
+  /* The feed does not carry its own headings. Nine of them plus nine
+     standfirsts was a chapter apparatus over what a reader uses as one
+     continuous grid — and the rail already names every section, counts it,
+     scrolls to it and filters by it, which is where someone goes when they
+     want the structure. Printed in the feed as well, it was the same nine
+     facts twice, and the second time in the way of the cards.
+     KEPT IN THE DOM, not deleted: the rail slugs the <h2> for the section id
+     it scrolls to, tools/library.mjs reads it as the study_s Family, and it
+     is the accessible name of the section for anyone arriving by landmark.
+     So it is taken off the screen the way a skip link is, not display:none.
+     The gap goes to the grid_s own 24px, because a 128px hole with nothing
+     in it reads as a mistake rather than a division. */
+  .sect{margin-top:24px}
+  .sect:first-of-type{margin-top:0}
+  .sect>h2, .sect-intro{position:absolute; width:1px; height:1px; padding:0;
+    margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0}
   /* The line under a section heading, and the heading needs it more now that
      it is one word: «Plate», «Mark», «State» name what performs and a part is
      not a criterion — none of them says what it collects or when you would
@@ -193,7 +205,7 @@
   .sect-intro{max-width:62ch; font-size:14px; line-height:1.5;
     color:var(--ink-mid); margin:10px 0 0}
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
-    gap:24px; margin-top:28px}
+    gap:24px; margin-top:0}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
      lightness — the card is bg-1 on bg-0 and carries no border and no shadow. */
   .spec{background:var(--bg-1); border-radius:var(--r-xl); overflow:hidden;
@@ -224,13 +236,43 @@
     font-size:14.5px; font-weight:600; color:var(--ink-hi); letter-spacing:0}
   .num{font:400 11px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
+  /* The description is clamped to three lines, which is not a guess: the
+     first sentence of these cards is the plain statement of what happens and
+     everything after it is the argument for it. Median first sentence is 110
+     characters and three lines of this measure holds about 117, so the clamp
+     lands on the sentence break rather than inside it. 37 of the 90 cards are
+     one sentence and never grow a control at all. */
   .spec p{padding:0 22px; margin:0 0 12px; font-size:13px; color:var(--ink-low)}
-  .chips{display:flex; gap:14px; flex-wrap:wrap; margin-top:auto;
-    padding:0 22px 20px; font:400 11.5px/1.6 var(--mono)}
+  .spec:not([data-open]) p{display:-webkit-box; -webkit-box-orient:vertical;
+    -webkit-line-clamp:3; overflow:hidden}
+  /* A search matches on the full text, clamped part included, so a hit whose
+     word is in the hidden two thirds would look like a false positive. While
+     the field has anything in it, every card is open. */
+  body.is-searching .spec p{display:block; -webkit-line-clamp:none; overflow:visible}
+  .chips{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    margin-top:auto; padding:0 22px 20px; font:400 11.5px/1.6 var(--mono)}
   /* --ink-faint measures 2.8:1 on the panel — under AA. Every chip is
      information, not decoration, so the ladder starts one step higher. */
   .chip{color:var(--ink-low)}
   .chip--kod{color:var(--ink-mid)}
+  /* Three chips on all 90 cards is 270 labels carrying eight distinct
+     combinations. «CSS» is true of 70 of them and «Code in Framer» of 73, so
+     on any one card they are the house default restated — 53 cards spent
+     their whole meta line saying nothing that separates them from the card
+     beside them. The default values are held in the DOM, where the copy
+     pipeline, the facet derivation and the search all read them by
+     textContent (which does not care that they are display:none), and only
+     the EXCEPTIONS are drawn: needs JS, or ships as a Framer variant. The
+     full stamp comes back when the card is opened. */
+  .spec:not([data-open]) .chip--muted{display:none}
+  /* The disclosure. It sits in the chip row because that row is already the
+     card_s meta line and a second one would put two 11.5px mono rows under
+     every description. Never the whole card: the stage holds a real button
+     you are meant to hover and press. */
+  .spec-more{margin-left:auto; padding:0; border:0; background:none;
+    font:inherit; color:var(--ink-low); cursor:pointer; letter-spacing:.04em}
+  .spec-more:hover{color:var(--ink-hi)}
+  .spec-more:focus-visible{outline:1px solid var(--ink-low); outline-offset:3px}
 
   /* ============ button base ============ */
   .btn{
@@ -10811,6 +10853,88 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     tell();
   })();
+
+
+/* ---- card disclosure -----------------------------------------------------
+   Two asks in one control: the meta row was three chips on every card when
+   only the exceptions say anything, and the description ran to 446 characters
+   in a 244px column. Collapsed, a card is the demo, the title, three lines and
+   — if it has one — the one chip that is not the house default. Opened, it is
+   the full description and the full stamp.
+
+   Nothing is removed from the DOM. The copy machinery routes on chip TEXT
+   (`/Code in Framer/` picks the export path, `/JS/` and `/Variant in Framer/`
+   branch it), the facets derive from it and the search index concatenates it —
+   all by textContent, which reads through display:none. Hiding is a paint
+   decision and the data is untouched.
+
+   DOMContentLoaded because the cards are markup below this script, and a
+   section reorder has stranded card JS here before. */
+document.addEventListener('DOMContentLoaded', function () {
+  // The values that are the page's default rather than this card's news.
+  var MUTED = /^(CSS|Code in Framer|Bold|Subtle)$/;
+
+  document.querySelectorAll('.spec').forEach(function (card) {
+    var chipRow = card.querySelector('.chips');
+    var p = card.querySelector('h3') && card.querySelector('h3').nextElementSibling;
+    if (!p || p.tagName !== 'P') p = null;
+
+    var hidden = 0;
+    if (chipRow) {
+      chipRow.querySelectorAll('.chip').forEach(function (c) {
+        if (MUTED.test(c.textContent.trim())) { c.classList.add('chip--muted'); hidden++; }
+      });
+    }
+
+    // Is there anything the clamp is actually withholding? Measured, not
+    // guessed from character counts — the clamp is three LINES and a card's
+    // measure changes with the column. scrollHeight > clientHeight is the
+    // question the browser has already answered.
+    var clipped = p && p.scrollHeight - p.clientHeight > 1;
+    // The control is earned by CLIPPED TEXT alone, not by hidden chips —
+    // every card has a muted chip, so keying on those put a «More» under all
+    // ninety and replaced three repeated labels with one repeated button.
+    // A card whose description already fits keeps no control: its default
+    // stamp is the least interesting data on the page, it is still in the
+    // copy and the filters, and its EXCEPTION chip was never hidden.
+    if (!clipped) return;
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'spec-more';
+    btn.setAttribute('aria-expanded', 'false');
+    if (p) { p.id = p.id || 'd-' + (card.dataset.key || Math.random().toString(36).slice(2));
+             btn.setAttribute('aria-controls', p.id); }
+    var name = (card.querySelector('h3') || {textContent:''}).textContent
+                 .replace(/^\s*\d+\s*/, '').trim();
+    var label = function (open) {
+      btn.textContent = open ? 'Less' : 'More';
+      btn.setAttribute('aria-label', (open ? 'Hide details for ' : 'Show details for ') + name);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    label(false);
+    btn.addEventListener('click', function () {
+      var open = card.hasAttribute('data-open');
+      if (open) card.removeAttribute('data-open'); else card.setAttribute('data-open', '');
+      label(!open);
+    });
+    if (chipRow) chipRow.appendChild(btn);
+    else if (p) p.insertAdjacentElement('afterend', btn);
+  });
+
+  // A search reads the whole description, clamped part included. Un-clamp
+  // everything while the field has anything in it, or a hit on a word in the
+  // hidden two thirds reads as a false positive.
+  var q = document.getElementById('rail-q');
+  if (q) {
+    var sync = function () {
+      document.body.classList.toggle('is-searching', !!q.value.trim());
+    };
+    q.addEventListener('input', sync);
+    q.addEventListener('search', sync);
+    sync();
+  }
+});
 </script>
 
 
@@ -10820,6 +10944,9 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","22":"355f60e9c4911fe3","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","56":"0c2433e83aa4bdd8","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","70":"60df677dd1cf4e68","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
 <!-- BHL:FRAMER-SYNC end -->
+
+
+
 
 </body>
 </html>
