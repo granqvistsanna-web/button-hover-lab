@@ -973,24 +973,34 @@
      second line, which reads as a column rule for a layout that has no columns. */
   .tools-sep{width:1px; height:20px; align-self:center; flex:none;
     background:var(--hairline); margin:0 -6px}
-  /* The VERSION row is about 460px wide against a ~1020px inner measure that
-     the colour and radius groups have already spent, so it wraps to its own
-     line at EVERY width the panel is ever drawn at — which left the rule
-     before it hanging off the end of line one, dividing a group from the air
-     beside it. Same reasoning as the ≤520px rule further down, applied to the
-     one row that is always stacked rather than to all of them.
-     :has() may not be nested inside :has(), so the version row is identified
-     by a descendant of the sibling rather than by a second :has() on it — the
-     nested form parses as invalid and drops the whole rule in silence. */
-  .tools-sep:has(+ .tools-row .vers-seg){display:none}
+  /* A vertical rule earns its place only while the group after it is on the
+     SAME line. This panel wraps at a dozen widths and the wrap point moves
+     whenever a control is added to it — measured across six widths, every
+     separator was left hanging off the end of a line at one width or another,
+     and which one it was changed with the width. So it is decided by
+     measurement, in `tidySeps()` below, not by a selector guessing where the
+     wrap will fall.
+     visibility, NOT display: hiding one must not change the layout that the
+     measurement was taken from, or hiding a rule reflows the panel, which
+     moves the wrap, which orphans a different rule — and the observer that
+     watches the panel runs again on its own output for ever. Keeping the box
+     in flow makes the measurement stable and the pass idempotent. */
+  .tools-sep[data-orphan]{visibility:hidden}
   /* Caption and swatch as one <label>, so the caption IS the accessible name
      and the hit target is the pair rather than 28 square pixels. Three of these
      sit on one line: the toolbar is sticky and every row it grows costs the
      reader viewport for the whole page. */
-  .set-pair{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
+  /* The pair is a plain box and the LABEL inside it is the clickable half.
+     They used to be the same element, which put the clear button inside a
+     <label> that also wrapped the colour input — a labelable element inside a
+     label, which is invalid, and which is why clearing a role needed a
+     preventDefault to stop the picker opening on the way past. The button is
+     a sibling of the label now and the hack came out with it. */
+  .set-pair{display:inline-flex; align-items:center; gap:2px}
+  .set-lab{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
   .set-cap{font-size:11px; font-weight:600; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low); transition:color var(--t-2) ease}
-  .set-pair:hover .set-cap{color:var(--ink-mid)}
+  .set-lab:hover .set-cap{color:var(--ink-mid)}
   /* The marker the fit puts up when it had to move a colour. Inline with the
      caption rather than in the shared readout, because with three swatches a
      single readout cannot say WHICH one moved. */
@@ -1001,15 +1011,36 @@
      and the only route was hitting graphite's exact white inside the OS picker
      — which nobody can do on purpose. So every role that is set says so with a
      clear, and clearing hands it back to the alias.
-     It lives inside the <label>, which would otherwise open the picker on the
-     way past; the handler takes the click before the label sees it. */
+     It is a sibling of the <label> rather than a child, so it is an ordinary
+     button and needs no interception. */
   .set-clear{
     font:inherit; font-size:12px; line-height:1; color:var(--ink-low);
-    background:none; border:0; padding:0 0 0 5px; cursor:pointer;
+    background:none; border:0; padding:0 3px; cursor:pointer;
     transition:color var(--t-2) ease;
   }
   .set-clear:hover{color:var(--ink-hi)}
   .set-clear:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px; border-radius:2px}
+  /* ---- Palette chips -------------------------------------------------
+     Each carries its accent as --sw and draws it as a dot, so the row reads
+     as colours rather than as six more words: the name is what you search
+     for, the dot is what you choose by. «Graphite» has no dot and gets a
+     ring instead, because its value is the ABSENCE of a colour and a grey
+     dot would read as one more option rather than as the way back. */
+  .set-presets{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
+  .set-p{
+    display:inline-flex; align-items:center; gap:6px;
+    font:400 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
+    padding:6px 9px; cursor:pointer; white-space:nowrap;
+    transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+  }
+  .set-p::before{content:""; width:9px; height:9px; border-radius:50%;
+    background:var(--sw); flex:none}
+  .set-p--none::before{background:none;
+    box-shadow:inset 0 0 0 1.2px var(--line-ctl)}
+  .set-p:hover{color:var(--ink-hi); background:var(--bg-2)}
+  .set-p[aria-pressed="true"]{color:var(--ink-hi); background:var(--bg-3)}
+  .set-p:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   /* A native colour input, stripped back to the swatch. It is the only control
      on the page that opens something the page does not draw, so it is worth
      letting the OS own it rather than rebuilding a picker badly. */
@@ -1102,6 +1133,7 @@
     /* Three captioned swatches and a contrast phrase do not fit a 390px line.
        The readout drops under them rather than squeezing HOVER off its own
        swatch — it reports on all three, so under all three is where it goes. */
+    .tools-row--sets{align-items:flex-start}
     .tools-row:has(.set-swatch){flex-wrap:wrap}
     .tools-row:has(.set-swatch) .set-read{flex-basis:100%; text-align:right;
       margin-top:2px}
@@ -1529,25 +1561,67 @@
 
   <div class="tools" role="group" aria-label="Restyle the studies">
     <div class="tools-row">
-      <label class="set-pair">
-        <span class="set-cap" data-cap="text">Text</span>
-        <input class="set-swatch" type="color" data-set="text" value="#ffffff"
-               aria-label="Label text colour, applied to every study"
-               aria-describedby="set-contrast">
-      </label>
-      <label class="set-pair">
-        <span class="set-cap" data-cap="accent">Accent</span>
-        <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
-               aria-label="Fill and mark colour, applied to every study"
-               aria-describedby="set-contrast">
-      </label>
-      <label class="set-pair">
-        <span class="set-cap" data-cap="hover">Hover</span>
-        <input class="set-swatch" type="color" data-set="hover" value="#ffffff"
-               aria-label="The colour that arrives on hover, applied to every study"
-               aria-describedby="set-contrast">
-      </label>
+      <div class="set-pair">
+        <label class="set-lab">
+          <span class="set-cap" data-cap="text">Text</span>
+          <input class="set-swatch" type="color" data-set="text" value="#ffffff"
+                 aria-label="Label text colour, applied to every study"
+                 aria-describedby="set-contrast">
+        </label>
+        <button type="button" class="set-clear" data-clear="text" hidden
+                aria-label="Clear Text, so it follows the colour above it again">&#10005;</button>
+      </div>
+      <div class="set-pair">
+        <label class="set-lab">
+          <span class="set-cap" data-cap="accent">Accent</span>
+          <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
+                 aria-label="Fill and mark colour, applied to every study"
+                 aria-describedby="set-contrast">
+        </label>
+        <button type="button" class="set-clear" data-clear="accent" hidden
+                aria-label="Clear Accent, so it follows the colour above it again">&#10005;</button>
+      </div>
+      <div class="set-pair">
+        <label class="set-lab">
+          <span class="set-cap" data-cap="hover">Hover</span>
+          <input class="set-swatch" type="color" data-set="hover" value="#ffffff"
+                 aria-label="The colour that arrives on hover, applied to every study"
+                 aria-describedby="set-contrast">
+        </label>
+        <button type="button" class="set-clear" data-clear="hover" hidden
+                aria-label="Clear Hover, so it follows the colour above it again">&#10005;</button>
+      </div>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
+    </div>
+    <div class="tools-sep" aria-hidden="true"></div>
+    <!-- Presets. Three swatches that all start white mean three trips through
+         an OS colour picker before the page does anything at all, so the one
+         clever part of this control — the fit that lifts a colour until it
+         clears its floor — was only ever seen by someone who happened to pick
+         something dark. A palette is one click, sets accent and hover
+         together, and leaves the label alone: unset, the label follows
+         --ink-hi on an outline and is computed black-or-white on a fill,
+         which is the reading that stays legible whatever the fill does.
+         «Graphite» is the way back, and it is pressed whenever nothing is
+         overridden — which is also the only place the page says out loud that
+         white means «follow the system» rather than «the colour white». -->
+    <div class="tools-row tools-row--sets">
+      <span class="tools-lbl">Palette</span>
+      <div class="set-presets" role="group" aria-label="Colour palette">
+        <button type="button" class="set-p set-p--none" data-p=""
+                aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. White in a swatch means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
+        <button type="button" class="set-p" data-p="accent:#f5a524,hover:#ffd166"
+                style="--sw:#f5a524" aria-pressed="false" title="Amber">Amber</button>
+        <button type="button" class="set-p" data-p="accent:#7c6cf0,hover:#a99bff"
+                style="--sw:#7c6cf0" aria-pressed="false" title="Iris">Iris</button>
+        <button type="button" class="set-p" data-p="accent:#3ecf8e,hover:#7ff0bb"
+                style="--sw:#3ecf8e" aria-pressed="false" title="Mint">Mint</button>
+        <button type="button" class="set-p" data-p="accent:#ff5c5c,hover:#ff9d7a"
+                style="--sw:#ff5c5c" aria-pressed="false" title="Coral">Coral</button>
+        <button type="button" class="set-p" data-p="accent:#14213d,hover:#2a4a80"
+                style="--sw:#14213d" aria-pressed="false"
+                title="Deep — dark enough that the page has to lift it to stay legible. The caption says so with an arrow.">Deep</button>
+      </div>
     </div>
     <div class="tools-sep" aria-hidden="true"></div>
     <div class="tools-row">
@@ -8764,10 +8838,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // is given a colour of its own. That is the behaviour a reader expects
     // from each: text stays put, hover goes along.
     var look = {text:'', accent:'', hover:'', radius:PILL};
-    var swatches = {}, caps = {};
+    var swatches = {}, caps = {}, clears = {};
     ROLES.forEach(function(r){
       swatches[r.key] = tools.querySelector('.set-swatch[data-set="' + r.key + '"]');
       caps[r.key]     = tools.querySelector('.set-cap[data-cap="' + r.key + '"]');
+      clears[r.key]   = tools.querySelector('.set-clear[data-clear="' + r.key + '"]');
       caps[r.key].setAttribute('data-label', caps[r.key].textContent);
     });
 
@@ -8831,6 +8906,13 @@ document.addEventListener("DOMContentLoaded", function () {
       // Neither direction clears it, which on a mid-grey background can happen
       // at 4.5:1 for any hue. Take the extreme that gets closest — black or
       // white — rather than leaving something illegible on screen.
+      //
+      // Keeping the reader's hue here was tried and removed. The extremes of a
+      // hue are the only places left to stand, and #0000ff at 3% lightness is
+      // #00000f: the hue is arithmetically preserved and invisible. Showing it
+      // for real would mean taking LESS contrast in the one case that has
+      // already failed its floor, which is the wrong trade — so the fallback
+      // keeps maximum contrast and gives the hue up honestly.
       if (!best){
         var w = [255, 255, 255], b = [0, 0, 0];
         best = {rgb: ratio(w, bg) >= ratio(b, bg) ? w : b};
@@ -8867,56 +8949,84 @@ document.addEventListener("DOMContentLoaded", function () {
       // means the label — not «the label except on the filled ones». The page
       // opens on solid plates, so anything else makes the swatch look broken
       // on the first studies a reader sees.
+      // It returns the whole result, not just the hex. Keeping only .hex is
+      // what made this fit SILENT: a label fitted against a fill never
+      // incremented `moved`, never marked its caption, and never reached the
+      // readout — so picking #ffcc00 put #292100 on the filled buttons with
+      // nothing on screen saying so, over the 41% of cards that are filled at
+      // rest and seven of the first nine a reader sees. The comment on fitOn
+      // promises the fit is never silent; this is where that was untrue.
       function labelOn(rgb){
-        return fitted.text ? fitOn(look.text, 4.5, rgb).hex : onTop(rgb);
+        return fitted.text ? fitOn(look.text, 4.5, rgb) : {hex: onTop(rgb), moved: false, ratio: ratio(toRgb(onTop(rgb)), rgb)};
       }
 
       // Pass two: write. Each token is written only while something it depends
       // on is set, so an untouched toolbar still leaves every alias standing.
       var anyColour = !!(fitted.text || fitted.accent || fitted.hover);
+      // Derived BEFORE the captions are written, because the text caption has
+      // to be able to say that the label was moved on the fills even when it
+      // sat still on the card.
+      var onAccent = anyColour ? labelOn(accentRgb) : null;
+      var onHover  = anyColour ? labelOn(hoverRgb)  : null;
+      var fillMoved = !!(onAccent && onAccent.moved) || !!(onHover && onHover.moved);
+
       ROLES.forEach(function(r){
         var cap = caps[r.key], sw = swatches[r.key], label = cap.getAttribute('data-label');
+        var clr = clears[r.key];
         var f = fitted[r.key];
         if (f){
           r.set.forEach(function(p){ root.setProperty(p, f.hex); });
-          cap.innerHTML = label + (f.moved ? ' <b>↑</b>' : '')
-                        + ' <button type="button" class="set-clear" aria-label="Clear '
-                        + label + ', so it follows the colour above it again">✕</button>';
-          cap.title = f.moved
+          // The text role answers for two fits: itself against the card, and
+          // itself against whatever fill it lands on. Either one moving earns
+          // the arrow, or the arrow means «sometimes».
+          var alsoOnFill = r.key === 'text' && fillMoved;
+          cap.innerHTML = label + (f.moved || alsoOnFill ? ' <b>↑</b>' : '');
+          clr.hidden = false;
+          var why = f.moved
             ? label + ' moved to ' + f.hex + ', so it clears ' + r.min
               + ':1 on the card. A dark page cannot carry a dark colour.'
             : label + ': ' + f.ratio.toFixed(1) + ':1 on the card.';
-          if (f.moved) moved++;
+          if (alsoOnFill){
+            why += ' On a filled button it is refitted against the fill and lands on '
+                 + onAccent.hex + ' — ' + onAccent.ratio.toFixed(1) + ':1 there.';
+          }
+          cap.title = why;
+          if (f.moved || alsoOnFill) moved++;
           if (r.key === 'text') textRatio = f.ratio;
         } else {
           r.set.forEach(function(p){ root.removeProperty(p); });
           sw.value  = WHITE;
           cap.textContent = label;
+          clr.hidden = true;
           cap.title = label + ' is unset: ' + WHITE + ', graphite’s white. It is left as '
                     + 'an alias rather than written to the root, so a copied snippet still '
                     + 'reads the system token and follows the system it lands in.';
         }
       });
       if (anyColour){
-        root.setProperty('--on-ink',      labelOn(accentRgb));
-        root.setProperty('--on-accent',   labelOn(accentRgb));
-        root.setProperty('--ink-on-fill', labelOn(accentRgb));
-        root.setProperty('--on-ink-hover', labelOn(hoverRgb));
+        root.setProperty('--on-ink',      onAccent.hex);
+        root.setProperty('--on-accent',   onAccent.hex);
+        root.setProperty('--ink-on-fill', onAccent.hex);
+        root.setProperty('--on-ink-hover', onHover.hex);
       } else {
         ['--on-ink', '--on-accent', '--ink-on-fill', '--on-ink-hover']
           .forEach(function(p){ root.removeProperty(p); });
       }
-      // One number, and it is the label's, because the label is the only one
-      // of the three that can put a reader below AA. The fills report
-      // themselves in their own captions.
-      if (textRatio === null) textRatio = ratio(WHITE_RGB, PANEL);
-      // «16.0:1» alone is a number with no noun. It is the one readout on the
-      // toolbar whose subject is not the control beside it — the swatches are
-      // three, this is about the label on the card — so it carries its own.
+      // The label's number — but WHICH label. With a text colour set it is
+      // that colour on the card. With only a fill set, the label on the card
+      // has not moved at all and reporting it means reporting 16.0:1 over a
+      // page that has changed everywhere: the honest subject is then the
+      // label on the fill, which is the one 41% of the cards are showing.
+      // Both are named, so the number is never a figure without a noun.
+      var subject = 'on the card';
+      if (textRatio === null){
+        if (anyColour && onAccent){ textRatio = onAccent.ratio; subject = 'on a fill'; }
+        else textRatio = ratio(WHITE_RGB, PANEL);
+      }
       readC.textContent = 'Contrast ' + textRatio.toFixed(1) + ':1';
-      readC.title = 'Label contrast on the card.'
+      readC.title = 'Label contrast ' + subject + '.'
                   + (moved ? ' ' + moved + (moved > 1 ? ' colours were' : ' colour was')
-                             + ' lightened to stay legible — see the ↑.' : '');
+                             + ' refitted to stay legible — see the ↑.' : '');
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
       // Written here and nowhere else, for the reason in the CSS: the filled
@@ -8963,20 +9073,52 @@ document.addEventListener("DOMContentLoaded", function () {
         // a no-op, which is what a visitor who changed nothing expects.
         var v = swatches[r.key].value.toLowerCase();
         look[r.key] = isUnset(v) ? '' : swatches[r.key].value;
-        paint(); saveLook(); apply();
+        paint(); saveLook(); apply(); markPreset();
       });
     });
-    // Delegated, because paint() rewrites the captions and a listener bound to
-    // the button itself would not survive the first repaint.
-    tools.addEventListener('click', function(e){
-      var x = e.target.closest && e.target.closest('.set-clear');
-      if (!x) return;
-      e.preventDefault();          // the <label> would open the picker otherwise
-      e.stopPropagation();
-      var cap = x.closest('.set-cap');
-      if (!cap) return;
-      look[cap.getAttribute('data-cap')] = '';
-      paint(); saveLook(); apply();
+    // A plain listener per button. It used to be delegated off .tools with a
+    // preventDefault, because the button lived inside the <label> and paint()
+    // rewrote it on every repaint; it is a sibling of the label now and
+    // paint() only toggles its `hidden`, so it survives and needs no
+    // interception.
+    ROLES.forEach(function(r){
+      clears[r.key].addEventListener('click', function(){
+        look[r.key] = '';
+        paint(); saveLook(); apply(); markPreset();
+      });
+    });
+
+    // ---- Palettes -------------------------------------------------------
+    // One click writes the roles the chip names and clears the ones it does
+    // not, so a palette is a whole state rather than a set of additions —
+    // choosing Amber after Deep must not leave Deep's hover behind.
+    var presets = [].slice.call(tools.querySelectorAll('.set-p'));
+    function parseP(v){
+      var out = {text:'', accent:'', hover:''};
+      String(v || '').split(',').forEach(function(bit){
+        var kv = bit.split(':');
+        if (kv.length === 2 && out.hasOwnProperty(kv[0].trim())) out[kv[0].trim()] = kv[1].trim();
+      });
+      return out;
+    }
+    // Which chip, if any, describes what is on screen. Read off `look` rather
+    // than remembered, so a chip is un-pressed the moment a swatch is touched
+    // and «Graphite» lights up again whenever the last role is cleared.
+    function markPreset(){
+      presets.forEach(function(el){
+        var want = parseP(el.getAttribute('data-p'));
+        var on = want.text === look.text && want.accent === look.accent
+              && want.hover === look.hover;
+        el.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+    presets.forEach(function(el){
+      el.addEventListener('click', function(){
+        var want = parseP(el.getAttribute('data-p'));
+        look.text = want.text; look.accent = want.accent; look.hover = want.hover;
+        ROLES.forEach(function(r){ swatches[r.key].value = look[r.key] || WHITE; });
+        paint(); saveLook(); apply(); markPreset();
+      });
     });
 
     range.value = look.radius;
@@ -9001,6 +9143,7 @@ document.addEventListener("DOMContentLoaded", function () {
       look  = {text:'', accent:'', hover:'', radius:PILL};
       range.value  = PILL;
       paint();   // clears all three swatches back to WHITE on its unset branch
+      markPreset();   // …and Graphite is what «no override» is called
       saveLook();
       favBtn.setAttribute('aria-pressed', 'false');
       // And the version, for the same reason — it is literally the control
@@ -9594,6 +9737,37 @@ document.addEventListener("DOMContentLoaded", function () {
     spy();
 
     paint();
+    // A restored look may be exactly a palette, so the chip says so on arrival
+    // rather than only after the next click.
+    markPreset();
+
+    // ---- The separators that separate nothing --------------------------
+    // See the note on .tools-sep in the stylesheet for why this is measured
+    // rather than selected, and why it hides with visibility. A rule is an
+    // orphan when the group after it starts a new line — or when there is no
+    // group after it at all, which is what the trailing row leaves behind
+    // once its own contents are hidden at a narrow width.
+    (function(){
+      var seps = [].slice.call(tools.querySelectorAll('.tools-sep'));
+      if (!seps.length) return;
+      function tidySeps(){
+        seps.forEach(function(sep){
+          if (getComputedStyle(sep).display === 'none') return;
+          var next = sep.nextElementSibling;
+          var a = sep.getBoundingClientRect();
+          var b = next && next.getBoundingClientRect();
+          var orphan = !b || !b.width || Math.abs(b.top - a.top) > 8;
+          if (orphan) sep.setAttribute('data-orphan', '');
+          else sep.removeAttribute('data-orphan');
+        });
+      }
+      tidySeps();
+      // The panel's own box changes when the toolbar wraps, which is exactly
+      // when the answer changes. Hiding is visibility-only, so this cannot
+      // feed itself.
+      if (window.ResizeObserver) new ResizeObserver(tidySeps).observe(tools);
+      else window.addEventListener('resize', tidySeps);
+    })();
     // After buildRail(), so the flat grid never takes a row in the section
     // nav, and after the cards are tagged, so the name order has a hay to read
     // and every order has an id to break ties on. It calls apply() itself.
