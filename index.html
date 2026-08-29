@@ -1490,11 +1490,11 @@
 
     <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:27:15+02:00" data-updated="2026-08-29T10:50:35+02:00">
                   <div class="stage">
-                    <button type="button" class="btn btn--solid q-riser"><span class="lbl">Press to start</span></button>
+                    <button type="button" class="btn btn--solid q-riser"><i class="q-riser-grd" aria-hidden="true"></i><span class="lbl">Press to start</span></button>
                   </div>
                   <h3><span class="num">82</span>Riser</h3>
-                  <p>Two legs grow from the bottom edge as the plate rises by exactly their height, so nothing below it moves and the button ends up standing off the page. Cards 49 and 43 lift with light; this grows structure.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+                  <p>Two legs grow from the bottom edge, the plate rises by exactly their height, and a face comes up over the top. The trailing leg lands a frame late so the button steps rather than levitates, and the line it was resting on gets drawn behind it. The only study here with an anatomy.</p>
+                  <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
     <article class="spec" data-versions="fill outline link" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T10:50:35+02:00">
@@ -4827,7 +4827,64 @@ document.addEventListener("DOMContentLoaded", function () {
      sets a bare scale and transform is ONE property, so a press would drop the
      rise and the button would fall through its own legs. All three states name
      translate then scale, in that order, and the press shortens the legs to
-     3px as it settles the plate onto them — the object being pushed down. */
+     3px as it settles the plate onto them — the object being pushed down.
+
+     AND THEN IT GREW A FACE. The legs made this the only card in the set
+     with an anatomy and then did nothing with it, so the study read as a
+     mechanism rather than as an object — correct, quiet, and filed under
+     Subtle, which is also why nobody stopped on it. Two eyes come up over
+     the top edge as the legs go down, and the card becomes the one thing
+     no other study here is: someone looking back.
+
+     TWO INKS, NO THIRD. The white of the eye is --ink-hover, the token
+     the legs already take, so the eye reads as the plate's own material
+     pushed up rather than a sticker laid on it; the pupil is
+     --ink-on-fill, the ink the label is drawn in. Nothing on this page is
+     allowed a hue and the face does not ask for one.
+
+     14px, and the second one 13. An 11px eye sized off the legs reads as
+     an indicator lamp — the disc is what you see and the pupil is a
+     speck. And the pair is deliberately unequal, one pixel narrower and
+     one lower, because a matched pair reads as a manufactured part.
+
+     SPACING IS ABSOLUTE: left:calc(50% ± Npx), never a percentage, so the
+     eyes hold their distance under a long label. A face that widens with
+     the button stops being a face.
+
+     THREE CHANNELS, ONE JOB EACH, and this is the load-bearing decision:
+     the pop rides translate + scale, the blink rides clip-path, the gaze
+     rides background-position. Put the blink on transform and it silently
+     eats the pop, because an animation outranks a transition on the same
+     property and neither of them warns you.
+
+     THE BLINK IS NOT A METRONOME. One lid-close every 2.6s, dead on the
+     beat, is what gave the first pass away — you stop reading it as an
+     eye at about the fourth one. The cycle is 7.4s and carries a double
+     blink early and a single one late, at intervals that do not divide
+     into each other. Card 85's trick: CSS has no randomness, so the
+     pattern is fixed and merely long enough that you never catch it.
+
+     AND IT STEPS RATHER THAN LEVITATES. The trailing leg lands one
+     --t-stagger after the leading one and the plate tips half a degree
+     into the gap, on the `rotate` property and not inside transform,
+     which is already carrying the rise and the press and would drop one
+     of them. Half a degree is the ceiling; at one the label visibly
+     slants.
+
+     THE GROUND LINE, and it is the reason the step is worth having. The
+     card's whole boast is that nothing below the button moves, and until
+     now you had to take that on trust, because the line it rests on is
+     invisible on a page with no floor. So draw it, from the centre out,
+     as the plate leaves it. It sits at +7 from the risen plate and +3
+     from the pressed one — the same arithmetic the legs run, which is to
+     say it is always at the height the button had at rest. --line-ctl
+     and not --ink: this is a boundary, and that is the token with the job.
+
+     THE FLOOR DOES NOT TIP. .q-riser-grd is a child of the plate, so the
+     step's half-degree carried it round too, and a ground line that leans
+     is not a ground line. An equal and opposite turn on its own centre
+     cancels the angle; the residual vertical shift is 0.6px at this
+     offset, under the width of the line itself. */
   .btn.q-riser{
     transform:translateY(0) scale(1);
     transition:transform var(--t-3) var(--e-out);
@@ -4841,12 +4898,86 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser::before{left:17%}
   .btn.q-riser::after{right:17%}
   .btn.q-riser:hover,
-  .btn.q-riser:focus-visible{transform:translateY(-7px) scale(1)}
+  .btn.q-riser:focus-visible{
+    transform:translateY(-7px) scale(1);
+    animation:q-riser-step var(--t-4) var(--e-out);
+  }
   .btn.q-riser:hover::before, .btn.q-riser:hover::after,
   .btn.q-riser:focus-visible::before, .btn.q-riser:focus-visible::after{height:7px}
+  .btn.q-riser:hover::after,
+  .btn.q-riser:focus-visible::after{transition-delay:var(--t-stagger)}
+  @keyframes q-riser-step{0%{rotate:0deg} 45%{rotate:-.5deg} 100%{rotate:0deg}}
+
+  /* The eyes. Both of .btn's pseudo-elements are spent on the legs, so
+     the face is built on .lbl's — .lbl is static here, so they anchor to
+     the button box like everything else does. */
+  .btn.q-riser .lbl::before,
+  .btn.q-riser .lbl::after{
+    content:""; position:absolute; bottom:100%;
+    width:14px; height:14px; border-radius:50%;
+    background-color:var(--ink-hover);
+    background-image:radial-gradient(circle at 50% 50%, var(--ink-on-fill) 56%, #0000 60%);
+    background-size:6.5px 6.5px; background-repeat:no-repeat;
+    background-position:50% 86%;
+    transform-origin:50% 100%;
+    translate:0 6px; scale:0; pointer-events:none;
+    transition:translate var(--t-3) var(--e-back), scale var(--t-3) var(--e-back),
+               background-position var(--t-4) var(--e-out) var(--d-1);
+  }
+  .btn.q-riser .lbl::before{left:calc(50% - 17px)}
+  .btn.q-riser .lbl::after{
+    left:calc(50% + 3px); width:13px; height:13px;
+    transition-delay:var(--t-stagger),var(--t-stagger),calc(var(--d-1) + var(--t-stagger));
+  }
+  .btn.q-riser:hover .lbl::before, .btn.q-riser:hover .lbl::after,
+  .btn.q-riser:focus-visible .lbl::before, .btn.q-riser:focus-visible .lbl::after{
+    translate:0 0; scale:1; background-position:50% 44%;
+    animation:q-riser-blink 7.4s var(--e-out) 300ms infinite;
+  }
+  /* The second lid closes a frame after the first, for the same reason
+     the two eyes are not the same size. */
+  .btn.q-riser:hover .lbl::after,
+  .btn.q-riser:focus-visible .lbl::after{animation-delay:420ms}
+  @keyframes q-riser-blink{
+    0%,11%      {clip-path:inset(0 0 0 0 round 50%)}
+    12%         {clip-path:inset(44% 0 44% 0 round 50%)}
+    13.4%       {clip-path:inset(0 0 0 0 round 50%)}
+    14.6%       {clip-path:inset(44% 0 44% 0 round 50%)}
+    15.8%,61%   {clip-path:inset(0 0 0 0 round 50%)}
+    62%         {clip-path:inset(44% 0 44% 0 round 50%)}
+    63.2%,100%  {clip-path:inset(0 0 0 0 round 50%)}
+  }
+
+  /* The ground line. */
+  .btn.q-riser .q-riser-grd{
+    position:absolute; left:9%; right:9%; top:calc(100% + 7px); height:1px;
+    background:var(--line-ctl); border-radius:1px;
+    scale:0 1; opacity:0; transform-origin:50% 50%; pointer-events:none;
+    transition:scale var(--t-4) var(--e-quint) var(--d-1),
+               opacity var(--t-2) linear var(--d-1),
+               top var(--t-3) var(--e-out);
+  }
+  .btn.q-riser:hover .q-riser-grd,
+  .btn.q-riser:focus-visible .q-riser-grd{
+    scale:1 1; opacity:1;
+    animation:q-riser-step-anti var(--t-4) var(--e-out);
+  }
+  @keyframes q-riser-step-anti{0%{rotate:0deg} 45%{rotate:.5deg} 100%{rotate:0deg}}
+
+  /* THE PRESS OWNS EVERYTHING, and it is last on purpose: a press has to
+     beat the loop above it, and at equal specificity that is decided by
+     order and not by !important. The plate settles onto shortened legs,
+     the eyes squeeze shut and look down, and the line stays exactly where
+     it was — +3 from a plate that is 3px down is the resting height. */
   .btn.q-riser:active{transform:translateY(-3px) scale(.97); transition-duration:var(--t-1)}
   .btn.q-riser:active::before,
-  .btn.q-riser:active::after{height:3px; transition-duration:var(--t-1)}
+  .btn.q-riser:active::after{height:3px; transition-duration:var(--t-1); transition-delay:0s}
+  .btn.q-riser:active .lbl::before,
+  .btn.q-riser:active .lbl::after{
+    animation:none; scale:1 .2; background-position:50% 92%;
+    transition-duration:var(--t-1); transition-delay:0s;
+  }
+  .btn.q-riser:active .q-riser-grd{top:calc(100% + 3px); transition-duration:var(--t-1)}
 
   /* 83 Working state — the mark turns a quarter and a dashed ring runs
      around it. This is the page's loop used as the hover STATE. A loop
@@ -4926,6 +5057,17 @@ document.addEventListener("DOMContentLoaded", function () {
     .q-jitter:hover .q-jitter-l,
     .q-jitter:focus-visible .q-jitter-l{animation:none !important;
       transform:translateY(var(--q-y,1px)) rotate(var(--q-a,4deg))}
+    /* Card 82 is three loops now — the blink, the step and the line's
+       counter-turn — and the same rule applies to all three: the end
+       state remains, the motion does not. The eyes still open, the legs
+       still land, the floor still gets drawn. They just stop blinking
+       and the plate stops tipping, which was the one part of the card
+       that had no meaning standing still. */
+    .btn.q-riser:hover, .btn.q-riser:focus-visible,
+    .btn.q-riser:hover .lbl::before, .btn.q-riser:hover .lbl::after,
+    .btn.q-riser:focus-visible .lbl::before, .btn.q-riser:focus-visible .lbl::after,
+    .btn.q-riser:hover .q-riser-grd,
+    .btn.q-riser:focus-visible .q-riser-grd{animation:none !important}
   }
 </style>
 
@@ -7002,7 +7144,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves tone|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves tone|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves fades tone shape seq|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
