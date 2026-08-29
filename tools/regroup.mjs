@@ -208,7 +208,6 @@ const ORDER_OF = {
     'Letter roll',
     'Word roll',
     'Letter lift',
-    'Overshoot',
     'Middle out',
     'Random stagger',
     'Word bow',
