@@ -904,11 +904,7 @@
   .set-read{font:400 11.5px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums; min-width:7ch}
   .set-read b{font-weight:400; color:var(--ink-mid); cursor:help}
-  /* The two head toggles. Both are one boolean over the whole run, which is
-     what earns them a place above the two axes rather than a row inside one:
-     an axis asks which KIND of study, these two ask which studies are eligible
-     at all. Same shape for both, because they are the same kind of control. */
-  .fav-only, .link-only{
+  .fav-only{
     display:inline-flex; align-items:center; gap:7px;
     font:500 14px/1 var(--font-ui); color:var(--ink-mid);
     background:var(--bg-2); border:0; border-radius:var(--r-sm);
@@ -916,16 +912,13 @@
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
   }
   /* The glyph is the same mark the per-card control uses, so the toggle and
-     the thing it filters on are recognisably one pair. The link toggle gets
-     none: the per-card control it pairs with is the version row, which is
-     words and not a mark, and an invented glyph would pair with nothing. */
+     the thing it filters on are recognisably one pair. */
   .fav-only::before{content:"★"; font-size:11px; line-height:1; color:var(--ink-low)}
-  .fav-only:hover, .link-only:hover{background:var(--bg-3); color:var(--ink-hi)}
+  .fav-only:hover{background:var(--bg-3); color:var(--ink-hi)}
   .fav-only:hover::before,
   .fav-only[aria-pressed="true"]::before{color:inherit}
-  .fav-only[aria-pressed="true"],
-  .link-only[aria-pressed="true"]{background:var(--inverse-bg); color:var(--inverse-ink)}
-  .fav-only:focus-visible,.link-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .fav-only[aria-pressed="true"]{background:var(--inverse-bg); color:var(--inverse-ink)}
+  .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .tools-count{font:500 13px/1 var(--mono); color:var(--ink-mid);
     font-variant-numeric:tabular-nums}
   .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
@@ -1415,15 +1408,6 @@
       <input class="rail-q" id="rail-q" type="search" autocomplete="off"
              placeholder="Name, word or number">
       <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
-      <!-- Not a section, deliberately. «Links» names the ELEMENT, and every
-           other heading on the page names the part that performs, so a Links
-           section would cut across all nine: a directional underline on a link
-           is still an edge effect, and every underline study would have an
-           argument for being in two places. The link-ness is already declared
-           per study in data-versions, so it filters instead — the studies stay
-           where they belong and the question «which of these can I use on a
-           link» still gets a one-click answer. -->
-      <button type="button" class="link-only" aria-pressed="false">Has a link version</button>
     </div>
 
     <div class="rail-body">
@@ -7721,9 +7705,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // rather than inside the toolbar.
     var countEl = document.querySelector('.tools-count');
     var favBtn  = document.querySelector('.fav-only');
-    var linkBtn = document.querySelector('.link-only');
     var reset   = document.querySelector('.tools-reset');
-    var state   = {fav:false, link:false, q:'', changes:[], answers:[]};
+    var state   = {fav:false, q:'', changes:[], answers:[]};
 
     function load(name){
       // `|| []` only catches null. Anything else valid JSON — an object, a
@@ -7976,7 +7959,8 @@ document.addEventListener("DOMContentLoaded", function () {
       countEl.textContent = shown === cards.length
         ? cards.length + ' studies'
         : shown + ' of ' + cards.length;
-      var filtered = state.fav || state.link || state.q || state.changes.length || state.answers.length
+      var filtered = state.fav || document.documentElement.dataset.vTreat
+                  || state.q || state.changes.length || state.answers.length
                   || look.text || look.accent || look.hover || look.radius !== PILL
                   || sortNow !== 'grouped';
       reset.hidden = !filtered;
@@ -8288,20 +8272,18 @@ document.addEventListener("DOMContentLoaded", function () {
       look.radius = +range.value; paint(); saveLook(); apply();
     });
 
-    if (linkBtn) linkBtn.addEventListener('click', function(){
-      state.link = linkBtn.getAttribute('aria-pressed') !== 'true';
-      linkBtn.setAttribute('aria-pressed', state.link ? 'true' : 'false');
-      apply();
-    });
-
     favBtn.addEventListener('click', function(){
       state.fav = favBtn.getAttribute('aria-pressed') !== 'true';
       favBtn.setAttribute('aria-pressed', state.fav ? 'true' : 'false');
       apply();
     });
 
+    // The version control is in the toolbar and in another IIFE; it announces
+    // a change and the run is re-filtered here, where the hiding lives.
+    document.addEventListener('bhl:version', function(){ apply(); });
+
     reset.addEventListener('click', function(){
-      state = {fav:false, link:false, q:'', changes:[], answers:[]};
+      state = {fav:false, q:'', changes:[], answers:[]};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
       look  = {text:'', accent:'', hover:'', radius:PILL};
@@ -8309,7 +8291,12 @@ document.addEventListener("DOMContentLoaded", function () {
       paint();   // clears all three swatches back to WHITE on its unset branch
       saveLook();
       favBtn.setAttribute('aria-pressed', 'false');
-      if (linkBtn) linkBtn.setAttribute('aria-pressed', 'false');
+      // And the version, for the same reason — it is literally the control
+      // whose default is called «As built». Clicked rather than set, so the
+      // aria-checked state, the roving tabindex and the re-render all happen
+      // through the one path that owns them. It ends in apply().
+      var asBuilt = document.querySelector('.vers-b[data-v=""]');
+      if (asBuilt && asBuilt.getAttribute('aria-checked') !== 'true') asBuilt.click();
       // The order comes back too. Reset already returns the colours and the
       // radius, neither of which is a filter either — it is the page's «as
       // built» button, and «as built» includes the sections. It calls apply().
@@ -8523,11 +8510,24 @@ document.addEventListener("DOMContentLoaded", function () {
     // what a reader means by it — and the groups are an AND with each other.
     function passes(card, skip){
       if (state.fav && favs.indexOf(card.dataset.key) < 0) return false;
-      // Read off data-versions, which is the same declaration the version row
-      // on the card reads — so the filter and the control can never disagree
-      // about which studies have a link. Word-bounded: «link» must be one of
-      // the listed versions and not part of a longer one.
-      if (state.link && !/(^|\s)link(\s|$)/.test(card.dataset.versions || '')) return false;
+      /* The VERSION control filters, and this is the whole of it.
+
+         It used to only re-render: picking «Link» set every study that owns a
+         link version to it and left the other 68 sitting there as buttons, so
+         the answer to «show me the links» was a page of keycaps and elevation
+         steps with eighteen links scattered through it. The readout said «18 of
+         86 offer it» and the page did not act on its own sentence.
+
+         A version is not a skin the page wears, it is a question about the
+         studies — «which of these work as a link» — so choosing one narrows the
+         run to the studies that can answer. «As built» is the whole 86, which
+         is what «as built» means.
+
+         Read off the same data-versions the per-card row reads, so the control
+         and the filter cannot disagree. Word-bounded: «link» must be one of the
+         listed versions, not a fragment of a longer one. */
+      var vt = document.documentElement.dataset.vTreat || '';
+      if (vt && !new RegExp('(^|\\s)' + vt + '(\\s|$)').test(card.dataset.versions || '')) return false;
       // The number is still searchable and always was: data-hay opens with it,
       // because the h3 does. So this second arm is the KEY — typing «y-hold»
       // finds card 111 by the name it will still answer to after the next
@@ -10129,6 +10129,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function global(){
       cards.forEach(function(c){ c.local = null; c.longLocal = null; apply(c); });
       tell();
+      // The rail lives in its own IIFE and owns the hiding, so the version can
+      // only ask. Without this the control re-renders the studies it can and
+      // the run stays 86 long, which is the bug this pairs with: the readout
+      // said «18 of 86 offer it» over a page still showing all 86.
+      document.dispatchEvent(new CustomEvent('bhl:version'));
     }
 
     if (tTreat){
