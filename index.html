@@ -1652,7 +1652,7 @@
     <article class="spec" data-key="j-dir" data-versions="fill outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line j-dir" data-j-dir="idle">
-          <span class="j-dir-tile" aria-hidden="true"><span class="j-dir-on" data-label>See the work</span></span><span class="lbl" data-label>See the work</span>
+          <span class="j-dir-tile" aria-hidden="true" data-bow="top"><span class="j-dir-nose"></span><span class="j-dir-clip"><span class="j-dir-on" data-label>See the work</span></span></span><span class="lbl" data-label>See the work</span>
         </button>
       </div>
       <h3><span class="num">75</span>Directional fill</h3>
@@ -3820,18 +3820,68 @@ document.addEventListener("DOMContentLoaded", function () {
        label went oblique the instant the fill arrived — the one thing this
        card does not claim to do. Measured after the swap: the two glyph runs
        register at the same left, top, width and height. */
-    position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1;
+    position:absolute; inset:0; pointer-events:none; z-index:1;
     background:var(--ink-hover);
-    --j-x:0%; --j-y:100%;
+    --j-x:0%; --j-y:100%; --j-bow:1;
     transform:translate(var(--j-x), var(--j-y));
-    /* The bow rides the SAME clock and curve as the travel, with no delay of
-       its own, so the leading edge is flat at the exact frame the plate lands.
-       Liquid fill — retired — was the study where a fill settles AFTER it
-       arrives, and that was its whole argument; a plate here that borrowed the
-       delay would restate it in a weaker form. The front simply straightens as
-       it crosses. */
-    transition:transform var(--t-5) var(--e-quint),
-               border-radius var(--t-5) var(--e-quint);
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  /* The clip used to be the tile's own overflow:hidden. It moved down one
+     level because the nose below has to hang PAST the tile's leading edge,
+     and the rule that reveals the label copy per pixel would have cut it off.
+     Same box, same job, one element each. */
+  .j-dir .j-dir-clip{position:absolute; inset:0; overflow:hidden}
+
+  /* THE BOW IS ITS OWN ELEMENT BECAUSE border-radius IS A PAINT PROPERTY.
+     It used to be transitioned on the tile alongside the travel, and a paint
+     property can never reach the compositor: the full-size tile AND the label
+     copy inside it were repainted on every frame, in both directions. Measured
+     live at 4x CPU, one enter: 118 paints / 33.1ms, against 47 for card 08 and
+     54 for card 49 doing comparable work — and 621 paints across four passes
+     where every other card on the page sat between 215 and 269.
+     A constant half-ellipse that SCALES says the same thing for nothing: 10
+     paints / 2.7ms over the same 650ms, twelve times less. The sentence is
+     unchanged — the front straightens as it crosses, on the same clock and the
+     same curve as the travel, with no delay of its own. Liquid fill, retired,
+     was the study where a fill settles AFTER it arrives; a plate here that
+     borrowed a delay would restate that in a weaker form.
+     It is ADDITIVE where the radius was subtractive. The old bow pulled the
+     two corners BACK by 10px; this pushes the middle FORWARD by the same 10px.
+     Both land flat and both read as a bowed front, and the forward one is the
+     more literal reading of the word.
+     Depth stays a length on the SHORT axis of each edge — 10px across 45px of
+     height, 8px across 150px of width — for the reason the old map gave: a
+     percentage would deepen the curve every time the label grew.
+     background:inherit, so the nose is whatever ink the plate is; the solid
+     version repaints the tile and the nose follows without a second rule. */
+  .j-dir .j-dir-nose{
+    position:absolute; pointer-events:none; background:inherit;
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  /* Same axis on both sides of every pair, always: place() is handed the side
+     the plate is OFF towards and bows the opposite edge, and left/right and
+     top/bottom are each other's opposites — so the flip from leading edge to
+     trailing edge never crosses from scaleX to scaleY mid-transition. It also
+     happens at --j-bow:0, where the nose has no size to jump with. */
+  .j-dir-tile[data-bow="right"] .j-dir-nose{
+    top:0; bottom:0; left:100%; width:10px;
+    border-radius:0 100% 100% 0 / 0 50% 50% 0;
+    transform-origin:left center; transform:scaleX(var(--j-bow));
+  }
+  .j-dir-tile[data-bow="left"] .j-dir-nose{
+    top:0; bottom:0; right:100%; width:10px;
+    border-radius:100% 0 0 100% / 50% 0 0 50%;
+    transform-origin:right center; transform:scaleX(var(--j-bow));
+  }
+  .j-dir-tile[data-bow="bottom"] .j-dir-nose{
+    left:0; right:0; top:100%; height:8px;
+    border-radius:0 0 50% 50% / 0 0 100% 100%;
+    transform-origin:center top; transform:scaleY(var(--j-bow));
+  }
+  .j-dir-tile[data-bow="top"] .j-dir-nose{
+    left:0; right:0; bottom:100%; height:8px;
+    border-radius:50% 50% 0 0 / 100% 100% 0 0;
+    transform-origin:center bottom; transform:scaleY(var(--j-bow));
   }
   /* The label does not change colour. A second copy of it lives INSIDE the
      tile and carries the tile's own translate back out, so it lands exactly on
@@ -3979,20 +4029,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // and it leaves room for a fifth state. The script's only job is choosing it.
     var OFF = {left:['-100%','0%'], right:['100%','0%'], top:['0%','-100%'], bottom:['0%','100%']};
     var OPP = {left:'right', right:'left', top:'bottom', bottom:'top'};
-    // The bow, keyed by which SIDE of the plate carries it. Each pair of
-    // corners takes half the edge on the long axis, so the two curves meet and
-    // the edge is one continuous arc rather than two rounded corners with a
-    // straight run between them. The bulge is small on purpose — 10px across
-    // 45px of height, 8px across 150px of width — because the plate stays a
-    // plate. And it is written in a length on the short axis rather than a
-    // percentage, so the long label does not deepen the curve when the button
-    // grows.
-    var BOW = {
-      left:  '10px 0 0 10px / 50% 0 0 50%',
-      right: '0 10px 10px 0 / 0 50% 50% 0',
-      top:   '50% 50% 0 0 / 8px 8px 0 0',
-      bottom:'0 0 50% 50% / 0 0 8px 8px'
-    };
+    // The bow is no longer a map of border-radius specs and no longer lives in
+    // this file at all. It is a nose element with a constant shape, and the
+    // script's whole share of it is naming the edge and saying whether it is
+    // out or in — the four geometries and the argument for the change are in
+    // the stylesheet, on .j-dir-nose.
 
     function nearestEdge(btn, e){
       var r = btn.getBoundingClientRect();
@@ -4059,11 +4100,17 @@ document.addEventListener("DOMContentLoaded", function () {
       // same values and the snap has to suppress both. Suppressing only the
       // tile left the copy sliding across the plate on its own for a rung.
       var on = tile.querySelector('.j-dir-on');
+      // The nose is a THIRD transition on the same clock, so the snap that
+      // stops the tile animating into place has to suppress it too. The two
+      // that were already here made the same point: suppressing only the tile
+      // left the label copy sliding across the plate on its own for a rung.
+      var nose = tile.querySelector('.j-dir-nose');
 
       function place(dir, animate){
         if (!animate){
           tile.style.transition = 'none';
-          if (on) on.style.transition = 'none';
+          if (on)   on.style.transition = 'none';
+          if (nose) nose.style.transition = 'none';
         }
         tile.style.setProperty('--j-x', OFF[dir][0]);
         tile.style.setProperty('--j-y', OFF[dir][1]);
@@ -4071,19 +4118,21 @@ document.addEventListener("DOMContentLoaded", function () {
         // side and not by direction: place() is handed the side the plate is
         // OFF towards, and the edge that crosses the plate is always the
         // opposite one. Entering from the left, the right edge leads; leaving
-        // to the right, the left edge trails. Both are BOW[OPP[dir]].
-        tile.style.borderRadius = BOW[OPP[dir]];
+        // to the right, the left edge trails. Both are OPP[dir].
+        tile.setAttribute('data-bow', OPP[dir]);
+        tile.style.setProperty('--j-bow', '1');
         if (!animate){
           void tile.offsetWidth;              // forced reflow — without it the
           tile.style.transition = '';         // jump animates and the tile
-          if (on) on.style.transition = '';   // enters from the LAST edge
+          if (on)   on.style.transition = ''; // enters from the LAST edge
+          if (nose) nose.style.transition = '';
         }
       }
       function enter(dir){
         place(dir, false);
         tile.style.setProperty('--j-x', '0%');
         tile.style.setProperty('--j-y', '0%');
-        tile.style.borderRadius = '0px';
+        tile.style.setProperty('--j-bow', '0');
         btn.setAttribute('data-j-dir', dir);
       }
       function leave(){
