@@ -33,6 +33,9 @@ export const VERSIONS = {
   'sweep':'fill outline link', 'shutter':'fill outline',
   'inkfill':'built fill',      'sheen':'built outline',
   'o-plate':'built',
+  // No link version: the mechanism is a plate entering from any of four edges,
+  // and a 1.5px rule on the bottom edge can only ever answer one of them.
+  'j-dir':'fill outline',
   // — Material and light ————————————————————————————————————————
   'f-glas':'built', 'f-motljus':'built', 'f-lykta':'built',
   's-bevel':'built', 's-crt':'built', 's-sprite':'built',

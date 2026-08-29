@@ -1569,10 +1569,10 @@
                     <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                   </article>
 
-    <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T11:11:48+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-dir" data-j-dir="idle">
-                      <span class="j-dir-tile" aria-hidden="true"><span class="j-dir-on">See the work</span></span><span class="lbl">See the work</span>
+                      <span class="j-dir-tile" aria-hidden="true"><span class="j-dir-on" data-label>See the work</span></span><span class="lbl" data-label>See the work</span>
                     </button>
                   </div>
                   <h3><span class="num">75</span>Directional fill</h3>
@@ -3579,7 +3579,13 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--ink-hover);
     --j-x:0%; --j-y:100%;
     transform:translate(var(--j-x), var(--j-y));
-    transition:transform var(--t-5) var(--e-quint);
+    /* The bow rides the SAME clock and curve as the travel, with no delay of
+       its own, so the leading edge is flat at the exact frame the plate lands.
+       Card 76 is the study where a fill settles AFTER it arrives, and that is
+       its whole argument — a plate that borrowed the delay would be restating
+       it in a weaker form. Here the front simply straightens as it crosses. */
+    transition:transform var(--t-5) var(--e-quint),
+               border-radius var(--t-5) var(--e-quint);
   }
   /* The label does not change colour. A second copy of it lives INSIDE the
      tile and carries the tile's own translate back out, so it lands exactly on
@@ -3601,6 +3607,28 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-5) var(--e-quint);
   }
   .j-dir .lbl{position:relative}
+
+  /* 75 in fill. The page's rule for a fill is that the arriving plate is the
+     INVERSE — cards 07, 08 and 09 all land here — so on a white button the
+     plate is --on-ink and the copy riding it goes back to --ink. The geometry
+     is not a version: all four entries and the bow are the mechanism, and the
+     treatment only says what colour the plate is.
+
+     The boundary is an ::after and NOT the hairline on the plate that 07 and 08
+     use, because this plate animates its own border-radius: an inset shadow
+     drawn on it would follow the bow, and at the landed frame it would be a
+     square ring with its corners cut off against the pill. A separate ring at
+     z-index 2 keeps the pill whatever the plate underneath is doing. It is
+     drawn at rest as well, where --line-ctl's white at .36 vanishes into the
+     white fill — the same non-loss card 09 records: a filled button does not
+     need a boundary drawn on top of its own. It earns its keep once the dark
+     plate is in, which on --bg-1 measures 1.06:1 without it. */
+  .j-dir.btn--solid .j-dir-tile{background:var(--on-ink)}
+  .j-dir.btn--solid .j-dir-on{color:var(--ink)}
+  .j-dir.btn--solid::after{
+    content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
 
   /* 76 Liquid fill — the fill rises with a curved leading edge that flattens as it
      lands, so it reads as liquid finding its level rather than a rectangle
@@ -3732,6 +3760,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // and it leaves room for a fifth state. The script's only job is choosing it.
     var OFF = {left:['-100%','0%'], right:['100%','0%'], top:['0%','-100%'], bottom:['0%','100%']};
     var OPP = {left:'right', right:'left', top:'bottom', bottom:'top'};
+    // The bow, keyed by which SIDE of the plate carries it. Each pair of
+    // corners takes half the edge on the long axis, so the two curves meet and
+    // the edge is one continuous arc rather than two rounded corners with a
+    // straight run between them. The bulge is small on purpose — 10px across
+    // 45px of height, 8px across 150px of width — because the plate stays a
+    // plate. And it is written in a length on the short axis rather than a
+    // percentage, so the long label does not deepen the curve when the button
+    // grows.
+    var BOW = {
+      left:  '10px 0 0 10px / 50% 0 0 50%',
+      right: '0 10px 10px 0 / 0 50% 50% 0',
+      top:   '50% 50% 0 0 / 8px 8px 0 0',
+      bottom:'0 0 50% 50% / 0 0 8px 8px'
+    };
 
     function nearestEdge(btn, e){
       var r = btn.getBoundingClientRect();
@@ -3763,6 +3805,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         tile.style.setProperty('--j-x', OFF[dir][0]);
         tile.style.setProperty('--j-y', OFF[dir][1]);
+        // One expression covers both callers, which is why the bow is keyed by
+        // side and not by direction: place() is handed the side the plate is
+        // OFF towards, and the edge that crosses the plate is always the
+        // opposite one. Entering from the left, the right edge leads; leaving
+        // to the right, the left edge trails. Both are BOW[OPP[dir]].
+        tile.style.borderRadius = BOW[OPP[dir]];
         if (!animate){
           void tile.offsetWidth;              // forced reflow — without it the
           tile.style.transition = '';         // jump animates and the tile
@@ -3773,6 +3821,7 @@ document.addEventListener("DOMContentLoaded", function () {
         place(dir, false);
         tile.style.setProperty('--j-x', '0%');
         tile.style.setProperty('--j-y', '0%');
+        tile.style.borderRadius = '0px';
         btn.setAttribute('data-j-dir', dir);
       }
       function leave(){
