@@ -378,13 +378,20 @@
   .inkfill:focus-visible .lbl{color:var(--on-ink-hover);
     transition-duration:var(--t-1); transition-delay:0ms}
 
-  /* 10 Sheen */
-  .sheen{background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  /* 10 Sheen. The streak takes its OWN duration and not --t-5, which inside
+     .btn resolves to 300ms. A light crossing a 200px plate is a material event
+     and not a plate reacting to a pointer, and at a fifth of a second it reads
+     as a flick rather than as light. 667ms is 40 frames at 60fps, so it keeps
+     the ladder's quantisation a rung above --t-5 without joining the ladder:
+     nothing else on the page wants a rung this long, and a sixth token would
+     be one study wide. Only :focus-visible ever saw this effect properly, at
+     the unshifted 450ms. Card 123 carries the same value for the same reason. */
+  .sheen{--sheen-t:667ms; background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
   .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
   .sheen:hover::after,
-  .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1)}
+  .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--sheen-t) cubic-bezier(.3,.6,.35,1)}
   .sheen .lbl{position:relative}
 
   /* ---- Family B in its other versions ---------------------------------
@@ -1582,7 +1589,7 @@
 
     <article class="spec" data-key="o-step" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
-                    <button type="button" class="btn btn--line o-step"><span class="o-step-fill" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="lbl">Start the build</span></button>
+                    <button type="button" class="btn btn--line o-step"><span class="o-step-fill" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="lbl" data-label>Start the build</span><span class="o-step-on" data-label aria-hidden="true">Start the build</span></button>
                   </div>
                   <h3><span class="num">91</span>Stepped fill</h3>
                   <p>Six columns rise on a stagger, so the fill arrives with a jagged leading edge and resolves flat. It does not retract: on the way out it collapses toward the ceiling, last column first. Blocks arriving, not a front moving.</p>
@@ -4459,17 +4466,49 @@ document.addEventListener("DOMContentLoaded", function () {
      staircase unbuilds from the end it was built towards. */
   .o-step{position:relative; overflow:hidden}
   .o-step .o-step-fill{position:absolute; inset:0; display:flex; pointer-events:none}
+  /* One rung slower, and the rung does both halves. .btn:hover raises every
+     token by a step, so this single --t-3 is 200ms arriving and 133ms leaving
+     — the page's own asymmetry, not a second declaration. It was --t-2, which
+     read as a flick: 83ms is shorter than the 130ms of stagger it carries, so
+     the card spent more of itself waiting than moving. */
   .o-step .o-step-fill span{flex:1; background:var(--accent);
     transform:scaleY(0); transform-origin:top;
-    transition:transform var(--t-2) var(--e-out)}
-  /* The label waits for the fill to pass under it, in BOTH directions. The
-     exit delay is the correction the reversed stagger asked for: the fill now
-     takes its 83ms plus the 130ms of stagger to leave, and a label that
-     recoloured on its own 83ms went light while three columns were still white
-     behind it — #f2f2f2 on #ffffff, which is no text at all for about 80ms. At
-     rest --t-3 is 133ms, so the recolour lands exactly as the last column
-     goes. */
-  .o-step .lbl{position:relative; transition:color var(--t-1) ease}
+    transition:transform var(--t-3) var(--e-out)}
+  /* THE LABEL IS NOT RECOLOURED. It was, and it could not be: one colour
+     cannot be right in two places at once, and this fill is white under the
+     left of the word while the right of it is still on the plate's own dark.
+     Measured, the old rule left «Start the» at 1.12:1 against the plate for
+     145ms on the way out — not low contrast, no text at all. A sweep of every
+     timing this page owns tops out at 2.05:1, because the defect is structural
+     and not a delay.
+     So the answer cards 75 and 111 already give: a second copy of the word, in
+     the colour the plate needs, revealed with the plate. .lbl stays --ink for
+     its whole life and never transitions; the twin above it carries
+     --ink-on-fill and is uncovered one column at a time.
+     steps(6,start) over six stagger units is the lock: the jumps land at 0,
+     26, 52, 78, 104 and 130ms after the delay, which is the column delays
+     exactly, so the word turns dark in the same six blocks the fill arrives
+     in. Reversed for free — the same property running backwards uncovers from
+     the right, which is the end the fill leaves from.
+     The delay is a FIFTH of the column's own ride, and the fifth is measured
+     rather than chosen. A column takes about 45ms to cross the text — the band
+     runs from 0.298 to 0.702 of the button's height — and for that long its
+     slice of the word is half on the plate and half off it, whichever colour
+     it wears. So the flip goes at the MIDDLE of the band, where the wrong half
+     is smallest and it is wrong for half as long: --e-out reaches scaleY 0.5
+     at 0.2064 of its ride, and a fifth is that to within 1.3ms. Aiming at the
+     TOP of the band — the first build of this — read far worse: the light word
+     kept its lower half on a white plate for the whole 45ms and «build»
+     ghosted out a column at a time. The middle is also symmetric, so one
+     declaration serves both directions where the top needed two. A literal
+     would survive only the rung it was typed at; a fifth survives any. */
+  .o-step .lbl{position:relative}
+  .o-step .o-step-on{position:absolute; inset:0; display:grid; place-items:center;
+    color:var(--ink-on-fill); pointer-events:none;
+    clip-path:inset(0 100% 0 0);
+    transition:clip-path calc(var(--t-stagger) * 6) steps(6,start) calc(var(--t-3) / 5)}
+  .o-step:hover .o-step-on,
+  .o-step:focus-visible .o-step-on{clip-path:inset(0 0 0 0)}
   /* The exit order: last column first, so the staircase comes apart from the
      end it was assembled towards. */
   .o-step .o-step-fill span:nth-child(1){transition-delay:calc(var(--t-stagger) * 5)}
@@ -4495,15 +4534,13 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-step:focus-visible .o-step-fill span:nth-child(5){transition-delay:calc(var(--t-stagger) * 4)}
   .o-step:hover .o-step-fill span:nth-child(6),
   .o-step:focus-visible .o-step-fill span:nth-child(6){transition-delay:calc(var(--t-stagger) * 5)}
-  .o-step:hover .lbl,
-  .o-step:focus-visible .lbl{color:var(--ink-on-fill); transition-delay:var(--t-2)}
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
      card would still arrive in sequence with nothing animating between the
      steps — six jumps instead of one. These are the delays this section adds,
      so this section takes them back. */
   @media (prefers-reduced-motion: reduce){
-    /* Both sides of the stagger now, not just the hover side. */
-    .o-step .o-step-fill span,.o-step .lbl{transition-delay:0s !important}
+    /* Both sides of the stagger, and the twin's lock along with them. */
+    .o-step .o-step-fill span,.o-step .o-step-on{transition-delay:0s !important}
   }
 </style>
 
@@ -6985,7 +7022,7 @@ document.addEventListener("DOMContentLoaded", function () {
      gradient has to invert to --on-ink, which is why the parent does. The
      delay is the lift's own duration and never a number invented for it, so
      the light crosses the face only once the face has arrived. */
-  .c-crest{overflow:hidden; background:var(--bg-2);
+  .c-crest{--sheen-t:667ms; overflow:hidden; background:var(--bg-2);
     border:1px solid var(--line-ctl); color:var(--ink-text);
     transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-4) var(--e-quint),
@@ -7002,7 +7039,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transform:translateX(-160%) skewX(-14deg)}
   .c-crest:hover::after,
   .c-crest:focus-visible::after{transform:translateX(340%) skewX(-14deg);
-    transition:transform var(--t-5) cubic-bezier(.3,.6,.35,1) var(--t-4)}
+    transition:transform var(--sheen-t) cubic-bezier(.3,.6,.35,1) var(--t-4)}
   .c-crest .lbl{position:relative; z-index:1}
 
   /* 124 Closing marks — 13 x a growing label. Crop marks against type opening up.
@@ -7169,7 +7206,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","magnet":"moves tone|js press","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-riser":"moves fades tone shape seq|press","o-quiet":"tone|hover","z-lurch":"moves fades|hover","z-stack":"moves tone|press","z-gum":"moves tone|press","sweep":"moves tone seq|hover","shutter":"moves tone seq|hover","inkfill":"moves tone|js","sheen":"moves tone|hover","j-dir":"moves shape|js","o-step":"moves tone seq|hover","w-dither":"shape|hover","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","corners":"moves fades tone|hover","uline":"moves|hover","e-draw":"fades shape|js","e-chamfer":"shape|hover","e-reg":"moves|hover","s-mid":"moves|hover","f-kant":"moves fades tone|loop press","l-gauge":"tone shape|hover","l-corner":"moves tone shape|hover","i-beam":"tone shape|hover","i-rule":"type|hover","w-corner":"shape|hover","roll":"moves|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-words":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","j-resolve":"tone|js","q-jitter":"moves seq|loop","relay":"moves seq|hover","dotm":"moves fades seq|hover","i-anti":"moves|press","i-space":"moves shape|hover","i-throw":"moves|js press","p-part":"moves shape|hover","p-walk":"moves|js","p-cycle":"seq|js loop","p-hinge":"moves|hover","j-out":"moves seq|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","n-cross":"moves fades seq|js","n-join":"moves shape|hover","w-grid":"moves|hover","w-redraw":"moves seq|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-glas":"moves tone|hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","l-plate-wrap":"fades|hover","x-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","k-recede":"moves tone|hover","k-ind":"moves|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-pair":"moves tone|hover","k-div":"moves fades tone|hover","c-swell":"moves|press","c-mass":"moves tone|press","c-tide":"moves seq|hover","c-relay":"moves tone shape seq|hover","c-crest":"moves tone|press","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","magnet":"moves tone|js press","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-riser":"moves fades tone shape seq|press","o-quiet":"tone|hover","z-lurch":"moves fades|hover","z-stack":"moves tone|press","z-gum":"moves tone|press","sweep":"moves tone seq|hover","shutter":"moves tone seq|hover","inkfill":"moves tone|js","sheen":"moves tone|hover","j-dir":"moves shape|js","o-step":"moves shape seq|hover","w-dither":"shape|hover","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","corners":"moves fades tone|hover","uline":"moves|hover","e-draw":"fades shape|js","e-chamfer":"shape|hover","e-reg":"moves|hover","s-mid":"moves|hover","f-kant":"moves fades tone|loop press","l-gauge":"tone shape|hover","l-corner":"moves tone shape|hover","i-beam":"tone shape|hover","i-rule":"type|hover","w-corner":"shape|hover","roll":"moves|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-words":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","j-resolve":"tone|js","q-jitter":"moves seq|loop","relay":"moves seq|hover","dotm":"moves fades seq|hover","i-anti":"moves|press","i-space":"moves shape|hover","i-throw":"moves|js press","p-part":"moves shape|hover","p-walk":"moves|js","p-cycle":"seq|js loop","p-hinge":"moves|hover","j-out":"moves seq|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","n-cross":"moves fades seq|js","n-join":"moves shape|hover","w-grid":"moves|hover","w-redraw":"moves seq|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-glas":"moves tone|hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","l-plate-wrap":"fades|hover","x-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","k-recede":"moves tone|hover","k-ind":"moves|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-pair":"moves tone|hover","k-div":"moves fades tone|hover","c-swell":"moves|press","c-mass":"moves tone|press","c-tide":"moves seq|hover","c-relay":"moves tone shape seq|hover","c-crest":"moves tone|press","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
