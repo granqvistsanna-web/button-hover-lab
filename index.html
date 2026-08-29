@@ -4523,7 +4523,23 @@ document.addEventListener("DOMContentLoaded", function () {
      — the page's own asymmetry, not a second declaration. It was --t-2, which
      read as a flick: 83ms is shorter than the 130ms of stagger it carries, so
      the card spent more of itself waiting than moving. */
+  /* THE 1px SHADOW IS THE SEAM FIX, and it is load-bearing. Six flex columns
+     of 26.5807px land their edges between device pixels, and while all six are
+     being composited separately — which is only true DURING the transition —
+     the boundary at 54.16px rasterises as 54 on one side and 55 on the other.
+     The page's own ground shows through the plate as a 1px hairline: measured
+     off the composited frames, 25 of 59, so it is on screen just under half
+     the time the card moves and gone the moment it settles, which is exactly
+     why it read as an intermittent glitch rather than as a line.
+     A shadow and not a negative margin, because a margin would widen every
+     column and walk the risers off the sixths — and the twin's clip-path steps
+     ARE sixths. This keeps the layout to the pixel and only paints 1px further
+     right, under the neighbour, where nothing else can see it. It rides the
+     element's own transform, so at scaleY(0) it is zero-height too and cannot
+     leak a line at rest, and it has no vertical offset or spread, so the
+     staircase's top edge stays as crisp as it was. */
   .o-step .o-step-fill span{flex:1; background:var(--accent);
+    box-shadow:1px 0 0 0 var(--accent);
     transform:scaleY(0); transform-origin:top;
     transition:transform var(--t-3) var(--e-out)}
   /* THE LABEL IS NOT RECOLOURED. It was, and it could not be: one colour
