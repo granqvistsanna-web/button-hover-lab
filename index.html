@@ -164,6 +164,9 @@
     letter-spacing:-.02em; line-height:1.05; margin:6px 0 0; text-wrap:balance}
   .lede{max-width:62ch; font-size:16px; color:var(--ink-mid); margin:14px 0 0}
   .lede strong{color:var(--ink-hi); font-weight:600}
+  /* One step down from the lede in both size and ink, on the lede's measure —
+     a second sentence at the same weight would be two ledes arguing. */
+  .lede-2{max-width:62ch; font-size:14.5px; color:var(--ink-low); margin:7px 0 0}
 
   /* ============ sections & cards ============ */
   /* The break between sections is AIR, not a rule. Nine full-bleed hairlines
@@ -283,8 +286,18 @@
      card_s meta line and a second one would put two 11.5px mono rows under
      every description. Never the whole card: the stage holds a real button
      you are meant to hover and press. */
-  .spec-more{margin-left:auto; padding:0; border:0; background:none;
-    font:inherit; color:var(--ink-low); cursor:pointer; letter-spacing:.04em}
+  /* A bare word at the end of a meta row of other bare words is not read as a
+     control — «More» sat in the same size, colour and typeface as the chip
+     beside it and was only distinguishable by being last. The chevron is the
+     smallest mark that says «this opens», and it turns when it has. */
+  .spec-more{margin-left:auto; display:inline-flex; align-items:center; gap:6px;
+    padding:0; border:0; background:none;
+    font:inherit; color:var(--ink-low); cursor:pointer; letter-spacing:.04em;
+    transition:color var(--t-fast) var(--ease)}
+  .spec-more::after{content:""; width:6px; height:6px; margin-top:-3px;
+    border-right:1.2px solid currentColor; border-bottom:1.2px solid currentColor;
+    transform:rotate(45deg); transition:transform var(--t-3) var(--e-out)}
+  .spec[data-open] .spec-more::after{transform:rotate(-135deg); margin-top:1px}
   .spec-more:hover{color:var(--ink-hi)}
   .spec-more:focus-visible{outline:1px solid var(--ink-low); outline-offset:3px}
 
@@ -381,6 +394,10 @@
   .vers-long{position:relative}
   .vers-long::before{content:""; position:absolute; left:-8px; top:50%;
     width:1px; height:13px; margin-top:-6.5px; background:var(--hairline)}
+  /* …and where length is the ONLY question the card offers, there is no
+     treatment segment to its left and the rule divides the chip from the
+     stage. 34 cards are in that case, each drawing a hairline against air. */
+  .vers-long:first-child::before{display:none}
   /* In the toolbar the same control sits in a row of its own furniture and
      needs neither the separator nor the centring. What it does need is an
      edge: on a stage the four words float over a card and read as a set, but
@@ -956,6 +973,16 @@
      second line, which reads as a column rule for a layout that has no columns. */
   .tools-sep{width:1px; height:20px; align-self:center; flex:none;
     background:var(--hairline); margin:0 -6px}
+  /* The VERSION row is about 460px wide against a ~1020px inner measure that
+     the colour and radius groups have already spent, so it wraps to its own
+     line at EVERY width the panel is ever drawn at — which left the rule
+     before it hanging off the end of line one, dividing a group from the air
+     beside it. Same reasoning as the ≤520px rule further down, applied to the
+     one row that is always stacked rather than to all of them.
+     :has() may not be nested inside :has(), so the version row is identified
+     by a descendant of the sibling rather than by a second :has() on it — the
+     nested form parses as invalid and drops the whole rule in silence. */
+  .tools-sep:has(+ .tools-row .vers-seg){display:none}
   /* Caption and swatch as one <label>, so the caption IS the accessible name
      and the hit target is the pair rather than 28 square pixels. Three of these
      sit on one line: the toolbar is sticky and every row it grows costs the
@@ -1028,7 +1055,7 @@
   /* Mono and tabular, and wide enough for the longest reading it can hold, so
      dragging the slider does not shove the row around under the pointer. */
   .set-read{font:400 11.5px/1 var(--mono); color:var(--ink-low);
-    font-variant-numeric:tabular-nums; min-width:7ch}
+    font-variant-numeric:tabular-nums; min-width:7ch; white-space:nowrap}
   .set-read b{font-weight:400; color:var(--ink-mid); cursor:help}
   .fav-only{
     display:inline-flex; align-items:center; gap:7px;
@@ -1072,21 +1099,38 @@
        line with a label; the track wraps and the readout takes the next. */
     .tools-row:has(.vers-seg){flex-wrap:wrap; justify-content:flex-start}
     .tools-row:has(.vers-seg) .set-read{margin-left:auto}
+    /* Three captioned swatches and a contrast phrase do not fit a 390px line.
+       The readout drops under them rather than squeezing HOVER off its own
+       swatch — it reports on all three, so under all three is where it goes. */
+    .tools-row:has(.set-swatch){flex-wrap:wrap}
+    .tools-row:has(.set-swatch) .set-read{flex-basis:100%; text-align:right;
+      margin-top:2px}
     .set-range{flex:1; min-width:0; max-width:150px}
     .set-swatch{margin-left:auto}
   }
 
+  /* ---- Why the stage actions are visible at rest --------------------
+     They were opacity:0 until the card was hovered, which hid the one thing
+     this page is FOR behind a gesture nobody is told to make: a visitor
+     scrolling the grid saw ninety demos and no way to take one. The lede says
+     «hover, tab and press any of them» and means the BUTTON, so the sentence
+     that was meant to teach the page taught the wrong control.
+     They now rest at .34 — legible as furniture, quiet enough that the eye
+     still lands on the demo — and go to full on hover or on focus anywhere in
+     the card. Nothing moves when they lift, so the reveal cannot be mistaken
+     for part of the study underneath it. */
   .spec .stage{position:relative}
   .fav{
     position:absolute; top:9px; right:9px; z-index:2;
     width:36px; height:36px; display:grid; place-items:center;
     background:none; border:0; border-radius:10px; cursor:pointer;
-    color:var(--ink-low); opacity:0;
+    color:var(--ink-low); opacity:.34;
     transition:opacity var(--t-3) ease,color var(--t-3) ease,
                background var(--t-fast) var(--ease),transform var(--t-3) var(--e-out);
   }
-  .spec:hover .fav,.fav:focus-visible,.fav[aria-pressed="true"]{opacity:1}
-  /* No hover to reveal it on touch — show it faintly instead. */
+  .spec:hover .fav,.spec:focus-within .fav,
+  .fav:focus-visible,.fav[aria-pressed="true"]{opacity:1}
+  /* Nothing will ever lift these on touch, so rest one step brighter there. */
   @media (hover: none){ .fav{opacity:.6} }
   .fav:hover{background:var(--bg-3); color:var(--ink-hi)}
   .fav[aria-pressed="true"]{color:var(--ink-hi)}
@@ -1110,14 +1154,15 @@
   .copy{
     display:flex; align-items:center; gap:7px; height:36px; padding:0 11px;
     background:none; border:0; border-radius:10px; cursor:pointer;
-    color:var(--ink-low); opacity:0;
+    color:var(--ink-low); opacity:.34;
     font:500 10.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
     white-space:nowrap;
     transition:opacity var(--t-3) ease,color var(--t-3) ease,
                background var(--t-fast) var(--ease),transform var(--t-3) var(--e-out);
   }
-  .spec:hover .copy,.copy:focus-visible,.copy[data-done="1"]{opacity:1}
-  /* No hover to reveal it on touch — show it faintly instead. */
+  .spec:hover .copy,.spec:focus-within .copy,
+  .copy:focus-visible,.copy[data-done="1"]{opacity:1}
+  /* Nothing will ever lift these on touch, so rest one step brighter there. */
   @media (hover: none){ .copy{opacity:.6} }
   .copy:hover{background:var(--bg-3); color:var(--ink-hi)}
   .copy:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
@@ -1474,6 +1519,12 @@
          stale twice. JS fills it from cards.length; without JS the sentence
          reads whole with no number. -->
     <p class="lede">Button hover animations, actually built. <strong>Hover, tab and press any of them.</strong></p>
+    <!-- The lede teaches the demo and stops there, so the page read as a
+         gallery: a visitor learned that the buttons move and never that they
+         come away. The second line is the offer, and it names the two things
+         the controls on every card are labelled with — CSS and Framer — so
+         the sentence and the buttons teach each other. -->
+    <p class="lede-2">Every one hands over its own CSS, or a Framer module you paste straight onto a canvas.</p>
   </header>
 
   <div class="tools" role="group" aria-label="Restyle the studies">
@@ -8577,7 +8628,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       empty.hidden = shown > 0;
       countEl.textContent = shown === cards.length
-        ? cards.length + ' studies'
+        ? cards.length + ' buttons'
         : shown + ' of ' + cards.length;
       var filtered = state.fav || document.documentElement.dataset.vTreat
                   || state.q || state.changes.length || state.answers.length
@@ -8821,7 +8872,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // of the three that can put a reader below AA. The fills report
       // themselves in their own captions.
       if (textRatio === null) textRatio = ratio(WHITE_RGB, PANEL);
-      readC.textContent = textRatio.toFixed(1) + ':1';
+      // «16.0:1» alone is a number with no noun. It is the one readout on the
+      // toolbar whose subject is not the control beside it — the swatches are
+      // three, this is about the label on the card — so it carries its own.
+      readC.textContent = 'Contrast ' + textRatio.toFixed(1) + ':1';
       readC.title = 'Label contrast on the card.'
                   + (moved ? ' ' + moved + (moved > 1 ? ' colours were' : ' colour was')
                              + ' lightened to stay legible — see the ↑.' : '');
@@ -9321,7 +9375,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
           var row = lab.closest('label');
           row.querySelector('.rail-n').textContent = n;
-          row.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
+          row.querySelector('.sr').textContent = n + (n === 1 ? ' button' : ' buttons');
           if (n) row.removeAttribute('data-empty'); else row.setAttribute('data-empty', '');
         });
       });
@@ -9347,7 +9401,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var own = [].slice.call(sect.querySelectorAll('.spec'));
         var n = own.filter(function(c){ return !c.hidden; }).length;
         a.querySelector('.rail-n').textContent = n;
-        a.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
+        a.querySelector('.sr').textContent = n + (n === 1 ? ' button' : ' buttons');
         a.hidden = n === 0;
         if (n) live++;
       });
@@ -10875,7 +10929,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // followed, that IS the studies. Each branch now says its own sentence.
       read.textContent = want
         ? n + ' of ' + total + ' offer it'
-        : total + ' as built';
+        : 'all ' + total + ' as built';
     }
     function global(){
       cards.forEach(function(c){ c.local = null; c.longLocal = null; apply(c); });
