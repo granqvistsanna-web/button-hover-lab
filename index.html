@@ -7300,12 +7300,60 @@ document.addEventListener("DOMContentLoaded", function () {
 // Deferred for the reason set out at the first of these blocks: a script above
 // its own markup binds to nothing, in silence.
 document.addEventListener("DOMContentLoaded", function () {
-  // 09 Ink fill — the fill originates at the pointer's entry and exit point
+  // The block's one pointer sample, shared by 09 and 125 — both of them ask
+  // the same question and asked it wrong in the same way. `pointerenter` and
+  // `pointerleave` report the first sample on the FAR side of the edge, never
+  // the edge: measured on this page, an ordinary flick lands 20–28px past it.
+  // Card 75 carries the long version of this argument, and reads the same
+  // travel to pick a SIDE; here the crossing POINT is the whole answer.
+  var lastPt = null;
+  addEventListener('pointermove', function(e){
+    lastPt = {x:e.clientX, y:e.clientY};
+  }, {passive:true, capture:true});
+
+  // Liang–Barsky, and it has to run BOTH ways round: card 09 marks the arrival
+  // AND the departure, so the entry crossing is wanted when the event lands
+  // inside and the exit crossing when it lands outside. Per axis the two plane
+  // times bracket that slab; the entry is the LATER of the two near times, the
+  // exit the EARLIER of the two far times. A zero component is travel parallel
+  // to that pair of planes: no constraint if the segment is already within the
+  // slab, and no crossing at all if it is not.
+  function crossedPoint(el, e){
+    var here = {x:e.clientX, y:e.clientY}, p = lastPt, r = el.getBoundingClientRect();
+    if (!p) return here;
+    var dx = here.x - p.x, dy = here.y - p.y;
+    if (!dx && !dy) return here;
+    var nx = -Infinity, fx = Infinity, ny = -Infinity, fy = Infinity, a, c;
+    if (dx){ a = (r.left - p.x)/dx; c = (r.right  - p.x)/dx; nx = Math.min(a,c); fx = Math.max(a,c); }
+    else if (p.x < r.left || p.x > r.right)  return here;
+    if (dy){ a = (r.top  - p.y)/dy; c = (r.bottom - p.y)/dy; ny = Math.min(a,c); fy = Math.max(a,c); }
+    else if (p.y < r.top  || p.y > r.bottom) return here;
+    // Which crossing is wanted follows from where the EVENT landed, not where
+    // the pointer came from: an event inside the plate is an arrival, so the
+    // segment's ENTRY into the rect is the edge that was crossed; an event
+    // outside is a departure, and the EXIT is. Getting this pair the wrong way
+    // round still type-checks and still returns a point on the outline — it
+    // just returns the far side, and every fallback fires instead.
+    var inside = here.x >= r.left && here.x <= r.right &&
+                 here.y >= r.top  && here.y <= r.bottom;
+    var t = inside ? Math.max(nx, ny) : Math.min(fx, fy);
+    // Outside [0,1] means this segment never met the edge: the pointer was
+    // already where it is and the page moved under it — a scroll, a layout
+    // shift, a fresh load with the cursor at rest. The event itself is then
+    // the honest answer, rather than a point invented from a stale sample.
+    if (!isFinite(t) || t < 0 || t > 1) return here;
+    return {x:p.x + dx * t, y:p.y + dy * t};
+  }
+
+  // 09 Ink fill — the fill originates at the pointer's entry and exit point.
+  // Both halves read the crossing rather than the event: the card promises the
+  // EXACT point on the way in and the place you left on the way out, and a
+  // sample 23px inside the plate is neither.
   document.querySelectorAll('.inkfill').forEach(function(b){
     function set(e){
-      var r = b.getBoundingClientRect();
-      b.style.setProperty('--x', (e.clientX - r.left) + 'px');
-      b.style.setProperty('--y', (e.clientY - r.top) + 'px');
+      var r = b.getBoundingClientRect(), c = crossedPoint(b, e);
+      b.style.setProperty('--x', (c.x - r.left) + 'px');
+      b.style.setProperty('--y', (c.y - r.top) + 'px');
     }
     b.addEventListener('pointerenter', set);
     b.addEventListener('pointerleave', set);
@@ -7497,30 +7545,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // the short way round the 40-unit loop: (-20, 20]
     function wrap(d){ return d - 40 * Math.round(d / 40); }
 
-    // Where the pointer crossed the boundary, in viewport coordinates. Same
-    // reading card 75 makes and for the same reason — pointerenter reports the
-    // first sample inside, not the edge — but this card wants the POINT rather
-    // than which of the four sides it sits on, so the clip returns the meeting
-    // place and lets nearestS turn it into a perimeter distance. Falls back to
-    // the event when there is no travel to read: the pointer was already
-    // inside and the page moved under it.
-    var lastPt = null;
-    addEventListener('pointermove', function(e){
-      lastPt = {x:e.clientX, y:e.clientY};
-    }, {passive:true, capture:true});
-
-    function crossedPoint(btn, e){
-      var p = lastPt, r = btn.getBoundingClientRect();
-      if (!p) return {x:e.clientX, y:e.clientY};
-      var dx = e.clientX - p.x, dy = e.clientY - p.y;
-      if (!dx && !dy) return {x:e.clientX, y:e.clientY};
-      var tx = -Infinity, ty = -Infinity;
-      if (dx > 0) tx = (r.left - p.x) / dx; else if (dx < 0) tx = (r.right - p.x) / dx;
-      if (dy > 0) ty = (r.top  - p.y) / dy; else if (dy < 0) ty = (r.bottom - p.y) / dy;
-      var t = Math.max(tx, ty);
-      if (!isFinite(t) || t < 0 || t > 1) return {x:e.clientX, y:e.clientY};
-      return {x:p.x + dx * t, y:p.y + dy * t};
-    }
+    // The crossing point comes from `crossedPoint` at the top of this block —
+    // one sample and one clip for both cards that need it. This card wants the
+    // POINT rather than which of the four sides it lies on, and hands it
+    // straight to nearestS to become a perimeter distance.
 
     document.querySelectorAll('.e-race').forEach(function(btn){
       if (rm.matches) return;                    // the CSS fade handles it
