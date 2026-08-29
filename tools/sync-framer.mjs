@@ -93,8 +93,25 @@ async function harvest () {
     const res = await fetch(link[1])
     if (!res.ok) throw new Error(`token sheet ${link[1]} answered ${res.status}`)
     sheet = await res.text()
+    // Re-serving the sheet from here moves what its own relative URLs resolve
+    // against, and tokens.css declares BOTH Geist faces with relative src —
+    // fonts/GeistVariable.woff2. From this origin those became a request this
+    // server answers with the page itself, so neither face ever loaded and
+    // every button was measured in the fallback. Nothing failed: the harvest
+    // just baked a fallback width into @framerIntrinsicWidth, and the stamp it
+    // wrote could never agree with the live page, which reported 70 of 85
+    // cards as drifted when none of them were. So every url() in the sheet is
+    // re-pointed at where the sheet actually lives before it is served.
+    const abs = ref => { try { return new URL(ref, link[1]).href } catch (e) { return ref } }
+    let rewritten = 0
+    sheet = sheet.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g, (m, q, ref) => {
+      if (/^(https?:|data:|#|\/\/)/i.test(ref)) return m
+      rewritten++
+      return `url("${abs(ref)}")`
+    })
     html = html.replace(link[0], link[0].replace(link[1], '/tokens.css'))
-    say(`token sheet re-served same-origin from ${link[1]} (${sheet.length} bytes)`)
+    say(`token sheet re-served same-origin from ${link[1]} (${sheet.length} bytes, ` +
+        `${rewritten} relative url() rewritten absolute)`)
   } else {
     say('no absolute stylesheet link in the page — nothing to re-serve')
   }
@@ -147,6 +164,40 @@ async function harvest () {
   await send('Page.navigate', { url: pageUrl })
   for (let i = 0; i < 120 && !seen.has('Page.loadEventFired'); i++) await new Promise(r => setTimeout(r, 100))
   await new Promise(r => setTimeout(r, 1500))   // let the linked token sheet land
+
+  // GEIST HAS TO BE ON THE GLASS BEFORE ANYTHING IS MEASURED. The generated
+  // component carries @framerIntrinsicWidth, and that number is the button's
+  // RENDERED width — so a harvest that measures while the webfont is still
+  // swapping bakes a fallback-font width into every study whose label is wide
+  // enough to matter. It does not fail: it produces a component that is a
+  // couple of pixels wrong and a stamp the live page can never agree with, so
+  // every one of those cards reads Framer* forever and the drift is reported
+  // where there is none. Measured 2026-08-29 on card 91: harvest said
+  // @framerIntrinsicWidth 161 against the live page's 159, one line apart in
+  // 9,566 identical bytes, and 70 of 85 cards were flagged behind by it.
+  //
+  // fonts.ready alone is not the check — it resolves happily when the face
+  // never arrived — so the loaded FontFace list is inspected and the run is
+  // aborted rather than allowed to publish fallback metrics quietly.
+  // fonts.ready is not enough on its own and neither is rendering the page:
+  // both resolve with the faces still 'unloaded', because the @font-face rules
+  // arrive from fonts.googleapis.com but nothing forces the woff2 fetch from
+  // fonts.gstatic.com in time. So the faces are demanded explicitly, which is
+  // the only call that actually returns the loaded FontFace objects.
+  const fonts = JSON.parse(await evalJs(`(async () => {
+    const want = ['500 15px "Geist"', '600 15px "Geist"', '400 12px "Geist Mono"']
+    for (const spec of want) { try { await document.fonts.load(spec) } catch (e) {} }
+    try { await document.fonts.ready } catch (e) {}
+    const fs = [...document.fonts].map(f => f.family + '|' + f.status)
+    return JSON.stringify({ loaded: fs.filter(x => x.endsWith('|loaded')), all: fs.length })
+  })()`))
+  const geist = fonts.loaded.filter(f => /Geist/i.test(f))
+  if (!geist.length) {
+    throw new Error('Geist never loaded in the harvest browser — every ' +
+      '@framerIntrinsicWidth would be a fallback-font width. Refusing to publish ' +
+      `fallback metrics. (${fonts.all} faces seen, ${fonts.loaded.length} loaded)`)
+  }
+  say(`fonts settled — ${geist.length} Geist face(s) loaded of ${fonts.loaded.length}`)
 
   // The copy button is the only generator. Stub the clipboard and press it.
   const n = await evalJs(`(() => {
