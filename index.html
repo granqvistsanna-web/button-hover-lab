@@ -1865,7 +1865,7 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T10:50:35+02:00">
+    <article class="spec" data-versions="fill outline link" data-nolong data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T10:50:35+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line e-wave">
                       <span class="e-wave-stack">
@@ -2370,7 +2370,20 @@
 <style>
   /* ============ Section F — The challengers ============ */
 
-  /* 26 Weight wave — variable weight follows the pointer through the characters */
+  /* 26 Weight wave — variable weight follows the pointer through the characters.
+
+     All three surfaces, and no Long. The effect is a weight applied per
+     character to the label, so it is indifferent to what is behind it — fill,
+     outline and link all carry it unchanged, which is the test for whether a
+     version is honest rather than merely non-crashing.
+
+     data-nolong is the other half. This label lives in .e-wave-live with a
+     hidden .e-wave-ghost holding the width and an .sr copy carrying the name,
+     and none of them is a .lbl — so the version bar's labelNodes() finds
+     nothing to rewrite and the Long button would be a control that does
+     nothing. Card 121 is the other shape of this trap: a label that IS spans
+     inside .lbl gets them flattened to raw text instead, silently, which is why
+     that one declares no versions at all. */
   .e-wave .e-wave-stack{display:inline-grid; justify-items:center}
   .e-wave .e-wave-ghost{grid-area:1/1; font-weight:800; white-space:nowrap; visibility:hidden}
   .e-wave .e-wave-live{grid-area:1/1; white-space:nowrap; font-variation-settings:"wght" 500; transition:font-variation-settings var(--t-4) var(--e-out)}
