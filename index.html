@@ -1572,7 +1572,7 @@
     <article class="spec" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line j-dir" data-j-dir="idle">
-                      <i class="j-dir-tile" aria-hidden="true"><span class="j-dir-on">See the work</span></i><span class="lbl">See the work</span>
+                      <span class="j-dir-tile" aria-hidden="true"><span class="j-dir-on">See the work</span></span><span class="lbl">See the work</span>
                     </button>
                   </div>
                   <h3><span class="num">75</span>Directional fill</h3>
@@ -3562,7 +3562,12 @@ document.addEventListener("DOMContentLoaded", function () {
   .j-dir .j-dir-tile{
     /* z-index, because the tile now carries type. Both are positioned and the
        label is later in the DOM, so at z-index auto the light original painted
-       ON TOP of the dark copy and every glyph came back haloed. */
+       ON TOP of the dark copy and every glyph came back haloed.
+       And the tile is a SPAN. It was an <i> while it was empty decoration, and
+       the UA sheet italicises <i>, so the moment the copy moved inside it the
+       label went oblique the instant the fill arrived — the one thing this
+       card does not claim to do. Measured after the swap: the two glyph runs
+       register at the same left, top, width and height. */
     position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1;
     background:var(--ink-hover);
     --j-x:0%; --j-y:100%;
