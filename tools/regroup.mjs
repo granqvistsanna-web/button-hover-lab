@@ -23,38 +23,50 @@ import { readFileSync, writeFileSync } from 'node:fs';
 const FILE = new URL('../index.html', import.meta.url);
 const CHECK = process.argv.includes('--check');
 
-// The nine groups, in reading order: the whole plate first because it is what
-// most sites ship, the row last because it is the only one that needs siblings.
+// The nine groups, in reading order. Every heading is ONE WORD naming what
+// performs, because the set used to run on three different axes and made the
+// reader change question twice on the way down: seven headings named a part,
+// «Button groups» named a scope, «Two at once» named a cardinality.
 //
-// Each carries a standfirst, drawn under the heading's hairline. The headings
-// name a PART — «Label», «Icon», «Two at once» — and a part is not a criterion:
-// it says what the studies touch and not what they have in common or when you
-// would want one. «Two at once» could not say it at all; it was the one heading
-// on the page a reader could not decode from the heading, because it is the one
-// group that names a relationship rather than a thing. One sentence each, and
-// the sentence answers «why are these together», not «what is this».
+// The words are not invented for the headings — they are the ones the cards
+// already use. Every study under «Whole button» opened «The plate…», and most
+// of «Icon» says «the mark»; edge, material, row and compound were already the
+// internal keys here while the headings carried long forms of them. The page
+// had renamed itself and the headings had not followed.
+//
+// Order: the six that name a part of one button keep the old progression —
+// whole, surface, outline, contents, substance. The three that are NOT one
+// button hovering (state answers a click, row needs siblings, compound runs
+// two mechanisms) form the tail, so the axis switches once, at a seam, rather
+// than twice at random.
+//
+// Each carries a standfirst, drawn under the heading. One sentence, and the
+// sentence answers «why are these together», not «what is this» — a part is
+// not a criterion, and the one-word headings need the sentence more than the
+// long ones did.
 const GROUPS = [
-  ['button',   'Whole button',
-   'The whole plate answers at once. It scales, lifts, leans, or takes on a state and says so.'],
+  ['plate',    'Plate',
+   'The whole surface answers at once: it scales, lifts, leans, or argues with the pointer about its own weight.'],
   ['fill',     'Fill',
    'A fill arrives or leaves. What differs is where it comes from and whether you can see it travel.'],
-  ['edge',     'Border, corner and rule',
+  ['edge',     'Edge',
    'The outline does the work and the plate holds still: an underline, a rule, a drawn border, a corner that changes shape.'],
+  // Whole-word and per-character were two sections until now. The split was
+  // how the studies were BUILT, which is the author's business — a reader who
+  // wants «the label does something» was checking two headings, one of them
+  // the smallest on the page. One section, two runs.
   ['label',    'Label',
-   'The word moves as one piece, so the button can change what it says without changing size.'],
-  ['char',     'Label, per character',
-   'The word is split and the parts move separately, which buys a stagger the whole label cannot make.'],
-  ['icon',     'Icon',
-   'A mark beside the label carries the gesture: an arrow travels, a shape redraws, a caret points.'],
-  ['material', 'Material and light',
+   'The word performs: as one piece, so the button can change what it says without changing size — then split, so the characters can move apart.'],
+  ['mark',     'Mark',
+   'A small mark beside the label carries the gesture: an arrow travels, an icon redraws itself, a caret points.'],
+  ['material', 'Material',
    'The button behaves like a physical thing — lit, glazed, printed, knurled or cut — and hover changes the material, not the layout.'],
-  ['row',      'Button groups',
+  // The three that follow are not one button answering a pointer.
+  ['state',    'State',
+   'These answer the click rather than the pointer: the button takes an instruction and reports on it in place, with no spinner and no second surface.'],
+  ['row',      'Row',
    'These need siblings to be read. Hovering one changes the others, so the row is the unit and a single button shows nothing.'],
-  // The ninth group does not name a part, because a compound performs on two
-  // of them at once — which is exactly why it cannot be filed under either.
-  // It goes last for the same reason 'row' used to: it is the one group that
-  // presumes you have read the others.
-  ['compound', 'Two at once',
+  ['compound', 'Compound',
    'Two mechanisms from the sections above, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.'],
 ];
 
@@ -89,8 +101,8 @@ const ALIAS_REHOME = [
 // number is its catalogue entry — the prose cites bare numbers across cards,
 // #number-map pairs key to number, and both survive a reorder untouched.
 const ORDER_OF = {
-  // Whole button — it lifts, scales, leans, settles, or answers a press.
-  button: [
+  // Plate — it lifts, scales, leans, settles, or resists the pointer.
+  plate: [
     // Scale: the plate changes size and nothing else.
     'Small grow',
     'Small shrink',
@@ -113,12 +125,6 @@ const ORDER_OF = {
     'Rigid type',
     'Wave through',
     'Tempo match',
-
-    // A state to report: the press means something and the button says so.
-    'Status button',
-    'Plate to check',
-    'Hold to confirm',
-    'Honest progress',
 
     // Two regions in one plate: it answers which part of itself you are on.
     'Two targets',
@@ -147,7 +153,6 @@ const ORDER_OF = {
 
     // Whole-plate: no travel, the surface just changes.
     'Instant invert',
-    'Sheen',
   ],
 
   // Border, corner and rule — an outline draws, a radius changes, a rule moves.
@@ -176,7 +181,7 @@ const ORDER_OF = {
     'Continuous corners',
   ],
 
-  // Label — the word moves as one unit.
+  // Label — the word performs, whole then split.
   label: [
     // Rolls: one label leaves as another arrives.
     'Label roll',
@@ -195,10 +200,10 @@ const ORDER_OF = {
     'Counter',
     'Tracking trade',
     'Label invert',
-  ],
 
-  // Label, per character — the word is split and the parts move separately.
-  char: [
+    // ---- and now split, so the characters can move separately. Two runs in
+    // one section rather than two sections: whole-word vs per-character is
+    // how a study was BUILT, and the reader is asking what the label does.
     // Rolls and lifts, staggered across the characters.
     'Letter roll',
     'Word roll',
@@ -217,8 +222,9 @@ const ORDER_OF = {
     'Resolve',
   ],
 
-  // Icon — an arrow, dot, caret, needle or dash does the work.
-  icon: [
+
+  // Mark — an arrow, dot, caret, needle or dash does the work.
+  mark: [
     // Arrows that travel.
     'Arrow relay',
     'Dot to arrow',
@@ -251,7 +257,6 @@ const ORDER_OF = {
     'Settle',
     'Re-spacing',
     'Optical centre',
-    'Working state',
   ],
 
   // Material and light — the button looks like a thing.
@@ -263,6 +268,7 @@ const ORDER_OF = {
     'Lantern',
     'Light flip',
     'Fixed light',
+    'Sheen',
 
     // Glass.
     'Frosted glass',
@@ -283,7 +289,19 @@ const ORDER_OF = {
     'Idle breath',
   ],
 
-  // Button groups — siblings react to the one you are on.
+  // State — the button answers the click, not the pointer. These four were
+  // the odd run inside «Whole button»: not hover studies at all. 'Working state'
+  // came from «Icon», where its own text already said it — the loop that
+  // starts because you pointed.
+  state: [
+    'Status button',
+    'Plate to check',
+    'Hold to confirm',
+    'Honest progress',
+    'Working state',
+  ],
+
+  // Row — siblings react to the one you are on.
   row: [
     // The others give way.
     'Others recede',

@@ -166,21 +166,32 @@
   .lede strong{color:var(--ink-hi); font-weight:600}
 
   /* ============ sections & cards ============ */
-  .sect{margin-top:96px}
+  /* The break between sections is AIR, not a rule. Nine full-bleed hairlines
+     down a 16,000px page chaptered it: each one is 1060px of held line for a
+     heading that is eleven pixels of grey, so the divider shouted louder than
+     the thing it divided. Removed, and the 96px gap goes to 128 to carry the
+     job on its own — the heading is then a marker sitting over its sentence
+     rather than a bar across the page.
+     What did NOT change is the colour. Dimming ink-low to ink-faint is the
+     obvious way to make a heading quieter and it fails AA: measured on bg-0,
+     ink-low is 5.55:1 and ink-faint is 3.00:1. Subtlety comes off the rule
+     and the spacing, never off the contrast of the only wayfinding the page
+     has. */
+  .sect{margin-top:128px}
   .sect>h2{display:flex; align-items:baseline; gap:14px;
     font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--ink-low); padding-bottom:16px; border-bottom:1px solid var(--hairline)}
-  /* The line under a section heading. The headings name a part — «Label», «Two
-     at once» — and a part is not a criterion: two of them could not say what
-     they collect without being read as a sentence, and «Two at once» could not
-     say it at all. It sits BELOW the heading's hairline rather than beside the
-     heading, because it is a sentence and the heading is a label at 11px in
-     caps; on one line they would be two registers fighting. Measure is the
-     lede's, so the three widths on the page are one width.
+    color:var(--ink-low); margin:0}
+  /* The line under a section heading, and the heading needs it more now that
+     it is one word: «Plate», «Mark», «State» name what performs and a part is
+     not a criterion — none of them says what it collects or when you would
+     want one. It sits BELOW the heading rather than beside it, because it is a
+     sentence and the heading is a label at 11px in caps; on one line they
+     would be two registers fighting. Measure is the lede's, so the three
+     widths on the page are one width.
      Emitted by tools/regroup.mjs with the sections — authored here it would be
      deleted by the next run. */
   .sect-intro{max-width:62ch; font-size:14px; line-height:1.5;
-    color:var(--ink-mid); margin:16px 0 0}
+    color:var(--ink-mid); margin:10px 0 0}
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
     gap:24px; margin-top:28px}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
@@ -1472,8 +1483,8 @@
 
     <div id="studies" tabindex="-1"></div>
     <section class="sect">
-  <h2>Whole button</h2>
-  <p class="sect-intro">The whole plate answers at once. It scales, lifts, leans, or takes on a state and says so.</p>
+  <h2>Plate</h2>
+  <p class="sect-intro">The whole surface answers at once: it scales, lifts, leans, or argues with the pointer about its own weight.</p>
   <div class="grid">
 
     <article class="spec" data-key="g-measure" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
@@ -1572,43 +1583,6 @@
       <h3><span class="num">52</span>Two masses</h3>
       <p>The arrow and the label leave at the same instant and travel the same distance at different rates, so the light one arrives first and the pair closes up by two pixels before the heavier label lands and restores the gap.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="t-report" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line t-report" data-state="idle" data-step="0"><span class="t-report-fill" aria-hidden="true"></span><span class="t-report-track" aria-hidden="true"><span class="t-report-roll"><span>Publish</span><span>Publishing</span><span><svg class="t-report-tick" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.4l3 3 5-6.2"/></svg>Published</span><span>Publish</span></span></span><span class="sr t-report-live" aria-live="polite">Publish</span></button>
-      </div>
-      <h3><span class="num">72</span>Status button</h3>
-      <p>The button takes the instruction and reports on it in place, with no spinner. Every state change is the same move &mdash; one row of the label rolling upward, the check riding the row it belongs to &mdash; and the plate takes the impact as the bar hits the end. Card 83 is the other loop you start by acting, but that one is bound to a hover; this one ends when the work does.</p>
-      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="t-mark" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
-        <span class="sr t-mark-live" role="status"></span>
-      </div>
-      <h3><span class="num">73</span>Plate to check</h3>
-      <p>The plate closes to a disc the height of the button and the check draws itself inside it. Card 80 stays a button the whole way; this one spends the plate, so the button becomes the confirmation.</p>
-      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="t-hold" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line t-hold" data-state="idle"><span class="t-hold-fill" aria-hidden="true"><span class="t-hold-over">Hold to delete</span></span><span class="lbl">Hold to delete</span></button>
-      </div>
-      <h3><span class="num">74</span>Hold to confirm</h3>
-      <p>Press and hold; let go early and nothing happens. Cards 86 and 43 answer the instant of contact &mdash; this is the only study that makes the duration of the press the input, putting the friction in the gesture.</p>
-      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="z-lurch" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T19:06:34+02:00">
-      <div class="stage">
-        <button type="button" class="btn z-lurch"><span class="lbl"><span class="z-lurch-track"><span class="z-lurch-inner"><span class="z-lurch-row">Run the export</span><span class="z-lurch-row" aria-hidden="true">Exported</span></span></span></span></button>
-      </div>
-      <h3><span class="num">113</span>Honest progress</h3>
-      <p>A progress bar that stalls at a quarter and then leaps, because real work is uneven and a linear bar is the one shape no job has, and the label rolls to the finished state on the frame the bar lands. The gallery animates width in 1.2s of keyframes; this is one scaleX transition.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec" data-key="g-two" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
@@ -1718,20 +1692,11 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="sheen" data-versions="built outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn sheen"><span class="lbl">Watch the showreel</span></button>
-      </div>
-      <h3><span class="num">10</span>Sheen</h3>
-      <p>A soft light crosses the dark surface, once per hover.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
   </div>
 </section>
 
 <section class="sect">
-  <h2>Border, corner and rule</h2>
+  <h2>Edge</h2>
   <p class="sect-intro">The outline does the work and the plate holds still: an underline, a rule, a drawn border, a corner that changes shape.</p>
   <div class="grid">
 
@@ -1806,7 +1771,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-
     <article class="spec" data-versions="fill outline" data-key="f-kant" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T13:02:01+02:00">
       <div class="stage">
         <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
@@ -1848,7 +1812,7 @@
 
 <section class="sect">
   <h2>Label</h2>
-  <p class="sect-intro">The word moves as one piece, so the button can change what it says without changing size.</p>
+  <p class="sect-intro">The word performs: as one piece, so the button can change what it says without changing size — then split, so the characters can move apart.</p>
   <div class="grid">
 
     <article class="spec" data-key="roll" data-versions="link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T20:29:47+02:00">
@@ -1911,14 +1875,6 @@
         <p>The counter wakes and steps up to today's number.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
-
-  </div>
-</section>
-
-<section class="sect">
-  <h2>Label, per character</h2>
-  <p class="sect-intro">The word is split and the parts move separately, which buys a stagger the whole label cannot make.</p>
-  <div class="grid">
 
     <article class="spec" data-key="u-roll" data-versions="link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T20:29:47+02:00">
       <div class="stage">
@@ -2014,8 +1970,8 @@
 </section>
 
 <section class="sect">
-  <h2>Icon</h2>
-  <p class="sect-intro">A mark beside the label carries the gesture: an arrow travels, a shape redraws, a caret points.</p>
+  <h2>Mark</h2>
+  <p class="sect-intro">A small mark beside the label carries the gesture: an arrow travels, an icon redraws itself, a caret points.</p>
   <div class="grid">
 
     <article class="spec" data-key="relay" data-versions="fill outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
@@ -2197,20 +2153,11 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="q-spin" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
-      </div>
-      <h3><span class="num">83</span>Working state</h3>
-      <p>The mark turns a quarter and a dashed ring runs around it. A loop that is already running when you arrive gives up the moment you point at it; this is the loop that starts because you pointed.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
   </div>
 </section>
 
 <section class="sect">
-  <h2>Material and light</h2>
+  <h2>Material</h2>
   <p class="sect-intro">The button behaves like a physical thing — lit, glazed, printed, knurled or cut — and hover changes the material, not the layout.</p>
   <div class="grid">
 
@@ -2268,6 +2215,15 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
+    <article class="spec" data-key="sheen" data-versions="built outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn sheen"><span class="lbl">Watch the showreel</span></button>
+      </div>
+      <h3><span class="num">10</span>Sheen</h3>
+      <p>A soft light crosses the dark surface, once per hover.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
     <article class="spec" data-key="f-glas" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage f-ruta">
         <button type="button" class="btn f-glas"><i class="f-glas-yta" aria-hidden="true"></i><span class="lbl">Book a walkthrough</span></button>
@@ -2320,7 +2276,61 @@
 </section>
 
 <section class="sect">
-  <h2>Button groups</h2>
+  <h2>State</h2>
+  <p class="sect-intro">These answer the click rather than the pointer: the button takes an instruction and reports on it in place, with no spinner and no second surface.</p>
+  <div class="grid">
+
+    <article class="spec" data-key="t-report" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line t-report" data-state="idle" data-step="0"><span class="t-report-fill" aria-hidden="true"></span><span class="t-report-track" aria-hidden="true"><span class="t-report-roll"><span>Publish</span><span>Publishing</span><span><svg class="t-report-tick" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.4l3 3 5-6.2"/></svg>Published</span><span>Publish</span></span></span><span class="sr t-report-live" aria-live="polite">Publish</span></button>
+      </div>
+      <h3><span class="num">72</span>Status button</h3>
+      <p>The button takes the instruction and reports on it in place, with no spinner. Every state change is the same move &mdash; one row of the label rolling upward, the check riding the row it belongs to &mdash; and the plate takes the impact as the bar hits the end. Card 83 is the other loop you start by acting, but that one is bound to a hover; this one ends when the work does.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="t-mark" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
+        <span class="sr t-mark-live" role="status"></span>
+      </div>
+      <h3><span class="num">73</span>Plate to check</h3>
+      <p>The plate closes to a disc the height of the button and the check draws itself inside it. Card 80 stays a button the whole way; this one spends the plate, so the button becomes the confirmation.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="t-hold" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line t-hold" data-state="idle"><span class="t-hold-fill" aria-hidden="true"><span class="t-hold-over">Hold to delete</span></span><span class="lbl">Hold to delete</span></button>
+      </div>
+      <h3><span class="num">74</span>Hold to confirm</h3>
+      <p>Press and hold; let go early and nothing happens. Cards 86 and 43 answer the instant of contact &mdash; this is the only study that makes the duration of the press the input, putting the friction in the gesture.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="z-lurch" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T19:06:34+02:00">
+      <div class="stage">
+        <button type="button" class="btn z-lurch"><span class="lbl"><span class="z-lurch-track"><span class="z-lurch-inner"><span class="z-lurch-row">Run the export</span><span class="z-lurch-row" aria-hidden="true">Exported</span></span></span></span></button>
+      </div>
+      <h3><span class="num">113</span>Honest progress</h3>
+      <p>A progress bar that stalls at a quarter and then leaps, because real work is uneven and a linear bar is the one shape no job has, and the label rolls to the finished state on the frame the bar lands. The gallery animates width in 1.2s of keyframes; this is one scaleX transition.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="q-spin" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
+      </div>
+      <h3><span class="num">83</span>Working state</h3>
+      <p>The mark turns a quarter and a dashed ring runs around it. A loop that is already running when you arrive gives up the moment you point at it; this is the loop that starts because you pointed.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+  </div>
+</section>
+
+<section class="sect">
+  <h2>Row</h2>
   <p class="sect-intro">These need siblings to be read. Hovering one changes the others, so the row is the unit and a single button shows nothing.</p>
   <div class="grid">
 
@@ -2410,7 +2420,7 @@
 </section>
 
 <section class="sect">
-  <h2>Two at once</h2>
+  <h2>Compound</h2>
   <p class="sect-intro">Two mechanisms from the sections above, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.</p>
   <div class="grid">
 
@@ -7272,7 +7282,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </style>
 
 <style>
-  /* ============ Two at once — compounds ============
+  /* ============ Compound — two mechanisms on one curve ============
      Six studies that each fuse two of the mechanisms above. The argument
      they share, and the reason a compound is not just two effects switched on
      together:
