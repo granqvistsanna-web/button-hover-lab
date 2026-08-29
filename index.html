@@ -358,7 +358,13 @@
   .roll:hover .inner,
   .roll:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg)}
 
-  /* 07 Riktad svep */
+  /* 07 Enkelriktat svep — the direction depends on NOTHING, which is why this
+     is no longer called directional. Approach it from the left, the right, the
+     top or the bottom and the origin comes back identical: one fixed direction,
+     in from the left and out to the right. Card 75 reads the edge the pointer
+     actually crossed, and two cards cannot share that word while only one of
+     them earns it. What this card is actually about is that it never reverses,
+     and the name now says so. */
   .sweep{overflow:hidden}
   .sweep::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
   .sweep:hover::before,
@@ -367,9 +373,19 @@
   .sweep:hover .lbl,
   .sweep:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
-  /* 08 Slutare */
+  /* 08 Slutare — ANCHORED, and the anchor is the card. It used to scale from
+     transform-origin's default, the centre, which was never authored: it opened
+     from mid-height and collapsed back into mid-height. That is a curtain. Every
+     shutter is fixed at an edge, and the exit is where the difference shows —
+     this one comes down from the top and rolls back up to it.
+
+     AND IT NAMES CARD 07, because the page's rule is that a card names the card
+     it repeats. Same construction exactly: overflow:hidden, a full-bleed
+     ::before, a scale, --ink-hover. 07 sweeps across, this drops. The origin is
+     the whole distinction, which is why it is now written down rather than
+     inherited from a default. */
   .shutter{overflow:hidden}
-  .shutter::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleY(0); transition:transform var(--t-4) var(--e-quint)}
+  .shutter::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleY(0); transform-origin:top; transition:transform var(--t-4) var(--e-quint)}
   .shutter:hover::before,
   .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
@@ -456,7 +472,7 @@
        opens on the vertical and a rule has no vertical to open on, and card 09
        grows a circle that a link's box would clip to nothing.
 
-     Card 07's link version lands on the same mechanism as card 15's directional
+     Card 07's link version lands on the same mechanism as card 14's directional
      underline, and that is not a duplicate to be apologised for — it is the
      family's own argument arriving: the sweep and the underline were always the
      same gesture on two different surfaces. */
@@ -1610,8 +1626,8 @@
       <div class="stage">
         <button type="button" class="btn btn--line sweep"><span class="lbl">See all work</span></button>
       </div>
-      <h3><span class="num">07</span>Directional sweep</h3>
-      <p>The fill enters from the left and leaves to the right — it never reverses the way it came.</p>
+      <h3><span class="num">07</span>One-way sweep</h3>
+      <p>The fill enters from the left and leaves to the right — it never reverses the way it came. One fixed direction, and that is the point: card 75 is the one that reads which edge the pointer crossed.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -1631,7 +1647,7 @@
         <button type="button" class="btn btn--line shutter"><span class="lbl">What we do</span></button>
       </div>
       <h3><span class="num">08</span>Shutter</h3>
-      <p>The fill opens from the centre line, like a shutter.</p>
+      <p>The fill comes down from the top edge and rolls back up to it. The anchor is the whole card: 07 sweeps across on one axis and this drops on the other, and a shutter that opened from its own middle would be a curtain.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -7042,14 +7058,24 @@ document.addEventListener("DOMContentLoaded", function () {
     box-shadow:0 0 0 var(--bg-4);
     transition-duration:var(--t-1);
   }
+  /* REDUCED MOTION WAS THE ONE PLACE THIS CARD CAST A SHADOW. Freezing the
+     plate with transform:none while leaving the seat at 4px 4px meant the plate
+     stood still and the SHADOW moved — a hard drop shadow arriving down-right,
+     which the name, the claim and the page's depth-as-lightness rule all forbid.
+     The cancellation only ever existed because the plate moved too.
+
+     Offset becomes spread. A ring grows on all four sides, so nothing is cast
+     and there is no direction left for the seat to move in. The footprint does
+     grow where the normal branch's never does, and that is the trade: a ring
+     that is honestly a ring beats an offset that is honestly a drop shadow. */
   @media (prefers-reduced-motion: reduce){
     .btn.z-gum,
     .btn.z-gum:hover,
     .btn.z-gum:focus-visible,
     .btn.z-gum:active{transform:none; transition:none}
     .btn.z-gum:hover,
-    .btn.z-gum:focus-visible{box-shadow:4px 4px 0 var(--bg-4)}
-    .btn.z-gum:active{box-shadow:0 0 0 var(--bg-4)}
+    .btn.z-gum:focus-visible{box-shadow:0 0 0 4px var(--bg-4)}
+    .btn.z-gum:active{box-shadow:0 0 0 0 var(--bg-4)}
   }
 </style>
 
@@ -7157,7 +7183,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-tide .c-tide-c:nth-child(7) .c-tide-i{transition-delay:156ms}
   .c-tide .c-tide-c:nth-child(8) .c-tide-i{transition-delay:182ms}
 
-  /* 122 Leading edge — 07 x 11. Directional sweep x Arrow relay.
+  /* 122 Leading edge — 07 x 11. One-way sweep x Arrow relay.
      The front is an ELLIPSE pinned to the left edge, not a scaled rectangle: a
      scaleX front is a flat vertical line, which is the one shape a wave never
      has. The vertical radius is 150% so only the middle of the arc ever

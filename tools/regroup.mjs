@@ -125,7 +125,7 @@ const ORDER_OF = {
   // Fill — a fill arrives or leaves.
   fill: [
     // Directional: it enters from a side.
-    'Directional sweep',
+    'One-way sweep',
     'Directional fill',
     'Shutter',
 
