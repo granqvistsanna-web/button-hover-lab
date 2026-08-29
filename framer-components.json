@@ -16,7 +16,8 @@
     "file": "SmallGrow.tsx",
     "hash": "39b0743b2e97b7fe",
     "id": "cXdZkij",
-    "url": "https://framer.com/m/SmallGrow-5RpDrp.js"
+    "url": "https://framer.com/m/SmallGrow-5RpDrp.js",
+    "retired": true
   },
   {
     "num": "02",
@@ -35,7 +36,8 @@
     "file": "SmallShrink.tsx",
     "hash": "b6fb9d117ed5d0a8",
     "id": "TJXVg7z",
-    "url": "https://framer.com/m/SmallShrink-uXOo62.js"
+    "url": "https://framer.com/m/SmallShrink-uXOo62.js",
+    "retired": true
   },
   {
     "num": "03",
@@ -112,7 +114,8 @@
     "file": "IdleBreath.tsx",
     "hash": "d7fbdb752067a897",
     "id": "gPEZtcs",
-    "url": "https://framer.com/m/IdleBreath-rbxnj2.js"
+    "url": "https://framer.com/m/IdleBreath-rbxnj2.js",
+    "retired": true
   },
   {
     "num": "07",
@@ -148,7 +151,7 @@
     "name": "Ink fill",
     "comp": "InkFill",
     "file": "InkFill.tsx",
-    "hash": "a58dd86120011280",
+    "hash": "97706e9d3811dd1c",
     "id": "jtNca0O",
     "url": "https://framer.com/m/InkFill-GW6yhu.js"
   },
@@ -157,7 +160,7 @@
     "name": "Sheen",
     "comp": "Sheen",
     "file": "Sheen.tsx",
-    "hash": "6b70676fec9bb069",
+    "hash": "44abea88db8047f6",
     "id": "LiiEjhn",
     "url": "https://framer.com/m/Sheen-eN4I5o.js"
   },
@@ -197,7 +200,8 @@
     "file": "CoarseDither.tsx",
     "hash": "324427910de0baf2",
     "id": "NixgRzo",
-    "url": "https://framer.com/m/CoarseDither-xphCi7.js"
+    "url": "https://framer.com/m/CoarseDither-xphCi7.js",
+    "retired": true
   },
   {
     "num": "102",
@@ -226,7 +230,8 @@
     "file": "NeedleSwing.tsx",
     "hash": "1d6584e94e3d759a",
     "id": "Wc_EVkn",
-    "url": "https://framer.com/m/NeedleSwing-tGB1s7.js"
+    "url": "https://framer.com/m/NeedleSwing-tGB1s7.js",
+    "retired": true
   },
   {
     "num": "104",
@@ -264,7 +269,8 @@
     "file": "DottedFocus.tsx",
     "hash": "86b10ab9984d0f2d",
     "id": "FT_xqLE",
-    "url": "https://framer.com/m/DottedFocus-f5LnRJ.js"
+    "url": "https://framer.com/m/DottedFocus-f5LnRJ.js",
+    "retired": true
   },
   {
     "num": "109",
@@ -408,7 +414,8 @@
     "file": "WordBow.tsx",
     "hash": "bb7c54d49306df25",
     "id": "ffvPKdP",
-    "url": "https://framer.com/m/WordBow-FhvP9i.js"
+    "url": "https://framer.com/m/WordBow-FhvP9i.js",
+    "retired": true
   },
   {
     "num": "116",
@@ -455,7 +462,8 @@
     "file": "UnderLoad.tsx",
     "hash": "9425eb98c9db348c",
     "id": "C09iaWd",
-    "url": "https://framer.com/m/UnderLoad-AZpSNc.js"
+    "url": "https://framer.com/m/UnderLoad-AZpSNc.js",
+    "retired": true
   },
   {
     "num": "119",
@@ -490,7 +498,7 @@
     "name": "Lands first",
     "comp": "LandsFirst",
     "file": "LandsFirst.tsx",
-    "hash": "43c35d58dc2a35f0",
+    "hash": "7fc172ae626b33f6",
     "id": "VKpVvFc",
     "url": "https://framer.com/m/LandsFirst-RZyfnF.js"
   },
@@ -517,7 +525,7 @@
     "name": "Crest",
     "comp": "Crest",
     "file": "Crest.tsx",
-    "hash": "86388659a4264785",
+    "hash": "53938a7d743bdb6b",
     "id": "TtZ5exs",
     "url": "https://framer.com/m/Crest-YJ9shJ.js"
   },
@@ -593,7 +601,8 @@
     "file": "EllipsisArrow.tsx",
     "hash": "f8c8d764f788ea0c",
     "id": "tADZTwB",
-    "url": "https://framer.com/m/EllipsisArrow-vzwuNQ.js"
+    "url": "https://framer.com/m/EllipsisArrow-vzwuNQ.js",
+    "retired": true
   },
   {
     "num": "18",
@@ -775,7 +784,7 @@
     "name": "Weight wave",
     "comp": "WeightWave",
     "file": "WeightWave.tsx",
-    "hash": "f355f7982de387c3",
+    "hash": "c523e6a300ba39df",
     "id": "eq_MniK",
     "url": "https://framer.com/m/WeightWave-w7rPq4.js"
   },
@@ -888,7 +897,8 @@
     "file": "CRTConverge.tsx",
     "hash": "2f22e2e56b7cfd79",
     "id": "GLJHXLM",
-    "url": "https://framer.com/m/CRTConverge-42JlA3.js"
+    "url": "https://framer.com/m/CRTConverge-42JlA3.js",
+    "retired": true
   },
   {
     "num": "36",
@@ -947,7 +957,8 @@
     "file": "TrackingTrade.tsx",
     "hash": "66bc781c50a135d5",
     "id": "K1ITtjX",
-    "url": "https://framer.com/m/TrackingTrade-Fj2mCp.js"
+    "url": "https://framer.com/m/TrackingTrade-Fj2mCp.js",
+    "retired": true
   },
   {
     "num": "39",
@@ -975,7 +986,8 @@
     "file": "DiagonalRadius.tsx",
     "hash": "fec7a43a92e2b106",
     "id": "OI9M5kz",
-    "url": "https://framer.com/m/DiagonalRadius-QprZXR.js"
+    "url": "https://framer.com/m/DiagonalRadius-QprZXR.js",
+    "retired": true
   },
   {
     "num": "41",
@@ -992,7 +1004,7 @@
     "name": "Inset fill",
     "comp": "InsetFill",
     "file": "InsetFill.tsx",
-    "hash": "815604ea00244430",
+    "hash": "2c7a3e7ce6621c58",
     "id": "FAWbmag",
     "url": "https://framer.com/m/InsetFill-iP3HaW.js"
   },
@@ -1001,7 +1013,7 @@
     "name": "Edge light",
     "comp": "EdgeLight",
     "file": "EdgeLight.tsx",
-    "hash": "08ffe91005d84371",
+    "hash": "ecd6e3d0810040ae",
     "id": "UZyindW",
     "url": "https://framer.com/m/EdgeLight-eEskv2.js"
   },
@@ -1020,7 +1032,7 @@
     "name": "Keycap",
     "comp": "Keycap",
     "file": "Keycap.tsx",
-    "hash": "0a2be8889390ef32",
+    "hash": "0cd4cefd8b299003",
     "id": "sqJwqC_",
     "url": "https://framer.com/m/Keycap-UCXvh9.js"
   },
@@ -1040,7 +1052,8 @@
     "file": "Deboss.tsx",
     "hash": "097428f64d35838b",
     "id": "YUvzHp3",
-    "url": "https://framer.com/m/Deboss-n6GzCh.js"
+    "url": "https://framer.com/m/Deboss-n6GzCh.js",
+    "retired": true
   },
   {
     "num": "46",
@@ -1059,7 +1072,8 @@
     "file": "LineGauge.tsx",
     "hash": "c182b57339f42759",
     "id": "t08MSyo",
-    "url": "https://framer.com/m/LineGauge-Y5x2vf.js"
+    "url": "https://framer.com/m/LineGauge-Y5x2vf.js",
+    "retired": true
   },
   {
     "num": "47",
@@ -1094,7 +1108,7 @@
     "name": "Elevation step",
     "comp": "ElevationStep",
     "file": "ElevationStep.tsx",
-    "hash": "43cb7dbbb5fbcf16",
+    "hash": "199c8e6c4c16ae94",
     "id": "Vkcwb1a",
     "url": "https://framer.com/m/ElevationStep-AKmCza.js"
   },
@@ -1103,7 +1117,7 @@
     "name": "Magnetic",
     "comp": "Magnetic",
     "file": "Magnetic.tsx",
-    "hash": "5ad61f99d0bb7db6",
+    "hash": "7e611e39e63ec33f",
     "id": "Fynt5Ez",
     "url": "https://framer.com/m/Magnetic-SmTIHx.js"
   },
@@ -1124,14 +1138,15 @@
     "file": "RigidType.tsx",
     "hash": "ad62aeaec27520ee",
     "id": "DGGVysf",
-    "url": "https://framer.com/m/RigidType-uIZjQw.js"
+    "url": "https://framer.com/m/RigidType-uIZjQw.js",
+    "retired": true
   },
   {
     "num": "52",
     "name": "Two masses",
     "comp": "TwoMasses",
     "file": "TwoMasses.tsx",
-    "hash": "ae71bb2b3e131413",
+    "hash": "299674597368fdb9",
     "id": "zgJW3fX",
     "url": "https://framer.com/m/TwoMasses-Sb7Tcx.js"
   },
@@ -1410,7 +1425,8 @@
     "file": "FillSwap.tsx",
     "hash": "e5b94c1bcbf46bd8",
     "id": "wswjR10",
-    "url": "https://framer.com/m/FillSwap-v9ARmg.js"
+    "url": "https://framer.com/m/FillSwap-v9ARmg.js",
+    "retired": true
   },
   {
     "num": "69",
@@ -1485,7 +1501,7 @@
     "name": "Status button",
     "comp": "StatusButton",
     "file": "StatusButton.tsx",
-    "hash": "17ed17abd9424ade",
+    "hash": "5fcabdc479d41fb5",
     "id": "Ecy8kTD",
     "url": "https://framer.com/m/StatusButton-ChYL00.js"
   },
@@ -1504,7 +1520,7 @@
     "name": "Plate to check",
     "comp": "PlateToCheck",
     "file": "PlateToCheck.tsx",
-    "hash": "9a5df520b53b43ef",
+    "hash": "af6f3c2f181520b8",
     "id": "VAYXGL5",
     "url": "https://framer.com/m/PlateToCheck-kB2KHh.js"
   },
@@ -1523,7 +1539,7 @@
     "name": "Hold to confirm",
     "comp": "HoldToConfirm",
     "file": "HoldToConfirm.tsx",
-    "hash": "306722b8cf5faedd",
+    "hash": "3e527af70889a27d",
     "id": "ADAz2F7",
     "url": "https://framer.com/m/HoldToConfirm-R6YcFY.js"
   },
@@ -1532,7 +1548,7 @@
     "name": "Directional fill",
     "comp": "DirectionalFill",
     "file": "DirectionalFill.tsx",
-    "hash": "159a306c94d27a74",
+    "hash": "52f9d509213ee2a0",
     "id": "AJ2VL5Q",
     "url": "https://framer.com/m/DirectionalFill-fpvcPF.js"
   },
@@ -1584,7 +1600,8 @@
     "file": "WaveThrough.tsx",
     "hash": "d21b44c7cbc9144b",
     "id": "Nlwv1VH",
-    "url": "https://framer.com/m/WaveThrough-2M4wmy.js"
+    "url": "https://framer.com/m/WaveThrough-2M4wmy.js",
+    "retired": true
   },
   {
     "num": "78",
@@ -1612,7 +1629,7 @@
     "name": "Corner exit",
     "comp": "CornerExit",
     "file": "CornerExit.tsx",
-    "hash": "71d8ff0f652c7875",
+    "hash": "6d34cf4710c42f34",
     "id": "hnqaP4h",
     "url": "https://framer.com/m/CornerExit-nHkglt.js"
   },
@@ -1640,7 +1657,7 @@
     "name": "Resolve",
     "comp": "Resolve",
     "file": "Resolve.tsx",
-    "hash": "2d1a8f1a2f96496b",
+    "hash": "1f634cfa08da782f",
     "id": "uQvVYfX",
     "url": "https://framer.com/m/Resolve-QdqmRV.js"
   },
@@ -1661,7 +1678,8 @@
     "file": "StraightensUp.tsx",
     "hash": "57118a2fd2038bae",
     "id": "BfIg9IP",
-    "url": "https://framer.com/m/StraightensUp-PMQhjy.js"
+    "url": "https://framer.com/m/StraightensUp-PMQhjy.js",
+    "retired": true
   },
   {
     "num": "81",
@@ -1698,7 +1716,7 @@
     "name": "Riser",
     "comp": "Riser",
     "file": "Riser.tsx",
-    "hash": "a6f21a3fe2557942",
+    "hash": "8ad9f08b7e8fa49a",
     "id": "nmrc2gw",
     "url": "https://framer.com/m/Riser-PKOmNa.js"
   },
@@ -1894,7 +1912,7 @@
     "name": "Stepped fill",
     "comp": "SteppedFill",
     "file": "SteppedFill.tsx",
-    "hash": "f5be1423169132de",
+    "hash": "701af16da502bf75",
     "id": "A0oDXRi",
     "url": "https://framer.com/m/SteppedFill-6Em9QG.js"
   },
@@ -1903,7 +1921,7 @@
     "name": "Changes sides",
     "comp": "ChangesSides",
     "file": "ChangesSides.tsx",
-    "hash": "ffdf6bc941049f64",
+    "hash": "cbe1778995252f14",
     "id": "uKgEoMc",
     "url": "https://framer.com/m/ChangesSides-0nQCL2.js"
   },
