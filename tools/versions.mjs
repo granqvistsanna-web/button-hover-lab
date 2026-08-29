@@ -23,7 +23,7 @@ export const VERSIONS = {
   'v-inner':'fill outline',     'v-live':'fill outline',
   // pure transform or label: no plate for the mechanism to depend on
   'magnet':'fill outline link', 'j-order':'fill outline link',
-  'q-true':'fill outline link', 'o-quiet':'fill outline link',
+  'o-quiet':'fill outline link',
   // geometric, but the gesture is about a plate — a link has none to give
   'i-mass':'fill outline', 't-mark':'fill outline',
   't-hold':'fill outline',  'q-riser':'fill outline',

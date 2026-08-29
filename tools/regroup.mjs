@@ -69,7 +69,6 @@ const GROUP_OF = {
   'Plate to check': 'button',
   'Hold to confirm': 'button',
   'Wave through': 'button',
-  'Straightens up': 'button',
   'Riser': 'button',
   'Hairline only': 'button',
 

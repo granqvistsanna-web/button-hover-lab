@@ -1481,15 +1481,6 @@
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-29T11:11:48+02:00">
-                  <div class="stage">
-                    <button type="button" class="btn btn--line q-true"><span class="lbl">Send the file</span></button>
-                  </div>
-                  <h3><span class="num">81</span>Straightens up</h3>
-                  <p>The plate rests at an angle and the hover puts it right. Every other card treats rest as the settled state; this one makes rest the state that reads as wrong, so the button is the thing being corrected.</p>
-                  <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
-                </article>
-
     <article class="spec" data-versions="fill outline" data-added="2026-08-27T11:27:15+02:00" data-updated="2026-08-29T11:15:26+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--solid q-riser"><i class="q-riser-grd" aria-hidden="true"></i><span class="lbl">Press to start</span></button>
@@ -4768,25 +4759,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Each card names the card it repeats or argues with. */
 
-  /* 81 Straightens up — the plate rests at an angle and the hover corrects it.
-     Every other card on this page treats rest as the settled state and hover
-     as the departure from it. This inverts that: the resting state is the one
-     that reads as wrong, and pointing at the button is what puts it right.
-     Card 86 is the floor of the same economy — one property, nothing travels —
-     pointed the other way.
-     The press has to carry the rotation with it. .btn:active sets a bare
-     scale, and transform is ONE property, so a press would otherwise drop the
-     tilt and the button would jump straight. One function list in all three
-     states, rotate then scale, so no pair falls back to interpolating
-     matrices. */
-  .btn.q-true{
-    transform:rotate(-2.5deg) scale(1);
-    transition:transform var(--t-4) var(--e-quint);
-  }
-  .btn.q-true:hover,
-  .btn.q-true:focus-visible{transform:rotate(0.001deg) scale(1)}
-  .btn.q-true:active{transform:rotate(0.001deg) scale(.97); transition-duration:var(--t-1)}
-
   /* 82 Riser — the plate grows the geometry it stands on. Section J
      borrows from objects, but always INTO the plate: card 44 mills grooves
      into it, 47 sinks the type below it, 45 stands it on a hard bottom edge.
@@ -6034,7 +6006,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
      · The house press is scale(.97), and a hover that leaves a transform in
        place has to compose with it rather than replace it — every card here
-       writes one function list in all three states, as card 81 had to.
+       writes one function list in all three states, as card 82 had to.
      · Type re-rasterises when a transform starts unless the element is already
        transformed at rest. Every rest state here carries rotate(0.001deg) for
        the reason section M gives.
@@ -7133,7 +7105,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves tone|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves fades tone shape seq|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves tone|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","82":"moves fades tone shape seq|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
