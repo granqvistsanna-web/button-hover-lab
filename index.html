@@ -213,7 +213,7 @@
      They just stop generating boxes, so their cards land in the feed's own
      column rhythm and the only part-row left is the last one on the page. */
   .feed{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
-    gap:24px}
+    gap:24px; margin-top:32px}
   .sect, .sect>.grid{display:contents}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
      lightness — the card is bg-1 on bg-0 and carries no border and no shadow. */
@@ -625,6 +625,31 @@
   }
 
   /* 11 Pilstafett */
+  /* The PLATE answers, not the type. The paint moves off the button onto a
+     layer so the scale reaches the background alone — scaling the button would
+     take the label and both arrows with it, and the arrows ARE the study.
+     isolation:isolate makes the button its own stacking context, so z-index:-1
+     sits above the button's own box and below its text instead of falling
+     behind the card. Scoped to .btn--solid: the outline and link versions have
+     no plate to grow and would otherwise gain a solid one. */
+  .btn--solid.relay{background:none; isolation:isolate}
+  .btn--solid.relay::before{
+    content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
+    background-color:var(--ink);
+    transform:scale(1) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-quint),
+               background-color var(--t-3) var(--e-out);
+  }
+  .btn--solid.relay:hover::before,
+  .btn--solid.relay:focus-visible::before{
+    transform:scale(1.04) rotate(0.001deg);
+    background-color:color-mix(in srgb, var(--ink) 86%, var(--bg));
+  }
+  .btn--solid.relay:active::before{
+    transform:scale(1.01) rotate(0.001deg);
+    transition-duration:var(--t-1), var(--t-1);
+  }
+
   .relay .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .relay .a1{transition:transform var(--t-4) var(--e-quint)}
   .relay .a2{position:absolute; inset:0; transform:translateX(-150%); transition:transform var(--t-4) var(--e-quint) var(--d-1)}
@@ -634,6 +659,16 @@
   .relay:focus-visible .a2{transform:translateX(0)}
 
   /* 12 Punkt → pil */
+  /* Card 42's pattern. --line-ctl is the CONTROL BOUNDARY token and clears
+     3:1, so a quieter rest state is still a boundary and not a decoration; the
+     press takes it to full --ink, which is the one state that should read as
+     unambiguous contact. */
+  .btn--line.dotm{border-color:var(--line-ctl);
+    transition:border-color var(--t-3) var(--e-out), transform var(--t-1) var(--e-out)}
+  .btn--line.dotm:hover, .btn--line.dotm:focus-visible{
+    border-color:color-mix(in srgb, var(--ink) 62%, var(--line-ctl))}
+  .btn.dotm:active{border-color:var(--ink); transition-duration:var(--t-1)}
+
   .dotm .slot{position:relative; width:14px; height:14px; overflow:hidden}
   .dotm .d{position:absolute; inset:0; margin:auto; width:6px; height:6px; border-radius:50%; background:currentColor; transition:transform var(--t-4) var(--e-quint),opacity var(--t-3) ease}
   .dotm .ar{position:absolute; inset:0; transform:translateX(-160%); transition:transform var(--t-4) var(--e-quint) var(--d-1)}
@@ -832,7 +867,7 @@
 
   /* ============ verktygsrad + favoriter ============ */
   .tools{
-    position:sticky; top:-1px; z-index:20; margin:48px 0 -6px;
+    position:sticky; top:-1px; z-index:20; margin:48px 0 0;
     display:flex; flex-wrap:wrap; align-items:center; gap:13px 26px;
     padding:14px 18px; border-radius:var(--r-md);
     background:var(--bg-1); border:1px solid var(--hairline);
@@ -3797,17 +3832,27 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-throw .i-throw-slot{position:relative; display:block; width:14px; height:14px}
   .i-throw .i-throw-mark{
     position:absolute; top:2px; left:2px; width:10px; height:10px;
-    /* Filled, not a 1.5px ring. The card's entire claim is a 2.5px overshoot,
-       and at this size an outline that thin reads as a hole punched in the
-       plate rather than as a mass being thrown — there is no body in it for
-       the eye to follow past the stop and back. A solid disc on the same 10px
-       footprint changes no layout and gives the spring something to carry. */
-    background:currentColor; border-radius:50%;
+    /* A ring at REST that fills the moment the throw starts. The note that
+       used to sit here rejected an outline outright — at this size a 1.5px ring
+       reads as a hole punched in the plate rather than a mass being thrown, and
+       the card's whole claim is a 2.5px overshoot that needs a body to follow.
+       That argument is about the THROWN state, and the thrown state is still
+       solid; only the resting one is a ring, where there is nothing in flight
+       to have a body. So the mark now reports its state as well as its travel.
+       box-sizing:border-box keeps it 10px across either way — a border added
+       outside would shift the mark 1.5px as it filled, and where the mark ends
+       up is the one thing this card measures. */
+    box-sizing:border-box;
+    background-color:transparent; border:1.5px solid currentColor;
+    border-radius:50%;
+    transition:background-color var(--t-3) var(--e-out);
     /* An explicit identity, and the spring writes a transform on every frame
        including the resting one — section M's rule, applied here: an element
        transformed in both states keeps one rasterisation throughout. */
     transform:translateX(0px);
   }
+  .i-throw:hover .i-throw-mark,
+  .i-throw:focus-visible .i-throw-mark{background-color:currentColor}
 
   @media (prefers-reduced-motion: reduce){
     /* 59 is JS-only, and the script stands down under reduced motion — so the
@@ -4102,17 +4147,17 @@ document.addEventListener("DOMContentLoaded", function () {
      the above. Travel is 4.2px out and 8.2px up, about 9px of arc; the 14px
      slot is fixed and all of it borrows from the plate's own padding. */
   .j-out .j-out-slot{position:relative; display:block; width:14px; height:14px}
+  /* It turns, and that is all. The mark used to lift four pixels, turn, and
+     then leave along the line it was now pointing down — three properties on
+     two delays, arguing that the turn and the travel were one statement. They
+     read as two things happening to agree. One property now, and the card
+     makes the smaller claim properly. */
   .j-out .j-out-mark{
     position:absolute; top:0; left:0;
-    translate:0 0; rotate:0deg; transform:translateX(0px);
-    transition:translate var(--t-2) var(--e-out) var(--d-1),
-               rotate    var(--t-3) var(--e-out) var(--d-1),
-               transform var(--t-3) var(--e-out);
+    rotate:0deg;
+    transition:rotate var(--t-3) var(--e-out);
   }
-  .j-out:hover .j-out-mark, .j-out:focus-visible .j-out-mark{
-    translate:0 -4px; rotate:-45deg; transform:translateX(6px);
-    transition-delay:0s, 0s, var(--d-1);
-  }
+  .j-out:hover .j-out-mark, .j-out:focus-visible .j-out-mark{rotate:-45deg}
 
   /* 79 Optical centre — the mark's space is reserved from the start,
      which normally means the label sits visibly off-centre while the mark is
