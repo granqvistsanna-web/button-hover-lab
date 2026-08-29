@@ -143,7 +143,6 @@ const ORDER_OF = {
 
     // Stepped and screened: the fill arrives in visible units.
     'Stepped fill',
-    'Halftone fill',
     'Hatch exit',
 
     // Whole-plate: no travel, the surface just changes.
@@ -167,7 +166,6 @@ const ORDER_OF = {
     // Outlines and marks around the whole plate.
     'Drawn outline',
     'Crop marks',
-    'In register',
     'Edge light',
     'Dotted focus',
 

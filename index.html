@@ -1718,15 +1718,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="w-dither" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line w-dither"><span class="lbl">Render the frame</span></button>
-      </div>
-      <h3><span class="num">96</span>Halftone fill</h3>
-      <p>The fill does not cross the plate — it is already everywhere, and thickens through four densities of a four-pixel dot field. Cards 07, 09 and 91 all move a front; an ordered dither has no front to move.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
     <article class="spec" data-key="sheen" data-versions="built outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn sheen"><span class="lbl">Watch the showreel</span></button>
@@ -1797,12 +1788,12 @@
 
     <article class="spec" data-key="e-draw" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
-        <button type="button" class="btn e-draw">Read the manifesto
+        <button type="button" class="btn e-draw"><span class="lbl">Read the manifesto</span>
           <svg class="e-draw-frame" aria-hidden="true"><rect class="e-draw-guide" pathLength="40"/><rect class="e-draw-ink" pathLength="40"/><rect class="e-draw-nib" pathLength="40"/></svg>
         </button>
       </div>
       <h3><span class="num">27</span>Drawn outline</h3>
-        <p>The frame is drawn around the button like a pen stroke over the faint base rule, and on the way out the stroke carries on the same way round rather than erasing back over itself.</p>
+        <p>A graphite plate rises to meet the pen: it lands one rung before the stroke closes, so the surface arrives first and the outline is the punctuation. Going out the stroke does not travel at all &mdash; it holds where the pen left it and goes out on opacity, uncovering a base rule that is already whole.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -1815,14 +1806,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="e-reg" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line e-reg">Subscribe</button>
-      </div>
-      <h3><span class="num">29</span>In register</h3>
-        <p>The accent frame sits a few pixels out of register and slides into place on hover.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-    </article>
 
     <article class="spec" data-versions="fill outline" data-key="f-kant" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T13:02:01+02:00">
       <div class="stage">
@@ -2555,22 +2538,37 @@
      transparent: the guide took its job, but removing it outright would shrink
      the button by 2px and move the demo in its stage. */
   .e-draw{--draw:41.5; border-radius:12px; border:1px solid transparent}
-  .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible}
+  /* The plate rises to meet the pen. clip-path and not scaleY: scaling a
+     rounded rect stretches its radius, and this plate has to keep the same 12px
+     the drawn corner is cut to, at every frame of the way up.
+     --t-4 against the stroke's --t-5, so the surface has landed before the line
+     closes over it. Graphite and not the accent: a white plate would take the
+     white stroke with it and the study would end with nothing drawn on it. */
+  .e-draw::before{
+    content:""; position:absolute; inset:0; z-index:0; background:var(--bg-3);
+    clip-path:inset(100% 0 0 0 round 12px);
+    transition:clip-path var(--t-4) var(--e-quint);
+  }
+  .e-draw:hover::before,
+  .e-draw:focus-visible::before{clip-path:inset(0 0 0 0 round 12px)}
+  .e-draw .lbl{position:relative; z-index:2}
+  .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible; z-index:1}
   /* rx 11.25 + half of the 1.5 stroke = 12, so the drawn corner matches the
      12px border-radius exactly. At 11.5 it measured 12.25 and the corners read
      a quarter-pixel softer on hover than at rest. */
   .e-draw .e-draw-frame rect{
     x:0.75px; y:0.75px; width:calc(100% - 1.5px); height:calc(100% - 1.5px); rx:11.25px; ry:11.25px;
     fill:none;
-    /* The base curve is the EXIT: an ease-in, so the tail lingers and then
-       whips off the end. :hover restores the draw-in ease-out. The lab argues
-       asymmetry by duration everywhere else; this one earns a second axis,
-       because a pen accelerating away is not a pen settling into place. Local
-       and not a :root token — it is this study's argument, not the page's. */
-    transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0);
+    /* One curve, because the dash now only ever travels one way. This rule
+       used to carry an ease-in as the EXIT and let :hover swap in the ease-out
+       for the draw — an asymmetry on a second axis, which the study argued for
+       on the grounds that a pen accelerating away is not a pen settling into
+       place. There is no pen accelerating away any more: the stroke leaves on
+       opacity with the dash held still, so the exit curve had nothing left to
+       describe and the override that restored the draw-in has nothing left to
+       restore. */
+    transition:stroke-dashoffset var(--t-5) var(--e-quint);
   }
-  .e-draw:hover .e-draw-frame rect,
-  .e-draw:focus-visible .e-draw-frame rect{transition-timing-function:var(--e-quint)}
   .e-draw .e-draw-guide{stroke:var(--line-ctl); stroke-width:1; stroke-linecap:butt;
     stroke-dasharray:41 41; stroke-dashoffset:calc(var(--draw) + 41)}
   /* butt, not round. Round caps on the zero-length dash at the seam painted a
@@ -2582,13 +2580,16 @@
      line closes. The pen character is not lost — the nib below is the round end,
      and it is the one you actually watch. */
   .e-draw .e-draw-ink{stroke:var(--ink); stroke-width:1.5; stroke-linecap:butt;
-    stroke-dasharray:41 41; stroke-dashoffset:var(--draw)}
+    stroke-dasharray:41 41; stroke-dashoffset:var(--draw); opacity:1;
+    /* The shared rect rule above is 0-2-1 and states stroke-dashoffset only, so
+       naming a second property here would drop the first. Both, or neither. */
+    transition:stroke-dashoffset var(--t-5) var(--e-quint), opacity var(--t-3) var(--e-out)}
   /* rect.e-draw-nib, not .e-draw-nib: the shared rect rule below is 0-2-1 and this
      was 0-2-0, so this element's whole transition list lost the cascade and the
      opacity half of it never ran at all. Matching the rect makes it 0-3-1. */
   .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink-hover); stroke-width:2.5; stroke-linecap:round;
     stroke-dasharray:2 80; stroke-dashoffset:calc(var(--draw) - 41); opacity:0;
-    transition:stroke-dashoffset var(--t-5) cubic-bezier(0.32,0,0.67,0), opacity var(--t-5) linear}
+    transition:stroke-dashoffset var(--t-5) var(--e-quint), opacity var(--t-3) var(--e-out)}
   /* 0s, not a duration: a pen is at full weight the moment it touches down. The
      draw-in is a quintic ease-out, so 133ms — the fade this used to ask for —
      is already 83% of the way round the button. Going out it fades over the
@@ -2597,9 +2598,30 @@
   .e-draw:focus-visible .e-draw-frame rect.e-draw-nib{opacity:1;
     transition-timing-function:var(--e-quint), linear;
     transition-duration:var(--t-5), 0s}
-  /* Fallback with no script: --draw never moves off 41.5, so :hover has to drive
-     all three itself. It draws in and erases back the way it came — the init
-     after this section is what makes the stroke one-way. */
+  /* ---- THE EXIT IS A FADE ----------------------------------------------
+     The stroke does not travel on the way out. data-fading holds the dash
+     exactly where the pen left it and takes the ink and the nib out on opacity
+     alone, over --t-3 — one rung down from the --t-5 draw, which is the page's
+     rule and not this card's invention.
+     The guide is snapped to 82.5 rather than transitioned there. Two reasons,
+     and both matter: at that instant it is underneath a still-opaque ink, so
+     the snap cannot be seen; and 82.5 is congruent to 0.5 on the 82-unit
+     pattern AND is exactly what calc(var(--draw) + 41) returns once --draw is
+     re-armed to 41.5 — so the re-arm afterwards moves the guide by nothing and
+     needs no suppression of its own. Transitioning it would have drawn the
+     faint rule back round, which is the very lap this change removes. */
+  .e-draw[data-fading] .e-draw-ink,
+  .e-draw[data-fading] .e-draw-frame rect.e-draw-nib{opacity:0}
+  .e-draw[data-fading] .e-draw-guide{stroke-dashoffset:82.5; transition:none}
+  /* Re-arming the dash for the next hover must not be a visible move. The
+     plate is NOT in this list: it is driven by :hover alone, so killing its
+     transition for a frame would snap it open instead of raising it. */
+  .e-draw[data-snap] .e-draw-frame rect{transition:none}
+
+  /* Fallback with no script: --draw never moves off 41.5, so :hover has to
+     drive all three itself, and with no init to set data-fading it draws in and
+     erases back the way it came. A floor, not a failure — the plate, which is
+     the louder half of this study, needs no script at all. */
   .e-draw:hover,
   .e-draw:focus-visible{--draw:0.5}
 
@@ -2616,15 +2638,6 @@
   }
   .e-chamfer .lbl{position:relative}
 
-  /* 29 In register — an out-of-register accent frame slides into place */
-  .e-reg::before{
-    content:""; position:absolute; inset:-1px; border:1px solid var(--accent);
-    border-radius:inherit; pointer-events:none;
-    transform:translate(5px,5px);
-    transition:transform var(--t-4) var(--e-quint);
-  }
-  .e-reg:hover::before,
-  .e-reg:focus-visible::before{transform:translate(0,0)}
 
   /* 30 Counter — a @property-registered integer steps a counter up */
   @property --e-n{syntax:"<integer>"; inherits:true; initial-value:0}
@@ -2761,27 +2774,46 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   })();
 
-  // 27 Drawn outline — the stroke only ever travels one way round.
-  // Every state change is the same move: subtract 41 from --draw. On a
-  // pathLength of 40 with dasharray:41 41 the pattern repeats every 82, so 41.5
-  // and -40.5 are both hidden and 0.5 and -81.5 both fully drawn; hidden becomes
-  // drawn becomes hidden again on the FAR side, and the pen never retraces. The
-  // guide and the nib are derived from --draw in CSS, so this stays one
-  // number and one write. Nothing here animates — the CSS transition retargets
-  // from the presentation value, so leaving half-drawn finishes the line and
-  // carries on instead of snapping.
+  // 27 Drawn outline — the pen draws in, and goes out where it stands.
+  // The dash still carries the whole drawing: on a pathLength of 40 with
+  // dasharray:41 41 the pattern repeats every 82, so 41.5 is hidden and 0.5 is
+  // fully drawn, and the guide and the nib are calc()s off that one number and
+  // cannot be told a different story than the ink.
+  // What changed is the exit. This used to subtract 41 on EVERY state change,
+  // so leaving carried the stroke on round the far side and the pen never
+  // retraced. Now leaving sets data-fading, which holds the dash exactly where
+  // it is and takes the ink out on opacity; once it has gone, the dash is
+  // re-armed to 41.5 with the rect transitions suppressed for one frame, so the
+  // next hover draws from the seam again instead of continuing round.
+  // The 280ms is the fade's own --t-3 at rest (133ms) with room either side —
+  // it only has to outlast the fade, and coming back early cancels it.
   (function(){
+    var HIDDEN = 41.5, DRAWN = 0.5;
     document.querySelectorAll('.e-draw').forEach(function(btn){
       if (!btn.querySelector('.e-draw-ink')) return;
-      var at = 41.5, on = false, hovering = false, focused = false;
+      var on = false, hovering = false, focused = false, t = null;
+
+      function rearm(){
+        btn.setAttribute('data-snap', '');
+        btn.style.setProperty('--draw', HIDDEN);
+        btn.removeAttribute('data-fading');
+        void btn.offsetWidth;             // forced reflow, or the re-arm animates
+        btn.removeAttribute('data-snap');
+      }
       function sync(){
         var next = hovering || focused;
         if (next === on) return;          // a click fires pointerenter AND focus
         on = next;
-        at -= 41;
-        // One write. The guide and the nib are calc()s off this value, so they
-        // cannot be told a different story than the ink.
-        btn.style.setProperty('--draw', at);
+        if (on){
+          clearTimeout(t);
+          // Back before the fade finished: the line is still fully drawn, so
+          // there is nothing to draw and everything to un-hide.
+          btn.removeAttribute('data-fading');
+          btn.style.setProperty('--draw', DRAWN);
+        } else {
+          btn.setAttribute('data-fading', '');
+          t = setTimeout(function(){ if (!on) rearm(); }, 280);
+        }
       }
       btn.addEventListener('pointerenter', function(){ hovering = true;  sync(); });
       btn.addEventListener('pointerleave', function(){ hovering = false; sync(); });
@@ -3603,26 +3635,53 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.i-space:hover, .btn.i-space:focus-visible{--i-gap:7px}
 
+  /* The thickness this study animates. Registered so it interpolates —
+     see the note on .i-rule .i-rule-lbl below. */
+  @property --i-rule-w{ syntax:"<length>"; inherits:false; initial-value:1px }
+
   /* 57 Real underline — the browser's own decoration, not a pseudo-element,
      which is the whole point: skip-ink keeps clean gaps around the descenders
      the entire way through the thickening. Decoration is painted, not laid out,
      so the box never changes. The offset travels .26em → .12em so the rise is
-     legible and not just a thickening. */
+     legible and not just a thickening.
+
+     THE THICKNESS RUNS THROUGH A REGISTERED LENGTH and not through
+     text-decoration-thickness itself, because that property does not
+     interpolate: measured, it stepped 1px → 2px on the first frame and held,
+     so the verb in this card's own sentence was the one channel that never
+     moved. Registered, it runs 1px → 2px across 285ms in 35 distinct values.
+     Card 56 already animates a registered length this way — --i-gap carries
+     its re-spacing — and 30 a registered integer; this is the same move for a
+     property that is painted rather than laid out, which is the case the other
+     two do not cover.
+
+     The colour used to run on --t-3 and a bare `ease`: two durations and two
+     curves inside one effect, against the first rule of the doctrine. It joins
+     the other two channels on --t-4 and --e-quint. */
   .i-rule .i-rule-lbl{
+    --i-rule-w:1px;
     text-decoration-line:underline;
     text-decoration-skip-ink:auto;
     text-decoration-color:color-mix(in srgb,var(--ink-text) 42%,transparent);
-    text-decoration-thickness:1px;
+    text-decoration-thickness:var(--i-rule-w);
     text-underline-offset:.26em;
-    transition:text-decoration-thickness var(--t-4) var(--e-quint),
+    transition:--i-rule-w            var(--t-4) var(--e-quint),
                text-underline-offset var(--t-4) var(--e-quint),
-               text-decoration-color var(--t-3) ease;
+               text-decoration-color var(--t-4) var(--e-quint);
   }
   .i-rule:hover .i-rule-lbl, .i-rule:focus-visible .i-rule-lbl{
-    text-decoration-thickness:2px;
+    --i-rule-w:2px;
     text-underline-offset:.12em;
     text-decoration-color:var(--ink-text);
   }
+  /* The frame is this study's own and not the shared one: .btn--line draws at
+     full --ink, which put a solid white ring around an effect whose entire
+     subject is a hairline — the loudest line on the button was the one doing
+     nothing. --line-ctl is the token with that job and its 3.36:1 on bg-1 is
+     measured at the token itself, so the boundary stays a boundary while the
+     underline becomes the thing you look at. Scoped to .i-rule: every other
+     outline study keeps the shared border. */
+  .i-rule.btn--line{ border-color:var(--line-ctl) }
 
   /* 59 Exit velocity — the return home is handed the pointer's exit
      velocity and settled by a critically damped spring (omega 20 rad/s), so a
@@ -3822,7 +3881,9 @@ document.addEventListener("DOMContentLoaded", function () {
        register at the same left, top, width and height. */
     position:absolute; inset:0; pointer-events:none; z-index:1;
     background:var(--ink-hover);
-    --j-x:0%; --j-y:100%; --j-bow:1;
+    /* The rest park matches OFF.bottom in the script, nose depth included —
+       see the note there. A flat 100% left the nose inside the plate. */
+    --j-x:0%; --j-y:calc(100% + 8px); --j-bow:1;
     transform:translate(var(--j-x), var(--j-y));
     transition:transform var(--t-5) var(--e-quint);
   }
@@ -4027,7 +4088,21 @@ document.addEventListener("DOMContentLoaded", function () {
     // ---- 78 Directional fill ------------------------------------------
     // The status attribute carries a WORD, not a boolean: readable in DevTools
     // and it leaves room for a fifth state. The script's only job is choosing it.
-    var OFF = {left:['-100%','0%'], right:['100%','0%'], top:['0%','-100%'], bottom:['0%','100%']};
+    // THE PARK HAS TO CLEAR THE NOSE, NOT JUST THE PLATE. The nose hangs off
+    // the tile's LEADING edge, and the leading edge is by definition the one
+    // facing the button — so a tile parked at a flat 100% leaves 8px of nose
+    // lying inside the plate at rest. Measured on the idle button: the nose
+    // spanned y 335.83–343.83 against a plate whose bottom edge is 344.83, a
+    // 9px intrusion, painting a crescent across the foot of every resting
+    // button. Invisible-ish in the outline version, where the nose is the same
+    // white as nothing much; obvious in the fill version, where it is a dark
+    // arc on a white plate, which is where it was caught.
+    // The extra is the nose's own depth, per axis: 10px on the vertical edges,
+    // 8px on the horizontal ones, matching .j-dir-nose in the stylesheet. The
+    // arrival is unchanged — both axes still travel to 0% — so the only thing
+    // this moves is where the plate starts, which is now genuinely outside.
+    var OFF = {left:['calc(-100% - 10px)','0%'], right:['calc(100% + 10px)','0%'],
+               top:['0%','calc(-100% - 8px)'],   bottom:['0%','calc(100% + 8px)']};
     var OPP = {left:'right', right:'left', top:'bottom', bottom:'top'};
     // The bow is no longer a map of border-radius specs and no longer lives in
     // this file at all. It is a nose element with a constant shape, and the
@@ -5644,7 +5719,14 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.s-mid .lbl::after{
     content:""; position:absolute; left:0; right:0; bottom:-4px; height:1.5px;
     background:currentColor; transform:scaleX(0); transform-origin:center;
-    transition:transform var(--t-4) var(--e-quint);
+    /* --e-out and not --e-quint, which is the same call card 78 made and for
+       the same measurement. On quint this rule was half-grown 36ms into a
+       300ms run and 87% of the way there by 95ms, leaving the last 13% of the
+       travel to fill the remaining two-thirds — it did not grow from the
+       centre, it appeared half-grown and then crept. On --e-out it reaches
+       half at 57ms and 70% by 95ms, and still settles at 294ms. Same duration,
+       same symmetry, the travel spread across itself. */
+    transition:transform var(--t-4) var(--e-out);
   }
   .btn.s-mid:hover .lbl::after,
   .btn.s-mid:focus-visible .lbl::after{transform:scaleX(1)}
@@ -6522,43 +6604,6 @@ document.addEventListener("DOMContentLoaded", function () {
      other transition on the page and the exit still drops one rung, so a
      four-step arrival becomes a four-step departure that is a third quicker. */
 
-  /* 96 Halftone fill — an ordered dither used as a transition. */
-  @property --w-dither-r{ syntax:"<length>"; inherits:false; initial-value:0px }
-  .w-dither{overflow:hidden}
-  /* Every other fill on this page is a FRONT: a straight edge (07), a curved
-     one (09), a jagged one (91). A dithered fill has no front at all. The plate
-     is there from the first step, everywhere at once, and what changes is how
-     much of each four-pixel cell it occupies — 0, 0.8, 1.6, 2.4, 3.2px of dot
-     radius, and at 3.2 the circle more than covers its own cell, so the last
-     step is solid. Four steps because four is what the tone ramp needs; a
-     fifth would be a tween wearing a costume. */
-  .w-dither::before{
-    content:""; position:absolute; inset:0; background:var(--accent);
-    --w-dither-r:0px;
-    /* Both stops on the SAME position, so the dot has no anti-aliased rim.
-       A half-pixel of feather left a visible grain on the plate at radius
-       zero — the fill was there before the hover was — and a dither with
-       soft dots is a blur pretending to be a pattern. */
-    -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 var(--w-dither-r), #0000 var(--w-dither-r));
-            mask-image:radial-gradient(circle at 50% 50%, #000 var(--w-dither-r), #0000 var(--w-dither-r));
-    -webkit-mask-size:4px 4px;  mask-size:4px 4px;
-    transition:--w-dither-r var(--t-4) steps(4,end);
-  }
-  .w-dither:hover::before,
-  .w-dither:focus-visible::before{ --w-dither-r:3.2px }
-  /* The label is NOT crossfaded. Stepping it with the plate put grey type on a
-     fifty-percent field for a third of the transition and the word disappeared;
-     holding it white loses it against the solid arrival instead. Difference
-     blending has no such middle: over the dark plate the white label stays
-     white, over the arrived white it inverts to black, and over the dot field
-     it inverts per dot — which is what a 1-bit display does to a cursor it
-     drags across a pattern, and the only reading of this card that is legible
-     on every frame. isolation:isolate keeps the blend inside the button rather
-     than letting it read the panel behind it. */
-  .w-dither{isolation:isolate}
-  .w-dither .lbl{position:relative; z-index:1;
-    color:var(--inverse-bg); mix-blend-mode:difference}
-
   /* 97 Grid steps — no in-between positions. */
   .w-grid .lbl{display:block; transition:transform var(--t-3) steps(1,end)}
   .w-grid:hover .lbl,
@@ -7018,9 +7063,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Two house rules get argued with here rather than followed, and both notes
      say so in place: section L's «no box-shadow» (card 116 stacks PLATES, not
-     shadow) and its «no mix-blend-mode» (cards 32 and 96 already spend one each;
-     113 is the page's third — the same fill under the same label, where
-     swapping a colour instead would put a tuned delay straight back).
+     shadow) and its «no mix-blend-mode» (card 32 already spends one; 113 is the
+     page's second — the same fill under the same label, where swapping a colour
+     instead would put a tuned delay straight back).
 
      The prefix is z-. */
 
@@ -8080,7 +8125,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","w-dither":"shape|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","e-reg":"moves|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves tone shape|hover","roll":"moves|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves seq|hover","dotm":"moves fades seq|hover","p-cycle":"moves seq|js loop","i-throw":"moves|js press hover","j-out":"moves seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves tone shape|hover","roll":"moves|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves seq|hover","dotm":"moves fades seq|hover","p-cycle":"moves seq|js loop","i-throw":"moves|js press hover","j-out":"moves seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -8089,7 +8134,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","g-two":"131","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","o-step":"91","w-dither":"96","sheen":"10","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","e-reg":"29","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-land":"22","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","i-space":"56","j-optic":"79","q-spin":"83","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","g-two":"131","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","o-step":"91","sheen":"10","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-land":"22","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","i-space":"56","j-optic":"79","q-spin":"83","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -10760,10 +10805,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","29":"https://framer.com/m/InRegister-QpqTov.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","96":"https://framer.com/m/HalftoneFill-RQmpfe.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","22":"https://framer.com/m/Overshoot-3MqZJ1.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","22":"355f60e9c4911fe3","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","29":"a7ff8e7f1bed272e","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","56":"0c2433e83aa4bdd8","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","70":"60df677dd1cf4e68","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","96":"8efd07dfce8cb8dd","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","22":"355f60e9c4911fe3","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","56":"0c2433e83aa4bdd8","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","70":"60df677dd1cf4e68","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 </body>
