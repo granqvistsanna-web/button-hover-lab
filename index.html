@@ -2930,13 +2930,20 @@ document.addEventListener("DOMContentLoaded", function () {
   .g-measure .g-measure-plate{
     position:absolute; inset:0; background:var(--ink);
     border-radius:inherit; pointer-events:none;
-    clip-path:inset(4px round 999px);
+    /* The inner radius FOLLOWS --btn-r rather than assuming a pill. Hardcoded
+       999px, a square button kept a pill-shaped plate inside square corners —
+       the reserve read as a badge that had been dropped in, not as a band. The
+       same H/2 - d that gives the even capsule band gives the general case:
+       inset d off outer radius R leaves R - d, floored at 0 so a square button
+       gets a square plate. At --btn-r's default 999px it resolves to 995 and
+       clamps back to the capsule, so the pill is unchanged. */
+    clip-path:inset(4px round max(0px,var(--btn-r) - 4px));
     transition:clip-path var(--t-5) var(--e-out),
                background-color var(--t-5) var(--e-out);
   }
   .g-measure:hover .g-measure-plate,
   .g-measure:focus-visible .g-measure-plate{
-    clip-path:inset(0px round 999px);
+    clip-path:inset(0px round var(--btn-r));
     background:color-mix(in srgb,var(--ink-hover) 86%,var(--bg));
   }
   /* The trim holds until the plate reaches it, then hands over. Undelayed, the
