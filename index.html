@@ -35,7 +35,7 @@
      Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
      Dark only, one grayscale ladder, white as the single accent, elevation by
      lightness. The DS tokens arrive from tokens.css; everything below is an
-     ALIAS so all eighty-nine effect rules keep resolving under their own names.
+     ALIAS so every effect rule keeps resolving under its own name.
      ============================================================ */
   :root{
     --bg:var(--bg-0);            /* canvas            */
@@ -179,7 +179,7 @@
      where the eye starts losing its place on the way back. Capped at the
      lede's own measure rather than a new number invented for three cards. */
   .spec--wide>p{max-width:62ch}
-  /* One stage height for all eighty-nine, so the hairline under every stage
+  /* One stage height for every study, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
      one-line spec falls between the paragraph and the chips, where nothing
@@ -208,7 +208,7 @@
     position:relative; display:inline-flex; align-items:center; gap:10px;
     /* var(--font-ui) and not a named face: the graphite pass removed the
        Schibsted Grotesk link but left this rule naming it, so every one of the
-       eighty-nine demo buttons was rendering in system-ui while the page around
+       demo buttons was rendering in system-ui while the page around
        them rendered in Geist. The buttons follow the page. */
     font:500 15px/1 var(--font-ui); letter-spacing:.005em;
     color:var(--ink-text); background:none; border:0; border-radius:var(--btn-r);
@@ -220,7 +220,7 @@
 
   /* The exit is one rung down the ladder. At rest each token resolves one step
      shorter; :hover restores the full value — so a hover ENTERS at the full rung
-     and LEAVES at the shorter one. One rule pair, and all eighty-nine inherit it,
+     and LEAVES at the shorter one. One rule pair, and every study inherits it,
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
@@ -764,7 +764,7 @@
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
-     Four knobs that restyle all eighty-nine studies at once. All are written as
+     Four knobs that restyle every study at once. All are written as
      inline custom properties on the ROOT element, which is also where the Copy
      buttons resolve their alias chains from — so a snippet copied after a
      change carries what is on screen rather than the page's defaults. That is
@@ -989,7 +989,7 @@
   }
 
   /* ============ the left panel ============
-     Eighty-nine studies is past the point where a filter row can hold the
+     This many studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
      the three colours and the radius, the things that rewrite every card and
      every copied snippet — and everything that FINDS a card lives here: the
@@ -1303,7 +1303,7 @@
 </head>
 <body>
 <div class="wrap">
-  <!-- Every card costs five or six tab stops and there are eighty-nine of
+  <!-- Every card costs five or six tab stops and there are dozens of
        them, so the panel is fifteen presses of overhead paid on
        arrival. This is the standard way out of that, and the only element on
        the page that is invisible until it is focused. -->
@@ -3476,21 +3476,6 @@ document.addEventListener("DOMContentLoaded", function () {
     text-decoration-color:var(--ink-text);
   }
 
-  /* 58 Tempo match — the carrier is deliberately the plainest thing
-     on the page, a colour arriving, because the mechanism is the CLOCK. The
-     script picks a rung and writes a token NAME into --i-rung; it never writes
-     a number, so the ladder still owns every duration. Two rungs apart, not
-     one: 133 against 450 is a difference you can feel without a stopwatch.
-     No pointer, no reading — a keyboard focus falls through to --t-4, the rung
-     in between. */
-  .btn.i-tempo{
-    --i-rung:var(--t-4);
-    background-color:color-mix(in srgb,var(--ink) 0%,transparent);
-    transition:background-color var(--i-rung) var(--e-out),
-               color var(--i-rung) var(--e-out), transform var(--t-1) var(--e-out);
-  }
-  .btn.i-tempo:hover, .btn.i-tempo:focus-visible{background-color:var(--ink-hover); color:var(--on-ink-hover)}
-
   /* 59 Exit velocity — the return home is handed the pointer's exit
      velocity and settled by a critically damped spring (omega 20 rad/s), so a
      quick sweep away carries the mark about 2.5px past rest and a slow drift
@@ -3546,11 +3531,11 @@ document.addEventListener("DOMContentLoaded", function () {
 // Deferred for the reason set out at the first of these blocks: a script above
 // its own markup binds to nothing, in silence.
 document.addEventListener("DOMContentLoaded", function () {
-  // Section L — one shared pointer-speed reading, two consumers.
+  // Section L — one shared pointer-speed reading, for Exit velocity.
   (function(){
     var reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-    // Shared: the last two pointermove samples, so both 78 and 79 can ask
+    // The last two pointermove samples, so Exit velocity can ask
     // "how fast was the pointer moving just now" without their own listeners.
     // pointerenter fires BEFORE the first pointermove inside the element, so
     // what this holds at that moment is the approach speed, which is the point.
@@ -3569,24 +3554,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       last = {x:e.clientX, y:e.clientY, t:now};
     }, {passive:true});
-
-    // ---- 61 Tempo match -------------------------------------
-    // The rung is chosen, never computed: --i-rung is set to a token NAME,
-    // which the element resolves itself — so the asymmetry rule still applies
-    // and the exit is one rung shorter for free.
-    var FAST = 1100;                                  // px/s
-    document.querySelectorAll('.i-tempo').forEach(function(btn){
-      btn.addEventListener('pointerenter', function(){
-        if (reduced.matches) return;
-        btn.style.setProperty('--i-rung', speed > FAST ? 'var(--t-2)' : 'var(--t-5)');
-      });
-      // Deliberately NOT cleared on pointerleave: the exit has to resolve the
-      // SAME rung it entered on, so the asymmetry rule shortens it by one step.
-      // Clearing it here would send a 133ms entry out over the rest --t-4.
-      btn.addEventListener('focus', function(){
-        btn.style.removeProperty('--i-rung');       // keyboard: no velocity, no rung
-      });
-    });
 
     // ---- 62 Exit velocity ----------------------------------------
     // Integrated in CLOSED FORM, not by Euler steps: at 60fps the damping term
@@ -3760,33 +3727,6 @@ document.addEventListener("DOMContentLoaded", function () {
     content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
     border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
   }
-
-  /* 76 Liquid fill — the fill rises with a curved leading edge that flattens as it
-     lands, so it reads as liquid finding its level rather than a rectangle
-     arriving. The crest is deliberately off-centre (56/44) — a perfect dome
-     reads as a shape, an uneven one reads as a material. It overhangs 12% each
-     side so the arc's ends fall outside the plate and the corners never strand.
-
-     The flattening SETTLES AFTER the rise rather than finishing with it. Run on
-     one duration the crest was already level at the moment it landed, which is
-     the one thing a liquid does not do: a surface arrives curved and finds its
-     level afterwards. The radius takes the same rung on a --d-2 delay, so it is
-     still visibly domed on contact and flat a tenth of a second later. */
-  .btn.j-wave{overflow:hidden}
-  .j-wave .j-wave-fill{
-    position:absolute; left:-12%; right:-12%; bottom:0; height:100%;
-    pointer-events:none; background:var(--ink-hover);
-    border-radius:56% 44% 0% 0% / 34% 34% 0% 0%;
-    transform:translateY(100%);
-    transition:transform var(--t-5) var(--e-quint), border-radius var(--t-5) var(--e-out) var(--d-2);
-  }
-  .j-wave:hover .j-wave-fill, .j-wave:focus-visible .j-wave-fill{
-    transform:translateY(0%);
-    border-radius:0% 0% 0% 0% / 0% 0% 0% 0%;
-  }
-  /* Same rule as 78: the colour lands as the fill clears, not after it. */
-  .j-wave .lbl{position:relative; transition:color var(--t-1) ease}
-  .j-wave:hover .lbl, .j-wave:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
 
   /* 78 Corner exit — the mark lifts, turns to point out of the page, and
      leaves along the line it is now pointing down.
@@ -6492,7 +6432,7 @@ document.addEventListener("DOMContentLoaded", function () {
      width and height, which are layout properties and cost a reflow a frame.
 
      But the tutorial button carries something this page has almost none of.
-     Eighty-nine studies in, exactly one lights a plate — card 104's
+     Across every study on the page, exactly one lights a plate — card 104's
      bevel, which puts two light sources on the four EDGES and nothing on the
      face between them. No card lights the SURFACE. Graphite states
      elevation as lightness and forbids shadow as depth, so the whole page
@@ -6856,57 +6796,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     .btn.z-lurch:hover::before,
     .btn.z-lurch:focus-visible::before{opacity:1}
-  }
-
-  /* 114 Slab tilt — the control is a slab seen slightly from
-     above, and tilting it further on hover shows the side it was standing on.
-     The side face is the same box rotated -90deg about its own top edge, so it
-     is welded to the face by construction and stays welded at any angle: there
-     is no second number to keep in sync with the first.
-     The gallery version puts perspective on the button as a PROPERTY, which
-     applies to children only — so its side faces are projected and its own
-     front face is not, and the face is an orthographic squash pretending to be
-     a rotation. perspective() inside the transform projects the element itself,
-     and transform-style:preserve-3d puts the side in the same space. One
-     element, no wrapper, correct at both ends.
-     Two costs. overflow:hidden flattens a 3D subtree, so this is the one plate
-     here that can carry no fill. And an extrusion assumes a straight edge: at
-     the page's default 999px radius the face is a pill and its side is read
-     edge-on and foreshortened, which holds along the flat of the plate and is
-     thinnest at the two ends. It is the card most improved by turning the
-     radius down, and the toolbar can.
-     The press composes rather than replaces — one function list in all three
-     states, for section A's reason. */
-  .btn.z-slab{
-    background:var(--bg-3);
-    transform-style:preserve-3d;
-    transform:perspective(800px) rotateX(6deg) scale(1);
-    transition:transform var(--t-4) var(--e-out);
-  }
-  .btn.z-slab:hover,
-  .btn.z-slab:focus-visible{transform:perspective(800px) rotateX(20deg) scale(1)}
-  .btn.z-slab:active{transform:perspective(800px) rotateX(20deg) scale(.97); transition-duration:var(--t-1)}
-  /* The thickness. Not a shadow: the side faces away from the light, so it is a
-     step DOWN the graphite ladder from the face, which is how this page has said
-     depth since the first card. It has to be a step down from the FACE and still
-     a step up from the STAGE — built first at --bg-1 it was the stage's own
-     colour exactly, and the slab had a side nobody could see. So the face is
-     raised to --bg-3 and the side takes --bg-2: two steps, both legible, and the
-     plate reads brighter than its neighbours because it is the one standing up. */
-  .btn.z-slab::before{
-    content:""; position:absolute; left:0; top:100%; width:100%; height:9px;
-    background:var(--bg-2);
-    border-radius:inherit;
-    transform:rotateX(-90deg); transform-origin:0 0;
-  }
-  @media (prefers-reduced-motion: reduce){
-    .btn.z-slab,
-    .btn.z-slab:hover,
-    .btn.z-slab:focus-visible,
-    .btn.z-slab:active{transform:none; transition:background-color var(--t-3) ease}
-    .btn.z-slab:hover,
-    .btn.z-slab:focus-visible{background:var(--bg-4)}
-    .btn.z-slab::before{display:none}
   }
 
   /* 116 Stack fan — the plate lifts and three more appear under
