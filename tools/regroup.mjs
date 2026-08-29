@@ -49,8 +49,10 @@ const GROUPS = [
 const ALIAS_REHOME = [
   ['  .f-mat{ --f-lys:var(--ink); --f-mork:var(--on-ink) }',
    '  .f-glas, .f-motljus, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }'],
-  ['  .l-mat{ --l-lys:var(--ink); --l-mork:var(--on-ink) }',
-   '  .l-deboss{ --l-lys:var(--ink); --l-mork:var(--on-ink) }'],
+  // The .l-mat -> .l-deboss rehoming is gone WITH ITS CARD: Deboss was culled
+  // (ef1ea6c) and the alias left the stylesheet with it, so there is nothing
+  // left to move and nothing left that reads it. If a card reading --l-lys
+  // ever returns, its alias belongs on the card's own class from day one.
 ];
 
 const GROUP_OF = {
@@ -88,6 +90,7 @@ const GROUP_OF = {
   'Crop marks': 'edge',
   'Directional underline': 'edge',
   'Drawn outline': 'edge',
+  'Racing line': 'edge',
   'Chamfered corner': 'edge',
   'In register': 'edge',
   'Edge light': 'edge',
