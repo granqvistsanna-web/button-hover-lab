@@ -1705,7 +1705,7 @@
         <span class="sr y-hold-live" role="status"></span>
       </div>
       <h3><span class="num">111</span>Press fill</h3>
-      <p>The flood starts on pointer-down from the point you pressed &mdash; the one study here you can call off: drag off the plate and it retracts, release outside and nothing happened. Card 74 times the press; this one places it.</p>
+      <p>The plate shrinks two per cent and drops half an elevation step as the pointer arrives, so the press has an approach rather than a start; the flood then runs from the point you pressed &mdash; the one study here you can call off: drag off the plate and it retracts, release outside and nothing happened. Card 74 times the press; this one places it.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -6743,17 +6743,51 @@ document.addEventListener("DOMContentLoaded", function () {
      retraction resolves to 300. Calling it off is a rung quicker than doing it,
      without a line saying so.
      The keyboard has no press point, so Enter and Space flood from the centre —
-     the fallback card 82 takes. */
+     the fallback card 82 takes.
+     And the press has an approach: the plate shrinks and shades on the way in,
+     so arriving reads as contact and pressing is the rest of a movement rather
+     than the start of one. The two rungs and the two speeds are argued for at
+     the rules themselves. */
   .btn.y-hold{
     background:var(--lift-bg);
     overflow:hidden;
     transform:scale(1) rotate(0.001deg);
+    /* The transform comes OFF --t-1. At 83ms flat a hover shrink lands like a
+       press and the two stop being different gestures; on --t-3 it is 200ms in
+       and 133ms out inside .btn, and the press puts --t-1 back below. */
+    transition:transform var(--t-3) var(--e-out),
+               background-color var(--t-3) var(--e-out);
+  }
+  /* The press has an APPROACH. Hovering takes the plate a third of the way to
+     where the press takes it — .99 against .97 — and the ground drops half an
+     elevation step, to the midpoint between the control's own grey and the card
+     it sits on. The shade is a POSITION ON THE LADDER, not a picked hex, which
+     is why it is written as the two tokens it sits between: card 126 derives
+     its shade the same way and lands on 84% because it is cutting white, and
+     84% of a #222 plate is a step nobody can see. What is borrowed is the
+     reasoning, not the figure.
+     The ladder only reads if the rungs stay apart. A hover that shrank as far
+     as the press would leave the press with nothing left to say and the flood
+     carrying the whole gesture on its own. */
+  .btn.y-hold:hover,
+  .btn.y-hold:focus-visible{
+    transform:scale(.99) rotate(0.001deg);
+    background:color-mix(in srgb, var(--lift-bg) 50%, var(--stage));
   }
   /* The press belongs to the state, not to :active — during a capture :active
-     stays true off-plate, which is exactly where the plate must let go. */
+     stays true off-plate, which is exactly where the plate must let go. This
+     rule has to sit AFTER the hover pair and BEFORE the states: all three weigh
+     the same, so the sheet's order is the whole argument. */
   .btn.y-hold:active{transform:scale(1) rotate(0.001deg)}
+  /* The press snaps and the approach glides — 83ms against 200. The exit from
+     the press is left to the rest-side rule, so dragging off rises at 133ms
+     while pressing falls at 83: the asymmetry rule pays for the cancel here
+     exactly as it already does for the flood. */
   .btn.y-hold[data-state="pressing"],
-  .btn.y-hold[data-state="done"]{transform:scale(.97) rotate(0.001deg)}
+  .btn.y-hold[data-state="done"]{
+    transform:scale(.97) rotate(0.001deg);
+    transition-duration:var(--t-1);
+  }
   .btn.y-hold::before{
     content:""; position:absolute; left:var(--y-x,50%); top:var(--y-y,50%); z-index:0;
     width:calc(var(--y-r,150px) * 2); aspect-ratio:1; border-radius:50%;
@@ -6777,7 +6811,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     .btn.y-hold[data-state="pressing"]::before,
     .btn.y-hold[data-state="done"]::before{opacity:1}
+    /* The shade STAYS under the clamp — a tone step is not motion, and with
+       the geometry gone and the flood reduced to a fade it is the only thing
+       left saying the pointer arrived. Only the transforms are cleared, and
+       :hover has to be named or it outranks the rule that clears them. */
     .btn.y-hold,
+    .btn.y-hold:hover,
+    .btn.y-hold:focus-visible,
     .btn.y-hold[data-state="pressing"],
     .btn.y-hold[data-state="done"]{transform:none}
   }
