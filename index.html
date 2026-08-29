@@ -389,9 +389,28 @@
   .sheen{--sheen-t:667ms; background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
   .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
-  .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0; width:36%; background:linear-gradient(100deg,transparent,color-mix(in srgb,var(--on-ink) 26%,transparent),transparent); transform:translateX(-150%) skewX(-14deg)}
+  /* Wider and five-stop: a bright core with a broad dim shoulder reads as
+     light, where the old 36% three-stop strip read as a bar. The travel
+     tightens with it — -150% to 340% spent a seventh of the run off-plate,
+     and -115% to 240% is the narrowest pair that still hides the streak at
+     both ends, the -14deg skew included. */
+  .sheen::after{content:""; position:absolute; top:-4px; bottom:-4px; left:0;
+    width:46%;
+    background:linear-gradient(100deg,transparent 0%,
+      color-mix(in srgb,var(--on-ink) 7%,transparent) 26%,
+      color-mix(in srgb,var(--on-ink) 34%,transparent) 50%,
+      color-mix(in srgb,var(--on-ink) 7%,transparent) 74%,
+      transparent 100%);
+    transform:translateX(-115%) skewX(-14deg); opacity:0;
+    /* THE REST SIDE PAINTS THE EXIT. Leave mid-crossing and the light fades
+       where it stands; the transform resets only once that fade has finished,
+       so it never teleports back to the left edge in view. */
+    transition:opacity var(--t-2) linear, transform 0s linear var(--t-2)}
   .sheen:hover::after,
-  .sheen:focus-visible::after{transform:translateX(340%) skewX(-14deg); transition:transform var(--sheen-t) cubic-bezier(.3,.6,.35,1)}
+  .sheen:focus-visible::after{transform:translateX(240%) skewX(-14deg); opacity:1;
+    /* Fast in, slow across the face, fast out: the run spends its cheap frames
+       where the streak is off-plate and its slow ones where you can see it. */
+    transition:transform var(--sheen-t) cubic-bezier(.25,.7,.75,.3), opacity 0s}
   .sheen .lbl{position:relative}
 
   /* ---- Family B in its other versions ---------------------------------
@@ -464,8 +483,11 @@
   .sheen.btn--line:hover,
   .sheen.btn--line:focus-visible{background:color-mix(in srgb,var(--ink) 8%,transparent)}
   .sheen.btn--line::after{
-    background:linear-gradient(100deg,transparent,
-               color-mix(in srgb,var(--ink) 26%,transparent),transparent);
+    background:linear-gradient(100deg,transparent 0%,
+      color-mix(in srgb,var(--ink) 7%,transparent) 26%,
+      color-mix(in srgb,var(--ink) 34%,transparent) 50%,
+      color-mix(in srgb,var(--ink) 7%,transparent) 74%,
+      transparent 100%);
   }
 
   /* 11 Pilstafett */
@@ -1689,7 +1711,7 @@
 
     <article class="spec" data-key="f-kant" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
-                    <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
+                    <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
                   </div>
                   <h3><span class="num">42</span>Edge light</h3>
                     <p>A streak of the primary circles the hairline for as long as the pointer stays, and holds its place when it goes. It travels the outline, not an angle: a conic gradient crosses the caps 11.6 times faster than the flanks.</p>
@@ -2810,9 +2832,20 @@ document.addEventListener("DOMContentLoaded", function () {
     .f-kant .f-kant-lamp{
       display:block; position:absolute; width:10px; height:1.5px; border-radius:1px;
       pointer-events:none; opacity:0; z-index:3;
-      background:linear-gradient(90deg, transparent,
-        color-mix(in srgb, var(--accent) 22%, transparent) 50%,
-        color-mix(in srgb, var(--accent) 76%, transparent));
+      /* --a scales the segment's brightness, and it is in the COLOUR rather
+         than in opacity for the reason given above: opacity is the channel the
+         hover uses, and a segment dimmed there would fight the fade.
+
+         FLAT, NOT A GRADIENT, and the screenshot is why. Each segment used to
+         carry the old single lamp's transparent-to-bright ramp, which put a
+         dark end on every one of them: six segments 8px apart, each fading out
+         across its own last five, read as a DASHED line rather than a tail. The
+         ramp is the ensemble's job now — six flat bars stepping 1 → .72 → .50 →
+         .34 → .22 → .12 — so each bar is uniform and the 2px overlap between
+         consecutive ones has no hole to leave. One gradient became six samples
+         of the same curve, which is what a segmented trail is. */
+      --a:1;
+      background:color-mix(in srgb, var(--accent) calc(76% * var(--a)), transparent);
       offset-path:border-box; offset-rotate:auto;
       /* half the border inward: the lamp's centreline and the hairline's are one */
       offset-anchor:100% calc(50% - 0.5px);
@@ -2820,8 +2853,38 @@ document.addEventListener("DOMContentLoaded", function () {
       /* the lap is the lamp's own clock — paused at rest, so it costs nothing
          and keeps its place. The hover only opens the shutter. */
       animation:f-kant-lap var(--f-kant-lap, 2400ms) linear infinite paused;
+      /* A NEGATIVE DELAY IS A POSITION, NOT A WAIT. Every segment runs the same
+         paused lap; starting one 42ms in parks it 8px further back along the
+         outline. So the tail is built out of the clock and costs no second
+         animation, no second path, and nothing for the pause to keep in sync.
+
+         IT HAD TO BE SEGMENTED RATHER THAN LONGER, and the note above is why: a
+         straight chord on the 23.5px cap radius stands off the curve by its
+         sagitta, 0.54px at 10 and 2.73px at 22, where the streak visibly lifts
+         off the corner. One long lamp would buy the tail back at the exact cost
+         this card already refused to pay. Six short ones each keep the 0.54px
+         budget and the ENSEMBLE bends, because every segment is tangent to the
+         outline at its own point. 50px of tail out of 10px parts. */
+      animation-delay:calc(var(--i, 0) * var(--f-kant-step, -42ms));
       transition:opacity var(--t-2) var(--e-out);
     }
+    /* The index is authored on nth-of-type and never as an inline style: the
+       Copy machinery strips every style attribute off its clone, so an inline
+       index would work on this page and arrive dead in the snippet. The lamps
+       are the only <i> in the button, so nth-of-type counts them and not the
+       label.
+
+       THE LAST ELEMENT IS THE HEAD, which reads backwards and is correct. A
+       negative delay means the lap started earlier, so the segment is FURTHER
+       along the outline — the highest --i leads and the lowest trails. Measured
+       before this was fixed, the ramp ran the other way and the comet flew dim
+       end first. The brightness follows the travel, not the source order. */
+    .f-kant .f-kant-lamp:nth-of-type(1){ --i:0; --a:.12 }
+    .f-kant .f-kant-lamp:nth-of-type(2){ --i:1; --a:.22 }
+    .f-kant .f-kant-lamp:nth-of-type(3){ --i:2; --a:.34 }
+    .f-kant .f-kant-lamp:nth-of-type(4){ --i:3; --a:.50 }
+    .f-kant .f-kant-lamp:nth-of-type(5){ --i:4; --a:.72 }
+    .f-kant .f-kant-lamp:nth-of-type(6){ --i:5; --a:1 }
     .f-kant:hover .f-kant-lamp, .f-kant:focus-visible .f-kant-lamp{
       opacity:1; animation-play-state:running;
       transition:opacity var(--t-1) var(--e-out);
@@ -4923,11 +4986,20 @@ document.addEventListener("DOMContentLoaded", function () {
      pattern is fixed and merely long enough that you never catch it.
 
      AND IT STEPS RATHER THAN LEVITATES. The trailing leg lands one
-     --t-stagger after the leading one and the plate tips half a degree
-     into the gap, on the `rotate` property and not inside transform,
-     which is already carrying the rise and the press and would drop one
-     of them. Half a degree is the ceiling; at one the label visibly
-     slants.
+     --t-stagger after the leading one, so the plate arrives on one leg
+     before the other and the rise reads as a step rather than a lift.
+
+     IT USED TO TIP HALF A DEGREE INTO THAT GAP AS WELL, on the `rotate`
+     property, and that came out on 2026-08-29. Rule A permits no
+     rotation as a channel, and a value chosen to sit just under the
+     angle at which the label visibly slants is the rule catching it
+     rather than a way round it. Measured before it went: the tip peaked
+     at -0.499999deg at 135ms and widened the painted box from 152.016 to
+     152.403px. The stagger is what the card was actually reading — at
+     46ms the left leg is 0.81px tall and the right is still 0 — and the
+     ground line below is what proves nothing under the button moved. The
+     half-degree was corroboration, and it cost the page its one
+     absolute rule.
 
      THE GROUND LINE, and it is the reason the step is worth having. The
      card's whole boast is that nothing below the button moves, and until
@@ -4938,11 +5010,14 @@ document.addEventListener("DOMContentLoaded", function () {
      say it is always at the height the button had at rest. --line-ctl
      and not --ink: this is a boundary, and that is the token with the job.
 
-     THE FLOOR DOES NOT TIP. .q-riser-grd is a child of the plate, so the
-     step's half-degree carried it round too, and a ground line that leans
-     is not a ground line. An equal and opposite turn on its own centre
-     cancels the angle; the residual vertical shift is 0.6px at this
-     offset, under the width of the line itself. */
+     THE FLOOR HAS NOTHING TO CANCEL. .q-riser-grd is a child of the
+     plate, so while the step carried a half-degree the line was turned
+     with it and needed an equal and opposite rotation on its own centre
+     to stay level. Both turns came out together: with no rotation on the
+     plate there is nothing for the floor to undo, and the line is level
+     because it is never tilted. Measured in all three states it holds
+     the resting floor to within a pixel — 0.00px at hover, -0.76px under
+     the press. */
   .btn.q-riser{
     transform:translateY(0) scale(1);
     transition:transform var(--t-3) var(--e-out);
@@ -4956,15 +5031,11 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser::before{left:17%}
   .btn.q-riser::after{right:17%}
   .btn.q-riser:hover,
-  .btn.q-riser:focus-visible{
-    transform:translateY(-7px) scale(1);
-    animation:q-riser-step var(--t-4) var(--e-out);
-  }
+  .btn.q-riser:focus-visible{transform:translateY(-7px) scale(1)}
   .btn.q-riser:hover::before, .btn.q-riser:hover::after,
   .btn.q-riser:focus-visible::before, .btn.q-riser:focus-visible::after{height:7px}
   .btn.q-riser:hover::after,
   .btn.q-riser:focus-visible::after{transition-delay:var(--t-stagger)}
-  @keyframes q-riser-step{0%{rotate:0deg} 45%{rotate:-.5deg} 100%{rotate:0deg}}
 
   /* The eyes. Both of .btn's pseudo-elements are spent on the legs, so
      the face is built on .lbl's — .lbl is static here, so they anchor to
@@ -4979,7 +5050,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background-position:50% 86%;
     transform-origin:50% 100%;
     translate:0 6px; scale:0; pointer-events:none;
-    transition:translate var(--t-3) var(--e-back), scale var(--t-3) var(--e-back),
+    transition:translate var(--t-3) var(--e-quint), scale var(--t-3) var(--e-quint),
                background-position var(--t-4) var(--e-out) var(--d-1);
   }
   .btn.q-riser .lbl::before{left:calc(50% - 17px)}
@@ -4990,6 +5061,13 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser:hover .lbl::before, .btn.q-riser:hover .lbl::after,
   .btn.q-riser:focus-visible .lbl::before, .btn.q-riser:focus-visible .lbl::after{
     translate:0 0; scale:1; background-position:50% 44%;
+    /* --e-back on the OPENING only, which is the token's own rule: it
+       overshoots its target by design, and the eyes' target on the way OUT
+       is scale:0. Declared on the rest rule it painted the exit too and the
+       eye passed through zero to a measured scale of -0.058 — a flipped eye
+       for two or three frames. The rest side is quint; the pop keeps its
+       overrun where there is a stop to overrun. */
+    transition-timing-function:var(--e-back), var(--e-back), var(--e-out);
     animation:q-riser-blink 7.4s var(--e-out) 300ms infinite;
   }
   /* The second lid closes a frame after the first, for the same reason
@@ -5018,9 +5096,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-riser:hover .q-riser-grd,
   .btn.q-riser:focus-visible .q-riser-grd{
     scale:1 1; opacity:1;
-    animation:q-riser-step-anti var(--t-4) var(--e-out);
   }
-  @keyframes q-riser-step-anti{0%{rotate:0deg} 45%{rotate:.5deg} 100%{rotate:0deg}}
 
   /* THE PRESS OWNS EVERYTHING, and it is last on purpose: a press has to
      beat the loop above it, and at equal specificity that is decided by
@@ -7033,13 +7109,18 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-crest:active{transform:translateY(0) rotate(0.001deg) scale(.98);
     background:var(--bg-4); transition-duration:var(--t-1)}
   .c-crest::after{content:""; position:absolute; top:-4px; bottom:-4px;
-    width:36%; left:0; pointer-events:none;
-    background:linear-gradient(100deg,transparent,
-      color-mix(in srgb,var(--ink) 30%,transparent),transparent);
-    transform:translateX(-160%) skewX(-14deg)}
+    width:46%; left:0; pointer-events:none;
+    background:linear-gradient(100deg,transparent 0%,
+      color-mix(in srgb,var(--ink) 8%,transparent) 26%,
+      color-mix(in srgb,var(--ink) 38%,transparent) 50%,
+      color-mix(in srgb,var(--ink) 8%,transparent) 74%,
+      transparent 100%);
+    transform:translateX(-115%) skewX(-14deg); opacity:0;
+    transition:opacity var(--t-2) linear, transform 0s linear var(--t-2)}
   .c-crest:hover::after,
-  .c-crest:focus-visible::after{transform:translateX(340%) skewX(-14deg);
-    transition:transform var(--sheen-t) cubic-bezier(.3,.6,.35,1) var(--t-4)}
+  .c-crest:focus-visible::after{transform:translateX(240%) skewX(-14deg); opacity:1;
+    transition:transform var(--sheen-t) cubic-bezier(.25,.7,.75,.3) var(--t-4),
+               opacity 0s}
   .c-crest .lbl{position:relative; z-index:1}
 
   /* 124 Closing marks — 13 x a growing label. Crop marks against type opening up.
@@ -7206,7 +7287,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","magnet":"moves tone|js press","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-riser":"moves fades tone shape seq|press","o-quiet":"tone|hover","z-lurch":"moves fades|hover","z-stack":"moves tone|press","z-gum":"moves tone|press","sweep":"moves tone seq|hover","shutter":"moves tone seq|hover","inkfill":"moves tone|js","sheen":"moves tone|hover","j-dir":"moves shape|js","o-step":"moves shape seq|hover","w-dither":"shape|hover","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","corners":"moves fades tone|hover","uline":"moves|hover","e-draw":"fades shape|js","e-chamfer":"shape|hover","e-reg":"moves|hover","s-mid":"moves|hover","f-kant":"moves fades tone|loop press","l-gauge":"tone shape|hover","l-corner":"moves tone shape|hover","i-beam":"tone shape|hover","i-rule":"type|hover","w-corner":"shape|hover","roll":"moves|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-words":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","j-resolve":"tone|js","q-jitter":"moves seq|loop","relay":"moves seq|hover","dotm":"moves fades seq|hover","i-anti":"moves|press","i-space":"moves shape|hover","i-throw":"moves|js press","p-part":"moves shape|hover","p-walk":"moves|js","p-cycle":"seq|js loop","p-hinge":"moves|hover","j-out":"moves seq|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","n-cross":"moves fades seq|js","n-join":"moves shape|hover","w-grid":"moves|hover","w-redraw":"moves seq|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-glas":"moves tone|hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","l-plate-wrap":"fades|hover","x-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","k-recede":"moves tone|hover","k-ind":"moves|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-pair":"moves tone|hover","k-div":"moves fades tone|hover","c-swell":"moves|press","c-mass":"moves tone|press","c-tide":"moves seq|hover","c-relay":"moves tone shape seq|hover","c-crest":"moves tone|press","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","magnet":"moves tone|js press","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-riser":"moves fades tone shape seq|press","o-quiet":"tone|hover","z-lurch":"moves fades|hover","z-stack":"moves tone|press","z-gum":"moves tone|press","sweep":"moves tone seq|hover","shutter":"moves tone seq|hover","inkfill":"moves tone|js","sheen":"moves tone|hover","j-dir":"moves shape|js","o-step":"moves shape seq|hover","w-dither":"shape|hover","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","corners":"moves fades tone|hover","uline":"moves|hover","e-draw":"fades shape|js","e-chamfer":"shape|hover","e-reg":"moves|hover","s-mid":"moves|hover","f-kant":"moves fades tone seq|press","l-gauge":"tone shape|hover","l-corner":"moves tone shape|hover","i-beam":"tone shape|hover","i-rule":"type|hover","w-corner":"shape|hover","roll":"moves|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-words":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","j-resolve":"tone|js","q-jitter":"moves seq|loop","relay":"moves seq|hover","dotm":"moves fades seq|hover","i-anti":"moves|press","i-space":"moves shape|hover","i-throw":"moves|js press","p-part":"moves shape|hover","p-walk":"moves|js","p-cycle":"seq|js loop","p-hinge":"moves|hover","j-out":"moves seq|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","n-cross":"moves fades seq|js","n-join":"moves shape|hover","w-grid":"moves|hover","w-redraw":"moves seq|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-glas":"moves tone|hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","l-plate-wrap":"fades|hover","x-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","k-recede":"moves tone|hover","k-ind":"moves|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-pair":"moves tone|hover","k-div":"moves fades tone|hover","c-swell":"moves|press","c-mass":"moves tone|press","c-tide":"moves seq|hover","c-relay":"moves tone shape seq|hover","c-crest":"moves tone|press","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
