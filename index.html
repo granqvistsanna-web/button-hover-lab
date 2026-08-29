@@ -2197,7 +2197,7 @@
         <button type="button" class="btn btn--line n-cross"><span class="n-cross-row"><span class="n-cross-mark" aria-hidden="true"><svg class="icon n-cross-glyph n-cross-glyph--go" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon n-cross-glyph n-cross-glyph--land" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span><span class="n-cross-lbl">Read the note</span></span></button>
       </div>
       <h3><span class="num">92</span>Changes sides</h3>
-      <p>The mark starts left of the label and finishes right of it, crossing rather than going around &mdash; the position cards 56 and 79 both decline to take. It goes out in one slot and is lit again in the other.</p>
+      <p>The mark starts left of the label and finishes right of it, crossing rather than going around &mdash; the position card 79 declines to take. It stays lit the whole way and shrinks as it passes the letters.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -2282,18 +2282,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="i-space" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--solid i-space">View the index
-          <span aria-hidden="true">
-            <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
-          </span>
-        </button>
-      </div>
-      <h3><span class="num">56</span>Re-spacing</h3>
-      <p>The gap between label and mark opens by exactly what the right padding gives up, so the mark travels out toward the trim while the measure stays identical to the pixel.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
 
     <article class="spec" data-key="j-optic" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
@@ -3606,7 +3594,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
      COLOUR: this section declares no colour of its own. Every value is an
      existing token or a color-mix() of one, so the single graphite palette in
-     the head already carries it. The one place that needed thought is card 56.
+     the head already carries it.
 
      DEPTH: no box-shadow anywhere — graphite states elevation as lightness. A
      black shadow is invisible on a near-black stage anyway, so the cards that have to
@@ -3787,23 +3775,6 @@ document.addEventListener("DOMContentLoaded", function () {
     d:path("M0 2 Q60 12 120 2");
   }
 
-  /* 56 Re-spacing — one registered length feeds two opposing metrics, so the
-     sum is exact rather than approximately equal: the gap grows by --i-gap and
-     the right padding gives up the same --i-gap. Declared and transitioned on
-     the same element as it is read on, which is the only way a registered
-     property is safe to rely on. On a solid plate, because the mark travelling
-     toward a hard colour boundary is the whole point. This is the one card here
-     that lays out on every frame; it earns it — the measure is conserved to the
-     pixel rather than to within a rounding error. */
-  @property --i-gap{syntax:"<length>"; inherits:false; initial-value:0px}
-  .btn.i-space{
-    --i-gap:0px;
-    gap:calc(10px + var(--i-gap));
-    padding-right:calc(28px - var(--i-gap));
-    transition:--i-gap var(--t-4) var(--e-quint), transform var(--t-1) var(--e-out);
-  }
-  .btn.i-space:hover, .btn.i-space:focus-visible{--i-gap:7px}
-
   /* The thickness this study animates. Registered so it interpolates —
      see the note on .i-rule .i-rule-lbl below. */
   @property --i-rule-w{ syntax:"<length>"; inherits:false; initial-value:1px }
@@ -3819,10 +3790,9 @@ document.addEventListener("DOMContentLoaded", function () {
      interpolate: measured, it stepped 1px → 2px on the first frame and held,
      so the verb in this card's own sentence was the one channel that never
      moved. Registered, it runs 1px → 2px across 285ms in 35 distinct values.
-     Card 56 already animates a registered length this way — --i-gap carries
-     its re-spacing — and 30 a registered integer; this is the same move for a
-     property that is painted rather than laid out, which is the case the other
-     two do not cover.
+     Cards 61 and 62 already animate a registered length this way, and 30 a
+     registered integer; this is the same move for a property that is painted
+     rather than laid out, which is the case the others do not cover.
 
      The colour used to run on --t-3 and a bare `ease`: two durations and two
      curves inside one effect, against the first rule of the doctrine. It joins
@@ -4521,8 +4491,9 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-ind:has(.k-ind-i:nth-child(3):is(:hover,:focus-visible)){--k-n:2}
   .k-ind:has(.k-ind-i:nth-child(4):is(:hover,:focus-visible)){--k-n:3}
 
-  /* 62 Conserved compression — card 56 conserved one button's measure by
-     trading its gap against its padding. This is the same principle one scope
+  /* 62 Conserved compression — a retired card conserved one button's measure
+     by trading its gap against its padding, one registered length feeding two
+     opposing metrics so the sum was exact. This is the same principle one scope
      up: the hovered item takes 24px and its two neighbours give up 12px each,
      so the row's width is unchanged by construction rather than by rounding.
      The padding is cut to 12px because the house 28px leaves no room to squeeze
@@ -4739,8 +4710,8 @@ document.addEventListener("DOMContentLoaded", function () {
      the card it disagrees with, which is the whole of the section. */
 
   /* 92 Changes sides — the mark leaves its slot and takes the opposite one.
-     Cards 56 and 79 both keep the mark on one side and negotiate the space
-     around it; this argues it can cross the label outright.
+     Card 79 keeps the mark on one side and negotiates the space around it;
+     this argues it can cross the label outright.
 
      The mark's travel is the label's width plus the gap, which CSS has no name
      for: a query container would supply it, but container-type carries
@@ -4775,42 +4746,47 @@ document.addEventListener("DOMContentLoaded", function () {
      the whole gesture at 350ms and the dark stretch at about 160, and it costs
      the card nothing it was using: the crossing itself is never visible.
 
-     WHAT THE STAGGER COULD NOT FIX, AND WHAT DOES: the arrow used to pass over
-     the label's glyphs, 14px of full overlap for about 200ms on the way in.
-     That is intrinsic to crossing a bare label — the label stepping aside 22px
-     does not clear a 107px path, it only shifts it — so the delays could change
-     the ORDER and never the overlap. Card 67 crosses two solid masses and can
-     put the travelling one in front with a z-index; there is no plate to hide
-     behind here. So the mark is not hidden behind anything: it is not drawn. It
-     goes out in its own slot, crosses dark, and is lit again as it settles into
-     the other one, and what you follow is the pair of slots rather than the
-     thing between them.
+     THE BLACKOUT IS GONE AND THAT IS THE WHOLE OF THIS PASS. The arrow used to
+     be extinguished for the crossing: --go faded out over --t-1, --land waited
+     --t-3 before lighting, and traced frame by frame that left 134ms — 64% of
+     the travel, from 36px to 104px of 107 — with NOTHING DRAWN AT ALL. It was
+     asked to read as a crossing and it read as a flicker: an arrow blinking out
+     in one slot and blinking in at the other, with an empty button between.
+     Continuity beats hiding the overlap, so the two layers now CROSSFADE over
+     the mark's own clock and the glyph is never absent.
 
-     TWO STACKED COPIES OF THE GLYPH, because the dip is out-then-in on one
-     property and a transition cannot do that — the objection the version before
-     this one raised against a keyframe still stands, and this is the way round
-     it that keeps every state a transition. One layer owns the departure and the
+     LINEAR ON BOTH HALVES, WHICH IS THE ONLY WAY A CROSSFADE HOLDS UP. Two
+     stacked copies of one glyph composite to 1 − (1−a)(1−b); with both halves
+     linear over the same window the minimum falls at the midpoint and is 0.75.
+     Ease either half and the dip deepens and moves: an --e-out pair bottoms out
+     near 0.35 a third of the way in, which is the blackout again, only shorter.
+     The travel keeps its curve — the character is in the motion, not in the fade.
+
+     IT GETS OUT OF THE TYPE'S WAY BY SHRINKING RATHER THAN BY GOING DARK. The
+     overlap the old machinery was avoiding is real: the label stepping aside
+     22px does not clear a 107px path, it only shifts it. So the glyphs scale
+     1 → 0.58 and 0.58 → 1 on the same linear window. They are the same size only
+     at the midpoint; either side of it THE BRIGHTER COPY IS ALWAYS THE LARGER
+     ONE — the departing arrow recedes as it dims and the arriving one grows as
+     it lights — so the pair reads as one arrow with a soft edge rather than as
+     two, which is what a thing moving 107px in 300ms should look like anyway.
+     Full size and full strength in both slots, smallest and softest over the
+     letters. Card 67 can put its travelling piece in front with a z-index
+     because it crosses a solid plate; there is no plate here, and this is the
+     answer that does not need one.
+
+     TWO STACKED COPIES OF THE GLYPH, still, because both the fade and the scale
+     are out-then-in on one property and a transition cannot do that — the
+     objection the version before this one raised against a keyframe stands, and
+     this keeps every state a transition. One layer owns the departure and the
      other the arrival; both ride the same travelling wrapper, so they are never
-     in two places and there is nothing to keep in sync. Each fade is --t-1, the
-     press rung, which is the only one short enough to beat the curve: --e-quint
-     puts the mark past the middle of the label inside a fifth of its own time,
-     so a --t-2 fade would still be visible over the type it was supposed to
-     clear.
+     in two places and there is nothing to keep in sync.
 
-     WHEN THE ARRIVAL MAY BE LIT IS NOT A TASTE DECISION, it is the gap. The
-     mark ends 107px along and the label, having stepped 22px aside, ends 8px
-     short of it — so the glyph's box is clear of the label's last letter only
-     over the final 8px, which is 92% of the travel. Nothing may light before
-     that frame. Under quint 92% falls at 44% of the run, and --t-3 is the first
-     rung past it: the arrival is lit at 95% of the way home with 6px still to
-     cover, and the return at 98.5% one rung down. Held at --t-4 before, it lit
-     with 3.6px left and 150ms to spend on them, which is a glyph appearing
-     parked. THE ORDER SURVIVES THE DISAPPEARANCE,
-     which was the risk: on the way in the label vacates and the slot it leaves
-     fills afterwards; on the way out the mark goes dark first and the label is
-     home before it comes back. The stagger is now read off two slots emptying
-     and filling instead of off a thing crossing, and it is the same claim either
-     way.
+     --e-out AND NOT --e-quint ON THE TRAVEL, for the same reason. Sampled at
+     8ms, quint moved the mark 12px in a single frame just after it started and
+     then spent the last 100ms covering 3px: a lurch and a crawl, which is what
+     was left to look at once the fade stopped covering it. --e-out is the
+     gentler cubic and the whole crossing now reads at one speed.
 
      The gap here stays 8px and off --pair-gap on purpose: that token is the
      label-plate-and-46px-circle spacing of card 93 and section N, and this is
@@ -4818,17 +4794,22 @@ document.addEventListener("DOMContentLoaded", function () {
   .n-cross .n-cross-row{position:relative; display:inline-flex; align-items:center; gap:8px}
   .n-cross .n-cross-lbl,
   .n-cross .n-cross-mark{transform:translateX(0)}
-  .n-cross .n-cross-lbl{transition:transform var(--t-3) var(--e-quint)}
+  .n-cross .n-cross-lbl{transition:transform var(--t-3) var(--e-out)}
   .n-cross .n-cross-mark{position:relative; display:block; width:14px; height:14px;
-    transition:transform var(--t-4) var(--e-quint)}
+    transition:transform var(--t-4) var(--e-out)}
   .n-cross .n-cross-glyph{position:absolute; inset:0}
   /* rest — the exit: the mark comes home, then the label follows it back */
   .n-cross .n-cross-mark{transition-delay:0s}
   .n-cross .n-cross-lbl{transition-delay:var(--d-1)}
-  /* rest — the exit again: the arrival layer goes dark as the mark breaks away,
-     the departure layer is lit again once it is nearly home. */
-  .n-cross .n-cross-glyph--go{opacity:1; transition:opacity var(--t-1) var(--e-out) var(--t-3)}
-  .n-cross .n-cross-glyph--land{opacity:0; transition:opacity var(--t-1) var(--e-out)}
+  /* rest — the exit again: the crossfade runs backwards on the mark's own
+     clock, no delay, so the way home is continuous too. */
+  .n-cross .n-cross-glyph--go,
+  .n-cross .n-cross-glyph--land{
+    transition:opacity var(--t-4) linear, scale var(--t-4) linear;
+    transition-delay:0s;
+  }
+  .n-cross .n-cross-glyph--go{opacity:1; scale:1}
+  .n-cross .n-cross-glyph--land{opacity:0; scale:.58}
   /* Gated on the measure: without a real number the label would shift and the
      mark would stand still, which is worse than doing nothing. */
   /* hover — the entrance: the label vacates, then the mark crosses */
@@ -4836,13 +4817,16 @@ document.addEventListener("DOMContentLoaded", function () {
   .n-cross.n-is-set:focus-visible .n-cross-lbl{transform:translateX(-22px); transition-delay:0s}   /* 14px mark + 8px gap */
   .n-cross.n-is-set:hover .n-cross-mark,
   .n-cross.n-is-set:focus-visible .n-cross-mark{transform:translateX(var(--n-cross-x,0px)); transition-delay:var(--d-1)}
-  /* hover — the entrance: out at once in the slot it is leaving, lit again in
-     the slot it is taking. Gated on the measure with everything else: without a
-     real number the mark would go dark in place and never come back. */
+  /* hover — the entrance: the two layers trade over the mark's own window,
+     sharing its --d-1 so the fade tracks the travel rather than racing it.
+     Gated on the measure with everything else: without a real number the mark
+     would trade layers standing still. */
   .n-cross.n-is-set:hover .n-cross-glyph--go,
-  .n-cross.n-is-set:focus-visible .n-cross-glyph--go{opacity:0; transition-delay:0s}
+  .n-cross.n-is-set:focus-visible .n-cross-glyph--go{opacity:0; scale:.58;
+    transition-delay:var(--d-1)}
   .n-cross.n-is-set:hover .n-cross-glyph--land,
-  .n-cross.n-is-set:focus-visible .n-cross-glyph--land{opacity:1; transition-delay:var(--t-3)}
+  .n-cross.n-is-set:focus-visible .n-cross-glyph--land{opacity:1; scale:1;
+    transition-delay:var(--d-1)}
 
   /* 93 Pieces join — two plates converge into one capsule. Card 52 opens a
      three-pixel gap between label and block and calls them two masses; this is
@@ -4850,7 +4834,7 @@ document.addEventListener("DOMContentLoaded", function () {
      their radius so the pair reads as a single object rather than a docking.
      A hidden copy at the rest spacing reserves the width, so the pair closes
      INWARD and the group's own box never moves. */
-  .n-join{padding:0; background:none; border:0; border-radius:999px; --n-join-tuck:8px}
+  .n-join{padding:0; background:none; border:0; border-radius:999px; --n-join-tuck:12px}
   .n-join .n-join-stack{display:inline-grid}
   /* align-items:stretch, not center: a fixed 46px mark against a plate whose
      height comes from its padding leaves a half-pixel step at the seam, and a
@@ -4872,13 +4856,24 @@ document.addEventListener("DOMContentLoaded", function () {
      to find at any subpixel or any zoom.
 
      The tuck is what makes the closed state read as one object instead of one
-     object with a hole in it. The seam stacks two paddings — the plate's own 26
-     and the 16px halo the mark keeps around a 14px arrow — so an untucked join
-     lands on 26 / 42 / 16 and puts its widest gap in the middle of the thing it
-     is claiming is single. Tucked, it lands on 26 / 31 / 16, and card 66 opens
-     from exactly that capsule. The travel stays derived rather than written out:
-     the seam cannot come apart the next time the spacing is judged as long as
-     2 × tuck > --pair-gap, which is the number's only constraint.
+     object with a hole in it, and IT IS ALSO THE ONLY DIAL ON HOW CLOSE THE
+     ARROW SITS TO THE LABEL. Measured from the last glyph to the arrow's own
+     box: 47px untucked, because the seam stacks the plate's 26px padding, the
+     5px gap and the 16px halo the mark keeps around a 14px arrow. At the
+     original tuck of 8 that came down to 31 and it was still reading as two
+     things with a hole between them. At 12 it is 23, which is the number this
+     card was returned for. Card 66 opens from exactly this capsule and carries
+     the same 12.
+
+     The 26px padding is deliberately NOT the thing that gives way. The plate has
+     to be a plate the moment it is alone — card 66's rest state is this capsule
+     and its hover is the plate on its own — so shortening the padding to close
+     the join would make the split state pay for the joined one. The tuck is two
+     opposed transforms and costs the plate nothing.
+
+     The travel stays derived rather than written out: the seam cannot come apart
+     the next time the spacing is judged as long as 2 × tuck > --pair-gap, which
+     is the number's only constraint. 24 against 5 overlaps by 19.
 
      Both halves move, and by the same 8, so the closed capsule stays centred in
      the width the ghost reserved. Closing on the mark alone would have hung it
@@ -5162,11 +5157,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Rest closes MORE than the gap: each half is pulled --p-part-tuck toward the
      other on top of it, which is what makes the joined state read as one object.
-     Un-tucked it does not, and the reason is that the seam stacks two paddings —
-     the plate's own 26 and the mark's 16px halo around a 14px arrow — so the
-     capsule measures 26 / 42 / 16 and puts its widest gap in the middle, which
-     is the one place a single object cannot have one. At 8 it measures
-     26 / 31 / 16 and the label and the arrow finally belong to each other.
+     Un-tucked it does not, and the reason is that the seam stacks the plate's
+     own 26px padding, the 5px gap and the mark's 16px halo around a 14px arrow —
+     47px from the last glyph to the arrow, with the widest space in the middle
+     of the thing claiming to be single, which is the one place a single object
+     cannot have one. The original 8 brought that to 31 and it still read as two
+     pieces. At 12 it is 23, and the label and the arrow finally belong to each
+     other. This is a REST-STATE number here and a hover number on 93, so the two
+     have to carry the same one or the mirror stops being a mirror.
 
      The 8 is spent as two opposed transforms and NOT as a shorter padding-right,
      for two reasons. The plate has to be a plate the moment it is alone, and a
@@ -5180,10 +5178,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
      The one constraint on the number is 2 × tuck > --pair-gap: below that the
      halves stop short of each other and the capsule they are supposed to arrive
-     as has a seam down the middle of it. 8 against 5 overlaps by 11. Card 93's
-     joined state carries the same 8, because it is the same state and the
+     as has a seam down the middle of it. 24 against 5 overlaps by 19. Card 93's
+     joined state carries the same 12, because it is the same state and the
      mirror has to hold on the side it is read from too. */
-  .p-part{padding:0; background:none; border:0; border-radius:999px; --p-part-tuck:8px}
+  .p-part{padding:0; background:none; border:0; border-radius:999px; --p-part-tuck:12px}
   .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-part .p-part-plate,
   .p-part .p-part-mark{background:var(--ink); color:var(--ink-on-fill);
@@ -5207,21 +5205,38 @@ document.addEventListener("DOMContentLoaded", function () {
      at all. Both are gated on the class, for 92's reason doubled — half a swap
      is worse than no swap.
 
-     They move together, same rung, same curve, because an exchange is
-     symmetric: there is no piece that vacates first, since each one
-     is heading for the slot the other is still standing in. So they must
-     overlap — two boxes trading places along one axis cannot avoid each other —
-     and the z-order stops being the effect and becomes a tie-break. The mark
-     stays on top. Underneath, it would disappear behind the plate and reappear
-     on the far side, which would be a tuck behind the plate and not this. */
+     There is no piece that vacates first, since each one is heading for the slot
+     the other is still standing in. So they must overlap — two boxes trading
+     places along one axis cannot avoid each other — and the z-order stops being
+     the effect and becomes a tie-break. The mark stays on top. Underneath, it
+     would disappear behind the plate and reappear on the far side, which would
+     be a tuck behind the plate and not this.
+
+     THEY DO NOT SHARE A DURATION, and that is this pass's correction — card
+     92's correction, applied to the card that took 92's split and then kept the
+     one rung. Symmetric in ROLE is not symmetric in DISTANCE: the mark clears
+     the whole plate, 146.9px at this string, and the plate clears the mark,
+     46 + one --pair-gap = 51px. One --t-5 for both ran the plate at 113px/s
+     against the mark's 327 — a third of the speed — and traced frame by frame
+     the plate was at 4px while the mark was already 12 clear of it and never
+     caught up. What you saw was not an exchange; it was an arrow leaving and a
+     plate being dragged after it. Speed, not duration, is what the eye reads
+     here, and the whole page's loop argument says so.
+
+     The mark takes --t-4 and the plate --t-2: 490px/s against 383, a ratio of
+     1.28 where it was 2.88, and the exchange lands in 300ms instead of 450 —
+     which is 92's other finding, that half a second of this reads as a stall.
+     The plate parks first and the mark crosses over it, which is the right
+     subject for a card named after the thing that walks. */
   .p-walk{padding:0; background:none; border:0; border-radius:999px}
   .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-walk .p-walk-plate,
   .p-walk .p-walk-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px;
-    position:relative; transform:translateX(0);
-    transition:transform var(--t-5) var(--e-quint)}
-  .p-walk .p-walk-plate{padding:15px 26px; z-index:0}
-  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px; z-index:1}
+    position:relative; transform:translateX(0)}
+  .p-walk .p-walk-plate{padding:15px 26px; z-index:0;
+    transition:transform var(--t-2) var(--e-quint)}
+  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px; z-index:1;
+    transition:transform var(--t-4) var(--e-quint)}
   .p-walk.p-is-set:hover .p-walk-mark,
   .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
   .p-walk.p-is-set:hover .p-walk-plate,
@@ -5335,13 +5350,30 @@ document.addEventListener("DOMContentLoaded", function () {
      34-degree tip on a 46px plate is close enough to the edge to flicker
      without it.
 
-     The opening takes --e-back and overruns the 34 degrees by two, because a
-     hinge has a stop and this is what reaching one looks like; the token's own
-     note carries the argument. The CLOSE
-     keeps --e-quint, exactly as card 54 keeps the plain curve on the way out:
-     the stop is at 0deg and it is the plate, so a hinge cannot overshoot
-     shut. Only the timing function is stated on the hover side, so the
-     duration still falls a rung on the exit like everything else. */
+     THE OPENING BOUNCES, AND --e-back WAS NOT ENOUGH OF ONE. That token peaks
+     at 1.058, so a 34-degree swing overran to 36 and settled — two degrees is a
+     stop being met, not a stop being hit, and at 46px across it is under a
+     pixel of travel at the far edge. This card is the one thing on the page
+     with a pin and a mass behind it, and the head of the token vocabulary says
+     so in as many words: a damped spring was taken out of the page because a
+     sliding dash has no mass to justify one, and «a hinge does». So the hinge
+     gets it, as a card-local linear() and NOT as a change to --e-back — that
+     token is also card 85's eye-pop, which is signed off and must not move
+     underneath itself. Traced at 8ms on the live page: three decaying
+     overshoots, −39.1deg, then back to −31.7, then −34.6, settling on −34.0.
+     The first bounce is 5.1 degrees past the stop where it was 2.
+
+     THE CLOSE keeps --e-quint, exactly as card 54 keeps the plain curve on the
+     way out: the stop is at 0deg and it is the plate, so a hinge cannot
+     overshoot shut. Only the timing function is stated on the hover side, so
+     the duration still falls a rung on the exit like everything else.
+
+     THE FACE DARKENS AS IT TURNS AWAY, which is the other half of leaving the
+     plane: a surface rotating out of the light gives some of it up. It is the
+     same colour move card 11 makes under its plate — a mix of --ink toward
+     --bg, no new token — and it is on the mark alone, because the plate has not
+     moved. --t-3 rather than the swing's --t-4, so the shade has settled by the
+     time the bounce is still deciding where to stop. */
   .p-hinge{padding:0; background:none; border:0; border-radius:999px}
   .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
   .p-hinge .p-hinge-plate,
@@ -5349,10 +5381,16 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-hinge .p-hinge-plate{padding:15px 26px}
   .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
     transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
-    transition:transform var(--t-4) var(--e-quint)}
+    background-color:var(--ink);
+    transition:transform var(--t-4) var(--e-quint),
+               background-color var(--t-3) var(--e-out)}
   .p-hinge:hover .p-hinge-mark,
   .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg);
-    transition-timing-function:var(--e-back)}
+    background-color:color-mix(in srgb, var(--ink) 82%, var(--bg));
+    transition-timing-function:
+      linear(0, 0.42 12%, 0.88 24%, 1.15 36%, 1.09 46%, 0.93 58%, 0.97 68%,
+             1.02 82%, 1.005 92%, 1),
+      var(--e-out)}
 </style>
 
 
@@ -5735,9 +5773,9 @@ document.addEventListener("DOMContentLoaded", function () {
      than the cards would have been:
 
      — a light wash sweeping diagonally across a solid plate is card 10.
-     — an icon nudging right while the label holds still is cards 11 and 56,
-       and 56 is the stronger of the two: it takes the travel back out of the
-       padding, so the plate does not grow while the mark moves.
+     — an icon nudging right while the label holds still is card 11. The
+       stronger version of it, which took the travel back out of the padding so
+       the plate did not grow while the mark moved, has been retired.
      — a soft shadow lift with no travel: this page has no box-shadow, and the
        reason is at the head of section L. A black shadow on a near-black
        stage is nothing at all, so elevation is stated as lightness instead.
@@ -6090,7 +6128,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
      The width is fixed at rest rather than hugged. A button that hugs its label
      would drag the row around it on the way down, and the page's rule is that
-     nothing outside the button moves; cards 16, 56 and 79 all pay that same
+     nothing outside the button moves; cards 16 and 79 both pay that same
      price up front. Fixed, though, is not the same as written down: 196px was
      the short label's number, and the toolbar's LONG label is 278px, so the
      plate wrapped to two rows and stopped being a plate. The width is measured
@@ -8272,7 +8310,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves tone|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -8281,7 +8319,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","g-two":"131","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","o-step":"91","sheen":"10","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","i-space":"56","j-optic":"79","q-spin":"83","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","g-two":"131","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","o-step":"91","sheen":"10","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","q-spin":"83","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -9152,11 +9190,11 @@ document.addEventListener("DOMContentLoaded", function () {
           if (wc) wc.split(',').forEach(function(p){
             p = p.trim(); if (p && p !== 'auto') props[p] = 1;
           });
-          // Which declarations READ each custom property. Cards 56, 61, 62 and
-          // 22 transition a registered length and spend it in a rest-state
-          // calc(), so the animated property name is --i-gap and the thing that
-          // actually moves is gap, padding or letter-spacing. Without this they
-          // carry no tag at all and fall out of every facet.
+          // Which declarations READ each custom property. Cards 61 and 62
+          // transition a registered length and spend it in a rest-state
+          // calc(), so the animated property name is the custom one and the
+          // thing that actually moves is gap, padding or letter-spacing.
+          // Without this they carry no tag at all and fall out of every facet.
           for (var k = 0; k < r.style.length; k++){
             var prop = r.style[k], val = r.style.getPropertyValue(prop);
             var m, vre = /var\((--[\w-]+)/g;
@@ -11054,10 +11092,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","56":"https://framer.com/m/ReSpacing-9XNknM.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","56":"0c2433e83aa4bdd8","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","70":"60df677dd1cf4e68","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","70":"60df677dd1cf4e68","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 

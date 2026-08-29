@@ -254,7 +254,6 @@ const ORDER_OF = {
     'Anticipation',
     'The stop',
     'Settle',
-    'Re-spacing',
     'Optical centre',
   ],
 
