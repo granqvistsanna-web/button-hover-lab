@@ -1432,7 +1432,7 @@
                     <button type="button" class="btn btn--solid i-mass"><svg class="icon i-mass-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><span class="i-mass-lbl">Continue to review</span></button>
                   </div>
                   <h3><span class="num">52</span>Two masses</h3>
-                  <p>The arrow and the label leave at the same instant and travel the same distance at different rates, so the light one arrives first and the pair closes up by a pixel and a half before the heavier label lands and restores the gap.</p>
+                  <p>The arrow and the label leave at the same instant and travel the same distance at different rates, so the light one arrives first and the pair closes up by two pixels before the heavier label lands and restores the gap.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -1451,7 +1451,7 @@
                     <span class="sr t-mark-live" role="status"></span>
                   </div>
                   <h3><span class="num">73</span>Plate to check</h3>
-                  <p>The plate collapses to the width of the mark and the check draws itself inside it. Card 80 stays a button the whole way; this one spends the plate, so the button becomes the confirmation.</p>
+                  <p>The plate closes to a disc the height of the button and the check draws itself inside it. Card 80 stays a button the whole way; this one spends the plate, so the button becomes the confirmation.</p>
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
@@ -3161,13 +3161,48 @@ document.addEventListener("DOMContentLoaded", function () {
      honest way to stop pretending for 170ms after it has arrived.
 
      On the way out both drop one rung, so the arrow snaps home and the label
-     drifts after it. */
+     drifts after it.
+
+     SIGNED OFF AT 6PX, WITH A SHADE. More push is more travel, not a faster
+     arrow. What you watch is the pair closing up, and the size of that closing
+     is the travel multiplied by the difference between the two rates — the
+     rates ARE the card, so hurrying the arrow would spend the subject in order
+     to buy a bigger reading of it. 4px to 6px is half again as much: the peak
+     separation goes 1.376px to 2.066px, the 10px gap narrows to 7.93 before it
+     comes back, and the label's median frame goes 0.0878px to 0.1349. The rung
+     fix stopped the dead tail; the travel is what pays for the movement.
+
+     AND THE PLATE TAKES A SHADE, a third channel that costs nothing. It is
+     background-color on the button itself — no extra element, no layer to
+     stack, nothing for layout to notice, and a colour cannot fuse into the two
+     transforms already here, so rule 3 is paid outright. The value is card 41's
+     to the byte: --ink mixed 86% with the ground, which resolves to #d2d2d2 at
+     the default control and is 0.504 of the rung from --ink-hi to --ink-mid.
+     Half a step down the ladder, already argued four passes into another card,
+     rather than a second opinion about how dark a hover should be.
+
+     It runs on --t-4 and --e-out, which is the label's own declaration: the
+     plate is the heaviest thing on the button, so it goes with the heavy
+     channel and the arrow stays the only thing that leads. The transform has to
+     be restated inside that shorthand or the press loses its transition. The
+     Outline version has no plate, the rule never matches, and the card falls
+     back to the push alone. Measured: box 212.88 x 45 identical at rest, at
+     hover and back, 1 distinct width across the enter; label #101010 in every
+     state; press composes to scale(.97). */
   .i-mass .i-mass-lbl{display:inline-block; transform:translateX(0);
     transition:transform var(--t-4) var(--e-out)}
   .i-mass .i-mass-arrow{transform:translateX(0);
     transition:transform var(--t-2) var(--e-out)}
   .i-mass:hover .i-mass-lbl, .i-mass:focus-visible .i-mass-lbl,
-  .i-mass:hover .i-mass-arrow, .i-mass:focus-visible .i-mass-arrow{transform:translateX(4px)}
+  .i-mass:hover .i-mass-arrow, .i-mass:focus-visible .i-mass-arrow{transform:translateX(6px)}
+  .btn--solid.i-mass{
+    transition:transform var(--t-1) var(--e-out),
+               background-color var(--t-4) var(--e-out);
+  }
+  .btn--solid.i-mass:hover,
+  .btn--solid.i-mass:focus-visible{
+    background-color:color-mix(in srgb, var(--ink) 86%, var(--bg-0));
+  }
   /* 54 Anticipation — a wind-up, which is the half of a spring a plain CSS
      easing can actually express. The curve dips to -0.205 at 21% of the
      duration, so a 7px advance winds 1.44px backwards first and arrives with
@@ -5174,24 +5209,41 @@ document.addEventListener("DOMContentLoaded", function () {
      The width is fixed at rest rather than hugged. A button that hugs its label
      would drag the row around it on the way down, and the page's rule is that
      nothing outside the button moves; cards 16, 56 and 79 all pay that same
-     price up front.
+     price up front. Fixed, though, is not the same as written down: 196px was
+     the short label's number, and the toolbar's LONG label is 278px, so the
+     plate wrapped to two rows and stopped being a plate. The width is measured
+     per label now and held for the life of that label — still fixed while
+     anything is happening, which is the property the card actually needs.
 
      The stroke is delayed past the width. Drawn while the plate is still moving
      the two read as one blurred event; landed first, the shape is the thing that
      happened and the check is the thing it says.
 
-     It collapses to the mark's own width, not to a square: --btn-r is the page's
+     It collapses to a square the height of the plate: --btn-r is the page's
      radius token and the toolbar owns it, so at the default pill setting this
      lands as a disc and at 0 it lands as a square. The card is about spending the
-     plate, and it holds either way. */
+     plate, and it holds either way.
+
+     Clearing the inline padding is what lets it get there. A border-box width
+     cannot go below padding plus border, so the 54px this asked for arrived as
+     58px — and the label, still in flow inside a content box of zero, wrapped to
+     three lines and pushed the height to 77. The shape was an upright ellipse
+     for as long as the card has existed. The padding leaves on the same curve as
+     the width, and the label is nowrap so it cannot wrap on the way down.
+
+     The diameter is measured rather than written, because it is not one number:
+     the outline version carries a 1px border on each side and the fill version
+     carries none, so the two are 47px and 45px tall and a constant would be
+     wrong in one of them. */
   .btn.t-mark{
-    width:196px; justify-content:center; overflow:hidden;
+    width:var(--t-mark-w, 196px); justify-content:center; overflow:hidden;
     transition:transform var(--t-1) var(--e-out),
                width var(--t-5) var(--e-quint),
+               padding var(--t-5) var(--e-quint),
                background-color var(--t-4) var(--e-out),
                border-color var(--t-4) var(--e-out);
   }
-  .btn.t-mark .lbl{transition:opacity var(--t-2) var(--e-out)}
+  .btn.t-mark .lbl{white-space:nowrap; transition:opacity var(--t-2) var(--e-out)}
   .btn.t-mark .t-mark-tick{
     position:absolute; left:0; top:0; right:0; bottom:0;
     display:grid; place-items:center;
@@ -5207,7 +5259,8 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:stroke-dashoffset var(--t-4) var(--e-out) var(--t-3);
   }
   .btn.t-mark[data-state="done"]{
-    width:54px; background:var(--ink); border-color:var(--ink);
+    width:var(--t-mark-d, 47px); padding-inline:0;
+    background:var(--ink); border-color:var(--ink);
   }
   .btn.t-mark[data-state="done"] .lbl{opacity:0}
   .btn.t-mark[data-state="done"] .t-mark-tick path{stroke-dashoffset:0}
@@ -5266,6 +5319,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .btn.t-mark{
       transition:transform var(--t-1) var(--e-out),
                  width var(--t-2) var(--e-out),
+                 padding var(--t-2) var(--e-out),
                  background-color var(--t-2) var(--e-out),
                  border-color var(--t-2) var(--e-out);
     }
@@ -5305,9 +5359,39 @@ document.addEventListener("DOMContentLoaded", function () {
   // 25 Plate to check — a drawn path announces nothing, so the
   // outcome is said in text next to it.
   (function(){
+    /* The plate's width and the disc's diameter are both measurements rather
+       than numbers. The width because the toolbar can swap in a label longer
+       than anything written here — the LONG label needs 278px and this shipped
+       with 196px, so it wrapped. The diameter because the fill version carries
+       no border and comes out 2px shorter than the outline one, so a constant
+       would be wrong in whichever version it was not written for.
+
+       bhl:label is the event the version machinery has always dispatched for
+       exactly this and nothing had ever listened to. It fires inside the swap
+       guard, with transitions off, so the new width ARRIVES rather than
+       animating — pressing Long must not read as though the plate closed. */
+    function fit(btn){
+      var lbl = btn.querySelector('.lbl');
+      var cs  = getComputedStyle(btn);
+      // The done state clears the inline padding, so a width measured there
+      // would come back 56px short and the plate would reopen too narrow.
+      if (btn.dataset.state !== 'done'){
+        var pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        var bd  = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+        btn.style.setProperty('--t-mark-w',
+          Math.max(196, Math.ceil(lbl.scrollWidth + pad + bd)) + 'px');
+      }
+      btn.style.setProperty('--t-mark-d', btn.offsetHeight + 'px');
+    }
+
     document.querySelectorAll('.t-mark').forEach(function(btn){
       var live = btn.parentNode.querySelector('.t-mark-live');
       var t = null;
+      fit(btn);
+      // Geist is not loaded on the first frame, so the first measurement is the
+      // fallback stack's and lands short of the face the page actually renders.
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ fit(btn); });
+      btn.addEventListener('bhl:label', function(){ fit(btn); });
       btn.addEventListener('click', function(){
         if (btn.dataset.state === 'done') return;
         btn.dataset.state = 'done';
