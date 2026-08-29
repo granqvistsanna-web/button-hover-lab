@@ -2858,6 +2858,22 @@ document.addEventListener("DOMContentLoaded", function () {
          outline. So the tail is built out of the clock and costs no second
          animation, no second path, and nothing for the pause to keep in sync.
 
+         THE STEP IS MEASURED, NOT DERIVED, and it caught the note above out. If
+         the outline really were the 460px that note computes, 42ms of a 2400ms
+         lap would buy 8px and six 10px segments would overlap by two. Measured
+         on the rendered path they landed 14.1px apart with 3-4px of dark
+         between them, and the trail read as a dashed line: 1% of this path is
+         8.06px, so the outline Chrome actually walks is about 806px. At 22ms
+         the segments still parted by half a pixel; 16ms lands them 7.7px apart
+         with 2.3px of overlap, which is the first value with no seam in it. The
+         460px figure upstream is now suspect wherever it is used to claim a
+         speed.
+
+         Measuring this needs care: a running CSS animation outranks an inline
+         style, so writing el.style.offsetDistance to pose the segments does
+         nothing and you are still reading the live lap. Pause it and read what
+         is there rather than trying to place it.
+
          IT HAD TO BE SEGMENTED RATHER THAN LONGER, and the note above is why: a
          straight chord on the 23.5px cap radius stands off the curve by its
          sagitta, 0.54px at 10 and 2.73px at 22, where the streak visibly lifts
@@ -2865,7 +2881,7 @@ document.addEventListener("DOMContentLoaded", function () {
          this card already refused to pay. Six short ones each keep the 0.54px
          budget and the ENSEMBLE bends, because every segment is tangent to the
          outline at its own point. 50px of tail out of 10px parts. */
-      animation-delay:calc(var(--i, 0) * var(--f-kant-step, -42ms));
+      animation-delay:calc(var(--i, 0) * var(--f-kant-step, -16ms));
       transition:opacity var(--t-2) var(--e-out);
     }
     /* The index is authored on nth-of-type and never as an inline style: the
