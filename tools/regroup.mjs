@@ -9,7 +9,8 @@
 //
 // Re-runnable. The map is keyed on TITLE, not number, because the numbers get
 // resequenced and the titles do not. A card whose title is not in the map
-// stops the run rather than being dropped or filed under a guess.
+// stops the run rather than being dropped or filed under a guess. Within a
+// group the cards land in the LISTED order — see the note on ORDER_OF.
 //
 //   node tools/regroup.mjs [--check]
 //
@@ -55,150 +56,251 @@ const ALIAS_REHOME = [
   // ever returns, its alias belongs on the card's own class from day one.
 ];
 
-const GROUP_OF = {
+// Membership AND order, in one structure. It used to be a flat title -> group
+// map, which answered «which section» and left «where in it» to whatever order
+// the cards happened to sit in — so a group of sixteen opened with a scale
+// study, then a press, then a scale again. A reader comparing two lifts had to
+// hold half the section in their head to find the second one.
+//
+// The lists below are read in order, and the blank-line clusters inside each
+// are the point: adjacent cards do the same thing to the same part, so the
+// comparison a reader is making is the one the eye is already making. The
+// cluster comments name the run rather than the group; they are not headings
+// and nothing renders them.
+//
+// Numbers still do not move. The clusters reorder POSITIONS, and a study's
+// number is its catalogue entry — the prose cites bare numbers across cards,
+// #number-map pairs key to number, and both survive a reorder untouched.
+const ORDER_OF = {
   // Whole button — it lifts, scales, leans, settles, or answers a press.
-  'Small grow': 'button',
-  'Small shrink': 'button',
-  'Pointer grow': 'button',
-  'Inset fill': 'button',
-  'Keycap': 'button',
-  'Elevation step': 'button',
-  'Magnetic': 'button',
-  'Rigid type': 'button',
-  'Two masses': 'button',
-  'Tempo match': 'button',
-  'Status button': 'button',
-  'Plate to check': 'button',
-  'Hold to confirm': 'button',
-  'Wave through': 'button',
-  'Riser': 'button',
-  'Hairline only': 'button',
+  button: [
+    // Scale: the plate changes size and nothing else.
+    'Small grow',
+    'Small shrink',
+    'Pointer grow',
+    'Inset fill',
+
+    // Depth: it leaves the page, or pretends to sit on it.
+    'Keycap',
+    'Elevation step',
+    'Riser',
+    'Fixed shadow',
+    'Slab tilt',
+    'Stack fan',
+
+    // Mass: it has weight, and the pointer has to argue with it.
+    'Magnetic',
+    'Two masses',
+    'Rigid type',
+    'Wave through',
+    'Tempo match',
+
+    // A state to report: the press means something and the button says so.
+    'Status button',
+    'Plate to check',
+    'Hold to confirm',
+    'Honest progress',
+
+    // The reduction: almost nothing, on purpose.
+    'Hairline only',
+  ],
 
   // Fill — a fill arrives or leaves.
-  'Directional sweep': 'fill',
-  'Shutter': 'fill',
-  'Ink fill': 'fill',
-  'Sheen': 'fill',
-  'Directional fill': 'fill',
-  'Liquid fill': 'fill',
-  'Instant invert': 'fill',
-  'Hatch exit': 'fill',
-  'Stepped fill': 'fill',
-  'Halftone fill': 'fill',
+  fill: [
+    // Directional: it enters from a side.
+    'Directional sweep',
+    'Directional fill',
+    'Shutter',
+
+    // Liquid: it spreads from the point of contact.
+    'Ink fill',
+    'Liquid fill',
+    'Measured ripple',
+    'Press fill',
+
+    // Stepped and screened: the fill arrives in visible units.
+    'Stepped fill',
+    'Halftone fill',
+    'Hatch exit',
+
+    // Whole-plate: no travel, the surface just changes.
+    'Instant invert',
+    'Sheen',
+  ],
 
   // Border, corner and rule — an outline draws, a radius changes, a rule moves.
-  'Crop marks': 'edge',
-  'Directional underline': 'edge',
-  'Drawn outline': 'edge',
-  'Racing line': 'edge',
-  'Chamfered corner': 'edge',
-  'In register': 'edge',
-  'Edge light': 'edge',
-  'Centre underline': 'edge',
-  'Diagonal radius': 'edge',
-  'Line gauge': 'edge',
-  'Continuous corners': 'edge',
-  'Rule bend': 'edge',
-  'Real underline': 'edge',
-  'Struck through': 'edge',
-  'Cell chamfer': 'edge',
-  'Dotted focus': 'edge',
+  edge: [
+    // Underlines: the one edge a link already has.
+    'Directional underline',
+    'Centre underline',
+    'Real underline',
+    'Struck through',
+
+    // Rules that are not underlines.
+    'Line gauge',
+    'Rule bend',
+    'Racing line',
+
+    // Outlines and marks around the whole plate.
+    'Drawn outline',
+    'Crop marks',
+    'In register',
+    'Edge light',
+    'Dotted focus',
+
+    // Corners: the radius itself performs.
+    'Chamfered corner',
+    'Cell chamfer',
+    'Diagonal radius',
+    'Continuous corners',
+  ],
 
   // Label — the word moves as one unit.
-  'Label roll': 'label',
-  'Second line': 'label',
-  'Overflow only': 'label',
-  'Counter': 'label',
-  'Tracking trade': 'label',
-  'One full turn': 'label',
-  'Overrun': 'label',
-  'Overflow loop': 'label',
-  'Ticker label': 'label',
-  'Split-flap': 'label',
+  label: [
+    // Rolls: one label leaves as another arrives.
+    'Label roll',
+    'Second line',
+    'One full turn',
+    'Split-flap',
+    'Ticker label',
+
+    // Overflow: the label is wider than the plate and admits it.
+    'Overflow only',
+    'Overrun',
+    'Overflow loop',
+
+    // The label changes without travelling.
+    'Counter',
+    'Tracking trade',
+    'Label invert',
+  ],
 
   // Label, per character — the word is split and the parts move separately.
-  'Letter roll': 'char',
-  'Letter lift': 'char',
-  'Overshoot': 'char',
-  'Word roll': 'char',
-  'Middle out': 'char',
-  'Random stagger': 'char',
-  'Weight wave': 'char',
-  'It prints': 'char',
-  'Resolve': 'char',
-  'Nervous type': 'char',
+  char: [
+    // Rolls and lifts, staggered across the characters.
+    'Letter roll',
+    'Word roll',
+    'Letter lift',
+    'Overshoot',
+    'Middle out',
+    'Random stagger',
+    'Word bow',
+
+    // The characters change weight or position in place.
+    'Weight wave',
+    'Nervous type',
+
+    // The word assembles: it was not there, and then it is.
+    'It prints',
+    'Resolve',
+  ],
 
   // Icon — an arrow, dot, caret, needle or dash does the work.
-  'Arrow relay': 'icon',
-  'Dot to arrow': 'icon',
-  'Guillemets': 'icon',
-  'Ellipsis arrow': 'icon',
-  'Caret': 'icon',
-  'The stop': 'icon',
-  'Settle': 'icon',
-  'Anticipation': 'icon',
-  'Re-spacing': 'icon',
-  'Exit velocity': 'icon',
-  'Split apart': 'icon',
-  'Mark walk': 'icon',
-  'Fill swap': 'icon',
-  'Clipped relay': 'icon',
-  'Mark hinge': 'icon',
-  'Mark tuck': 'icon',
-  'Corner exit': 'icon',
-  'Optical centre': 'icon',
-  'Working state': 'icon',
-  'Changes sides': 'icon',
-  'Pieces join': 'icon',
-  'Grid steps': 'icon',
-  'Sprite arrow': 'icon',
-  'Plus to X': 'icon',
-  'Needle swing': 'icon',
+  icon: [
+    // Arrows that travel.
+    'Arrow relay',
+    'Dot to arrow',
+    'Ellipsis arrow',
+    'Sprite arrow',
+    'Clipped relay',
+    'Exit velocity',
+    'Corner exit',
+    'Changes sides',
+
+    // Marks that redraw themselves.
+    'Mark walk',
+    'Mark hinge',
+    'Mark tuck',
+    'Plus to X',
+    'Pieces join',
+    'Split apart',
+    'Grid steps',
+    'Fill swap',
+
+    // Carets and pointers: the small directional set.
+    'Caret',
+    'Guillemets',
+    'Needle swing',
+
+    // Where the character is in the MOTION, not the shape.
+    'Anticipation',
+    'The stop',
+    'Settle',
+    'Re-spacing',
+    'Optical centre',
+    'Working state',
+  ],
 
   // Material and light — the button looks like a thing.
-  'Bloom': 'material',
-  'Inner light': 'material',
-  'Idle breath': 'material',
-  'Frosted glass': 'material',
-  'Backlight': 'material',
-  'Lantern': 'material',
-  'The grain settles': 'material',
-  'Light flip': 'material',
-  'CRT converge': 'material',
-  'Sprite swap': 'material',
-  'Knurling': 'material',
-  'Deboss': 'material',
-  'Shortcut plate': 'material',
-  'Coarse dither': 'material',
-  'Bevel flip': 'material',
+  material: [
+    // Light: something is emitting.
+    'Bloom',
+    'Inner light',
+    'Backlight',
+    'Lantern',
+    'Light flip',
+    'Fixed light',
+
+    // Glass.
+    'Frosted glass',
+
+    // Print and screen: the surface has a grain.
+    'The grain settles',
+    'Coarse dither',
+    'CRT converge',
+    'Sprite swap',
+    'Knurling',
+
+    // Relief: the surface is cut or raised.
+    'Deboss',
+    'Bevel flip',
+    'Shortcut plate',
+
+    // It never stops.
+    'Idle breath',
+  ],
 
   // Button groups — siblings react to the one you are on.
-  'Others recede': 'row',
-  'Travelling rule': 'row',
-  'Conserved compression': 'row',
-  'Repulsion': 'row',
-  'Emphasis trade': 'row',
-  'Divider yields': 'row',
-  // Studies 109-117, added with the 2026-08-28 rename (they predate this map).
-  'Fixed light': 'material',
-  'Measured ripple': 'fill',
-  'Press fill': 'fill',
-  'Label invert': 'label',
-  'Honest progress': 'button',
-  'Slab tilt': 'button',
-  'Word bow': 'char',
-  'Stack fan': 'button',
-  'Fixed shadow': 'button',
+  row: [
+    // The others give way.
+    'Others recede',
+    'Conserved compression',
+    'Repulsion',
+
+    // Something shared between them moves or yields.
+    'Travelling rule',
+    'Divider yields',
+    'Emphasis trade',
+  ],
 
   // Two at once — two mechanisms from the groups above, on one curve.
-  'Under load': 'compound',
-  'Swell': 'compound',
-  'Lands first': 'compound',
-  'Tide': 'compound',
-  'Leading edge': 'compound',
-  'Crest': 'compound',
-  'Closing marks': 'compound',
+  compound: [
+    // The two arrive together.
+    'Swell',
+    'Crest',
+    'Tide',
+    'Under load',
+
+    // One leads and the other follows.
+    'Lands first',
+    'Leading edge',
+    'Closing marks',
+  ],
 };
+
+// The flat lookup the rest of the script uses, derived so the two can never
+// disagree. A title listed under two groups is an authoring mistake that would
+// otherwise show up as a card silently taking the second group, so it stops
+// the run here instead.
+const GROUP_OF = {};
+const ORDER_IN = {};
+for (const [group, titles] of Object.entries(ORDER_OF)) {
+  titles.forEach((title, i) => {
+    if (GROUP_OF[title]) throw new Error(`'${title}' is listed twice: ${GROUP_OF[title]} and ${group}`);
+    GROUP_OF[title] = group;
+    ORDER_IN[title] = i;
+  });
+}
 
 // ---- parsing ---------------------------------------------------------------
 // Tag-counting rather than a regex across the whole block: the cards contain
@@ -249,12 +351,37 @@ if (missing.length) {
 
 const bucket = Object.fromEntries(GROUPS.map(([k]) => [k, []]));
 for (const c of cards) bucket[GROUP_OF[titleOf(c)]].push(c);
+// Into the authored order. Sorting rather than walking ORDER_OF and pulling
+// each title keeps the run total honest: every card that was parsed is still
+// in a bucket afterwards, whatever the lists say.
+for (const k of Object.keys(bucket)) {
+  bucket[k].sort((a, b) => ORDER_IN[titleOf(a)] - ORDER_IN[titleOf(b)]);
+}
 
 const empty = GROUPS.filter(([k]) => !bucket[k].length);
 if (empty.length) throw new Error('empty group: ' + empty.map(([, n]) => n).join(', '));
 
 // ---- rebuild ---------------------------------------------------------------
-const indent = (s, pad) => s.replace(/^/gm, pad).replace(/^\s+$/gm, '');
+// Re-indent a card to `pad`, having first taken off whatever indentation it
+// arrived with. The dedent is not tidiness: blocks() starts a card at its
+// `<article`, so the first line comes back with no indent while every line
+// after it keeps its original one — and a plain `pad + line` then ADDED four
+// spaces to those lines on every run. Three runs had left the same element at
+// 18, 22 and 24 spaces across the page, and the file grew ~2.8KB each time for
+// no change on screen, which is noise a 600KB file being merged by two
+// sessions cannot afford. Idempotent now: run it twice, get the same bytes.
+// Safe because no card contains <pre>, <textarea> or white-space:pre — checked
+// across all 86 — so leading whitespace inside a card renders as nothing.
+const indent = (s, pad) => {
+  const lines = s.split('\n');
+  const base = lines.slice(1)
+    .filter((l) => l.trim())
+    .reduce((min, l) => Math.min(min, l.match(/^ */)[0].length), Infinity);
+  const strip = Number.isFinite(base) ? base : 0;
+  return lines
+    .map((l, i) => (l.trim() ? pad + (i === 0 ? l : l.slice(strip)) : ''))
+    .join('\n');
+};
 const rebuilt = GROUPS.map(([key, name]) => {
   return `<section class="sect">\n  <h2>${name}</h2>\n  <div class="grid">\n\n`
        + bucket[key].map((c) => indent(c, '    ')).join('\n\n')
@@ -268,13 +395,23 @@ const rebuilt = GROUPS.map(([key, name]) => {
 let out = '';
 let cursor = 0;
 sects.forEach((s, i) => {
-  out += src.slice(cursor, s.start);
-  if (i === 0) out += rebuilt;            // all eight land where the first was
+  const between = src.slice(cursor, s.start);
+  if (i === 0) {
+    out += between + rebuilt;             // all nine land where the first was
+  } else {
+    // What sits between two authored sections is the interleaved CSS, and it
+    // is kept exactly. What is NOT kept is the blank lines the removed
+    // <section> leaves on either side of it: the old swallow took one newline
+    // per section, the source has two, and the leftover was carried to the end
+    // of the file — eight fresh blank lines after </section> on every run,
+    // for ever. Trimmed to nothing and re-separated by exactly one blank line,
+    // so a second run over the same file is a no-op.
+    const kept = between.replace(/^\s*\n/, '').replace(/\s+$/, '');
+    if (kept) out += '\n\n' + kept;
+  }
   cursor = s.end;
-  // Swallow the blank line a dropped section leaves behind.
-  if (i > 0) { const m = /^[ \t]*\n/.exec(src.slice(cursor)); if (m) cursor += m[0].length; }
 });
-out += src.slice(cursor);
+out += src.slice(cursor).replace(/^(?:[ \t]*\n)+/, '\n');
 
 // The rail took a section's id from the first letter of its heading, which was
 // unique only while the headings started with one. Slug the whole name.
