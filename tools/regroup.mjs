@@ -96,6 +96,7 @@ const ORDER_OF = {
     'Small shrink',
     'Pointer grow',
     'Inset fill',
+    'Squash and stretch',
 
     // Depth: it leaves the page, or pretends to sit on it.
     'Keycap',
@@ -107,6 +108,7 @@ const ORDER_OF = {
 
     // Mass: it has weight, and the pointer has to argue with it.
     'Magnetic',
+    'Loose label',
     'Two masses',
     'Rigid type',
     'Wave through',
@@ -118,6 +120,9 @@ const ORDER_OF = {
     'Hold to confirm',
     'Honest progress',
 
+    // Two regions in one plate: it answers which part of itself you are on.
+    'Two targets',
+
     // The reduction: almost nothing, on purpose.
     'Hairline only',
   ],
@@ -127,6 +132,7 @@ const ORDER_OF = {
     // Directional: it enters from a side.
     'One-way sweep',
     'Directional fill',
+    'Takes turns',
     'Shutter',
 
     // Liquid: it spreads from the point of contact.
@@ -176,6 +182,7 @@ const ORDER_OF = {
   label: [
     // Rolls: one label leaves as another arrives.
     'Label roll',
+    'Arc swap',
     'Second line',
     'One full turn',
     'Split-flap',
@@ -228,6 +235,7 @@ const ORDER_OF = {
     'Mark walk',
     'Mark hinge',
     'Mark tuck',
+    'Buds a mark',
     'Plus to X',
     'Pieces join',
     'Split apart',
