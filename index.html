@@ -381,12 +381,12 @@
   /* 10 Sheen. The streak takes its OWN duration and not --t-5, which inside
      .btn resolves to 300ms. A light crossing a 200px plate is a material event
      and not a plate reacting to a pointer, and at a fifth of a second it reads
-     as a flick rather than as light. 667ms is 40 frames at 60fps, so it keeps
+     as a flick rather than as light. 583ms is 35 frames at 60fps, so it keeps
      the ladder's quantisation a rung above --t-5 without joining the ladder:
      nothing else on the page wants a rung this long, and a sixth token would
      be one study wide. Only :focus-visible ever saw this effect properly, at
      the unshifted 450ms. Card 123 carries the same value for the same reason. */
-  .sheen{--sheen-t:667ms; background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  .sheen{--sheen-t:583ms; background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
   .sheen:hover,
   .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
   /* Wider and five-stop: a bright core with a broad dim shoulder reads as
@@ -408,9 +408,13 @@
     transition:opacity var(--t-2) linear, transform 0s linear var(--t-2)}
   .sheen:hover::after,
   .sheen:focus-visible::after{transform:translateX(240%) skewX(-14deg); opacity:1;
-    /* Fast in, slow across the face, fast out: the run spends its cheap frames
-       where the streak is off-plate and its slow ones where you can see it. */
-    transition:transform var(--sheen-t) cubic-bezier(.25,.7,.75,.3), opacity 0s}
+    /* Fast in, slow across the face, and LANDED rather than flung. The run
+       spends its cheap frames where the streak is off-plate and its slow ones
+       where you can see it; the tail now leaves at slope 0.14 instead of 2.8,
+       so the light settles off the edge instead of snapping off it. Not zero,
+       though: a tail that stops dead is the very first curve's mistake moved
+       to the other end of the run. */
+    transition:transform var(--sheen-t) cubic-bezier(.2,.75,.65,.95), opacity 0s}
   .sheen .lbl{position:relative}
 
   /* ---- Family B in its other versions ---------------------------------
@@ -1709,9 +1713,9 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-key="f-kant" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
+    <article class="spec" data-versions="fill outline" data-key="f-kant" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
-                    <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
+                    <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
                   </div>
                   <h3><span class="num">42</span>Edge light</h3>
                     <p>A streak of the primary circles the hairline for as long as the pointer stays, and holds its place when it goes. It travels the outline, not an angle: a conic gradient crosses the caps 11.6 times faster than the flanks.</p>
@@ -2818,6 +2822,34 @@ document.addEventListener("DOMContentLoaded", function () {
   /* .btn carried, so the press beats the hover pair's (0,2,0): a bare :active
      is (0,1,0) and would lose to any two-class hover on the same element. */
   .btn.f-kant:active{ border-color:var(--ink-hover); transition-duration:var(--t-1) }
+  /* ---- the two surface versions ----------------------------------------
+     ON FILL THE LIGHT HAS TO INVERT, for the reason card 72's progress bar
+     inverts: the lamp is --accent, the filled plate is --ink, and white on
+     white is nothing at all. So the fill version darkens its edge instead of
+     lighting it — the same mechanism, the same tail, the opposite sign — and
+     --f-kant-ink is the one property that carries it.
+
+     THE OUTLINE VERSION IS THE HARD ONE AND IT IS OFFERED ANYWAY. This study's
+     own surface is already an outline: a --line-ctl hairline that the lamp
+     lifts. .btn--line states that hairline at full --ink, which leaves the
+     light nothing to add — a white lamp on a white border. So the outline
+     version keeps the plate transparent, as .btn--line means it to be, and
+     holds the RESTING border at the study's own strength; the hover still
+     takes it up. The alternative was a version where the effect is invisible,
+     and an invisible version is not a version. */
+  /* Both carry .f-kant so they outrank it: a bare .btn--solid is (0,1,0) and
+     loses to this card's own (0,1,0) background, which is stated later in the
+     sheet. Measured before that was fixed, the fill version kept the lifted
+     grey plate while the lamp had already inverted to dark — a dark light on a
+     dark plate, which is nothing at all. */
+  .btn--solid.f-kant{
+    background:var(--ink); color:var(--ink-on-fill); border-color:var(--ink);
+    --f-kant-ink:var(--on-ink);
+  }
+  .btn--solid.f-kant:hover, .btn--solid.f-kant:focus-visible{ border-color:var(--ink) }
+  .btn.btn--solid.f-kant:active{ border-color:var(--ink) }
+  .btn--line.f-kant{ background:none; border-color:var(--line-ctl) }
+
   .f-kant .f-kant-lamp{ display:none }
   @supports (offset-path: border-box){
     @keyframes f-kant-lap{ to{ offset-distance:100% } }
@@ -2837,7 +2869,7 @@ document.addEventListener("DOMContentLoaded", function () {
          consecutive ones has no hole to leave. One gradient became six samples
          of the same curve, which is what a segmented trail is. */
       --a:1;
-      background:color-mix(in srgb, var(--accent) calc(76% * var(--a)), transparent);
+      background:color-mix(in srgb, var(--f-kant-ink, var(--accent)) calc(76% * var(--a)), transparent);
       offset-path:border-box; offset-rotate:auto;
       /* half the border inward: the lamp's centreline and the hairline's are one */
       offset-anchor:100% calc(50% - 0.5px);
@@ -2855,11 +2887,15 @@ document.addEventListener("DOMContentLoaded", function () {
          lap would buy 8px and six 10px segments would overlap by two. Measured
          on the rendered path they landed 14.1px apart with 3-4px of dark
          between them, and the trail read as a dashed line: 1% of this path is
-         8.06px, so the outline Chrome actually walks is about 806px. At 22ms
-         the segments still parted by half a pixel; 16ms lands them 7.7px apart
-         with 2.3px of overlap, which is the first value with no seam in it. The
-         460px figure upstream is now suspect wherever it is used to claim a
-         speed.
+         8.06px, so the outline Chrome actually walks is about 806px, and the
+         460px figure upstream is suspect wherever it is used to claim a speed.
+
+         The step is then swept rather than solved, because the arithmetic has
+         already been wrong once here. Ten segments on this plate: -32ms and
+         below bunches them, -40ms spans 78.6px, -48ms spans 92.5px with the
+         worst gap still -0.82px, and -56ms opens a 1.18px seam. -48ms is the
+         longest tail this technique holds without breaking, so that is the
+         number, and the seam is what sets it rather than a preference.
 
          Measuring this needs care: a running CSS animation outranks an inline
          style, so writing el.style.offsetDistance to pose the segments does
@@ -2873,7 +2909,7 @@ document.addEventListener("DOMContentLoaded", function () {
          this card already refused to pay. Six short ones each keep the 0.54px
          budget and the ENSEMBLE bends, because every segment is tangent to the
          outline at its own point. 50px of tail out of 10px parts. */
-      animation-delay:calc(var(--i, 0) * var(--f-kant-step, -16ms));
+      animation-delay:calc(var(--i, 0) * var(--f-kant-step, -48ms));
       transition:opacity var(--t-2) var(--e-out);
     }
     /* The index is authored on nth-of-type and never as an inline style: the
@@ -2887,12 +2923,23 @@ document.addEventListener("DOMContentLoaded", function () {
        along the outline — the highest --i leads and the lowest trails. Measured
        before this was fixed, the ramp ran the other way and the comet flew dim
        end first. The brightness follows the travel, not the source order. */
-    .f-kant .f-kant-lamp:nth-of-type(1){ --i:0; --a:.12 }
-    .f-kant .f-kant-lamp:nth-of-type(2){ --i:1; --a:.22 }
-    .f-kant .f-kant-lamp:nth-of-type(3){ --i:2; --a:.34 }
-    .f-kant .f-kant-lamp:nth-of-type(4){ --i:3; --a:.50 }
-    .f-kant .f-kant-lamp:nth-of-type(5){ --i:4; --a:.72 }
-    .f-kant .f-kant-lamp:nth-of-type(6){ --i:5; --a:1 }
+    /* THE FALLOFF IS A CURVE, NOT A TASTE, and this is the one place on this
+       card where easing belongs. The lap must stay linear — see below — but the
+       BRIGHTNESS along the tail is free, and hand-picked values read as steps.
+       --a is (k/10)² for the kth segment from the back, a square falloff: the
+       front half of the tail holds most of the light and the back half gives
+       it up quickly, which is what a trail looks like and what an even ramp
+       never does. Ten values, one expression, no number chosen by eye. */
+    .f-kant .f-kant-lamp:nth-of-type(1){  --i:0; --a:.01 }
+    .f-kant .f-kant-lamp:nth-of-type(2){  --i:1; --a:.04 }
+    .f-kant .f-kant-lamp:nth-of-type(3){  --i:2; --a:.09 }
+    .f-kant .f-kant-lamp:nth-of-type(4){  --i:3; --a:.16 }
+    .f-kant .f-kant-lamp:nth-of-type(5){  --i:4; --a:.25 }
+    .f-kant .f-kant-lamp:nth-of-type(6){  --i:5; --a:.36 }
+    .f-kant .f-kant-lamp:nth-of-type(7){  --i:6; --a:.49 }
+    .f-kant .f-kant-lamp:nth-of-type(8){  --i:7; --a:.64 }
+    .f-kant .f-kant-lamp:nth-of-type(9){  --i:8; --a:.81 }
+    .f-kant .f-kant-lamp:nth-of-type(10){ --i:9; --a:1 }
     .f-kant:hover .f-kant-lamp, .f-kant:focus-visible .f-kant-lamp{
       opacity:1; animation-play-state:running;
       transition:opacity var(--t-1) var(--e-out);
@@ -7103,7 +7150,7 @@ document.addEventListener("DOMContentLoaded", function () {
      gradient has to invert to --on-ink, which is why the parent does. The
      delay is the lift's own duration and never a number invented for it, so
      the light crosses the face only once the face has arrived. */
-  .c-crest{--sheen-t:667ms; overflow:hidden; background:var(--bg-2);
+  .c-crest{--sheen-t:583ms; overflow:hidden; background:var(--bg-2);
     border:1px solid var(--line-ctl); color:var(--ink-text);
     transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-4) var(--e-quint),
@@ -7124,7 +7171,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:opacity var(--t-2) linear, transform 0s linear var(--t-2)}
   .c-crest:hover::after,
   .c-crest:focus-visible::after{transform:translateX(240%) skewX(-14deg); opacity:1;
-    transition:transform var(--sheen-t) cubic-bezier(.25,.7,.75,.3) var(--t-4),
+    transition:transform var(--sheen-t) cubic-bezier(.2,.75,.65,.95) var(--t-4),
                opacity 0s}
   .c-crest .lbl{position:relative; z-index:1}
 
@@ -7292,7 +7339,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","magnet":"moves tone|js press","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-riser":"moves fades tone shape seq|press","o-quiet":"tone|hover","z-lurch":"moves fades|hover","z-stack":"moves tone|press","z-gum":"moves tone|press","sweep":"moves tone seq|hover","shutter":"moves tone seq|hover","inkfill":"moves tone|js","sheen":"moves tone|hover","j-dir":"moves shape|js","o-step":"moves shape seq|hover","w-dither":"shape|hover","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","corners":"moves fades tone|hover","uline":"moves|hover","e-draw":"fades shape|js","e-chamfer":"shape|hover","e-reg":"moves|hover","s-mid":"moves|hover","f-kant":"moves fades tone seq|press","l-corner":"moves tone shape|hover","i-beam":"tone shape|hover","i-rule":"type|hover","w-corner":"shape|hover","roll":"moves|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-words":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","j-resolve":"tone|js","q-jitter":"moves seq|loop","relay":"moves seq|hover","dotm":"moves fades seq|hover","i-anti":"moves|press","i-space":"moves shape|hover","i-throw":"moves|js press","p-part":"moves shape|hover","p-walk":"moves|js","p-cycle":"seq|js loop","p-hinge":"moves|hover","j-out":"moves seq|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","n-cross":"moves fades seq|js","n-join":"moves shape|hover","w-grid":"moves|hover","w-redraw":"moves seq|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-glas":"moves tone|hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","l-plate-wrap":"fades|hover","x-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","k-recede":"moves tone|hover","k-ind":"moves|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-pair":"moves tone|hover","k-div":"moves fades tone|hover","c-swell":"moves|press","c-mass":"moves tone|press","c-tide":"moves seq|hover","c-relay":"moves tone shape seq|hover","c-crest":"moves tone|press","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","magnet":"moves tone|js press","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-riser":"moves fades tone shape seq|press","o-quiet":"tone|hover","z-lurch":"moves fades|hover","z-stack":"moves tone|press","z-gum":"moves tone|press","sweep":"moves tone seq|hover","shutter":"moves tone seq|hover","inkfill":"moves tone|js","sheen":"moves fades tone seq|hover","j-dir":"moves shape|js","o-step":"moves shape seq|hover","w-dither":"shape|hover","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","corners":"moves fades tone|hover","uline":"moves|hover","e-draw":"fades shape|js","e-chamfer":"shape|hover","e-reg":"moves|hover","s-mid":"moves|hover","f-kant":"moves fades tone seq|press","l-corner":"moves tone shape|hover","i-beam":"tone shape|hover","i-rule":"type|hover","w-corner":"shape|hover","roll":"moves|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-words":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","j-resolve":"tone|js","q-jitter":"moves seq|loop","relay":"moves seq|hover","dotm":"moves fades seq|hover","i-anti":"moves|press","i-space":"moves shape|hover","i-throw":"moves|js press","p-part":"moves shape|hover","p-walk":"moves|js","p-cycle":"seq|js loop","p-hinge":"moves|hover","j-out":"moves seq|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","n-cross":"moves fades seq|js","n-join":"moves shape|hover","w-grid":"moves|hover","w-redraw":"moves seq|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-glas":"moves tone|hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","l-plate-wrap":"fades|hover","x-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","k-recede":"moves tone|hover","k-ind":"moves|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-pair":"moves tone|hover","k-div":"moves fades tone|hover","c-swell":"moves|press","c-mass":"moves tone|press","c-tide":"moves seq|hover","c-relay":"moves tone shape seq|hover","c-crest":"moves fades tone seq|press","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
