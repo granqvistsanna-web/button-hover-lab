@@ -1528,12 +1528,12 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-key="o-quiet" data-versions="fill outline link" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T11:11:48+02:00">
+    <article class="spec" data-lib="no" data-key="o-quiet" data-versions="fill outline link" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T11:11:48+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line o-quiet"><span class="lbl">See the work</span></button>
                   </div>
                   <h3><span class="num">86</span>Hairline only</h3>
-                  <p>One property moves and nothing travels — the least a button can do and still answer, with the house press doing the rest. The floor of the set, and of the page.</p>
+                  <p>One property moves and nothing travels — the least a button can do and still answer, with the house press doing the rest. The floor of the set, and of the page. <strong>Not in the library:</strong> it is here as the reference the other studies are measured against rather than as a button to drop into a page, so it hands over CSS and nothing else.</p>
                   <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
@@ -4512,14 +4512,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Each card names the card it repeats. */
 
-  /* 86 Hairline only — the whole effect is the hairline gaining
-     contrast. It is here as the floor of the set: the reference frame showed a
-     white pill that did nothing on hover but take the pointer cursor, and a
-     card that does nothing is not a card. So this is the least a button can do
-     and still answer — one property, no movement, and the house press
-     underneath it doing the actual work. It is also the only card here whose
-     whole effect is a border colour — everything else on the page moves
-     something — which is the argument for keeping it. */
+  /* 86 Hairline only — NOT IN THE LIBRARY, and on the page anyway. It is the
+     floor of the set: the reference frame showed a white pill that did nothing
+     on hover but take the pointer cursor, and a card that does nothing is not a
+     card. So this is the least a button can do and still answer — one property,
+     no movement, and the house press underneath it doing the actual work. Five
+     places on this page cite it by number as that floor, which is why it is
+     hidden from the library rather than cut: cutting it would leave five
+     arguments pointing at nothing. `data-lib="no"` on the article is the whole
+     mechanism.
+
+     ⚠️ AND THE ONE PROPERTY IS NOT THE ONE THE NAME PROMISES. This comment used
+     to say the whole effect was the hairline gaining contrast, and that this was
+     the only card on the page whose whole effect is a border colour — which was
+     stated as the argument for keeping it. Measured, it is not true: the border
+     sits at --muted in BOTH states and what actually transitions is
+     background-color. The card is named for the one property that does not move.
+     Sanna took it out of the library on 2026-08-29 rather than have it rebuilt;
+     if it is ever wanted back, the fix is to transition border-color and nothing
+     else, which would make the name true and keep it a single property. */
   /* --muted and not --line at rest: the page's hairline token is 8% white,
      which on a control reads as disabled rather than as quiet, and leaves the
      only boundary of an interactive thing below 3:1. Quiet has to mean low
@@ -9501,7 +9512,15 @@ document.addEventListener("DOMContentLoaded", function () {
       pair.className = 'copy-pair';
       var restFns = [];
 
+      // A study can be ON the page without being IN the library. It keeps its
+      // CSS button and loses the Framer one, and losing that button IS the
+      // exclusion: tools/sync-framer.mjs harvests `.spec` cards that carry a
+      // .copy--fr, so a card without one is never pushed to buttons-sg and its
+      // manifest entry retires itself on the next run. One attribute, and no
+      // second list that has to be kept in step with this one.
+      var inLibrary = card.getAttribute('data-lib') !== 'no';
       ACTIONS.forEach(function(a){
+        if (!inLibrary && a.cls.indexOf('copy--fr') !== -1) return;
         var b = document.createElement('button');
         b.className = a.cls;
         b.type = 'button';
