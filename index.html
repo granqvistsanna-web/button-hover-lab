@@ -411,6 +411,30 @@
   .roll:hover .inner,
   .roll:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg)}
 
+  /* The roll on its own is the plainest effect on this page, and cards 20 and
+     23 already own it at finer grain. What it has that they do not is a WHOLE
+     label: one unit, with room either side of it. So the plate opens a slot and
+     a mark arrives in it, which is card 128's rule — the room is made before
+     anything is in it — and the one thing a per-character roll cannot answer,
+     because ten characters have nowhere to open a slot between them.
+     gap:0 at rest and not a collapsed margin: the slot is a real box the whole
+     time, so the width transition has something to interpolate from. --d-1
+     behind the roll, so the label is already moving when the arrow starts. */
+  .btn.roll{
+    gap:0;
+    transition:padding-right var(--t-5) var(--e-quint), gap var(--t-5) var(--e-quint),
+               transform var(--t-1) var(--e-out);
+  }
+  .roll .roll-slot{
+    display:inline-flex; align-items:center; overflow:hidden;
+    width:0; opacity:0;
+    transition:width var(--t-5) var(--e-quint) var(--d-1),
+               opacity var(--t-3) var(--e-out) var(--d-1);
+  }
+  .btn.roll:hover, .btn.roll:focus-visible{padding-right:22px; gap:9px}
+  .roll:hover .roll-slot,
+  .roll:focus-visible .roll-slot{width:14px; opacity:1}
+
   /* 07 Enkelriktat svep — the direction depends on NOTHING, which is why this
      is no longer called directional. Approach it from the left, the right, the
      top or the bottom and the origin comes back identical: one fixed direction,
@@ -1859,10 +1883,10 @@
 
     <article class="spec" data-key="roll" data-versions="link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T20:29:47+02:00">
       <div class="stage">
-        <button type="button" class="btn btn--solid roll"><span class="track"><span class="inner"><span>Book a meeting</span><span aria-hidden="true">Book a meeting</span></span></span></button>
+        <button type="button" class="btn btn--solid roll"><span class="track"><span class="inner"><span>Book a meeting</span><span aria-hidden="true">Book a meeting</span></span></span><span class="roll-slot" aria-hidden="true"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></button>
       </div>
       <h3><span class="num">15</span>Label roll</h3>
-      <p>The label rolls up and its duplicate takes its place from below.</p>
+      <p>The label rolls up and its duplicate takes its place from below &mdash; and the plate opens a slot for an arrow that arrives one delay behind it, so the room is made before anything is in it. Cards 20 and 23 do the same roll per character and per word; neither can open a slot, because ten characters have nowhere to open one between them. That is what this card is for.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -8138,7 +8162,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves seq|hover","dotm":"moves fades seq|hover","p-cycle":"moves seq|js loop","i-throw":"moves|js press hover","j-out":"moves seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves seq|hover","dotm":"moves fades seq|hover","p-cycle":"moves seq|js loop","i-throw":"moves|js press hover","j-out":"moves seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
