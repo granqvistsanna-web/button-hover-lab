@@ -408,13 +408,15 @@
     transition:opacity var(--t-2) linear, transform 0s linear var(--t-2)}
   .sheen:hover::after,
   .sheen:focus-visible::after{transform:translateX(240%) skewX(-14deg); opacity:1;
-    /* Fast in, slow across the face, and LANDED rather than flung. The run
+    /* Fast in, slow across the face, and SET DOWN rather than flung. The run
        spends its cheap frames where the streak is off-plate and its slow ones
-       where you can see it; the tail now leaves at slope 0.14 instead of 2.8,
-       so the light settles off the edge instead of snapping off it. Not zero,
-       though: a tail that stops dead is the very first curve's mistake moved
-       to the other end of the run. */
-    transition:transform var(--sheen-t) cubic-bezier(.2,.75,.65,.95), opacity 0s}
+       where you can see it; the tail leaves at slope 0 instead of the 2.8 this
+       curve first had, so the light comes to rest off the edge rather than
+       snapping off it. The last stretch creeps, and that is the trade taken
+       deliberately: it creeps where the streak is already past the plate, so
+       what you see is a light that finishes rather than one that is cut off.
+       Sanna's call on the bench, against a 0.14 tail benched beside it. */
+    transition:transform var(--sheen-t) cubic-bezier(.2,.75,.55,1), opacity 0s}
   .sheen .lbl{position:relative}
 
   /* ---- Family B in its other versions ---------------------------------
@@ -7171,7 +7173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:opacity var(--t-2) linear, transform 0s linear var(--t-2)}
   .c-crest:hover::after,
   .c-crest:focus-visible::after{transform:translateX(240%) skewX(-14deg); opacity:1;
-    transition:transform var(--sheen-t) cubic-bezier(.2,.75,.65,.95) var(--t-4),
+    transition:transform var(--sheen-t) cubic-bezier(.2,.75,.55,1) var(--t-4),
                opacity 0s}
   .c-crest .lbl{position:relative; z-index:1}
 
