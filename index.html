@@ -1436,16 +1436,16 @@
                   <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
                 </article>
 
-    <article class="spec" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:37:20+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-28T21:37:20+02:00">
                   <div class="stage">
-                    <button type="button" class="btn btn--line t-report" data-state="idle"><span class="t-report-fill" aria-hidden="true"></span><span class="lbl">Publish</span></button>
+                    <button type="button" class="btn btn--line t-report" data-state="idle" data-step="0"><span class="t-report-fill" aria-hidden="true"></span><span class="t-report-track" aria-hidden="true"><span class="t-report-roll"><span>Publish</span><span>Publishing</span><span><svg class="t-report-tick" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.4l3 3 5-6.2"/></svg>Published</span><span>Publish</span></span></span><span class="sr t-report-live" aria-live="polite">Publish</span></button>
                   </div>
                   <h3><span class="num">72</span>Status button</h3>
-                  <p>The button takes the instruction and reports on it in place, with no spinner. Card 83 is the other loop you start by acting &mdash; but that one is bound to a hover; this one ends when the work does.</p>
+                  <p>The button takes the instruction and reports on it in place, with no spinner. Every state change is the same move &mdash; one row of the label rolling upward, the check riding the row it belongs to &mdash; and the plate takes the impact as the bar hits the end. Card 83 is the other loop you start by acting, but that one is bound to a hover; this one ends when the work does.</p>
                   <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
                 </article>
 
-    <article class="spec" data-versions="fill outline link" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T10:48:40+02:00">
+    <article class="spec" data-versions="fill outline" data-added="2026-08-27T10:37:26+02:00" data-updated="2026-08-29T10:48:40+02:00">
                   <div class="stage">
                     <button type="button" class="btn btn--line t-mark" data-state="idle"><span class="lbl">Add to the project</span><span class="t-mark-tick" aria-hidden="true"><svg class="icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.9 3.9 7-8"/></svg></span></button>
                     <span class="sr t-mark-live" role="status"></span>
@@ -5178,26 +5178,103 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Reduced motion shortens the run rather than removing it. The bar is
      information, not ornament: it is the only thing on screen saying the work is
-     still going. */
+     still going.
+
+     THE WIDTH IS FIXED, AND NOTHING ELSE HERE WAS POSSIBLE UNTIL IT WAS. The
+     button used to hug its label while the label changed: 110.19px at Publish,
+     132.05 at Publishing, 127.75 at Published, each swap an instant jump with no
+     transition on it at all. That was the least smooth thing about the card and
+     a mark would only have made it worse. 160px is the widest state plus the
+     mark and its gap; card 73 pays the same price up front for the same reason.
+
+     THE ROLL IS THE LABEL, NOT A SLOT BESIDE IT. A tick that opens its own slot
+     is a second mechanism and it shoves the word sideways every time it arrives.
+     Rolled instead, the word IS the channel: four rows in a clipped track —
+     Publish, Publishing, Published with the mark, Publish again — and every state
+     change is the same move, one row upward, 17.25px, which is one line box
+     exactly. The mark rolls up with the row it belongs to and rolls up and away
+     when that row leaves. The fourth row is a duplicate of the first, so the
+     track is put back to zero while the visible row is unchanged; nothing ever
+     reverses. The put-back rides transitionend rather than a fourth timer, so it
+     cannot drift from --t-4.
+
+     THE BOUNCE IS THE ARRIVAL AND IT COULD NOT BE THE BAR. A bar cannot
+     overshoot its own track — the button clips, so anything past 100% is painted
+     where nobody can see it — and the run has to stay linear, because it is the
+     only thing on screen claiming the work is still going and an eased progress
+     bar is a lie about progress. So the impact is spent where the event actually
+     lands: 2.6% out and back as the bar hits the end, one pulse, no second
+     cycle. It is a transform, so the layout box does not move a hundredth.
+
+     THE TWO VERSIONS DIFFER IN WHAT THE BAR IS MADE OF. On outline there is
+     nothing under it but the page, so it keeps its 22% white and done inverts the
+     whole plate. On fill the bar crosses a white plate, where 22% white is
+     invisible — so it becomes --ink mixed 86% with the ground, card 41's number,
+     and done lands the plate on THAT SAME SHADE. The bar does not disappear at
+     the end, it finishes: the plate arrives at the colour the bar has been all
+     along and the seam between them stops existing.
+
+     THE HOLD IS A TOKEN, like the run beside it. --t-done, declared once and read
+     back the same way, so Published cannot be held for a length the stylesheet
+     does not know about. 1800ms to 2600. */
   .btn.t-report{
-    --t-run:1500ms;
-    overflow:hidden;
+    --t-run:1500ms; --t-done:2600ms;
+    width:160px; justify-content:center; overflow:hidden;
     transition:transform var(--t-1) var(--e-out),
                background-color var(--t-3) var(--e-out),
+               border-color var(--t-3) var(--e-out),
                color var(--t-3) var(--e-out);
   }
   .btn.t-report .t-report-fill{
     position:absolute; left:0; top:0; bottom:0; width:0; z-index:0;
     background:rgba(255,255,255,.22);
   }
-  .btn.t-report .lbl{position:relative; z-index:1}
+  .btn--solid.t-report .t-report-fill{
+    background:color-mix(in srgb, var(--ink) 86%, var(--bg-0));
+  }
   .btn.t-report[data-state="busy"]{cursor:progress}
   .btn.t-report[data-state="busy"] .t-report-fill{
     width:100%; transition:width var(--t-run) linear;
   }
-  .btn.t-report[data-state="done"]{
+  .btn.t-report[data-state="done"] .t-report-fill{width:100%}
+  .btn--line.t-report[data-state="done"]{
     background:var(--ink); color:var(--ink-on-fill); border-color:var(--ink);
   }
+  .btn--solid.t-report[data-state="done"]{
+    background-color:color-mix(in srgb, var(--ink) 86%, var(--bg-0));
+  }
+  /* One line box tall, and the roll is four of them, so a quarter is exactly one
+     row and the arithmetic cannot drift if the type size ever changes. */
+  .btn.t-report .t-report-track{
+    position:relative; z-index:1; display:block; width:100%;
+    height:1.15em; overflow:hidden;
+  }
+  .btn.t-report .t-report-roll{
+    display:block; transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-4) var(--e-out);
+  }
+  .btn.t-report .t-report-roll > span{
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    height:1.15em; line-height:1.15; white-space:nowrap;
+  }
+  .btn.t-report[data-step="1"] .t-report-roll{transform:translateY(-25%) rotate(0.001deg)}
+  .btn.t-report[data-step="2"] .t-report-roll{transform:translateY(-50%) rotate(0.001deg)}
+  .btn.t-report[data-step="3"] .t-report-roll{transform:translateY(-75%) rotate(0.001deg)}
+  /* Put back to zero on the row that duplicates row one, so there is nothing to
+     see and nothing to animate. An attribute and not a class: the copy machinery
+     reads every class inside the button as a possible effect key. */
+  .btn.t-report[data-reset] .t-report-roll{transition:none}
+  .btn.t-report .t-report-tick{width:14px; height:14px; flex:none}
+  .btn.t-report .t-report-tick path{
+    fill:none; stroke:currentColor; stroke-width:1.7;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  @keyframes t-report-land{
+    0%{transform:scale(1) rotate(0.001deg)}
+    42%{transform:scale(1.026) rotate(0.001deg)}
+    100%{transform:scale(1) rotate(0.001deg)}
+  }
+  .btn.t-report[data-state="done"]{animation:t-report-land var(--t-5) var(--e-out)}
 
   /* 73 Plate to check — the plate collapses to a square and the
      check draws itself inside it. Card 80 churns the LABEL and locks it in, and
@@ -5232,16 +5309,15 @@ document.addEventListener("DOMContentLoaded", function () {
      the width, and the label is nowrap so it cannot wrap on the way down.
 
      The diameter is measured rather than written, because it is not one number:
-     the outline version carries a 1px border on each side, the fill version
-     carries none, and the link version is padded 8px instead of 15px, so the
-     three are 47, 45 and 31px tall and a constant would be wrong in two of them.
+     the outline version carries a 1px border on each side and the fill version
+     carries none, so the two are 47px and 45px tall and a constant would be
+     wrong in one of them.
 
-     The link version is the reason that measurement is worth having. It was
-     left undeclared on the grounds that a study about spending a plate has no
-     plate to spend as a link — but that reads the mechanism too narrowly. What
-     the card is about is a control becoming its own outcome, and a line of text
-     closing into a mark is the plainest form of that: there is no plate to hide
-     behind, so the collapse IS the entire event. It holds, so it is declared. */
+     A link version was built and taken out again on 2026-08-29. It worked — the
+     line of text closed into a 31px mark — but the card is called Plate to check
+     and a link has no plate, so what it demonstrated was a different study
+     wearing this one's name. Two versions, and the absence is the honest
+     signal. */
   .btn.t-mark{
     width:var(--t-mark-w, 196px); justify-content:center; overflow:hidden;
     transition:transform var(--t-1) var(--e-out),
@@ -5268,12 +5344,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.t-mark[data-state="done"]{
     width:var(--t-mark-d, 47px); padding-inline:0;
     background:var(--ink); border-color:var(--ink);
-    /* .btn--text carries its own 2px radius, which is right for a link and
-       wrong for what a link BECOMES here. The confirmation is a mark in all
-       three versions, so the done state takes the page's radius token back —
-       and at radius 0 all three land as the same square, which is the whole
-       reason the radius is a token. */
-    border-radius:var(--btn-r);
   }
   .btn.t-mark[data-state="done"] .lbl{opacity:0}
   .btn.t-mark[data-state="done"] .t-mark-tick path{stroke-dashoffset:0}
@@ -5350,21 +5420,42 @@ document.addEventListener("DOMContentLoaded", function () {
   // bar and the state machine cannot disagree.
   (function(){
     document.querySelectorAll('.t-report').forEach(function(btn){
-      var lbl = btn.querySelector('.lbl');
+      var roll = btn.querySelector('.t-report-roll');
+      var live = btn.querySelector('.t-report-live');
       var words = {idle:'Publish', busy:'Publishing', done:'Published'};
       var timers = [];
-      function set(s){ btn.dataset.state = s; lbl.textContent = words[s]; }
+      // The visible rows are aria-hidden, so the state is announced from the .sr
+      // copy — cards 80 and 85's arrangement, applied to a state machine.
+      function go(state, step){
+        btn.dataset.state = state;
+        btn.dataset.step = step;
+        if (live) live.textContent = words[state];
+      }
       btn.addEventListener('click', function(){
         // Guarded rather than [disabled]: disabling a focused button drops focus
         // to the body mid-action, and takes the label out of the accessibility
-        // tree just as it becomes the thing worth announcing.
-        if (btn.dataset.state !== 'idle') return;
+        // tree just as it becomes the thing worth announcing. The step is checked
+        // too, so a click landing during the put-back cannot start a second run.
+        if (btn.dataset.state !== 'idle' || btn.dataset.step !== '0') return;
         timers.forEach(clearTimeout);
         timers = [];
-        var run = parseFloat(getComputedStyle(btn).getPropertyValue('--t-run')) || 1500;
-        set('busy');
-        timers.push(setTimeout(function(){ set('done'); }, run));
-        timers.push(setTimeout(function(){ set('idle'); }, run + 1800));
+        var cs = getComputedStyle(btn);
+        var run  = parseFloat(cs.getPropertyValue('--t-run'))  || 1500;
+        var hold = parseFloat(cs.getPropertyValue('--t-done')) || 2600;
+        go('busy', 1);
+        timers.push(setTimeout(function(){ go('done', 2); }, run));
+        timers.push(setTimeout(function(){ go('idle', 3); }, run + hold));
+      });
+      // The put-back, driven by the roll's own transition rather than by a fourth
+      // timer: a number here would be a second opinion about --t-4. Two frames,
+      // because one is not enough for the suppressed transition to be observed.
+      if (roll) roll.addEventListener('transitionend', function(e){
+        if (e.propertyName !== 'transform' || btn.dataset.step !== '3') return;
+        btn.dataset.reset = '';
+        btn.dataset.step = '0';
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){ delete btn.dataset.reset; });
+        });
       });
     });
   })();
@@ -6911,7 +7002,7 @@ document.addEventListener("DOMContentLoaded", function () {
      CSSOM on every load; this is the tripwire that says when that
      derivation stops matching the build it was checked against. Restamp
      after adding or re-tagging a study: node tools/facet-manifest.mjs -->
-<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
+<script type="application/json" id="facet-manifest">{"10":"moves tone|hover","11":"moves seq|hover","12":"moves fades seq|hover","13":"moves fades tone|hover","14":"moves|hover","15":"moves|hover","16":"fades shape seq|hover","19":"moves fades seq|js","20":"moves seq|hover","21":"moves seq|hover","22":"moves seq|hover","23":"moves seq|hover","24":"moves seq|hover","25":"moves seq|hover","26":"type|js","27":"fades shape|js","28":"shape|hover","29":"moves|hover","30":"fades|hover","31":"moves tone|hover","32":"moves|hover","33":"moves fades tone|js","34":"moves tone|press","36":"moves tone|press","39":"moves|hover","41":"tone shape seq|hover","42":"moves fades tone|loop press","43":"moves tone seq|press","44":"moves fades tone|hover","46":"tone shape|hover","47":"fades|hover","48":"moves tone shape|hover","49":"moves tone seq|press","50":"moves tone|js press","52":"moves tone|hover","54":"moves|press","55":"tone shape|hover","56":"moves shape|hover","57":"type|hover","59":"moves|js press","60":"moves tone|hover","61":"moves|hover","62":"moves shape|hover","63":"moves|hover","64":"moves tone|hover","65":"moves fades tone|hover","66":"moves shape|hover","67":"moves|js","69":"seq|js loop","70":"moves|hover","72":"moves tone shape|js","73":"moves fades tone shape seq|js","74":"shape|js","75":"moves|js","77":"moves seq|hover","78":"moves seq|hover","79":"moves fades seq|hover","80":"tone|js","81":"moves|press","82":"moves shape|press","83":"moves fades|hover","85":"moves seq|loop","86":"tone|hover","91":"moves tone seq|hover","92":"moves fades seq|js","93":"moves shape|hover","96":"shape|hover","97":"moves|hover","98":"shape|hover","100":"moves seq|hover","104":"moves tone|press","109":"moves fades tone seq|hover","110":"moves fades tone seq|js","111":"moves fades tone|js press","113":"moves fades|hover","116":"moves tone|press","117":"moves tone|press","119":"moves|press","120":"moves tone|press","121":"moves seq|hover","122":"moves tone shape seq|hover","123":"moves tone|press","124":"moves tone|hover","07":"moves tone seq|hover","08":"moves tone seq|hover","09":"moves tone|js","04":"tone|hover","05":"tone|press"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
