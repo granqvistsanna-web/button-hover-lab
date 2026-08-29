@@ -7378,16 +7378,9 @@ document.addEventListener("DOMContentLoaded", function () {
      performs it. Under the global clamp the ring collapses to its own end
      state, which is rest, and the shade is left doing the whole job — which
      is the division this card already claims. */
-  /* will-change DECLARES the movement, it does not optimise it. The rail's
-     facets are derived from the property names a rule transitions, and an
-     animation exposes only `animation` — so a study whose entire subject is
-     deformation filed itself under its colour and fell out of the Movement
-     facet. Card 50 leaves the same trace for the same reason, its transform
-     coming from a script rather than a keyframe. */
   .btn.squash{
     background:var(--accent); color:var(--on-accent);
     transition:background var(--t-4) var(--e-out);
-    will-change:transform;
   }
   .btn.squash:hover, .btn.squash:focus-visible{
     background:color-mix(in srgb, var(--accent) 84%, var(--bg));
@@ -7998,7 +7991,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","q-riser":"moves fades tone shape seq|press","z-gum":"moves tone|press","z-stack":"moves tone|press","magnet":"moves tone|js press","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","o-step":"moves shape seq|hover","w-dither":"shape|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js","e-draw":"fades shape|js","corners":"moves fades tone|hover","e-reg":"moves|hover","f-kant":"moves fades tone seq|press","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves tone shape|hover","roll":"moves|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","q-jitter":"moves seq|loop","j-resolve":"tone|js","relay":"moves seq|hover","dotm":"moves fades seq|hover","p-cycle":"seq|js loop","i-throw":"moves|js press","j-out":"moves seq|hover","n-cross":"moves fades seq|js","p-walk":"moves|js","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press","c-crest":"moves fades tone seq|press","c-tide":"moves seq|hover","c-mass":"moves tone|press","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press","lift":"moves tone seq|press","q-riser":"moves fades tone shape seq|press","z-gum":"moves tone|press","z-stack":"moves tone|press","magnet":"moves tone|js press","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js","y-reach":"moves fades tone seq|js","y-hold":"moves fades tone|js press","o-step":"moves shape seq|hover","w-dither":"shape|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js","e-draw":"fades shape|js","corners":"moves fades tone|hover","e-reg":"moves|hover","f-kant":"moves fades tone seq|press","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves tone shape|hover","roll":"moves|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-land":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js","q-jitter":"moves seq|loop","j-resolve":"tone|js","relay":"moves seq|hover","dotm":"moves fades seq|hover","p-cycle":"moves seq|js loop","i-throw":"moves|js press","j-out":"moves seq|hover","n-cross":"moves fades seq|js","p-walk":"moves|js","p-hinge":"moves|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press","i-space":"moves shape|hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press","f-motljus":"moves|hover","f-lykta":"moves fades tone|js","s-bevel":"moves tone|press","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press","c-crest":"moves fades tone seq|press","c-tide":"moves seq|hover","c-mass":"moves tone|press","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -8752,6 +8745,41 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       return out;
     }
+    // WHAT EACH @keyframes ACTUALLY MOVES.
+    // A keyframes rule has a name, not a selectorText, so allRules() walks
+    // straight past it — and `animation: squash-mass 950ms both` names a motion
+    // without saying one word about what it changes. The derivation therefore
+    // saw `animation` and nothing else, and 126, whose entire subject is
+    // deforming the plate, filed itself under its colour and fell out of
+    // Movement. The card carried a will-change to say so by hand, which is an
+    // author remembering to declare what the page can read for itself.
+    //
+    // Nothing here decides anything: it maps a name to the property names its
+    // blocks declare, and the same CHANGES regexes do the filing they always
+    // did. A study is filed by what its keyframes touch.
+    function keyframeProps(){
+      var map = {};
+      function rec(list){
+        [].forEach.call(list, function(r){
+          // CSSRule.KEYFRAMES_RULE. `type` is deprecated but still the only
+          // one-liner; the duck test behind it is the actual contract — named,
+          // holds rules, and is not a selector.
+          if (r.type === 7 || (r.name && r.cssRules && !r.selectorText)){
+            var into = map[r.name] = map[r.name] || {};
+            [].forEach.call(r.cssRules, function(kf){
+              if (!kf.style) return;
+              for (var i = 0; i < kf.style.length; i++) into[kf.style[i]] = 1;
+            });
+            return;
+          }
+          if (r.cssRules) rec(r.cssRules);
+        });
+      }
+      [].forEach.call(document.styleSheets, function(sh){
+        try { rec(sh.cssRules); } catch(e){}
+      });
+      return map;
+    }
     // The same key derivation the Copy buttons use: every class on the card's
     // button and its descendants that is not house furniture. Matching .btn
     // loosely would hand every card every other card's rules.
@@ -8759,6 +8787,11 @@ document.addEventListener("DOMContentLoaded", function () {
                       sr:1,slot:1,track:1,inner:1};
     function tag(){
       var rules = allRules();
+      var KF = keyframeProps();
+      var KF_NAMES = Object.keys(KF).map(function(n){
+        return {n: n, re: new RegExp('(^|[\\s,])' +
+          n.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&') + '($|[\\s,])')};
+      });
       cards.forEach(function(card){
         var root = card.querySelector('[data-copy-root]') || card.querySelector('.btn');
         if (!root) return;
@@ -8782,6 +8815,18 @@ document.addEventListener("DOMContentLoaded", function () {
           // arrive — an idle behaviour, not an answer to a gesture.
           if (!stateRule && (r.style.animationName || r.style.animation)) loop = true;
           if (r.style.animationName) props['animation'] = 1;
+          // The name is matched against the keyframes that exist rather than
+          // parsed out of the shorthand, where it is one unlabelled token among
+          // durations, counts and fill modes. Read from EVERY rule, not just
+          // state rules: an animation is a change wherever it is declared —
+          // on a state rule it answers the pointer, on a rest rule it is the
+          // loop the line above is already looking for.
+          var anim = (r.style.getPropertyValue('animation-name') || '') + ' ' +
+                     (r.style.getPropertyValue('animation') || '');
+          if (anim.trim()) KF_NAMES.forEach(function(k){
+            if (!k.re.test(anim)) return;
+            Object.keys(KF[k.n]).forEach(function(p){ props[p] = 1; });
+          });
           // A transition shorthand carrying var() has NO readable longhands:
           // CSSOM keeps a pending-substitution value and transitionProperty
           // comes back empty. On this page 131 rules declare a transition and
