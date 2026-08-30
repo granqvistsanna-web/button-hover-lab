@@ -1,6 +1,6 @@
-# Button Hover Lab
+# Button Lab
 
-One hundred and five button hover animations, actually built. Hover, tab and press all of them.
+Ninety-one button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -16,7 +16,7 @@ script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the one hundred and five obeys all five:
+Every one of the ninety-one obeys all five:
 
 | | |
 |---|---|
@@ -24,7 +24,7 @@ Every one of the one hundred and five obeys all five:
 | **Interruptible** | Hover out halfway and the animation turns smoothly from wherever it is — no waiting for it to finish. |
 | **In one way, out another** | The exit takes its own path — and its own clock, one rung down the ladder. |
 | **Reduced motion** | Everything falls back to plain colour and opacity changes. |
-| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the one hundred and five effects; the toolbar chrome runs on the design system's own `--t-fast`. |
+| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the ninety-one effects; the toolbar chrome runs on the design system's own `--t-fast`. |
 
 And, without exception: no layout shift — every button's own box stays identical to three
 decimals, and in the group cards the row does too, the one deliberate exception being
@@ -68,7 +68,7 @@ cannot quietly lose a study the next time it runs.
 Search, the derived facets and the starred shortlist do the rest of the narrowing — and the
 shortlist persists in your browser.
 
-The same toolbar carries four global settings that restyle all one hundred and five at once:
+The same toolbar carries four global settings that restyle all ninety-one at once:
 **text**, **accent**, **hover** and a **button radius**. All are written as custom properties
 on the root element, which is also where the copy buttons resolve from, so a snippet copied
 with colours set carries those colours rather than the defaults they replaced.
@@ -90,7 +90,7 @@ has always been. The fit walks lightness in **either** direction for exactly thi
 label on a near-white accent has to go down, and the one-way walk the single-primary toolbar
 used would have sent it to white on white.
 
-**Hover reaches about twenty of the hundred and five, and that is the page's own thesis
+**Hover reaches about twenty of the ninety-one, and that is the page's own thesis
 showing through rather than a gap.** These effects are geometric: most of them paint their
 arriving layer at rest and animate `transform`, `clip-path` or `height`, so the colour that
 arrives is the same declaration as the fill. Which ones count was settled by reading every

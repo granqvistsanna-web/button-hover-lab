@@ -26,8 +26,8 @@
     }catch(e){}
   })();
 </script>
-<meta property="og:title" content="Button Hover Lab">
-<meta property="og:description" content="Button hover animations, actually built.">
+<meta property="og:title" content="Button Lab">
+<meta property="og:description" content="A specimen page of button hover animations, each one built and hoverable. Monochrome, layout-stable, interruptible, with notes on porting each to Framer.">
 <meta property="og:url" content="https://granqvistsanna-web.github.io/button-hover-lab/">
 <!-- The unfurl card: the header and the first three stages, captured at 1200x630@2x.
      Reshoot it when the fold changes — it is a screenshot, not a design. -->
@@ -37,7 +37,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%9B%EF%B8%8F</text></svg>">
-<title>Button Hover Lab</title>
+<title>Button Lab</title>
 <!-- Graphite Console tokens, inlined as a fallback FIRST so the page still
      renders if the linked sheet does not arrive; the link follows and wins
      whenever it does. Keep the two in step. -->
@@ -1948,7 +1948,7 @@
        better by the cards themselves, which are hoverable from the first
        row up. The count is never typed — see the .mast-n fill below. -->
   <header class="mast">
-    <h1>Button Hover Lab</h1>
+    <h1>Button Lab</h1>
     <p class="mast-sub"><span class="mast-n"></span>&nbsp;studies</p>
   </header>
 
@@ -11385,7 +11385,7 @@ document.addEventListener("DOMContentLoaded", function () {
       out.push('/* ' + p.num + ' · ' + p.name);
       out.push('   ' + p.chips.join(' · '));
       out.push('   ' + p.route);
-      out.push('   Button Hover Lab — ' + SOURCE + ' */');
+      out.push('   Button Lab — ' + SOURCE + ' */');
       if (p.tokens.length) out.push(block('1 — tokens this effect reads') +
         p.tokens.map(function(t){ return wrap(t.cond, t.sel + '{' + t.decls + '}'); }).join('\n'));
       if (p.external) out.push(block('1b — resolved from a stylesheet this page cannot enumerate') +
@@ -11673,7 +11673,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           '// which is browser JS rather than TypeScript. The component itself is typed.');
       head.push('/**');
       head.push(' * ' + p.num + ' · ' + p.name + ' — ' + p.chips.join(' · '));
-      head.push(' * Button Hover Lab — ' + SOURCE);
+      head.push(' * Button Lab — ' + SOURCE);
       head.push(' *');
       head.push(' * Paste the whole file into Framer: Assets → Code → New File, select all,');
       head.push(' * paste. The component then sits in the Code section, ready to drag out.');
