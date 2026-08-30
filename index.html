@@ -420,6 +420,66 @@
      pseudo-elements and child spans included. --t-1 is left alone: a press must
      read as instant whether or not the pointer is already there. */
   .btn{ --t-2:83ms;  --t-3:133ms; --t-4:200ms; --t-5:300ms }
+
+  /* ---- The colour reaches the parts that are not the fill ---------------
+     The toolbar writes four tokens — --ink-text, --ink, --accent, --ink-hover —
+     and a button is made of more than those. Its control boundary, its hairline
+     details and the neutral rungs it shades itself with on hover all come from
+     --line-ctl, --hairline and the --bg ladder, none of which the control
+     writes. Set Coral and 24 edges took the colour while 22 did not: a coral
+     label in a black box, which reads as a bug rather than as a decision.
+
+     It WAS a decision, and half of it was right. --line-ctl exists to hold one
+     number — a control boundary clears 3:1 — and the page's stated rule is that
+     the tint stops at the stage edge so the toolbar stays graphite whatever is
+     set. Those same two tokens draw the search field, the order select and every
+     card border, so tinting them at the root would take the chrome with them.
+     But there is no floor to defend here: the accent is already fitted to 4.5:1
+     against the card before it is written, so it clears a 3:1 boundary with room.
+
+     So the neutrals are remapped INSIDE the button. Scoped this way the chrome
+     cannot be reached — it is not a rule anyone has to remember — and no study
+     rule is touched, which also means no study's copied CSS or Framer module
+     changes shape. Every study inherits it, including the ones that write their
+     edge as a `border:` shorthand, which is the half a per-rule swap would have
+     missed: the CSSOM reports a shorthand holding a var() as a pending
+     substitution and its longhands come back empty, so a survey of the parsed
+     rules cannot see them at all.
+
+     ⚠️ THE FALLBACKS ARE LITERALS AND HAVE TO BE. Writing --line-ctl:var(--a-edge,
+     var(--line-ctl)) is a cycle: custom properties substitute lazily, at the
+     element where they are USED, so the inner var() would resolve against this
+     very declaration and the whole chain drops to its initial value. The same
+     trap kills the tidier-looking `--edge-n:var(--line-ctl)` at :root — read
+     from inside .btn it re-resolves in .btn's scope. Duplicated on purpose,
+     stated here, and kept next to the ladder it copies. The --a-* values are
+     written by paint() as concrete rgb, for the same cycle reason. */
+  .btn{
+    --line-ctl:var(--a-edge,  rgba(255,255,255,.36));
+    --hairline:var(--a-soft,  rgba(255,255,255,.08));
+    --line:var(--a-soft,      rgba(255,255,255,.08));
+    --line-soft:var(--a-soft, rgba(255,255,255,.08));
+    --bg-2:var(--a-2,         #222222);
+    --bg-3:var(--a-3,         #2e2e2e);
+    --bg-4:var(--a-4,         #3a3a3a);
+    --lift-bg:var(--a-2,      #222222);
+    --ink-low:var(--a-quiet,  #8a8a8a);
+    --muted:var(--a-quiet,    #8a8a8a);
+    --ink-mid:var(--a-mid,    #b3b3b3);
+  }
+  :root[data-theme="light"] .btn{
+    --line-ctl:var(--a-edge,  rgba(0,0,0,.45));
+    --hairline:var(--a-soft,  rgba(0,0,0,.10));
+    --line:var(--a-soft,      rgba(0,0,0,.10));
+    --line-soft:var(--a-soft, rgba(0,0,0,.10));
+    --bg-2:var(--a-2,         #e7e7e7);
+    --bg-3:var(--a-3,         #d6d6d6);
+    --bg-4:var(--a-4,         #c5c5c5);
+    --lift-bg:var(--a-2,      #e7e7e7);
+    --ink-low:var(--a-quiet,  #636363);
+    --muted:var(--a-quiet,    #636363);
+    --ink-mid:var(--a-mid,    #4b4b4b);
+  }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
   .btn--solid{background:var(--ink); color:var(--ink-on-fill)}
@@ -9749,6 +9809,54 @@ document.addEventListener("DOMContentLoaded", function () {
       // to be able to say that the label was moved on the fills even when it
       // sat still on the card.
       var onAccent = anyColour ? labelOn(accentRgb) : null;
+
+      // ---- The parts of a button that are not the fill --------------------
+      // The four roles above answer «what colour is the button and its label».
+      // A button also has a control boundary, hairline details and the neutral
+      // rungs it shades itself with on hover, and those came from --line-ctl,
+      // --hairline and the --bg ladder — none of which a role writes. .btn
+      // remaps them; this is what it reads. See the remap for why the chrome
+      // cannot be reached from here and why every value below is concrete.
+      //
+      // Written as rgb() and not as color-mix(… var(--bg-2)): inside .btn that
+      // token is the remapped one, so a mix naming it would resolve against the
+      // declaration it is feeding. The rungs are MEASURED off the page for the
+      // same reason WHITE and PANEL are — they move with the theme, and a
+      // literal here would be a third copy of the ladder to keep in step.
+      var A_TOKENS = ['--a-edge','--a-soft','--a-2','--a-3','--a-4','--a-quiet','--a-mid'];
+      if (fitted.accent){
+        // Rounded here and not trusted from the fit: fitOn walks HSL and hands
+        // back fractional channels, which are legal in rgb() but would put
+        // «221.4999999999999» in a value the Copy buttons hand over as text.
+        var A = fitted.accent.rgb.map(Math.round);
+        var rung = function (name){
+          var probe = document.createElement('span');
+          probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(' + name + ')';
+          document.body.appendChild(probe);
+          var v = rgbOf(probe, 'color'); probe.remove(); return v;
+        };
+        var mix = function (base, amount){
+          return 'rgb(' + [0,1,2].map(function (i){
+            return Math.round(A[i] * amount + base[i] * (1 - amount));
+          }).join(',') + ')';
+        };
+        var rgba = function (a){ return 'rgba(' + A.join(',') + ',' + a + ')'; };
+        // The boundary takes the accent whole. It is the fit's own output, so it
+        // is already 4.5:1 on the card and clears a 3:1 edge with room to spare.
+        root.setProperty('--a-edge',  'rgb(' + A.join(',') + ')');
+        // A hairline is subordinate by definition — at full strength it stops
+        // being a detail and becomes a second border.
+        root.setProperty('--a-soft',  rgba(.30));
+        // The rungs keep their own lightness and take a tint, so the ladder the
+        // studies climb still steps the same distance it did in graphite.
+        root.setProperty('--a-2',     mix(rung('--bg-2'), .14));
+        root.setProperty('--a-3',     mix(rung('--bg-3'), .24));
+        root.setProperty('--a-4',     mix(rung('--bg-4'), .34));
+        root.setProperty('--a-quiet', mix(rung('--ink-low'), .55));
+        root.setProperty('--a-mid',   mix(rung('--ink-mid'), .55));
+      } else {
+        A_TOKENS.forEach(function (n){ root.removeProperty(n); });
+      }
       // The hover label, at last a choice. Picked, it is fitted against the
       // fill it will actually sit on rather than against the card — that fill
       // is the only thing it is ever read against. Unpicked, it derives from
