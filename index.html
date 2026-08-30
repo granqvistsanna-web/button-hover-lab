@@ -137,6 +137,10 @@
     /* The left panel's width, as one token: body reserves it as padding and
        the panel claims it as its own width, so the two cannot disagree. */
     --rail-w:288px;
+    /* Narrower than the left wall by design: this one holds four labelled
+       controls, the other holds a search, two facet lists and eighteen
+       section links. */
+    --insp-w:276px;
     --mono:var(--font-mono);
     --e-quint:cubic-bezier(0.22,1,0.36,1);
     --e-out:cubic-bezier(0.33,1,0.68,1);
@@ -255,16 +259,17 @@
     font-family:var(--font-ui); font-size:15px; line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1060px; margin:0 auto; padding:88px 28px 140px}
+  .wrap{max-width:1060px; margin:0 auto; padding:40px 28px 140px}
 
-  /* ============ header ============ */
-  h1{color:var(--ink-hi); font-size:clamp(34px,5vw,52px); font-weight:700;
-    letter-spacing:-.02em; line-height:1.05; margin:6px 0 0; text-wrap:balance}
-  .lede{max-width:62ch; font-size:16px; color:var(--ink-mid); margin:14px 0 0}
-  .lede strong{color:var(--ink-hi); font-weight:600}
-  /* One step down from the lede in both size and ink, on the lede's measure —
-     a second sentence at the same weight would be two ledes arguing. */
-  .lede-2{max-width:62ch; font-size:14.5px; color:var(--ink-low); margin:7px 0 0}
+  /* ============ masthead ============
+     One line: the name, and how many. It is baseline-aligned rather than
+     stacked because the count is an attribute of the name and not a second
+     statement — the page has one heading and no subtitle to argue with it. */
+  .mast{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+  h1{color:var(--ink-hi); font-size:21px; font-weight:600;
+    letter-spacing:-.01em; line-height:1.2; margin:0}
+  .mast-sub{margin:0; font:400 12px/1 var(--mono); letter-spacing:.06em;
+    text-transform:uppercase; color:var(--ink-low)}
 
   /* ============ sections & cards ============ */
   /* The break between sections is AIR, not a rule. Nine full-bleed hairlines
@@ -313,7 +318,7 @@
      Family through closest(), and the rail still counts and filters by them.
      They just stop generating boxes, so their cards land in the feed's own
      column rhythm and the only part-row left is the last one on the page. */
-  .feed{display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr));
+  .feed{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
     gap:24px; margin-top:32px}
   .sect, .sect>.grid{display:contents}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
@@ -336,7 +341,16 @@
      one-line spec falls between the paragraph and the chips, where nothing
      needs to align. */
   .stage{display:grid; grid-template-columns:minmax(0,1fr); place-items:center;
-    height:172px; padding:28px 24px; background:none; border:0; border-radius:0}
+    height:216px; padding:54px 24px 34px; background:none; border:0; border-radius:0}
+  /* The padding is deliberately top-heavy. place-items centres the demo in
+     the CONTENT box, so a bigger top inset carries the button down the stage
+     — and down is where it wanted to go: the stage is only the top half of
+     the card, and a button centred in it sits well above the middle of the
+     panel a reader is actually looking at. The corner layer is up there too
+     (the two Copy chips and the star), so the old 38px put the demo about
+     fifty pixels under a row of furniture and left the same gap below to a
+     hairline. Twenty on top, fourteen off the bottom: the button lands on
+     the card's optical centre and the chips stop crowding it. */
   /* Without an explicit column the implicit one is auto-sized, so a demo whose
      natural width beats the stage (card 19's over-long label) sizes the column
      to max-content and gets centred in an area wider than the card — off to one
@@ -358,8 +372,15 @@
      lands on the sentence break rather than inside it. 37 of the 90 cards are
      one sentence and never grow a control at all. */
   .spec p{padding:0 24px; margin:0 0 12px; font-size:13px; color:var(--ink-low)}
-  .spec:not([data-open]) p{display:-webkit-box; -webkit-box-orient:vertical;
-    -webkit-line-clamp:3; overflow:hidden}
+  /* Shut, not clamped. Three lines of prose under ninety-one demos is most
+     of the page by area, and it is the half nobody came for: the argument
+     for an effect is worth reading once, after the effect has been seen,
+     and the effect is right there above it. Clamping was the half-measure —
+     it still spent the three lines, and it still put a paragraph between
+     every demo and the next one down the column. Open is one press, the
+     control that does it has not moved, and a search still forces every
+     card open so a hit can never be hiding in a shut one. */
+  .spec:not([data-open]) p{display:none}
   /* A search matches on the full text, clamped part included, so a hit whose
      word is in the hidden two thirds would look like a false positive. While
      the field has anything in it, every card is open. */
@@ -518,7 +539,7 @@
 
   /* ---- The version switch ---------------------------------------------
      Pinned to the foot of the stage, not added as a row beneath it. The stage
-     is a fixed 172px so that every hairline on the page lands on one line, and
+     is a fixed 216px so that every hairline on the page lands on one line, and
      a row only some cards carry would break that promise for all of them.
 
      It sits in the corner layer with the star and the two copy buttons — but
@@ -565,7 +586,7 @@
      answers, and the pressed answer rises back to bg-3. */
   .tools .vers-long::before{display:none}
   .tools .vers-seg{gap:1px; padding:2px; border-radius:var(--r-sm);
-    background:var(--well); box-shadow:inset 0 0 0 1px var(--hairline)}
+    background:var(--well)}
   .tools .vers-b{padding:5px 8px}
   /* The chip in the trough is the one place on the page that has to stand up
      out of a recess, so it takes the role and not the rung — see --raised.
@@ -576,8 +597,9 @@
     box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
   /* Length is a toggle, not a fifth treatment, so it is outlined rather than
      seated in the track — a different shape for a different kind of answer. */
-  .tools .vers-long{border:1px solid var(--hairline); padding:5px 9px}
-  .tools .vers-long[aria-pressed="true"]{border-color:var(--line-ctl)}
+  .tools .vers-long{border:0; padding:6px 10px; background:var(--well)}
+  .tools .vers-long[aria-pressed="true"]{background:var(--raised);
+    box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
 
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
   /* Off-screen rather than clipped, because it has to be able to come BACK:
@@ -1030,7 +1052,7 @@
   }
 
   /* ============ footer ============ */
-  .foot{margin-top:80px; border-top:1px solid var(--hairline); padding-top:22px;
+  .foot{margin-top:80px; padding-top:0;
     display:flex; flex-wrap:wrap; gap:6px 26px;
     font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
   .foot p{margin:0}
@@ -1048,10 +1070,10 @@
 
   /* ============ verktygsrad + favoriter ============ */
   .tools{
-    position:sticky; top:-1px; z-index:20; margin:48px 0 0;
-    display:flex; flex-wrap:wrap; align-items:center; gap:13px 26px;
-    padding:14px 18px; border-radius:var(--r-md);
-    background:var(--bg-1); border:1px solid var(--hairline);
+    position:sticky; top:-1px; z-index:20; margin:22px 0 0;
+    display:flex; flex-wrap:wrap; align-items:center; gap:12px 34px;
+    padding:12px 18px; border-radius:var(--r-md);
+    background:var(--bg-1); border:0;
     transition:background var(--t-med) var(--ease),
                border-color var(--t-med) var(--ease),
                box-shadow var(--t-med) var(--ease),
@@ -1101,6 +1123,51 @@
      directly beneath the panel's right side, so that is where the handle for
      it belongs. Above 1360 the button is display:none and this does nothing. */
   .tools-row--end{margin-left:auto}
+
+  /* ---- The colour fold -------------------------------------------------
+     Shut it is a chip on the toolbar's one line; open it takes the whole
+     line and pushes the other three groups down. Full-basis rather than
+     letting it wrap on its own: the swatch row measures about 680px and the
+     palette row about 505px, so at every width this panel exists at they
+     would land on different lines from the label that introduces them.
+     No rule under the summary and no box around the body — the fold is
+     already marked by the chevron and by the indent of what it opens. */
+  .tools-fold{flex:0 0 auto; min-width:0}
+  .tools-fold[open]{flex:1 0 100%}
+  .tools-fold-sum{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:6px 10px; border-radius:var(--r-sm); cursor:pointer;
+    list-style:none; user-select:none;
+    transition:background var(--t-fast) var(--ease);
+  }
+  .tools-fold-sum::-webkit-details-marker{display:none}
+  .tools-fold-sum:hover{background:var(--bg-2)}
+  .tools-fold-sum:hover .tools-lbl{color:var(--ink-mid)}
+  .tools-fold-sum:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .tools-fold[open] > .tools-fold-sum{background:var(--bg-2)}
+  /* What is set, said in the palette chips' own register so the shut state
+     and the open one are plainly the same control. The dot is the accent;
+     with nothing set it is the ring the Graphite chip uses, for the same
+     reason — an absence should not be drawn as one more colour. */
+  .tools-fold-state{
+    display:inline-flex; align-items:center; gap:7px;
+    font:400 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-mid); white-space:nowrap;
+  }
+  .tools-fold-state::before{content:""; width:9px; height:9px; flex:none;
+    border-radius:50%; background:none;
+    box-shadow:inset 0 0 0 1.2px var(--line-ctl)}
+  .tools-fold-state[data-set="1"]{color:var(--ink-hi)}
+  .tools-fold-state[data-set="1"]::before{background:var(--sw); box-shadow:none}
+  /* The same chevron as the card disclosure and the panel's own groups, so
+     the page has one mark for «this opens» rather than three. */
+  .tools-fold-sum::after{content:""; width:6px; height:6px; margin:-3px 0 0 -2px;
+    flex:none; border-right:1.2px solid var(--ink-low);
+    border-bottom:1.2px solid var(--ink-low); transform:rotate(45deg);
+    transition:transform var(--t-3) var(--e-out)}
+  .tools-fold[open] > .tools-fold-sum::after{transform:rotate(-135deg); margin-top:1px}
+  .tools-fold-body{display:flex; flex-direction:column; gap:14px;
+    padding:14px 10px 4px}
   .tools-lbl{font-size:11px; font-weight:600; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
 
@@ -1131,25 +1198,6 @@
      becomes frame, and the text variant — and there the radius IS the effect,
      so the setting leaves them where they are. The overlays inside every other
      card already say border-radius:inherit, so they follow for free. */
-  /* A fixed height and centred, NOT align-self:stretch. Below 1360 the panel
-     is two rows tall (see .tools-row--end), and a stretched rule runs the whole
-     69px — down past the groups it divides and through the empty half of the
-     second line, which reads as a column rule for a layout that has no columns. */
-  .tools-sep{width:1px; height:20px; align-self:center; flex:none;
-    background:var(--hairline); margin:0 -6px}
-  /* A vertical rule earns its place only while the group after it is on the
-     SAME line. This panel wraps at a dozen widths and the wrap point moves
-     whenever a control is added to it — measured across six widths, every
-     separator was left hanging off the end of a line at one width or another,
-     and which one it was changed with the width. So it is decided by
-     measurement, in `tidySeps()` below, not by a selector guessing where the
-     wrap will fall.
-     visibility, NOT display: hiding one must not change the layout that the
-     measurement was taken from, or hiding a rule reflows the panel, which
-     moves the wrap, which orphans a different rule — and the observer that
-     watches the panel runs again on its own output for ever. Keeping the box
-     in flow makes the measurement stable and the pass idempotent. */
-  .tools-sep[data-orphan]{visibility:hidden}
   /* Caption and swatch as one <label>, so the caption IS the accessible name
      and the hit target is the pair rather than 28 square pixels. Three of these
      sit on one line: the toolbar is sticky and every row it grows costs the
@@ -1313,7 +1361,6 @@
        groups stacked on each other are a coin toss. */
     .tools-row{width:100%; justify-content:space-between}
     /* A vertical rule between stacked full-width rows separates nothing. */
-    .tools-sep{display:none}
     /* Four treatments plus a toggle plus a readout will not sit on one phone
        line with a label; the track wraps and the readout takes the next. */
     .tools-row:has(.vers-seg){flex-wrap:wrap; justify-content:flex-start}
@@ -1402,7 +1449,7 @@
   .btn,.fav,.copy,.fav-only,.tools-reset{scroll-margin-top:160px}
   .spec[hidden],.sect[hidden]{display:none}
   .tools-empty{margin-top:28px; padding:26px; border-radius:var(--r-md);
-    border:1px dashed rgba(var(--sheen),.22); text-align:center;
+    border:0; background:var(--bg-1); text-align:center;
     font-size:13.5px; color:var(--ink-low)}
 
   @media (prefers-reduced-motion: reduce){
@@ -1444,7 +1491,7 @@
      the foot it cannot be scrolled away from at all. */
   .rail{
     display:flex; flex-direction:column;
-    border:1px solid var(--hairline); border-radius:var(--r-md);
+    border:0; border-radius:var(--r-md);
     background:var(--bg-1); padding:14px 13px 12px;
   }
   /* :not([hidden]) on every display rule, not a bare .rail — the nav ships
@@ -1453,6 +1500,7 @@
      [hidden]{display:none} and the empty shell flashes up before the script
      has filled it. */
   .rail-head{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
+  .rail-fold, .rail-show{display:none}
   .rail-lbl{display:block; margin:0 0 8px 9px;
     font:600 11px/1 var(--font-ui); letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
@@ -1462,11 +1510,13 @@
        one word this looks for. In the panel the header is 228px and the cap
        never bites. */
     flex:1 1 190px; min-width:0; max-width:440px;
-    padding:9px 11px; border-radius:var(--r-sm);
-    border:1px solid var(--line-ctl); background:var(--bg-0);
+    padding:10px 12px; border-radius:var(--r-sm);
+    border:0; background:var(--bg-2);
     color:var(--ink-hi); font:400 15px/1.2 var(--font-ui);
+    transition:background var(--t-fast) var(--ease);
   }
   .rail-q::placeholder{color:var(--ink-faint)}
+  .rail-q:hover{background:var(--bg-3)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
 
   /* ---- Order ----------------------------------------------------------
@@ -1484,8 +1534,8 @@
   .rail-sort{
     appearance:none; -webkit-appearance:none;
     display:block; width:100%; cursor:pointer;
-    padding:9px 30px 9px 11px; border-radius:var(--r-sm);
-    border:1px solid var(--line-ctl); background-color:var(--bg-0);
+    padding:10px 30px 10px 12px; border-radius:var(--r-sm);
+    border:0; background-color:var(--bg-2);
     color:var(--ink-hi); font:400 14px/1.2 var(--font-ui);
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     /* The literal above is --ink-low's dark value. A data URI cannot read a
@@ -1497,7 +1547,7 @@
   :root[data-theme="light"] .rail-sort{
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%23636363' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
-  .rail-sort:hover{color:var(--ink-hi); border-color:var(--ink-faint)}
+  .rail-sort:hover{color:var(--ink-hi); background-color:var(--bg-3)}
   .rail-sort:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
   /* The list itself is drawn by the OS and inherits nothing, so the two colours
      it does take are set explicitly — without them a dark page opens a white
@@ -1625,7 +1675,7 @@
      Not a dropdown, and that is deliberate. It is the navigation rather than a
      filter, the scroll spy marks the section you are in on it, and a marker
      inside a shut disclosure marks nothing. */
-  .rail-grp{margin-top:12px; padding-top:16px; border-top:1px solid var(--hairline)}
+  .rail-grp{margin-top:22px; padding-top:0}
   .rail-hint + .rail-list{margin-top:0}
   .rail-sects{list-style:none; display:flex; flex-direction:column; gap:2px}
   .rail-sects a{
@@ -1652,13 +1702,13 @@
 
   /* ---- The status bar -------------------------------------------------- */
   .rail-foot{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
-    margin-top:12px; padding-top:12px; border-top:1px solid var(--hairline)}
+    margin-top:18px; padding-top:0}
   .rail-foot .tools-reset{margin-left:auto}
 
   .rail-toggle{
     display:inline-flex; align-items:center; gap:7px;
-    padding:7px 12px; border:1px solid var(--line-ctl); border-radius:var(--r-sm);
-    background:none; color:var(--ink-mid); cursor:pointer;
+    padding:8px 12px; border:0; border-radius:var(--r-sm);
+    background:var(--bg-2); color:var(--ink-mid); cursor:pointer;
     font:400 13px/1 var(--font-ui);
   }
   .rail-toggle:hover{background:var(--bg-3); color:var(--ink-hi)}
@@ -1685,17 +1735,135 @@
      makes it read as a wall: the panel is measured from the viewport edge, not
      from a centred column's left margin, so it no longer drifts inward as the
      window widens. */
+  /* ---- Two walls -------------------------------------------------------
+     The panel that FINDS a study is on the left, the panel that RESTYLES
+     every study is on the right, and the studies run between them. That is
+     the arrangement every tool with an inspector has settled on, and the
+     reason is the same here: the restyle controls are properties of what is
+     on screen, they are read against what is on screen, and a sticky bar
+     that sits ON the grid spends a strip of every screenful arguing with it.
+     Moved to the wall, the panel costs the page nothing vertical at all —
+     the studies now start 209px up from where they did.
+     No max-width on the column any more. Capped at 1360 the grid stopped
+     growing while the screen kept going, which put an increasingly wide
+     empty margin either side of a page whose entire content is a grid. */
   @media (min-width: 1360px){
-    body{padding-left:var(--rail-w)}
-    .wrap{max-width:1180px}
+    body{padding-left:var(--rail-w); padding-right:var(--insp-w);
+      transition:padding-left var(--t-med) var(--ease)}
+    .wrap{max-width:none; padding-top:32px}
+
+    /* ---- The inspector ---------------------------------------------- */
+    .tools{
+      position:fixed; inset:0 0 0 auto; z-index:30;
+      width:var(--insp-w); margin:0; padding:0; border-radius:0;
+      /* nowrap matters: the base toolbar wraps, and a WRAPPED column
+         container gives every item its own line sized to the item — so
+         stretch stretched the colour fold to its own 315px and a third of
+         the swatches sat off the screen. One line, and the wall is the
+         width of anything in it. */
+      display:flex; flex-direction:column; flex-wrap:nowrap;
+      align-items:stretch; gap:0;
+      background:var(--bg-0); box-shadow:none;
+      overflow-y:auto; overscroll-behavior:contain;
+    }
+    /* The stuck state is a sticky bar's way of saying it is floating over the
+       page. A wall is never over the page, so the observer can go on firing
+       and none of it applies. */
+    .tools[data-stuck]{border-radius:0; border-top-color:transparent;
+      box-shadow:none; background:var(--bg-0);
+      -webkit-backdrop-filter:none; backdrop-filter:none}
+    .tools-head{padding:24px var(--pad-panel) 4px}
+    .tools-h{font:600 15px/1.2 var(--font-ui); color:var(--ink-hi);
+      letter-spacing:-.01em}
+    /* Label over control, one group per block. In a 276px column a label
+       BESIDE its control leaves the control about 150px, which is not a
+       slider and is certainly not four version chips. */
+    .tools-row{flex-direction:column; align-items:stretch; gap:10px;
+      padding:18px var(--pad-panel) 0}
+    .tools-row--end{display:none}
+    .tools > .tools-row:last-of-type{padding-bottom:26px}
+    /* The segmented controls take the column, so the four answers are four
+       equal thirds of a known width rather than four different widths that
+       happen to be as wide as their words. */
+    /* Two by two, not four across. «As built» is eight characters and a
+       276px column gives a four-across cell about 59px, which broke the one
+       label that is two words onto two lines and made the whole control a
+       row taller than the three beside it. */
+    .tools .vers-seg{display:grid; grid-template-columns:1fr 1fr; gap:2px}
+    .tools .vers-b{min-width:0; text-align:center; padding:7px 4px}
+    /* Length is not a fifth treatment, and full-width directly under the
+       four of them said it was. Its own labelled row, with the air that
+       every other group in this panel gets. */
+    .tools .vers-long{width:100%; text-align:center; margin-top:8px}
+    .tools .set-read{margin-left:0}
+    .tools .set-range{width:100%}
+    /* The fold is a block in the stack here, not a chip on a line. */
+    .tools-fold{flex:none}
+    .tools-fold[open]{flex:none}
+    .tools-fold-sum{margin:18px var(--pad-panel) 0; padding:8px 10px;
+      justify-content:space-between}
+    .tools-fold-body{padding:12px var(--pad-panel) 0; gap:16px; min-width:0}
+    .tools-fold-body .tools-row{padding:0; min-width:0}
+    .set-grp{display:flex; flex-direction:column; align-items:stretch;
+      gap:8px; margin-right:0; min-width:0}
+    /* Text and Button side by side, each half the column. min-width:0 on
+       every link in the chain: a flex item's automatic minimum size is its
+       content, and two swatch groups that refuse to shrink measured 382px
+       inside a 276px wall — the right-hand half was off the screen. */
+    /* The groups share the line; the readout does not. It is 104px of
+       mono in a 236px row, and on the line with the groups it taxed them
+       down to captions of three letters and an ellipsis each. */
+    .tools-fold-body .tools-row:has(.set-swatch){flex-direction:row; flex-wrap:wrap; gap:14px}
+    .tools-fold-body .tools-row:has(.set-swatch) .set-grp{flex:1 1 0}
+    .tools-fold-body .set-read{flex-basis:100%; margin-top:2px}
+    .set-pair{justify-content:space-between; min-width:0}
+    .set-pair .set-lab{min-width:0; gap:6px}
+    .set-cap{overflow:hidden; text-overflow:ellipsis}
+    .set-presets{gap:2px}
+    .tools .set-read{white-space:normal}
     .rail:not([hidden]){
       display:flex; position:fixed; inset:0 auto 0 0; z-index:30;
       width:var(--rail-w); padding:0;
-      background:var(--bg-1);
-      border:0; border-right:1px solid var(--hairline); border-radius:0;
+      /* The canvas colour, not the card colour. With the hairlines gone,
+         walls at --bg-1 were the same value as the ninety-one cards between
+         them and the whole screen read as one flat field. At --bg-0 the
+         walls are the ground, the cards are the only thing standing up on
+         it, and no rule is needed to say where one ends. */
+      background:var(--bg-0);
+      border:0; border-radius:0;
     }
-    .rail-head{padding:24px var(--pad-panel) 18px;
-      border-bottom:1px solid var(--hairline)}
+    /* ---- The panel is titled ------------------------------------------
+       The name belongs at the top of the left wall, which is where every
+       tool with a panel puts it and where a reader's eye starts. It is
+       still the document's one <h1> and still the same element — moved with
+       position, not duplicated into the panel, because two copies of a
+       title is two things that can disagree and one of them would have had
+       to be hidden from a screen reader to stay valid.
+       It rides with the panel: fold the wall away and the title goes with
+       it, because a panel's title is part of the panel. The count in the
+       status bar at the foot says the same number, so nothing is lost. */
+    .mast{
+      position:fixed; left:0; top:0; z-index:31;
+      width:var(--rail-w); padding:24px var(--pad-panel) 0;
+      flex-direction:column; align-items:flex-start; gap:5px;
+      transition:transform var(--t-med) var(--ease);
+    }
+    body[data-rail="off"] .mast{transform:translateX(-100%)}
+    /* The handle rides with the field rather than above it: one row of
+       chrome, and the panel's first line is still the thing it is for.
+       The top inset clears the title fixed above it. */
+    .rail-head{display:grid; grid-template-columns:minmax(0,1fr) auto;
+      align-items:center; gap:10px; padding:82px var(--pad-panel) 20px}
+    .rail-head .rail-q{max-width:none}
+    .rail-head .fav-only{grid-column:1 / -1; justify-self:start}
+    .rail-fold{
+      display:grid; width:30px; height:30px; place-items:center; padding:0;
+      border:0; border-radius:var(--r-xs); cursor:pointer;
+      background:none; color:var(--ink-low);
+      transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .rail-fold:hover{background:var(--bg-2); color:var(--ink-hi)}
+    .rail-fold:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
     /* min-height:0 is what lets the body actually scroll: a flex item's
        automatic minimum size is its content, so without it the body grows past
        the panel and the status bar is pushed off the bottom of the screen. */
@@ -1703,9 +1871,42 @@
       padding:14px 11px 26px}
     .rail-grp{margin-top:18px}
     .rail-grp{padding:14px 0 0}
-    .rail-foot{margin:0; padding:16px var(--pad-panel); background:var(--bg-1);
-      border-top:1px solid var(--hairline)}
+    .rail-foot{margin:0; padding:14px var(--pad-panel) 18px; background:var(--bg-0)}
     .rail-toggle{display:none}
+
+    /* ---- Folding the left wall away ---------------------------------
+       transform and not display: the panel keeps its box, so nothing it
+       contains has to be rebuilt on the way back, the scroll-spy's targets
+       stay measurable, and the motion is the one thing that tells you where
+       the panel went. */
+    .rail:not([hidden]){transition:transform var(--t-med) var(--ease)}
+    body[data-rail="off"]{padding-left:0}
+    body[data-rail="off"] .rail:not([hidden]){transform:translateX(-100%)}
+    body[data-rail="off"] .rail-show{display:grid}
+    .rail-show{
+      display:none; position:fixed; left:12px; top:24px; z-index:32;
+      width:34px; height:34px; place-items:center; padding:0;
+      border:0; border-radius:var(--r-sm); cursor:pointer;
+      background:var(--bg-2); color:var(--ink-mid);
+      transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .rail-show:hover{background:var(--bg-3); color:var(--ink-hi)}
+    .rail-show:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+    /* The same mark on both handles, mirrored: a panel edge with an arrow
+       leaving it, and an arrow coming back. Drawn in CSS because two 12px
+       glyphs are not worth a network request or an inline SVG each. */
+    .rail-fold{position:relative}
+    .rail-fold::before, .rail-show::before{
+      content:""; position:absolute; left:50%; top:50%;
+      width:11px; height:11px; margin:-5.5px 0 0 -5.5px;
+      border:1.4px solid currentColor; border-radius:2px;
+    }
+    .rail-fold::after, .rail-show::after{
+      content:""; position:absolute; left:50%; top:50%;
+      width:3.6px; height:11px; margin:-5.5px 0 0 -5.5px;
+      background:currentColor; border-radius:2px 0 0 2px;
+    }
+    .rail-show::after{margin-left:1.9px; border-radius:0 2px 2px 0}
   }
   @media (max-width: 1359px){
     .rail:not([hidden]){display:none; margin-top:12px}
@@ -1739,21 +1940,24 @@
        arrival. This is the standard way out of that, and the only element on
        the page that is invisible until it is focused. -->
   <a class="skip" href="#studies">Skip to the studies</a>
-  <header>
+  <!-- A masthead, not a hero. Fifty-two-point type and two ledes were most
+       of the first screenful on a page whose whole argument is the grid
+       underneath them — the studies started 260px down and a visitor had to
+       scroll before the page did the one thing it is for. The name and the
+       count are what a title has to carry; everything the ledes said is said
+       better by the cards themselves, which are hoverable from the first
+       row up. The count is never typed — see the .mast-n fill below. -->
+  <header class="mast">
     <h1>Button Hover Lab</h1>
-    <!-- The count is never written by hand here — a hand-typed number went
-         stale twice. JS fills it from cards.length; without JS the sentence
-         reads whole with no number. -->
-    <p class="lede">Button hover animations, actually built. <strong>Hover, tab and press any of them.</strong></p>
-    <!-- The lede teaches the demo and stops there, so the page read as a
-         gallery: a visitor learned that the buttons move and never that they
-         come away. The second line is the offer, and it names the two things
-         the controls on every card are labelled with — CSS and Framer — so
-         the sentence and the buttons teach each other. -->
-    <p class="lede-2">Every one hands over its own CSS, or a Framer module you paste straight onto a canvas.</p>
+    <p class="mast-sub"><span class="mast-n"></span>&nbsp;studies</p>
   </header>
 
-  <div class="tools" role="group" aria-label="Restyle the studies">
+  <div class="tools" role="group" aria-labelledby="tools-h">
+    <!-- Only drawn where the panel is a wall (1360 and up). In the toolbar
+         shape below that width the group already sits under the masthead
+         with nothing between them, and a title there is a heading for a
+         thing you can see the whole of. -->
+    <div class="tools-head"><span class="tools-h" id="tools-h">Restyle</span></div>
     <!-- Two questions, two swatches each. It used to be three swatches on one
          line — Text, Accent, Hover — which is a mix of one TEXT role and two
          SURFACE roles, and it hid the fourth setting entirely: the colour of
@@ -1761,6 +1965,21 @@
          could not be chosen. A button has two parts and two states, so the
          control is the 2×2 that actually describes it, and every cell is a
          colour someone can pick rather than three picks and one derivation. -->
+    <!-- Folded, and shut on arrival. Four swatches and six palettes were two
+         of this panel's three lines, and the panel is sticky — so every
+         screenful of studies was paying about 76px for a control most
+         visitors never open. It is a <details> rather than a class toggle so
+         the disclosure semantics, the keyboard and the announcement all come
+         from the element instead of being rebuilt on it.
+         Shut, it still says what is set: markPreset() writes the palette's
+         own name and its accent into the chip, because a control that hides
+         its state is one nobody trusts to be off. -->
+    <details class="tools-fold">
+      <summary class="tools-fold-sum">
+        <span class="tools-lbl">Colour</span>
+        <span class="tools-fold-state" data-set="">Graphite</span>
+      </summary>
+      <div class="tools-fold-body">
     <div class="tools-row">
       <div class="set-grp">
         <span class="tools-lbl">Text</span>
@@ -1814,7 +2033,6 @@
       </div>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
-    <div class="tools-sep" aria-hidden="true"></div>
     <!-- Presets. Three swatches that all start white mean three trips through
          an OS colour picker before the page does anything at all, so the one
          clever part of this control — the fit that lifts a colour until it
@@ -1858,14 +2076,14 @@
                 title="Deep — dark enough that the page has to lift it to stay legible. The caption says so with an arrow.">Deep</button>
       </div>
     </div>
-    <div class="tools-sep" aria-hidden="true"></div>
+      </div>
+    </details>
     <div class="tools-row">
       <span class="tools-lbl">Radius</span>
       <input class="set-range" type="range" min="0" max="28" step="1" value="28"
              aria-label="Button corner radius, applied to every study">
       <span class="set-read" data-read="radius"></span>
     </div>
-    <div class="tools-sep" aria-hidden="true"></div>
     <div class="tools-row">
       <span class="tools-lbl">Version</span>
       <div class="vers-seg" id="v-treat" role="radiogroup"
@@ -1879,7 +2097,6 @@
               aria-label="Long label, applied to every study that offers it">Long</button>
       <span class="set-read" data-read="versions" aria-live="polite"></span>
     </div>
-    <div class="tools-sep" aria-hidden="true"></div>
     <!-- The theme belongs in this panel and not floating in a corner: every
          other control here restyles the whole page at once, and this is the
          same kind of knob. It is a radiogroup rather than a toggle for the
@@ -1902,8 +2119,20 @@
        Its two shapes and the reasoning behind each are in the stylesheet, at
        «the left panel». Three regions, in the order a console has them: a
        header with the search, a body that scrolls, a status bar at the foot. -->
+  <!-- Outside .rail on purpose: a button inside a panel that has been
+       translated off the screen is a button off the screen. -->
+  <button type="button" class="rail-show" aria-expanded="false" aria-controls="rail"
+          aria-label="Show the find panel" hidden></button>
   <nav class="rail" id="rail" hidden aria-label="Find a study">
     <div class="rail-head">
+      <!-- The panel is 288px of a 1440px screen and it answers a question
+           most visits ask once — «where is the one about X» — so it folds.
+           Its own handle rather than a control somewhere else: the thing
+           that closes a panel belongs on the panel, and the thing that
+           re-opens it has to be somewhere the closed panel is not, which is
+           .rail-show below. -->
+      <button type="button" class="rail-fold" aria-expanded="true"
+              aria-controls="rail" aria-label="Hide the find panel"></button>
       <label class="sr" for="rail-q">Find a study</label>
       <input class="rail-q" id="rail-q" type="search" autocomplete="off"
              placeholder="Name, word or number">
@@ -10017,13 +10246,27 @@ document.addEventListener("DOMContentLoaded", function () {
     // Which chip, if any, describes what is on screen. Read off `look` rather
     // than remembered, so a chip is un-pressed the moment a swatch is touched
     // and «Graphite» lights up again whenever the last role is cleared.
+    // The chip on the shut fold is written from the same comparison, so the
+    // two cannot disagree: whatever chip is pressed is what the chip says,
+    // and a set of swatches no palette describes says «Custom».
+    var foldState = tools.querySelector('.tools-fold-state');
     function markPreset(){
+      var hit = null;
       presets.forEach(function(el){
         var want = parseP(el.getAttribute('data-p'));
         var on = want.text === look.text && want.textHover === look.textHover
               && want.accent === look.accent && want.hover === look.hover;
         el.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (on) hit = el;
       });
+      if (!foldState) return;
+      var any = !!(look.text || look.textHover || look.accent || look.hover);
+      foldState.textContent = hit ? hit.textContent.trim() : 'Custom';
+      foldState.setAttribute('data-set', any ? '1' : '');
+      // The dot is the fill, because the fill is the half of a palette you
+      // see across a card. With nothing set there is no dot to draw and the
+      // ring the Graphite chip uses says so instead.
+      foldState.style.setProperty('--sw', look.accent || look.hover || 'transparent');
     }
     presets.forEach(function(el){
       el.addEventListener('click', function(){
@@ -10550,6 +10793,37 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.key === 'Escape' && qEl.value){ qEl.value = ''; state.q = ''; apply(); }
       });
     }
+    // ---- The left wall folds ------------------------------------------
+    // Two handles, one state, and the state lives on <body> so the padding
+    // that holds the column open and the transform that moves the panel are
+    // reading the same attribute. Remembered, because a reader who has put
+    // the panel away has said something about how they use the page and
+    // being asked again every load is not listening.
+    (function(){
+      var fold = document.querySelector('.rail-fold');
+      var show = document.querySelector('.rail-show');
+      if (!fold || !show || !rail) return;
+      // The storage keys on this page are the project's own, and they are
+      // Swedish — matching them matters more than being readable in English,
+      // because a second convention is how two of them end up disagreeing.
+      var KEY = 'knapplabbet-panel';
+      function set(off, remember){
+        document.body.setAttribute('data-rail', off ? 'off' : 'on');
+        fold.setAttribute('aria-expanded', off ? 'false' : 'true');
+        show.setAttribute('aria-expanded', off ? 'false' : 'true');
+        // hidden as well as display:none — the handle that is not on screen
+        // must not be a tab stop, and CSS alone cannot say that.
+        show.hidden = !off;
+        fold.hidden = off;
+        if (remember){ try{ localStorage.setItem(KEY, off ? 'off' : 'on'); }catch(e){} }
+      }
+      var saved = null;
+      try{ saved = localStorage.getItem(KEY); }catch(e){}
+      set(saved === 'off', false);
+      fold.addEventListener('click', function(){ set(true, true); show.focus(); });
+      show.addEventListener('click', function(){ set(false, true); fold.focus(); });
+    })();
+
     if (railToggle && rail){
       railToggle.setAttribute('aria-controls', 'rail');
       railToggle.addEventListener('click', function(){
@@ -10599,12 +10873,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // claim is that nothing is authored twice. tools/facet-manifest.mjs reads
     // this instead, so the stamp is always what the rule currently says.
     window.__bhlDerived = DERIVED;
-    // The lede's count, from the same list everything else counts. A
+    // The masthead's count, from the same list everything else counts. A
     // hand-typed number in that sentence went stale twice; this one cannot.
-    var lede = document.querySelector('.lede');
-    if (lede && lede.firstChild && lede.firstChild.nodeType === 3){
-      lede.firstChild.textContent = cards.length + ' button hover animations, actually built. ';
-    }
+    // Empty in the source rather than a placeholder digit: a number that is
+    // wrong until JS runs is worse than no number at all.
+    var mastN = document.querySelector('.mast-n');
+    if (mastN) mastN.textContent = cards.length;
     // The taxonomy above is DERIVED, so a bug in tag() mis-files studies in
     // silence — the rail shows wrong numbers as confidently as right ones.
     // #facet-manifest holds the tags as they stood when last stamped, and the
@@ -10750,33 +11024,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // rather than only after the next click.
     markPreset();
 
-    // ---- The separators that separate nothing --------------------------
-    // See the note on .tools-sep in the stylesheet for why this is measured
-    // rather than selected, and why it hides with visibility. A rule is an
-    // orphan when the group after it starts a new line — or when there is no
-    // group after it at all, which is what the trailing row leaves behind
-    // once its own contents are hidden at a narrow width.
-    (function(){
-      var seps = [].slice.call(tools.querySelectorAll('.tools-sep'));
-      if (!seps.length) return;
-      function tidySeps(){
-        seps.forEach(function(sep){
-          if (getComputedStyle(sep).display === 'none') return;
-          var next = sep.nextElementSibling;
-          var a = sep.getBoundingClientRect();
-          var b = next && next.getBoundingClientRect();
-          var orphan = !b || !b.width || Math.abs(b.top - a.top) > 8;
-          if (orphan) sep.setAttribute('data-orphan', '');
-          else sep.removeAttribute('data-orphan');
-        });
-      }
-      tidySeps();
-      // The panel's own box changes when the toolbar wraps, which is exactly
-      // when the answer changes. Hiding is visibility-only, so this cannot
-      // feed itself.
-      if (window.ResizeObserver) new ResizeObserver(tidySeps).observe(tools);
-      else window.addEventListener('resize', tidySeps);
-    })();
     // After buildRail(), so the flat grid never takes a row in the section
     // nav, and after the cards are tagged, so the name order has a hay to read
     // and every order has an id to break ties on. It calls apply() itself.
@@ -12252,18 +12499,16 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // Is there anything the clamp is actually withholding? Measured, not
-    // guessed from character counts — the clamp is three LINES and a card's
-    // measure changes with the column. scrollHeight > clientHeight is the
-    // question the browser has already answered.
-    var clipped = p && p.scrollHeight - p.clientHeight > 1;
-    // The control is earned by CLIPPED TEXT alone, not by hidden chips —
-    // every card has a muted chip, so keying on those put a «More» under all
-    // ninety and replaced three repeated labels with one repeated button.
-    // A card whose description already fits keeps no control: its default
-    // stamp is the least interesting data on the page, it is still in the
-    // copy and the filters, and its EXCEPTION chip was never hidden.
-    if (!clipped) return;
+    // The description is SHUT now, not clamped to three lines, so the old
+    // question — «is the clamp withholding anything» — has no answer to
+    // measure: a display:none paragraph reports scrollHeight 0 and every
+    // card looked like it had nothing more to say. It read as a bug, and it
+    // was the same bug on all ninety-one at once: the text was gone and so
+    // was the control that brings it back.
+    // A paragraph with words in it is the whole test now. Nothing else can
+    // earn the control, so a card that carries only its default chips still
+    // keeps a clean meta line.
+    if (!p || !p.textContent.trim()) return;
 
     var btn = document.createElement('button');
     btn.type = 'button';
