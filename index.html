@@ -4653,7 +4653,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // 8px on the horizontal ones, matching .j-dir-nose in the stylesheet. The
     // arrival is unchanged — both axes still travel to 0% — so the only thing
     // this moves is where the plate starts, which is now genuinely outside.
-    var OFF = {left:['calc(-100% - 10px)','0%'], right:['calc(100% + 10px)','0%'],
+    // ⚠️ ELEVEN ON THE HORIZONTAL AXIS, TEN ON NOTHING, and the odd pixel is the
+    // pill. The long edges are straight, so a park of exactly the nose's depth
+    // puts its flat back on the clip's straight boundary and nothing shows —
+    // measured, top and bottom are clean at 10px of travel plus an 8px nose.
+    // The END CAPS are not straight: --btn-r:999px makes them semicircles, and
+    // the nose is a half-ellipse whose tip is its outermost point, so a flush
+    // park makes two curves TANGENT at one point and the pixel they share is lit
+    // by both. It measured as a one-device-pixel column about five pixels tall
+    // at the middle of the cap — max channel delta 27 at 1x and 55 at 2x on the
+    // outline version, and it moves in and out of view with sub-pixel layout,
+    // which is why it read as intermittent. One whole pixel of clearance puts
+    // the tip out of reach of the boundary at both ends: verified 0 differing
+    // pixels at 1x and 2x, outline and fill, at two window widths, against the
+    // same capture with the nose removed. 12px is clean too; 11 is the least
+    // that is, so it is the one that says what it is for.
+    var OFF = {left:['calc(-100% - 11px)','0%'], right:['calc(100% + 11px)','0%'],
                top:['0%','calc(-100% - 8px)'],   bottom:['0%','calc(100% + 8px)']};
     var OPP = {left:'right', right:'left', top:'bottom', bottom:'top'};
     // The bow is no longer a map of border-radius specs and no longer lives in
