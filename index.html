@@ -2466,17 +2466,17 @@
       <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="j-out" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="j-out" data-versions="fill outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
-        <button type="button" class="btn btn--solid j-out">Read the case
+        <button type="button" class="btn btn--line j-out"><span class="lbl">Read the case</span>
           <span class="j-out-slot" aria-hidden="true">
             <svg class="icon j-out-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
           </span>
         </button>
       </div>
       <h3><span class="num">78</span>Corner exit</h3>
-      <p>The mark turns to point out of the page and does not go anywhere. It used to lift and then leave along the line it was now pointing down &mdash; three properties arguing that the turn and the travel were one statement, where they read as two things happening to agree. A rotation on its own is enough to say off this page.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+      <p>Card 09's fill, taken off the pointer and pinned to the corner the mark points at: the plate fills from the exit while the mark leaves by it, so the pair is two directions on one diagonal rather than one said twice &mdash; the trap card 124 names. The mark still only rotates. It used to lift and then leave along the line it was now pointing down, three properties arguing that the turn and the travel were one statement, where they read as two things happening to agree. The label's colour waits one beat and the mark's does not, because the mark is standing where the fill starts.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec" data-key="n-cross" data-versions="fill outline link" data-added="2026-08-26T20:37:15+02:00" data-updated="2026-08-29T12:30:33+02:00">
@@ -2496,7 +2496,6 @@
       <p>The two pieces exchange places: the mark crosses the whole label to the far end while the plate slides into the slot it vacates. Card 92 walks a bare icon; this is one solid mass crossing another.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
-
 
     <article class="spec" data-key="p-bud" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
       <div class="stage">
@@ -4464,49 +4463,61 @@ document.addEventListener("DOMContentLoaded", function () {
     border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
   }
 
-  /* 78 Corner exit — the mark lifts, turns to point out of the page, and
-     leaves along the line it is now pointing down.
+  /* 78 Corner exit — 09 x 78. Ink fill x the turn out of the page.
+     Built the way the Compound section argues for: two mechanisms on one
+     curve, and the second one running AGAINST the first. The label leaning
+     toward the corner was tried and is the failure card 124 names — two
+     channels saying the same word twice, because the mark is already pointing
+     there. So the plate fills FROM the exit while the mark leaves BY it, and
+     the pair is two directions on one diagonal instead of one said twice.
 
-     THE VERSION BEFORE THIS ONE CLAIMED A SWING AND DREW A STRAIGHT LINE. A
-     single element interpolating translate(4px,-4px) gives x and y the same
-     curve and the same clock, so the path is a chord; sampled frame by frame,
-     x and y agreed to the decimal the whole way down. The rotation swung and
-     the travel did not, which is the one thing this card says they both do.
+     THE MARK'S HALF IS STILL ONE PROPERTY. It used to lift four pixels, turn,
+     and then leave along the line it was now pointing down — three properties
+     on two delays, arguing that the turn and the travel were one statement.
+     They read as two things happening to agree. The rotation carries it alone
+     and the second channel is the plate, which is what makes them separable.
 
-     THREE PROPERTIES, THREE CLOCKS, STILL ONE ELEMENT. translate, rotate and
-     transform are separate animatable properties and compose in that order, so
-     each carries its own duration and delay without a wrapper span:
+     The fill is card 09's, taken off the pointer and pinned to the corner:
+     circle(0% at 100% 0) out to 142%. A percentage radius resolves against
+     sqrt((w² + h²) / 2) — 131.9px on the 183 x 45 plate this ships at — so
+     142% clears the 188px to the far corner with room for a longer label.
+     --t-5 and --e-quint are card 09's own rungs and not new ones.
 
-       translate   the LIFT, straight up, and the first thing to go
-       rotate      the TURN, running alongside the lift
-       transform   the DEPARTURE — and because transform composes AFTER rotate,
-                   its translateX runs along the glyph's OWN rotated axis. The
-                   card's sentence stops being asserted in a comment and
-                   becomes geometry: it travels in the direction it points.
-
-     The departure waits one --d-1, so the first fifty milliseconds are pure
-     vertical and the path bends out to the corner from there instead of setting
-     off on the diagonal. The rest side reverses the order — the departure comes
-     home first, the lift drops in last — so the exit retraces the arc rather
-     than cutting back across it.
-
-     --e-out and not --e-quint: quint spent 3.9 of the old 4px inside the first
-     120ms of a 300ms transition and left the remaining 180ms with nothing in
-     them, which is what a 4px move on a 45° turn was doing wrong before any of
-     the above. Travel is 4.2px out and 8.2px up, about 9px of arc; the 14px
-     slot is fixed and all of it borrows from the plate's own padding. */
-  .j-out .j-out-slot{position:relative; display:block; width:14px; height:14px}
-  /* It turns, and that is all. The mark used to lift four pixels, turn, and
-     then leave along the line it was now pointing down — three properties on
-     two delays, arguing that the turn and the travel were one statement. They
-     read as two things happening to agree. One property now, and the card
-     makes the smaller claim properly. */
+     The label's flip waits one --d-1 and the MARK'S DOES NOT, which is the one
+     place this differs from 122: the mark sits at the fill's origin, so a
+     delay on it would hold the old colour under a plate that has already
+     arrived. The label is a plate-width away and flips as the front reaches
+     it. The 14px slot is fixed and borrows from the plate's own padding, so
+     nothing reflows whatever the mark does inside it. */
+  .j-out{overflow:hidden;
+    transition:transform var(--t-1) var(--e-out), color var(--t-2) ease}
+  .j-out::before{content:""; position:absolute; inset:0;
+    background:var(--ink-hover); clip-path:circle(0% at 100% 0);
+    transition:clip-path var(--t-5) var(--e-quint)}
+  .j-out:hover::before,
+  .j-out:focus-visible::before{clip-path:circle(142% at 100% 0)}
+  .j-out .lbl, .j-out .j-out-slot{position:relative; z-index:1}
+  .j-out .lbl{transition:color var(--t-2) ease var(--d-1)}
+  .j-out:hover, .j-out:focus-visible{color:var(--on-ink-hover)}
+  .j-out:hover .lbl,
+  .j-out:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-2)}
+  .j-out .j-out-slot{display:block; width:14px; height:14px}
   .j-out .j-out-mark{
     position:absolute; top:0; left:0;
     rotate:0deg;
     transition:rotate var(--t-3) var(--e-out);
   }
   .j-out:hover .j-out-mark, .j-out:focus-visible .j-out-mark{rotate:-45deg}
+
+  /* 78 in fill. The same move 07 and 08 make: the arriving plate is --on-ink
+     and needs the --line-ctl hairline, because --on-ink on a --bg-1 panel
+     measures 1.07:1 and reads as gone rather than as switched. The outline
+     version needs none of it — its own --ink border is the boundary. */
+  .j-out.btn--solid::before{background:var(--on-ink);
+    box-shadow:inset 0 0 0 1px var(--line-ctl)}
+  .j-out.btn--solid:hover, .j-out.btn--solid:focus-visible{color:var(--ink)}
+  .j-out.btn--solid:hover .lbl,
+  .j-out.btn--solid:focus-visible .lbl{color:var(--ink)}
 
   /* 79 Optical centre — the mark's space is reserved from the start,
      which normally means the label sits visibly off-centre while the mark is
@@ -9141,7 +9152,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
