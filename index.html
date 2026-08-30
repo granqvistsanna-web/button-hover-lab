@@ -12319,9 +12319,26 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".k-lamp").forEach(function (row) {
     var items = row.querySelectorAll(".k-lamp-i");
     var left = 0;
+    // ⚠️ BOTH NUMBERS MUST BE IN ROW COORDINATES, and one of them was not.
+    // --k-x is the pointer minus the row's left edge. --k-o was b.offsetLeft,
+    // which is measured from the nearest POSITIONED ancestor — .stage here, not
+    // the row — so the subtraction mixed two origins and the light landed a
+    // constant to the left of the pointer: 146px on the page, which is more than
+    // a third of a 404px row. Measured before it was believed: pointer at the
+    // centre of «Reports» gave --k-x 254.34px, correct, while button 0's
+    // gradient origin sat at 108.3 where it should have been 254.3, and every
+    // button was out by the same −146.
+    // Both offsets come off the same rect now, so the origin is the row whatever
+    // the study is dropped into — offsetLeft would still be wrong the moment the
+    // row itself is positioned, and right for the wrong reason when it is not.
+    // Still nothing measured at paint time: this runs on load, on resize and on
+    // pointerenter, never on pointermove.
     function measure() {
-      left = row.getBoundingClientRect().left;
-      items.forEach(function (b) { b.style.setProperty("--k-o", b.offsetLeft + "px"); });
+      var r = row.getBoundingClientRect();
+      left = r.left;
+      items.forEach(function (b) {
+        b.style.setProperty("--k-o", (b.getBoundingClientRect().left - r.left) + "px");
+      });
     }
     measure();
     addEventListener("resize", measure, { passive: true });
@@ -12333,9 +12350,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // A light that follows a pointer has nothing to say to a Tab, so focus
     // parks the source on the focused button rather than inventing a second
     // effect for the keyboard.
+    // ⚠️ THE KEYBOARD ROUTE CARRIED THE SAME FAULT, in a second place, and only
+    // the measurement found it: fixing measure() alone left focus parking the
+    // light 145.65px from the button it had just focused — the same constant,
+    // because this line read offsetLeft too. One origin, both routes.
     items.forEach(function (b) {
       b.addEventListener("focus", function () {
-        row.style.setProperty("--k-x", (b.offsetLeft + b.offsetWidth / 2) + "px");
+        var r = row.getBoundingClientRect(), bb = b.getBoundingClientRect();
+        row.style.setProperty("--k-x", (bb.left - r.left + bb.width / 2) + "px");
       });
       b.addEventListener("blur", function () { row.style.removeProperty("--k-x"); });
     });
