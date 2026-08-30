@@ -2312,15 +2312,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="l-corner" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--solid l-corner">Open the spec sheet</button>
-      </div>
-      <h3><span class="num">48</span>Continuous corners</h3>
-      <p>The corner's curvature changes while its radius stays exactly where it was &mdash; and an inset hairline holds the old curve, so the difference opens at the four corners and measures zero along every edge. On its own a curvature change has nothing to be seen against; this gives it a reference, the way card 29 gave one to offset.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
   </div>
 </section>
 
@@ -2459,7 +2450,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="j-resolve" data-versions="link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="j-resolve" data-versions="fill link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line j-resolve">
           <span class="j-resolve-lbl" aria-hidden="true">Request the audit</span>
@@ -4615,12 +4606,25 @@ document.addEventListener("DOMContentLoaded", function () {
      is the one thing a primary action must never read as. So the dim moves
      into the only place it was ever load-bearing. */
   .j-resolve .j-resolve-lbl{color:var(--ink-text)}
+  /* THE FILL VERSION HAS TO RESTATE THE LABEL COLOUR, and it is the one line
+     that makes the version exist. .btn--solid paints the plate --ink and sets
+     the button's own colour to --ink-on-fill, but the rule above names the SPAN
+     and beats that inheritance — so on a filled plate the label would be --ink
+     on --ink: the exact white-on-white the pair studies shipped once and that
+     only a screenshot caught. The scramble would run, invisibly. */
+  .btn--solid.j-resolve .j-resolve-lbl{color:var(--ink-on-fill)}
   @media (prefers-reduced-motion: reduce){
     /* The script returns before it starts a frame here, so this colour shift
        IS the effect, exactly as it has always been. Unchanged, just scoped. */
     .j-resolve .j-resolve-lbl{color:var(--ink-soft); transition:color var(--t-3) ease}
     .j-resolve:hover .j-resolve-lbl,
     .j-resolve:focus-visible .j-resolve-lbl{color:var(--ink-text)}
+    /* Same substitution on the reduced-motion route: the dim and its arrival
+       are both stated against the fill, or the fallback is the invisible one. */
+    .btn--solid.j-resolve .j-resolve-lbl{
+      color:color-mix(in srgb, var(--ink-on-fill) 62%, transparent)}
+    .btn--solid.j-resolve:hover .j-resolve-lbl,
+    .btn--solid.j-resolve:focus-visible .j-resolve-lbl{color:var(--ink-on-fill)}
   }
 </style>
 
@@ -4909,7 +4913,13 @@ document.addEventListener("DOMContentLoaded", function () {
     position:absolute; left:0; bottom:0; width:25%; height:1.5px;
     background:var(--ink); border-radius:1px;
     transform:translateX(calc(var(--k-n) * 100%));
-    transition:transform var(--t-4) var(--e-quint);
+    /* --t-5 and not --t-4, on Sanna's «a bit slower» (2026-08-30). The row is a
+       plain div and not a .btn, so it reads the ROOT ladder: this is 300ms → 450.
+       One rung, not a number — a rule crossing a whole nav is the longest travel
+       on the page and the only card where the top of the ladder is the honest
+       rung. The fallback and the anchored version move together, or the two
+       disagree the moment anchor-name is unsupported. */
+    transition:transform var(--t-5) var(--e-quint);
   }
   .k-ind:has(.k-ind-i:nth-child(1):is(:hover,:focus-visible)){--k-n:0}
   .k-ind:has(.k-ind-i:nth-child(2):is(:hover,:focus-visible)){--k-n:1}
@@ -4930,7 +4940,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .k-ind .k-ind-bar{
       width:auto; transform:none;
       left:anchor(--k-ind-1 left); right:anchor(--k-ind-1 right);
-      transition:left var(--t-4) var(--e-quint), right var(--t-4) var(--e-quint);
+      transition:left var(--t-5) var(--e-quint), right var(--t-5) var(--e-quint);
     }
     .k-ind:has(.k-ind-i:nth-child(2):is(:hover,:focus-visible)) .k-ind-bar{
       left:anchor(--k-ind-2 left); right:anchor(--k-ind-2 right)}
@@ -5034,14 +5044,21 @@ document.addEventListener("DOMContentLoaded", function () {
      the bench made plain — ticks with no rule to hang from read as a barcode,
      and the fix was four changes deep on a study nobody was reaching for.
 
-     Two of them were not buildable when the other fifty-two were written.
+     One of them was not buildable when the other fifty-two were written.
      Card 47 tethers its plate with CSS anchor positioning and moves it in and
-     out of `display:none` with @starting-style and allow-discrete; card 48
-     animates `corner-shape`, which changes a corner's curvature without
-     changing its radius. Both were checked in the browser rather than assumed:
-     corner-shape interpolates round → superellipse(1.33) → (1.68) → (2.18) →
-     (4), and the anchored plate resolves position-area, flip-block fallbacks
-     and a discrete display transition.
+     out of `display:none` with @starting-style and allow-discrete, checked in
+     the browser rather than assumed: the anchored plate resolves position-area,
+     flip-block fallbacks and a discrete display transition.
+
+     THERE WERE TWO, and the second is gone. Card 48 Continuous corners animated
+     `corner-shape` to change a corner's curvature while its radius stayed put,
+     and it was cut 2026-08-30. The mechanism was never the problem — corner-shape
+     interpolates cleanly, round → superellipse(1.33) → (1.68) → (2.18) → (4).
+     What it could not solve is that a curvature change at a constant radius has
+     nothing to be measured against, so the card asks to be taken on trust. An
+     inset hairline holding the old curve was built to give it that reference and
+     did not earn the study back. The argument stays here because the browser
+     support note is still the useful part.
 
      ONE THAT DID NOT MAKE IT. `interpolate-size: allow-keywords` finally lets
      a transition run to `auto`, which is the honest answer to the 0fr → 1fr
@@ -5107,40 +5124,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .l-plate-tag{display:none !important}
   }
 
-  /* 48 Continuous corners — a milled aluminium chassis, where the corner is a
-     continuous curve rather than an arc spliced between two straight edges.
-     The RADIUS never changes; only the curvature does, which is what separates
-     it from a corner that simply opens up.
-     THE REFERENCE IS THE STUDY. A curvature change has nothing to be measured
-     against — the radius is identical before and after, so on its own the card
-     asks to be taken on trust and reads as almost nothing happening. The inset
-     hairline HOLDS superellipse(1) while the plate takes 5, so the gap between
-     them opens at the four corners and measures zero along every edge. That is
-     the sentence above, drawn, and it is the same move card 29 made for offset
-     before it was cut: show both states at once rather than describe one.
-     The background tint that used to be here is gone with it. It was doing most
-     of the visible work, which meant the card's own mechanism was never what you
-     were looking at — one channel, one claim. */
-  .btn.l-corner{
-    border-radius:20px;
-    corner-shape:superellipse(1);
-    transition:corner-shape var(--t-4) var(--e-out),
-               transform var(--t-1) var(--e-out);
-  }
-  /* inset by 6 and radius 14, so the hairline sits parallel to the plate's own
-     20px curve at rest: 20 - 6 = 14. Parallel at rest is what makes the corners
-     the only place the two can disagree. */
-  .btn.l-corner::after{
-    content:""; position:absolute; inset:6px; pointer-events:none;
-    border:1px solid color-mix(in srgb, var(--ink-on-fill) 34%, transparent);
-    border-radius:14px; corner-shape:superellipse(1);
-    opacity:0; transition:opacity var(--t-2) var(--e-out);
-  }
-  .btn.l-corner:hover::after,
-  .btn.l-corner:focus-visible::after{opacity:1}
-  .btn.l-corner:hover, .btn.l-corner:focus-visible{
-    corner-shape:superellipse(5);
-  }
 </style>
 
 
@@ -9212,7 +9195,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -9221,7 +9204,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -12442,10 +12425,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 

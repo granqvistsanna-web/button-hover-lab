@@ -184,7 +184,6 @@ const ORDER_OF = {
     'Chamfered corner',
     'Cell chamfer',
     'Diagonal radius',
-    'Continuous corners',
   ],
 
   // Label — the word performs, whole then split.
