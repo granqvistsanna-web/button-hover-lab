@@ -5486,15 +5486,30 @@ document.addEventListener("DOMContentLoaded", function () {
      1.28 where it was 2.88. The plate parks first and the mark crosses over it,
      which is the right subject for a card named after the thing that walks.
 
-     THE RATIO IS THE FIX; THE RUNG IS A SEPARATE QUESTION, and the first
-     attempt confused them. Correcting the ratio at --t-4 / --t-2 also cut the
-     gesture from 450ms to 300 and it came back too fast — a walk that finishes
-     before you have read it is not a walk. So both pieces move up one rung
-     together: the ratio is untouched at 1.28, and the exchange is back to the
-     450ms it always took, now with the plate keeping up instead of trailing.
-     Card 92's «half a second reads as a stall» does not carry over, because it
-     was a finding about DEAD TIME — 92 had 134ms with nothing drawn — and both
-     pieces here are visible for every frame of the crossing. */
+     🔑 THE RULES BELOW ARE NOW THE FALLBACK. THE CARD IS A SPRING, and the
+     script at the foot of the page carries the argument for why. The short
+     version is that three passes on this card all argued about DURATION —
+     one rung for both pieces read as the plate being dragged, two rungs read as
+     too fast, one rung up read as right until it was watched again — and
+     duration was the wrong dial every time. A spring does not have one. It has
+     a damping ratio and a response, the settle time falls out of them, and the
+     two pieces then share one clock and cover the same FRACTION of their own
+     travel on every frame.
+
+     WHAT ONLY THE SPRING CAN DO is survive being interrupted. Measured on the
+     transition version: leave 60ms in and the mark had reached 80px, and the
+     exit started a fresh curve from there — the position carried, the VELOCITY
+     did not, and the turn was a corner. On the spring the target flips and the
+     velocity carries straight through: traced, the mark leaves at 120ms, keeps
+     going to 70.6px, turns at 148, and comes home on the same spring. The
+     stretch tells you it happened — it is proportional to speed, so it falls to
+     1.002 exactly at the turn, where the piece is momentarily still.
+
+     These rules still run when there is no script, and under reduced motion,
+     where the script stands down on purpose and the page's global clamp
+     collapses them: the pair still exchanges places, it just does not travel to
+     do it. Two rungs apart because that is the speed match the ratio needs when
+     duration IS the only dial — 1.28 rather than 2.88. */
   .p-walk{padding:0; background:none; border:0; border-radius:999px}
   .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-walk .p-walk-plate,
@@ -5508,6 +5523,34 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
   .p-walk.p-is-set:hover .p-walk-plate,
   .p-walk.p-is-set:focus-visible .p-walk-plate{transform:translateX(calc(46px + var(--pair-gap)))}
+
+  /* ---- the spring takes over, and everything above becomes the fallback ----
+     Two states of the same card. Without the script — or under reduced motion,
+     where the script stands down on purpose — the rules above run and the pair
+     still exchanges places on the ladder. With it, .p-is-spring turns the
+     transitions off and the frame loop writes the three custom properties
+     below. The copy button hands over both halves, so a snippet dropped into a
+     page behaves the same way round.
+
+     One transform per piece and not `translate` plus `scale`, because the
+     individual properties compose translate → rotate → scale → transform, so a
+     separate `scale` would multiply the translate by the stretch and the mark
+     would fly a tenth further than it was measured to. Inside one transform,
+     translateX then scaleX, the stretch happens about the point the piece has
+     already reached. */
+  .p-walk.p-is-spring .p-walk-plate,
+  .p-walk.p-is-spring .p-walk-mark{transition:none}
+  .p-walk.p-is-spring:hover .p-walk-plate,
+  .p-walk.p-is-spring:focus-visible .p-walk-plate,
+  .p-walk.p-is-spring .p-walk-plate{transform:translateX(var(--p-walk-px,0px))}
+  .p-walk.p-is-spring:hover .p-walk-mark,
+  .p-walk.p-is-spring:focus-visible .p-walk-mark,
+  .p-walk.p-is-spring .p-walk-mark{
+    transform:translateX(var(--p-walk-mx,0px)) scaleX(var(--p-walk-sx,1))}
+  /* The stretch is on the pill, never on what it carries: the arrow takes the
+     inverse so the glyph stays the shape it was drawn as. */
+  .p-walk.p-is-spring .p-walk-mark .icon{
+    transform:scaleX(calc(1 / var(--p-walk-sx,1)))}
 
   /* 69 Clipped relay — the capsule holds perfectly still and both halves of it
      become windows. Two arrows sit in one grid cell inside the mark and two
@@ -5649,44 +5692,87 @@ document.addEventListener("DOMContentLoaded", function () {
      out of the light gives up the most of it.
 
      The flap gets a DAMPED SPRING and the plate an ELASTIC one, on purpose.
-     They are not the same event. The flap meets a stop: three decaying
-     overshoots and done. The plate is absorbing a push: it overruns by a third
-     of its own travel, comes back past its rest position, and rings out. Traced
-     at 8ms: −5.1px, back to −3.5, out to −4.3, in to −4.0 and settled, on a 4px
-     recoil. Measured with it, the two shades land at 224 and 201 on a 242
-     ground, so the ordering holds. Two curves because
-     there are two materials; one curve on both would have made the plate a
-     smaller copy of the flap instead of the thing the flap is fixed to.
+     They are not the same event. The flap meets a stop: it overshoots, comes
+     back and settles. The plate is absorbing a push: it overruns by a third of
+     its own travel, comes back past its rest position, and rings out. One curve
+     on both would have made the plate a smaller copy of the flap instead of the
+     thing the flap is fixed to.
 
-     Both curves are card-local linear() and NOT changes to --e-back, which is
-     also card 85's eye-pop and is signed off. */
-  .p-hinge{padding:0; background:none; border:0; border-radius:999px}
+     ⚠️ BOTH CURVES WERE DRAWN BY HAND, AND THIS PASS DERIVES THEM INSTEAD.
+     They were tuned by eye until the trace looked right, which is how you get a
+     shape nobody can defend a single control point of. Apple's argument, and it
+     is the right one: state a spring as DAMPING RATIO and RESPONSE — two numbers
+     a person can reason about — and let the curve be the solution, not the
+     design. The two shapes barely moved (the flap's peak went 1.15 to 1.166,
+     the plate's 1.32 to 1.316) and that is the point: the same feel, now with a
+     derivation behind every stop. The parameters are at the top of the rule.
+
+     THE CLOSE IS A SPRING TOO NOW, critically damped, and that is a second
+     correction. It kept --e-quint, so the card sprang open and eased shut —
+     two different materials on the way out and the way back, for one hinge.
+     Mirrored, the return is the same spring with the bounce taken out, one
+     response-notch quicker, which is the page's «exit one rung down» said in
+     the spring's own parameter instead of the ladder's.
+
+     Every curve is card-local and NOT a change to --e-back, which is also card
+     85's eye-pop and is signed off. */
+  .p-hinge{padding:0; background:none; border:0; border-radius:999px;
+    /* DAMPING RATIO AND RESPONSE, and the curves below are what they solve to.
+       Response is the natural period in seconds, not a duration: a spring has
+       no duration, it has a settle time that falls out of the two numbers. The
+       durations here ARE those settle times, which is why they are off the
+       ladder — 600 and 700 are not rungs anybody chose.
+         flap  zeta 0.50, response 0.40s  ->  peak 1.166 at 231ms, settled 600
+         body  zeta 0.35, response 0.35s  ->  peak 1.316 at 188ms, settled 700
+         close zeta 1.00, response 0.30s  ->  no overshoot, settled 420        */
+    --h-flap-t:600ms; --h-body-t:700ms; --h-close-t:420ms;
+    --h-flap:linear(0, 0.0579 4%, 0.2012 8%, 0.3882 12%, 0.5853 15%, 0.768 19%, 0.9206 23%,
+             1.0357 27%, 1.1122 31%, 1.1534 35%, 1.1656 38%, 1.1563 42%, 1.133 46%,
+             1.1026 50%, 1.0704 54%, 1.0406 58%, 1.0157 62%, 0.9969 65%, 0.9844 69%,
+             0.9776 73%, 0.9756 77%, 0.9771 81%, 0.9809 85%, 0.9858 88%, 0.9911 92%,
+             0.9959 96%, 1);
+    --h-body:linear(0, 0.1032 4%, 0.3522 8%, 0.6566 12%, 0.9415 15%, 1.157 19%, 1.2812 23%,
+             1.3161 27%, 1.2806 31%, 1.2018 35%, 1.1074 38%, 1.0203 42%, 0.9553 46%,
+             0.9187 50%, 0.9094 54%, 0.9215 58%, 0.9464 62%, 0.9756 65%, 1.0022 69%,
+             1.0218 73%, 1.0326 77%, 1.035 81%, 1.0309 85%, 1.0231 88%, 1.014 92%,
+             1.0059 96%, 1);
+    /* Critically damped. Used for BOTH closes — a hinge cannot overshoot shut,
+       because the stop on the way back is the plate it is pinned to — and for
+       every colour channel, because there is nothing past a colour to overshoot
+       into and a mix over 100% is not a value. */
+    --h-settle:linear(0, 0.0459 4%, 0.1479 8%, 0.2702 12%, 0.3925 15%, 0.5049 19%, 0.6029 23%,
+             0.6856 27%, 0.7537 31%, 0.8087 35%, 0.8525 38%, 0.8871 42%, 0.9141 46%,
+             0.935 50%, 0.9511 54%, 0.9634 58%, 0.9729 62%, 0.98 65%, 0.9854 69%,
+             0.9895 73%, 0.9925 77%, 0.9948 81%, 0.9965 85%, 0.9978 88%, 0.9988 92%,
+             0.9995 96%, 1)}
   .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
   .p-hinge .p-hinge-plate,
   .p-hinge .p-hinge-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
+
+  /* THE SHADE RIDES THE SAME CLOCK AS THE MOVEMENT, which is the correction
+     this pass makes to both pieces. It used to run --t-3 against a swing on
+     --t-4 and then on a 600ms spring: two clocks inside one event, so the
+     surface finished turning colour while it was still turning. One duration
+     per piece, two curves — the motion bounces, the colour settles. */
   .p-hinge .p-hinge-plate{padding:15px 26px; translate:0;
     background-color:var(--ink);
-    transition:translate var(--t-4) var(--e-quint),
-               background-color var(--t-3) var(--e-out)}
+    transition:translate var(--h-close-t) var(--h-settle),
+               background-color var(--h-close-t) var(--h-settle)}
   .p-hinge:hover .p-hinge-plate,
   .p-hinge:focus-visible .p-hinge-plate{translate:-4px;
     background-color:color-mix(in srgb, var(--ink) 92%, var(--bg));
-    transition-timing-function:
-      linear(0, 0.55 9%, 1.12 19%, 1.32 27%, 1.18 36%, 0.88 47%, 0.94 56%,
-             1.08 68%, 1.02 78%, 0.99 88%, 1),
-      var(--e-out)}
+    transition-duration:var(--h-body-t);
+    transition-timing-function:var(--h-body), var(--h-settle)}
   .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
     transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
     background-color:var(--ink);
-    transition:transform var(--t-4) var(--e-quint),
-               background-color var(--t-3) var(--e-out)}
+    transition:transform var(--h-close-t) var(--h-settle),
+               background-color var(--h-close-t) var(--h-settle)}
   .p-hinge:hover .p-hinge-mark,
   .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg);
     background-color:color-mix(in srgb, var(--ink) 82%, var(--bg));
-    transition-timing-function:
-      linear(0, 0.42 12%, 0.88 24%, 1.15 36%, 1.09 46%, 0.93 58%, 0.97 68%,
-             1.02 82%, 1.005 92%, 1),
-      var(--e-out)}
+    transition-duration:var(--h-flap-t);
+    transition-timing-function:var(--h-flap), var(--h-settle)}
 </style>
 
 
@@ -5699,22 +5785,128 @@ document.addEventListener("DOMContentLoaded", function () {
   // Measured on the same schedule as 92 and 19: once now, once after the
   // webfont lands, and again on resize behind a rAF guard.
   (function(){
+    /* 67 Mark walk — a spring, not a transition. Every earlier pass on this card
+       argued about DURATION: one rung for both pieces read as the plate being
+       dragged, two rungs read as too fast, one rung up read as right until it
+       was watched again. That is the wrong dial, and a fixed-duration curve is
+       why it was the only one available.
+
+       A spring has no duration. It has a DAMPING RATIO and a RESPONSE, and the
+       settle time falls out of them — so the two numbers below are the whole of
+       what there is to argue about, and both are the values Apple ships for a
+       reposition: critically damped, response 0.4s. Critically damped because
+       nothing here carried momentum; a hover is not a flick, and overshoot on
+       something that merely answered a pointer reads as decoration.
+
+       THE TWO PIECES SHARE ONE SPRING, so at every frame each has covered the
+       same FRACTION of its own travel and they arrive together. The plate's 51px
+       and the mark's 147px are then a fact of the geometry rather than a timing
+       error, and the speed difference is stated rather than hidden — see the
+       stretch below.
+
+       IT IS INTERRUPTIBLE, which a transition is not in the way that matters.
+       The target flips on enter and leave; position and VELOCITY carry straight
+       through. Leave 60ms in and the mark does not restart a fresh 300ms curve
+       over the 80px it managed — it decelerates, turns, and comes home on the
+       same spring, because the reversal is a change of target and not a change
+       of animation. That is the one behaviour this page could not express
+       before. */
+    var RESPONSE = 0.40;                 // seconds — Apple's «reposition» value
+    var W  = 2 * Math.PI / RESPONSE;     // natural frequency
+    var Z  = 1.0;                        // damping ratio: 1.0 = critically damped
+    /* Peak speed of a critically damped step is A·W/e, so the mark's 147px tops
+       out near 850px/s and the plate's 51px near 295. Normalising the stretch
+       against the faster of the two is what makes the pair read as one fast
+       thing and one slow one rather than two things at one speed. */
+    var VREF = 850, STRETCH = 0.10;
+
+    var rm = matchMedia('(prefers-reduced-motion: reduce)');
+
     document.querySelectorAll('.p-walk').forEach(function(btn){
       var row   = btn.querySelector('.p-walk-row');
       var plate = btn.querySelector('.p-walk-plate');
-      if (!row || !plate) return;
+      var mark  = btn.querySelector('.p-walk-mark');
+      if (!row || !plate || !mark) return;
+
+      var markTo = 0, plateTo = 0;
       function measure(){
         var w = plate.getBoundingClientRect().width;
         if (!w) return;
         var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-        btn.style.setProperty('--p-walk-x', -(w + gap) + 'px');
+        markTo  = -(w + gap);            // the measured one: clears the plate
+        plateTo = mark.offsetWidth + gap; // the authored one: clears the mark
+        // offsetWidth and not a rect, because the mark is the piece that gets
+        // stretched and a rect would hand back the stretched box.
+        btn.style.setProperty('--p-walk-x', markTo + 'px');
         btn.classList.add('p-is-set');
       }
       measure();
-      var raf = null;
+
+      var mx = 0, mv = 0, px = 0, pv = 0, on = false, raf = null, last = 0;
+
+      function frame(now){
+        var dt = Math.min(0.034, (now - last) / 1000); last = now;
+        var mt = on ? markTo : 0, pt = on ? plateTo : 0;
+        // Semi-implicit Euler: a = −W²(x − target) − 2ZW·v, integrate v then x.
+        mv += (-W * W * (mx - mt) - 2 * Z * W * mv) * dt; mx += mv * dt;
+        pv += (-W * W * (px - pt) - 2 * Z * W * pv) * dt; px += pv * dt;
+
+        var sx = 1 + Math.min(Math.abs(mv) / VREF, 1) * STRETCH;
+        btn.style.setProperty('--p-walk-mx', mx.toFixed(2) + 'px');
+        btn.style.setProperty('--p-walk-px', px.toFixed(2) + 'px');
+        btn.style.setProperty('--p-walk-sx', sx.toFixed(4));
+
+        if (Math.abs(mx - mt) < 0.05 && Math.abs(mv) < 1 &&
+            Math.abs(px - pt) < 0.05 && Math.abs(pv) < 1){
+          mx = mt; mv = 0; px = pt; pv = 0;
+          btn.style.setProperty('--p-walk-mx', mt + 'px');
+          btn.style.setProperty('--p-walk-px', pt + 'px');
+          btn.style.setProperty('--p-walk-sx', '1');
+          raf = null; return;                    // settled: stop burning frames
+        }
+        raf = requestAnimationFrame(frame);
+      }
+      function set(v){
+        if (!btn.classList.contains('p-is-spring')) return;
+        on = v;
+        if (raf === null){ last = performance.now(); raf = requestAnimationFrame(frame); }
+      }
+
+      btn.addEventListener('pointerenter', function(){ set(true); });
+      btn.addEventListener('pointerleave', function(){
+        if (!btn.matches(':focus-visible')) set(false);
+      });
+      btn.addEventListener('focus', function(){
+        if (btn.matches(':focus-visible')) set(true);
+      });
+      btn.addEventListener('blur', function(){ set(false); });
+
+      /* Reduced motion is asked at load AND on change, because the setting can
+         be turned on mid-visit. Standing down means handing the card back to the
+         CSS above, which the page's global clamp then collapses to 0.01ms —
+         the pair still exchanges places, it just does not travel to do it. */
+      function mode(){
+        if (rm.matches){
+          btn.classList.remove('p-is-spring');
+          if (raf !== null){ cancelAnimationFrame(raf); raf = null; }
+          btn.style.removeProperty('--p-walk-mx');
+          btn.style.removeProperty('--p-walk-px');
+          btn.style.removeProperty('--p-walk-sx');
+          mx = mv = px = pv = 0; on = false;
+        } else {
+          btn.style.setProperty('--p-walk-mx', '0px');
+          btn.style.setProperty('--p-walk-px', '0px');
+          btn.style.setProperty('--p-walk-sx', '1');
+          btn.classList.add('p-is-spring');
+        }
+      }
+      mode();
+      rm.addEventListener ? rm.addEventListener('change', mode) : rm.addListener(mode);
+
+      var rraf = null;
       addEventListener('resize', function(){
-        if (raf !== null) return;
-        raf = requestAnimationFrame(function(){ raf = null; measure(); });
+        if (rraf !== null) return;
+        rraf = requestAnimationFrame(function(){ rraf = null; measure(); });
       });
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     });
