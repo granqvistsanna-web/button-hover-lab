@@ -230,12 +230,19 @@
     /* The inverse pair is still THE accent — it just points the other way, so a
        solid plate is black on white here exactly as it is white on black there. */
     --inverse-bg:#101010; --inverse-ink:#ffffff;
-    /* --line-ctl keeps its ARGUMENT, not its value. The comment on the dark
-       token defends a RATIO — a control boundary has to clear 3:1 — and .36
-       black measures 3.52:1 on bg-1 here, the same job done in the channel this
-       ground has available. Copying .36 white across would have measured 1.1:1
-       and silently un-drawn every control edge on the page. */
-    --line-ctl:rgba(0,0,0,.36);
+    /* --line-ctl keeps its ARGUMENT, not its value, and the argument is a
+       RATIO: a control boundary has to clear 3:1, which is the whole point of
+       the note on the dark token. THE ALPHA IS NOT PORTABLE. .36 white over
+       #171717 composites to #6b6b6b and measures 3.34:1; .36 BLACK over
+       #f4f4f4 composites to #9c9c9c and measures 2.49:1 — the same number in
+       the other channel lands under the floor the token exists to hold, and it
+       does it silently, because a border that is merely too pale still draws.
+       .45 is the alpha that puts the light ground back where the dark one is:
+       3.35:1 on bg-0 and 3.30:1 on bg-1, against dark's 3.31 and 3.34.
+       Composited before measuring, which is the step that catches this — read
+       rgba(0,0,0,.36) against its background WITHOUT compositing and it reports
+       19:1, and the token looks fine. */
+    --line-ctl:rgba(0,0,0,.45);
     --sheen:0,0,0;
     /* Away from white is down, toward white is up — see the roles' own note. */
     --well:var(--bg-2);
