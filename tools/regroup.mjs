@@ -129,6 +129,11 @@ const ORDER_OF = {
     // Two regions in one plate: it answers which part of itself you are on.
     'Two targets',
 
+    // The silhouette changes. The plate is a different shape at rest and at
+    // hover, and no transform could have faked it — the one exception to the
+    // repaint-never-re-measure rule, which card 128 opened and 136 inherits.
+    'Grows its word',
+
     // The reduction: almost nothing, on purpose.
     'Hairline only',
   ],
@@ -146,6 +151,7 @@ const ORDER_OF = {
     'Liquid fill',
     'Measured ripple',
     'Press fill',
+    'The plus is the source',
 
     // Stepped and screened: the fill arrives in visible units.
     'Stepped fill',
@@ -310,6 +316,13 @@ const ORDER_OF = {
     'Travelling rule',
     'Divider yields',
     'Emphasis trade',
+    'One light for the row',
+
+    // The row answers as one thing, or turns out not to fit in the first
+    // place. Both need a script, which is what separates them from the six
+    // above — see 61's note on why equal columns were the limit of :has().
+    'Handover',
+    'The row that doesn’t fit',
   ],
 
   // Two at once — two mechanisms from the groups above, on one curve.

@@ -1604,21 +1604,32 @@
          which is the reading that stays legible whatever the fill does.
          «Graphite» is the way back, and it is pressed whenever nothing is
          overridden — which is also the only place the page says out loud that
-         white means «follow the system» rather than «the colour white». -->
+         white means «follow the system» rather than «the colour white».
+
+         Every palette sets all THREE roles, and the shape is the same each
+         time: a light tint for the label so it reads on the dark card, a DEEP
+         shade at rest, and a BRIGHT one on hover. Leaving the label unset was
+         tried first and is why the buttons kept their white text under a
+         palette — the fill went amber and the word on it did not. And rest and
+         hover a step apart on the same hue made the arrival almost invisible,
+         which is the one thing a page of hover studies cannot afford: deep to
+         bright is a change you can see across a card at arm's length.
+         The label flipping dark on the bright hover is not a fault — that is
+         --on-ink-hover doing the job it exists for, and it is now reported. -->
     <div class="tools-row tools-row--sets">
       <span class="tools-lbl">Palette</span>
       <div class="set-presets" role="group" aria-label="Colour palette">
         <button type="button" class="set-p set-p--none" data-p=""
                 aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. White in a swatch means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
-        <button type="button" class="set-p" data-p="accent:#f5a524,hover:#ffd166"
-                style="--sw:#f5a524" aria-pressed="false" title="Amber">Amber</button>
-        <button type="button" class="set-p" data-p="accent:#7c6cf0,hover:#a99bff"
-                style="--sw:#7c6cf0" aria-pressed="false" title="Iris">Iris</button>
-        <button type="button" class="set-p" data-p="accent:#3ecf8e,hover:#7ff0bb"
-                style="--sw:#3ecf8e" aria-pressed="false" title="Mint">Mint</button>
-        <button type="button" class="set-p" data-p="accent:#ff5c5c,hover:#ff9d7a"
-                style="--sw:#ff5c5c" aria-pressed="false" title="Coral">Coral</button>
-        <button type="button" class="set-p" data-p="accent:#14213d,hover:#2a4a80"
+        <button type="button" class="set-p" data-p="text:#ffd9a0,accent:#b45309,hover:#fbbf24"
+                style="--sw:#b45309" aria-pressed="false" title="Amber">Amber</button>
+        <button type="button" class="set-p" data-p="text:#cfc7ff,accent:#4c35d4,hover:#a78bfa"
+                style="--sw:#4c35d4" aria-pressed="false" title="Iris">Iris</button>
+        <button type="button" class="set-p" data-p="text:#a7f3d0,accent:#0b7a55,hover:#4ade80"
+                style="--sw:#0b7a55" aria-pressed="false" title="Mint">Mint</button>
+        <button type="button" class="set-p" data-p="text:#ffcdc4,accent:#c2352b,hover:#fb923c"
+                style="--sw:#c2352b" aria-pressed="false" title="Coral">Coral</button>
+        <button type="button" class="set-p" data-p="text:#a8c4f0,accent:#14213d,hover:#60a5fa"
                 style="--sw:#14213d" aria-pressed="false"
                 title="Deep — dark enough that the page has to lift it to stay legible. The caption says so with an arrow.">Deep</button>
       </div>
@@ -1838,6 +1849,18 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
+    <article class="spec" data-key="h-grow" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn h-grow">
+          <svg class="icon h-grow-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M7 1.5v11M1.5 7h11"/></svg>
+          <span class="h-grow-w"><span class="h-grow-t">New study</span></span>
+        </button>
+      </div>
+      <h3><span class="num">136</span>Grows its word</h3>
+      <p>Card 128 opens the plate for a mark that arrives; this opens it for a word that was there all along, clipped to no width. It is the second study allowed to re-measure, and for the same reason: the silhouette change is the subject, so nothing here can be faked with a transform. The radius resolves against the live height, so the button is a true pill at both widths instead of changing shape family on the way out.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
     <article class="spec" data-lib="no" data-key="o-quiet" data-versions="fill outline link" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T18:50:33+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line o-quiet"><span class="lbl">See the work</span></button>
@@ -1922,6 +1945,18 @@
       <h3><span class="num">111</span>Press fill</h3>
       <p>The plate shrinks two per cent and drops half an elevation step as the pointer arrives, so the press has an approach rather than a start; the flood then runs from the point you pressed &mdash; the one study here you can call off: drag off the plate and it retracts, release outside and nothing happened. Card 74 times the press; this one places it.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="j-plus" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn j-plus">
+          <svg class="icon j-plus-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M7 1.5v11M1.5 7h11"/></svg>
+          <span class="j-plus-lbl">Add to library</span>
+        </button>
+      </div>
+      <h3><span class="num">135</span>The plus is the source</h3>
+      <p>Every other fill on the page starts at the pointer or at an edge. This one starts at the mark: the bloom opens from the centre of the plus and spreads outward, so it arrives the same way whichever side you come in on, and the origin is derived from the padding and the mark rather than typed as a number. The polarity follows the front, which is why the plus turns first and the label a beat later.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec" data-key="o-step" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T12:37:56+02:00">
@@ -2356,7 +2391,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-
     <article class="spec" data-key="j-optic" data-versions="fill outline link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line j-optic">
@@ -2634,6 +2668,56 @@
       <h3><span class="num">64</span>Emphasis trade</h3>
       <p>Emphasis is a fixed quantity, so the secondary can only take it by the primary giving it up — point at the outline and the two trade places.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec spec--wide" data-key="k-lamp" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
+      <div class="stage">
+        <div class="k-row k-lamp" data-copy-root>
+          <button type="button" class="btn k-lamp-i">Overview</button>
+          <button type="button" class="btn k-lamp-i">Activity</button>
+          <button type="button" class="btn k-lamp-i">Reports</button>
+          <button type="button" class="btn k-lamp-i">Settings</button>
+        </div>
+      </div>
+      <h3><span class="num">132</span>One light for the row</h3>
+      <p>One source lights the whole row, so a button you are not pointing at is still lit if its neighbour is. Card 125 gives every button its own lamp and the row reads as four separate objects; here the four share a coordinate space, and what changes between them is only how far each one sits from the light.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec spec--wide" data-key="k-hand" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
+      <div class="stage">
+        <div class="k-row k-hand" data-copy-root>
+          <button type="button" class="btn k-hand-i"><span class="k-hand-lbl">Draft</span></button>
+          <button type="button" class="btn k-hand-i"><span class="k-hand-lbl">Review</span></button>
+          <button type="button" class="btn k-hand-i"><span class="k-hand-lbl">Ship</span></button>
+          <button type="button" class="btn k-hand-i"><span class="k-hand-lbl">Archive</span></button>
+        </div>
+      </div>
+      <h3><span class="num">134</span>Handover</h3>
+      <p>Card 75 reads the edge one button was crossed at; this reads the edge between two of them. Sweep the row and each fill enters from the side you arrived on while the one you left drains toward the side you are heading for, so four buttons answer as one continuous movement rather than four separate ones. Sweep back and the whole row reverses with you.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec spec--wide" data-key="k-fit" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
+      <div class="stage">
+        <div class="k-row k-fit" data-copy-root>
+          <div class="k-fit-track">
+            <button type="button" class="btn k-fit-i">All</button>
+            <button type="button" class="btn k-fit-i">Plate</button>
+            <button type="button" class="btn k-fit-i">Fill</button>
+            <button type="button" class="btn k-fit-i">Edge</button>
+            <button type="button" class="btn k-fit-i">Label</button>
+            <button type="button" class="btn k-fit-i">Mark</button>
+            <button type="button" class="btn k-fit-i">Material</button>
+            <button type="button" class="btn k-fit-i">Row</button>
+          </div>
+          <button type="button" class="k-fit-hit k-fit-hit--l" data-step="-1" tabindex="-1" aria-hidden="true"></button>
+          <button type="button" class="k-fit-hit k-fit-hit--r" data-step="1" tabindex="-1" aria-hidden="true"></button>
+        </div>
+      </div>
+      <h3><span class="num">133</span>The row that doesn’t fit</h3>
+      <p>The other six rows on this page assume every item is on screen. This one is wider than what holds it, which is what a filter row actually looks like on a phone: the end of it goes under a mask, and pointing at the last stretch of track advances the row by exactly one item. The mask is a mask and not a gradient painted in the card colour, so the row keeps working on any ground you drop it on.</p>
+      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
   </div>
@@ -4908,7 +4992,15 @@ document.addEventListener("DOMContentLoaded", function () {
      their radius so the pair reads as a single object rather than a docking.
      A hidden copy at the rest spacing reserves the width, so the pair closes
      INWARD and the group's own box never moves. */
-  .n-join{padding:0; background:none; border:0; border-radius:999px; --n-join-tuck:12px}
+  .n-join{padding:0; background:none; border:0; border-radius:999px;
+    /* Authored as the GAP; everything else derives from it. See the note below
+       for why it takes two movements and not one. */
+    --n-join-pad:26px;
+    --n-join-halo:calc((46px - 14px) / 2);
+    --n-join-reach:calc(var(--n-join-pad) + var(--pair-gap) + var(--n-join-halo));
+    --n-join-gap:12px;
+    --n-join-tuck:calc((var(--n-join-pad) + var(--pair-gap)) / 2);
+    --n-join-lean:calc(var(--n-join-reach) - 2 * var(--n-join-tuck) - var(--n-join-gap))}
   .n-join .n-join-stack{display:inline-grid}
   /* align-items:stretch, not center: a fixed 46px mark against a plate whose
      height comes from its padding leaves a half-pixel step at the seam, and a
@@ -4924,6 +5016,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .n-join .n-join-plate{padding:15px 26px; border-radius:999px; transform:translateX(0)}
   .n-join .n-join-mark{display:grid; place-items:center; width:46px; border-radius:999px; transform:translateX(0)}
+  /* The arrow leans the rest of the way. Same rung and curve as the halves it
+     is riding, so it is one movement to the eye and not a second event. */
+  .n-join .n-join-mark .icon{translate:0;
+    transition:translate var(--t-5) var(--e-quint)}
+  .n-join:hover .n-join-mark .icon,
+  .n-join:focus-visible .n-join-mark .icon{translate:calc(-1 * var(--n-join-lean))}
   /* The facing corners go to a true zero and each half moves --n-join-tuck
      toward the other, which is more than the --pair-gap between them, so the
      two backgrounds overlap rather than merely meet and there is no seam left
@@ -4931,13 +5029,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
      The tuck is what makes the closed state read as one object instead of one
      object with a hole in it, and IT IS ALSO THE ONLY DIAL ON HOW CLOSE THE
-     ARROW SITS TO THE LABEL. Measured from the last glyph to the arrow's own
-     box: 47px untucked, because the seam stacks the plate's 26px padding, the
-     5px gap and the 16px halo the mark keeps around a 14px arrow. At the
-     original tuck of 8 that came down to 31 and it was still reading as two
-     things with a hole between them. At 12 it is 23, which is the number this
-     card was returned for. Card 66 opens from exactly this capsule and carries
-     the same 12.
+     ARROW SITS TO THE LABEL.
+
+     SO IT IS NO LONGER THE AUTHORED NUMBER. What anyone judging this card is
+     actually looking at is the distance from the last glyph to the arrow, and
+     the tuck is only half of the arithmetic that produces it — every earlier
+     pass on this card set the tuck, measured the gap, and found it had asked
+     for the wrong thing. 8 gave 31px. 12 gave 23px and still read as two pieces
+     with a hole between them. So --n-join-gap is the authored number now, set
+     to 12, and everything else derives from it.
+
+     ⚠️ THE TUCK ALONE CANNOT DELIVER IT, AND FINDING OUT COST A SCREENSHOT.
+     The reach is 47px — the plate's own 26px right padding, one --pair-gap, and
+     the 16px halo the mark keeps around a 14px arrow — so 12px looks like a
+     tuck of 17.5. It is not, because THE MARK IS A PLATE TOO and it paints over
+     the one beside it: source order puts it last, so wherever the two boxes
+     overlap, the mark's white wins. The overlap is 2 × tuck − --pair-gap, and
+     the moment it passes the plate's 26px padding it stops eating padding and
+     starts eating the label. At 17.5 the overlap is 30 and «Book the studio»
+     rendered as «Book the studi» — four pixels of the last glyph under the
+     mark, in white on white, invisible as a bug and obvious as a defect.
+
+     SO THE CEILING ON THE TUCK IS THE PLATE'S OWN RIGHT PADDING: overlap = pad,
+     which is a tuck of (26 + 5) / 2 = 15.5px, and that is where the mark's
+     leading edge lands exactly on the label's last letter and no further. It
+     closes the reach to 16px, and it is derived from the padding rather than
+     written down, so it cannot drift past it later.
+
+     THE ARROW CLOSES THE LAST FOUR. --n-join-lean is whatever the tuck could not
+     reach, and it moves the glyph inside its own box rather than the box. That
+     is not a fudge, it is the card's own claim taken seriously: once the two
+     halves are one capsule there is no disc any more, and an icon in a pill sits
+     where the pill wants it, not at the centre of a circle that has stopped
+     existing. It rides the same rung and the same curve as the halves, so the
+     eye reads one movement. Card 66 opens from exactly this capsule and carries
+     the same six lines.
 
      The 26px padding is deliberately NOT the thing that gives way. The plate has
      to be a plate the moment it is alone — card 66's rest state is this capsule
@@ -4945,9 +5071,10 @@ document.addEventListener("DOMContentLoaded", function () {
      the join would make the split state pay for the joined one. The tuck is two
      opposed transforms and costs the plate nothing.
 
-     The travel stays derived rather than written out: the seam cannot come apart
-     the next time the spacing is judged as long as 2 × tuck > --pair-gap, which
-     is the number's only constraint. 24 against 5 overlaps by 19.
+     The seam cannot come apart as long as 2 × tuck > --pair-gap: 31 against 5
+     overlaps by 26. That constraint is now met by construction rather than by
+     choosing a number, because the tuck is derived from a padding that is
+     always larger than the gap.
 
      Both halves move, and by the same 8, so the closed capsule stays centred in
      the width the ghost reserved. Closing on the mark alone would have hung it
@@ -5235,10 +5362,15 @@ document.addEventListener("DOMContentLoaded", function () {
      own 26px padding, the 5px gap and the mark's 16px halo around a 14px arrow —
      47px from the last glyph to the arrow, with the widest space in the middle
      of the thing claiming to be single, which is the one place a single object
-     cannot have one. The original 8 brought that to 31 and it still read as two
-     pieces. At 12 it is 23, and the label and the arrow finally belong to each
-     other. This is a REST-STATE number here and a hover number on 93, so the two
-     have to carry the same one or the mirror stops being a mirror.
+     cannot have one. A tuck of 8 brought that to 31 and 12 brought it to 23, and
+     both still read as two pieces — which is why THE GAP IS THE AUTHORED NUMBER
+     NOW and everything else derives from it. --p-part-gap is 12px; the tuck is
+     capped at 15.5 by the plate's own right padding, because past that the mark
+     paints over the label rather than over the padding, and the arrow leans the
+     remaining 4px inside its own box. 93's note carries the whole argument and
+     the screenshot that forced it. This is a REST-STATE number here and a hover
+     number on 93, so the two carry the same six lines or the mirror stops being
+     a mirror.
 
      The 8 is spent as two opposed transforms and NOT as a shorter padding-right,
      for two reasons. The plate has to be a plate the moment it is alone, and a
@@ -5250,12 +5382,21 @@ document.addEventListener("DOMContentLoaded", function () {
      stage; this is two transforms on the rung already declared above, and the
      hover releases both to 0 — one gesture, both halves, which is the name.
 
-     The one constraint on the number is 2 × tuck > --pair-gap: below that the
-     halves stop short of each other and the capsule they are supposed to arrive
-     as has a seam down the middle of it. 24 against 5 overlaps by 19. Card 93's
-     joined state carries the same 12, because it is the same state and the
-     mirror has to hold on the side it is read from too. */
-  .p-part{padding:0; background:none; border:0; border-radius:999px; --p-part-tuck:12px}
+     The one constraint is 2 × tuck > --pair-gap: below that the halves stop short
+     of each other and the capsule they are supposed to arrive as has a seam down
+     the middle of it. 31 against 5 overlaps by 26, and it is now met by
+     construction rather than by choosing a number. Card 93's joined state carries
+     the same derivation, because it is the same state and the mirror has to hold
+     on the side it is read from too. */
+  .p-part{padding:0; background:none; border:0; border-radius:999px;
+    /* Card 93's six lines, unchanged: the GAP is authored, the tuck is capped by
+       the plate's own padding, and the arrow leans the rest. 93 carries the why. */
+    --p-part-pad:26px;
+    --p-part-halo:calc((46px - 14px) / 2);
+    --p-part-reach:calc(var(--p-part-pad) + var(--pair-gap) + var(--p-part-halo));
+    --p-part-gap:12px;
+    --p-part-tuck:calc((var(--p-part-pad) + var(--pair-gap)) / 2);
+    --p-part-lean:calc(var(--p-part-reach) - 2 * var(--p-part-tuck) - var(--p-part-gap))}
   .p-part .p-part-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-part .p-part-plate,
   .p-part .p-part-mark{background:var(--ink); color:var(--ink-on-fill);
@@ -5264,6 +5405,11 @@ document.addEventListener("DOMContentLoaded", function () {
     transform:translateX(var(--p-part-tuck))}
   .p-part .p-part-mark{display:grid; place-items:center; width:46px;
     border-radius:0 999px 999px 0; transform:translateX(calc(-1 * var(--p-part-tuck)))}
+  /* Leaning at REST here and centred on hover, which is 93 read backwards. */
+  .p-part .p-part-mark .icon{translate:calc(-1 * var(--p-part-lean));
+    transition:translate var(--t-5) var(--e-quint)}
+  .p-part:hover .p-part-mark .icon,
+  .p-part:focus-visible .p-part-mark .icon{translate:0}
   .p-part:hover .p-part-plate,
   .p-part:focus-visible .p-part-plate{border-radius:999px; transform:translateX(0)}
   .p-part:hover .p-part-mark,
@@ -5297,20 +5443,28 @@ document.addEventListener("DOMContentLoaded", function () {
      plate being dragged after it. Speed, not duration, is what the eye reads
      here, and the whole page's loop argument says so.
 
-     The mark takes --t-4 and the plate --t-2: 490px/s against 383, a ratio of
-     1.28 where it was 2.88, and the exchange lands in 300ms instead of 450 —
-     which is 92's other finding, that half a second of this reads as a stall.
-     The plate parks first and the mark crosses over it, which is the right
-     subject for a card named after the thing that walks. */
+     The mark takes --t-5 and the plate --t-3: 327px/s against 255, a ratio of
+     1.28 where it was 2.88. The plate parks first and the mark crosses over it,
+     which is the right subject for a card named after the thing that walks.
+
+     THE RATIO IS THE FIX; THE RUNG IS A SEPARATE QUESTION, and the first
+     attempt confused them. Correcting the ratio at --t-4 / --t-2 also cut the
+     gesture from 450ms to 300 and it came back too fast — a walk that finishes
+     before you have read it is not a walk. So both pieces move up one rung
+     together: the ratio is untouched at 1.28, and the exchange is back to the
+     450ms it always took, now with the plate keeping up instead of trailing.
+     Card 92's «half a second reads as a stall» does not carry over, because it
+     was a finding about DEAD TIME — 92 had 134ms with nothing drawn — and both
+     pieces here are visible for every frame of the crossing. */
   .p-walk{padding:0; background:none; border:0; border-radius:999px}
   .p-walk .p-walk-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap)}
   .p-walk .p-walk-plate,
   .p-walk .p-walk-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px;
     position:relative; transform:translateX(0)}
   .p-walk .p-walk-plate{padding:15px 26px; z-index:0;
-    transition:transform var(--t-2) var(--e-quint)}
+    transition:transform var(--t-3) var(--e-quint)}
   .p-walk .p-walk-mark{display:grid; place-items:center; width:46px; z-index:1;
-    transition:transform var(--t-4) var(--e-quint)}
+    transition:transform var(--t-5) var(--e-quint)}
   .p-walk.p-is-set:hover .p-walk-mark,
   .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
   .p-walk.p-is-set:hover .p-walk-plate,
@@ -5445,14 +5599,43 @@ document.addEventListener("DOMContentLoaded", function () {
      THE FACE DARKENS AS IT TURNS AWAY, which is the other half of leaving the
      plane: a surface rotating out of the light gives some of it up. It is the
      same colour move card 11 makes under its plate — a mix of --ink toward
-     --bg, no new token — and it is on the mark alone, because the plate has not
-     moved. --t-3 rather than the swing's --t-4, so the shade has settled by the
-     time the bounce is still deciding where to stop. */
+     --bg, no new token. --t-3 rather than the swing's --t-4, so the shade has
+     settled by the time the bounce is still deciding where to stop.
+
+     THE PLATE ANSWERS TOO, AND IT IS A DIFFERENT MATERIAL. A hinge with a dead
+     body is a flap on a wall; what makes it hardware is that the thing it is
+     pinned to takes the load. So the plate recoils 4px away from the seam and
+     mixes 8% toward --bg while the mark mixes 18% — TWO DEPTHS, not one shade
+     applied twice, and the ordering is the point: the piece that turned furthest
+     out of the light gives up the most of it.
+
+     The flap gets a DAMPED SPRING and the plate an ELASTIC one, on purpose.
+     They are not the same event. The flap meets a stop: three decaying
+     overshoots and done. The plate is absorbing a push: it overruns by a third
+     of its own travel, comes back past its rest position, and rings out. Traced
+     at 8ms: −5.1px, back to −3.5, out to −4.3, in to −4.0 and settled, on a 4px
+     recoil. Measured with it, the two shades land at 224 and 201 on a 242
+     ground, so the ordering holds. Two curves because
+     there are two materials; one curve on both would have made the plate a
+     smaller copy of the flap instead of the thing the flap is fixed to.
+
+     Both curves are card-local linear() and NOT changes to --e-back, which is
+     also card 85's eye-pop and is signed off. */
   .p-hinge{padding:0; background:none; border:0; border-radius:999px}
   .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
   .p-hinge .p-hinge-plate,
   .p-hinge .p-hinge-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
-  .p-hinge .p-hinge-plate{padding:15px 26px}
+  .p-hinge .p-hinge-plate{padding:15px 26px; translate:0;
+    background-color:var(--ink);
+    transition:translate var(--t-4) var(--e-quint),
+               background-color var(--t-3) var(--e-out)}
+  .p-hinge:hover .p-hinge-plate,
+  .p-hinge:focus-visible .p-hinge-plate{translate:-4px;
+    background-color:color-mix(in srgb, var(--ink) 92%, var(--bg));
+    transition-timing-function:
+      linear(0, 0.55 9%, 1.12 19%, 1.32 27%, 1.18 36%, 0.88 47%, 0.94 56%,
+             1.08 68%, 1.02 78%, 0.99 88%, 1),
+      var(--e-out)}
   .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
     transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
     background-color:var(--ink);
@@ -7933,15 +8116,27 @@ document.addEventListener("DOMContentLoaded", function () {
      and hand CSS the number; this needs no number, no listener and no
      script, because the question is not «where» but «which of these two».
 
-     The halves are flex:1 and the gap is zero, so the seam sits exactly on
-     the highlight's 50% and there is no dead strip between the targets — a
-     gap here would be a third region answering to neither rule, and the
-     highlight would sit off the border it is supposed to meet. The min-width
-     keeps the wider half off a second line for the same reason: a wrap moves
-     the seam, and the seam is the only thing holding the two halves' claims
-     apart. */
+     The two halves have to be EXACTLY equal, because the highlight is a
+     50% band and the seam is a border on the second half — one number and
+     one border that only agree while the halves do. flex:1 alone does not
+     deliver that: flex-basis is 0, but min-width on a flex item defaults to
+     auto, so the label half floors at its own min-content width and the mark
+     half absorbs the difference. At the old fixed 264px that put the seam
+     12px right of the fill, which reads as a sloppy fill and is really an
+     unequal split — the hover boundary was off the drawn line by the same
+     12px. So min-width:0 lifts the floor off the halves and the plate is
+     sized to clear twice the wider half — 272px against a 130px min-content
+     — which leaves the split to the 50/50 flex maths instead of to whichever
+     half shouted loudest. The declared 16px side padding is a floor, not the
+     gap you see: the halves are 135px wide and the label is 98px, so it sits
+     with 18px either side. Widen the plate and that grows; the seam does
+     not move. width:max-content does NOT solve this — Chrome sizes a flex
+     container to the SUM of its items there, not to twice the widest, so it
+     resolves under the floor and changes nothing. There is no gap between
+     the halves for the same reason a third region would answer to neither
+     rule. */
   .btn.g-two{
-    padding:0; gap:0; min-width:264px; overflow:hidden;
+    padding:0; gap:0; min-width:272px; overflow:hidden;
     border:1px solid var(--line);
   }
   .g-two::before{
@@ -7950,8 +8145,8 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-4) var(--e-out), opacity var(--t-3) var(--e-out);
   }
   .g-two .g-two-half{
-    position:relative; z-index:1; flex:1;
-    text-align:center; white-space:nowrap; padding:15px 22px;
+    position:relative; z-index:1; flex:1 1 50%; min-width:0;
+    text-align:center; white-space:nowrap; padding:15px 16px;
     color:var(--ink-text); transition:color var(--t-3) var(--e-out);
   }
   .g-two .g-two-half + .g-two-half{ border-left:1px solid var(--line) }
@@ -7960,6 +8155,198 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.g-two:has(.g-two-lbl:hover) .g-two-lbl{ color:var(--on-ink-hover) }
   .btn.g-two:has(.g-two-mark:hover) .g-two-mark{ color:var(--on-ink-hover) }
 </style>
+
+<style>
+  /* ============ Batch six — three rows, two around a plus ============
+     From the 2026-08-30 bench: sixteen proposed, five kept. Every Link and
+     every Compound candidate was cut, so this batch is what survived — group
+     behaviour and icon-led buttons.
+
+     Three of the five need a script, which is worth saying plainly because the
+     section they join was built on the opposite claim: sections M/Row shipped
+     six CSS-only sibling effects and card 61 states the constraint that stopped
+     it there — equal columns, because an unequal one needs a measured offset
+     per item. 132, 133 and 134 are all on the far side of that line. They keep
+     the section prefix anyway: a prefix records where a class was authored, not
+     what it is implemented in. */
+
+  /* 132 One light for the row.
+     The row owns the light and every button reads it. --k-x is the pointer in
+     ROW coordinates; --k-o is each button’s own offset, written once and on
+     resize, so the gradient position is one subtraction per button and no
+     button ever measures anything at paint time.
+
+     WHY THE SOURCE IS ON THE ROW AND NOT THE BUTTON: with a per-button lamp the
+     only reachable state is "the hovered one is lit", which is card 125 at
+     four times the cost. Shared, a button at rest is lit in proportion to its
+     distance from the pointer, and that gradient across the row IS the effect.
+
+     No transition on the background: the light is a position, not a state, and
+     a transition on a position that already tracks the pointer would only add
+     lag to it. The plate colour is not touched either — the claim is that the
+     LIGHT does the work.
+
+     Keyboard: a light that follows a pointer has nothing to say to a Tab, so
+     focus parks the source on the focused button’s centre. That is the honest
+     equivalent rather than a second, different effect. */
+  .k-lamp{gap:8px}
+  .k-lamp .k-lamp-i{
+    padding:13px 18px; border-radius:10px;
+    background-color:var(--lift-bg);
+    box-shadow:inset 0 0 0 1px var(--line);
+    background-image:radial-gradient(210px 120px at calc(var(--k-x, -9999px) - var(--k-o, 0px)) 50%,
+      color-mix(in srgb, var(--ink-hover) 22%, transparent), transparent 72%);
+    /* A DECLARATION, not an optimisation, and the same device card 50 uses. The
+       light is driven from a script and never transitions, so it leaves no
+       trace whatever in the sheet — and the facet derivation reads transitioned
+       property names. Without this the one study on the page whose whole
+       subject is colour would be filed under nothing and fall out of every
+       facet. Naming the property here is the author saying what the script is
+       about to change. */
+    will-change:background-image;
+  }
+
+  /* 133 The row that doesn’t fit.
+     THE MASK IS A MASK. The obvious build is a gradient overlay that fades to
+     the card colour, and it is wrong for a page whose whole point is that a
+     study gets copied into someone else’s project: the moment the ground is not
+     --stage, the fade paints a stripe. Masking the track instead means the
+     chips themselves fade and the effect carries onto any ground.
+
+     One declaration covers both ends. --k-l and --k-r are 0 or 1 and the stops
+     collapse when they are 0, so "more to the left" and "more to the right" are
+     the same rule read twice rather than two overlapping masks.
+
+     The step is 96px because the chip is 88 and the gap is 8, and the track is
+     width:max-content so the chips cannot shrink to fit — a row that quietly
+     squeezed itself would have nothing left to demonstrate. */
+  .k-fit{
+    position:relative; overflow:hidden; width:min(100%,320px);
+    --k-i:0; --k-l:0; --k-r:1; --k-step:96px;
+    mask-image:linear-gradient(90deg,
+      rgba(0,0,0,calc(1 - var(--k-l))) 0,
+      #000 calc(var(--k-l) * 64px),
+      #000 calc(100% - var(--k-r) * 64px),
+      rgba(0,0,0,calc(1 - var(--k-r))) 100%);
+  }
+  .k-fit .k-fit-track{
+    display:flex; gap:8px; width:max-content;
+    transform:translateX(calc(var(--k-i) * var(--k-step) * -1));
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .k-fit .k-fit-i{
+    flex:0 0 88px; justify-content:center; padding:12px 0;
+    border-radius:var(--btn-r); color:var(--ink-soft);
+    box-shadow:inset 0 0 0 1px var(--line);
+    transition:color var(--t-3) var(--e-out), box-shadow var(--t-3) var(--e-out);
+  }
+  .k-fit .k-fit-i:hover,
+  .k-fit .k-fit-i:focus-visible{color:var(--ink-text); box-shadow:inset 0 0 0 1px var(--line-ctl)}
+  /* The two hit strips are buttons so they are not a bare div with a pointer
+     handler, and they are out of the tab order because the keyboard has a
+     better route: focusing a chip scrolls it in. */
+  .k-fit .k-fit-hit{
+    position:absolute; top:0; bottom:0; width:52px; padding:0;
+    border:0; background:none; cursor:pointer; opacity:0;
+  }
+  .k-fit .k-fit-hit--l{left:0}
+  .k-fit .k-fit-hit--r{right:0}
+
+  /* 134 Handover.
+     Class-driven and not :hover, because the ORIGIN has to be written before
+     the travelling class lands. Card 129 carries the long version of this trap:
+     set both in one go and the tile slides in from the previous pass’s edge,
+     which reads as a bug in the cycle rather than as a direction.
+
+     The exit is the other half of the claim and it is the half that makes the
+     row read as one movement: the button you leave drains toward the side you
+     are heading for, so the fill you are losing and the fill you are gaining
+     travel the same way. */
+  .k-hand{gap:8px}
+  .k-hand .k-hand-i{
+    position:relative; overflow:hidden; padding:13px 20px; border-radius:10px;
+    box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
+  .k-hand .k-hand-i::before{
+    content:""; position:absolute; inset:0; background:var(--ink-hover);
+    transform:scaleX(0); transform-origin:var(--k-org, left);
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .k-hand .k-hand-i.is-in::before{transform:scaleX(1)}
+  .k-hand .k-hand-lbl{position:relative; transition:color var(--t-3) var(--e-out)}
+  .k-hand .k-hand-i.is-in .k-hand-lbl{color:var(--on-ink-hover)}
+
+  /* 135 The plus is the source.
+     The origin is DERIVED. --j-x is the padding plus half the mark, from the
+     same two lengths that place the mark, so changing the padding moves the
+     bloom with it — a typed 29px would be correct exactly once.
+
+     The polarity flip follows the front. The bloom opens AT the plus, so the
+     plus is engulfed first and the label, thirty to a hundred pixels out,
+     later: the mark inverts on the short rung with no delay and the label one
+     step behind it. Delaying the mark instead would be the more obvious
+     sequence and the wrong one.
+
+     It costs less than the fills it argues with. 09, 110 and 111 all sample the
+     pointer; this one is a clip-path against a fixed point, so there is no
+     listener and no per-entry measurement at all. */
+  .j-plus{
+    --j-pad:22px; --j-mark:14px; --j-x:calc(var(--j-pad) + var(--j-mark) / 2);
+    position:relative; overflow:hidden; padding-left:var(--j-pad);
+    box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
+  .j-plus::before{
+    content:""; position:absolute; inset:0; background:var(--ink-hover);
+    clip-path:circle(0% at var(--j-x) 50%);
+    transition:clip-path var(--t-5) var(--e-quint);
+  }
+  .j-plus:hover::before,
+  .j-plus:focus-visible::before{clip-path:circle(150% at var(--j-x) 50%)}
+  .j-plus .j-plus-mark,
+  .j-plus .j-plus-lbl{position:relative}
+  .j-plus .j-plus-mark{transition:color var(--t-2) var(--e-out)}
+  .j-plus .j-plus-lbl{transition:color var(--t-3) var(--e-out) var(--d-1)}
+  .j-plus:hover .j-plus-mark,
+  .j-plus:focus-visible .j-plus-mark,
+  .j-plus:hover .j-plus-lbl,
+  .j-plus:focus-visible .j-plus-lbl{color:var(--on-ink-hover)}
+
+  /* 136 Grows its word.
+     THE SECOND STUDY ALLOWED TO RE-MEASURE, and the exception is the same one
+     card 128 opened: the silhouette change is the subject. A scaleX would take
+     the word with it and a fixed track would clip the mark, so the plate has to
+     genuinely get wider. One 48px button for 300ms.
+
+     The word is present at rest and clipped to no width by a 0fr track, so
+     nothing is inserted and nothing reflows outside the button. Opacity rides
+     the short rung so the letters are never shown mid-clip.
+
+     The radius is --btn-r, which resolves against the live height rather than
+     naming a length: at 48 square it is a circle and at 150 it is a pill, one
+     shape family throughout. A typed 14px would have been a rounded square that
+     turns into a slab, which is the failure this card exists to avoid. */
+  .h-grow{
+    --h-pad:15px;
+    height:48px; padding:0 var(--h-pad); gap:0;
+    border-radius:var(--btn-r);
+    box-shadow:inset 0 0 0 1px var(--line-ctl);
+    overflow:hidden;
+  }
+  .h-grow .h-grow-mark{flex:none}
+  .h-grow .h-grow-w{
+    display:grid; grid-template-columns:0fr;
+    transition:grid-template-columns var(--t-4) var(--e-quint);
+  }
+  .h-grow .h-grow-t{
+    min-width:0; overflow:hidden; white-space:nowrap; padding-left:0; opacity:0;
+    transition:opacity var(--t-3) var(--e-out), padding var(--t-4) var(--e-quint);
+  }
+  .h-grow:hover .h-grow-w,
+  .h-grow:focus-visible .h-grow-w{grid-template-columns:1fr}
+  .h-grow:hover .h-grow-t,
+  .h-grow:focus-visible .h-grow-t{padding-left:10px; opacity:1}
+</style>
+
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -8384,7 +8771,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","g-two":"moves fades tone|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","o-step":"moves shape seq|hover","sheen":"moves fades tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves tone|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","q-spin":"moves fades|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves tone|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -8393,7 +8780,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","g-two":"131","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","o-step":"91","sheen":"10","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","q-spin":"83","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -11263,6 +11650,119 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 </script>
+
+<script>
+// Batch six. Deferred for the reason the other blocks give: a script above its
+// own markup binds to nothing, in silence.
+document.addEventListener("DOMContentLoaded", function () {
+
+  // 132 One light for the row.
+  // Two numbers, and neither is read at paint time. --k-o is each button’s
+  // offset inside the row, written once and again on resize; --k-x is the
+  // pointer in row coordinates, and the row’s left edge is CACHED rather than
+  // measured per move — a getBoundingClientRect() in a pointermove handler is
+  // a forced layout on every sample, which card 50 already paid for once.
+  document.querySelectorAll(".k-lamp").forEach(function (row) {
+    var items = row.querySelectorAll(".k-lamp-i");
+    var left = 0;
+    function measure() {
+      left = row.getBoundingClientRect().left;
+      items.forEach(function (b) { b.style.setProperty("--k-o", b.offsetLeft + "px"); });
+    }
+    measure();
+    addEventListener("resize", measure, { passive: true });
+    row.addEventListener("pointerenter", measure);
+    row.addEventListener("pointermove", function (e) {
+      row.style.setProperty("--k-x", (e.clientX - left) + "px");
+    }, { passive: true });
+    row.addEventListener("pointerleave", function () { row.style.removeProperty("--k-x"); });
+    // A light that follows a pointer has nothing to say to a Tab, so focus
+    // parks the source on the focused button rather than inventing a second
+    // effect for the keyboard.
+    items.forEach(function (b) {
+      b.addEventListener("focus", function () {
+        row.style.setProperty("--k-x", (b.offsetLeft + b.offsetWidth / 2) + "px");
+      });
+      b.addEventListener("blur", function () { row.style.removeProperty("--k-x"); });
+    });
+  });
+
+  // 133 The row that doesn’t fit.
+  // How many steps exist is derived from what fits, not declared, so the row
+  // stops when the last chip reaches the trailing edge instead of running past
+  // it into empty track.
+  document.querySelectorAll(".k-fit").forEach(function (rail) {
+    var track = rail.querySelector(".k-fit-track");
+    var chips = track.children;
+    var i = 0;
+    function step() { return parseFloat(getComputedStyle(rail).getPropertyValue("--k-step")) || 96; }
+    function max() {
+      var per = step();
+      return Math.max(0, Math.ceil((track.scrollWidth - rail.clientWidth) / per));
+    }
+    function set(next) {
+      var m = max();
+      i = Math.min(Math.max(next, 0), m);
+      rail.style.setProperty("--k-i", i);
+      rail.style.setProperty("--k-l", i > 0 ? 1 : 0);
+      rail.style.setProperty("--k-r", i < m ? 1 : 0);
+    }
+    set(0);
+    addEventListener("resize", function () { set(i); }, { passive: true });
+    rail.querySelectorAll(".k-fit-hit").forEach(function (hit) {
+      var dir = parseInt(hit.getAttribute("data-step"), 10);
+      var timer = null;
+      hit.addEventListener("pointerenter", function () {
+        set(i + dir);
+        timer = setInterval(function () { set(i + dir); }, 420);
+      });
+      hit.addEventListener("pointerleave", function () { clearInterval(timer); });
+      hit.addEventListener("click", function () { set(i + dir); });
+    });
+    // The keyboard route: a chip that takes focus off screen brings the row
+    // with it, which is why the two hit strips are out of the tab order.
+    Array.prototype.forEach.call(chips, function (chip, n) {
+      chip.addEventListener("focus", function () {
+        var per = step(), visible = Math.floor((rail.clientWidth + 8) / per);
+        if (n < i) set(n);
+        else if (n >= i + visible) set(n - visible + 1);
+      });
+    });
+  });
+
+  // 134 Handover.
+  // Class-driven rather than :hover, because the origin has to be written and
+  // the layout forced BEFORE the travelling class lands. Card 129 carries the
+  // long version: batch the two and the fill slides in from the previous
+  // pass’s edge, which reads as a bug in the cycle and not as a direction.
+  document.querySelectorAll(".k-hand").forEach(function (row) {
+    var items = Array.prototype.slice.call(row.querySelectorAll(".k-hand-i"));
+    var last = -1;
+    items.forEach(function (el, idx) {
+      function enter() {
+        var from = (last === -1 || idx > last) ? "left" : "right";
+        el.style.setProperty("--k-org", from);
+        void el.offsetWidth;
+        el.classList.add("is-in");
+        last = idx;
+      }
+      function leave() {
+        // Drain toward the side the pointer is heading for, which is the
+        // opposite end from the one it arrived at.
+        el.style.setProperty("--k-org", el.style.getPropertyValue("--k-org") === "right" ? "left" : "right");
+        void el.offsetWidth;
+        el.classList.remove("is-in");
+      }
+      el.addEventListener("pointerenter", enter);
+      el.addEventListener("pointerleave", leave);
+      el.addEventListener("focus", enter);
+      el.addEventListener("blur", leave);
+    });
+    row.addEventListener("pointerleave", function () { last = -1; });
+  });
+});
+</script>
+
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
