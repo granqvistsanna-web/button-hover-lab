@@ -7,7 +7,17 @@
      (the lede takes its count from cards.length, but crawlers read this tag
      before JS runs, so no number can live here). -->
 <meta name="description" content="Button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
+<!-- The theme is stamped before the first paint, so a visitor who chose light
+     last time never sees the dark page flash past on the way to it. -->
+<script>
+  (function(){
+    try{
+      var t = localStorage.getItem('bhl-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    }catch(e){}
+  })();
+</script>
 <meta property="og:title" content="Button Hover Lab">
 <meta property="og:description" content="Button hover animations, actually built.">
 <meta property="og:url" content="https://granqvistsanna-web.github.io/button-hover-lab/">
@@ -91,6 +101,13 @@
        cards 31 and 44's inverting pairs, which is why this needs its own name. */
     --ink-on-fill:var(--on-ink);
     --shadow-rgb:0,0,0;
+    /* The channel a raised surface catches light in. On a dark ladder that is
+       white, which is why eight material studies wrote rgba(255,255,255,…)
+       inline and were the only rules on the page a theme could not reach.
+       Named here, the highlight flips to a shadow on a light ground — which is
+       what depth actually looks like there — and the studies keep one spelling
+       for both. */
+    --sheen:255,255,255;
     /* The button radius, as one token the whole page reads. It is here in the
        alias block rather than inline on .btn so the toolbar has one property to
        write and the Copy buttons have one to resolve. */
@@ -151,6 +168,41 @@
        is quint, because a thing overshooting on the way back has passed through
        the surface it is fixed to. */
     --e-back: cubic-bezier(0.34, 1.42, 0.64, 1);
+  }
+
+  /* ============ light ============
+     Graphite Console is authored dark-only, so light is an OVERRIDE of the same
+     token names rather than a second design system. Everything above is an
+     alias, so every alias keeps resolving under its own name and all 93 studies
+     inherit the flip without one of them being re-authored.
+
+     MIRRORED, not inverted. The surface ladder still steps AWAY from the canvas
+     — white → grey rather than near-black → grey — so «a card is one step off
+     the page» stays true in both themes and elevation reads the same way round.
+     Inverting the ladder literally was tried on paper and is wrong: it puts the
+     canvas at #f0f0f0 and hover at #c5c5c5, which is a heavier separation than
+     the dark page has and reads as a table, not a feed.
+
+     The ink ladder is pulled one rung further down than a straight mirror
+     would put it. On a dark ground a tertiary grey at 3:1 is quiet; on a light
+     one it is thin, and this page spends its tertiary on 11px mono metadata.
+     Every role clears 4.7:1 on bg-1 here, which is stricter than the dark
+     theme manages and is the right way round for the lighter ground. */
+  :root[data-theme="light"]{
+    color-scheme:light;
+    --bg-0:#ffffff; --bg-1:#f4f4f4; --bg-2:#ebebeb; --bg-3:#e0e0e0; --bg-4:#d4d4d4;
+    --hairline:rgba(0,0,0,.10);
+    --ink-hi:#121212; --ink-mid:#4b4b4b; --ink-low:#636363; --ink-faint:#6d6d6d;
+    /* The inverse pair is still THE accent — it just points the other way, so a
+       solid plate is black on white here exactly as it is white on black there. */
+    --inverse-bg:#101010; --inverse-ink:#ffffff;
+    /* --line-ctl keeps its ARGUMENT, not its value. The comment on the dark
+       token defends a RATIO — a control boundary has to clear 3:1 — and .36
+       black measures 3.52:1 on bg-1 here, the same job done in the channel this
+       ground has available. Copying .36 white across would have measured 1.1:1
+       and silently un-drawn every control edge on the page. */
+    --line-ctl:rgba(0,0,0,.36);
+    --sheen:0,0,0;
   }
 
   *{box-sizing:border-box; margin:0; padding:0}
@@ -1240,7 +1292,7 @@
   .btn,.fav,.copy,.fav-only,.tools-reset{scroll-margin-top:160px}
   .spec[hidden],.sect[hidden]{display:none}
   .tools-empty{margin-top:28px; padding:26px; border-radius:var(--r-md);
-    border:1px dashed rgba(255,255,255,.22); text-align:center;
+    border:1px dashed rgba(var(--sheen),.22); text-align:center;
     font-size:13.5px; color:var(--ink-low)}
 
   @media (prefers-reduced-motion: reduce){
@@ -1676,7 +1728,7 @@
       <span class="tools-lbl">Palette</span>
       <div class="set-presets" role="group" aria-label="Colour palette">
         <button type="button" class="set-p set-p--none" data-p=""
-                aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. White in a swatch means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
+                aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. A swatch showing the page&rsquo;s own ink means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
         <button type="button" class="set-p" data-p="text:#ffe0b2,textHover:#5c3a00,accent:#f5a524,hover:#fff1d6"
                 style="--sw:#f5a524" aria-pressed="false" title="Amber">Amber</button>
         <button type="button" class="set-p" data-p="text:#ddd6ff,textHover:#2e1d80,accent:#8b7bf7,hover:#ece8ff"
@@ -1710,6 +1762,20 @@
       <button type="button" class="vers-b vers-long" id="v-long" aria-pressed="false"
               aria-label="Long label, applied to every study that offers it">Long</button>
       <span class="set-read" data-read="versions" aria-live="polite"></span>
+    </div>
+    <div class="tools-sep" aria-hidden="true"></div>
+    <!-- The theme belongs in this panel and not floating in a corner: every
+         other control here restyles the whole page at once, and this is the
+         same kind of knob. It is a radiogroup rather than a toggle for the
+         reason the version control is one — the two states are both named on
+         screen, so nobody has to work out whether the label is describing
+         where they are or where the press would take them. -->
+    <div class="tools-row">
+      <span class="tools-lbl">Theme</span>
+      <div class="vers-seg" id="v-theme" role="radiogroup" aria-label="Page theme">
+        <button type="button" class="vers-b" role="radio" aria-checked="true"  data-theme="dark">Dark</button>
+        <button type="button" class="vers-b" role="radio" aria-checked="false" data-theme="light">Light</button>
+      </div>
     </div>
     <div class="tools-row tools-row--end">
       <button type="button" class="rail-toggle" aria-expanded="false">Find &amp; filter</button>
@@ -6465,7 +6531,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.t-report .t-report-fill{
     position:absolute; left:0; top:0; bottom:0; width:0; z-index:0;
-    background:rgba(255,255,255,.22);
+    background:rgba(var(--sheen),.22);
   }
   .btn--solid.t-report .t-report-fill{
     background:color-mix(in srgb, var(--ink) 86%, var(--bg-0));
@@ -7109,12 +7175,12 @@ document.addEventListener("DOMContentLoaded", function () {
      anything around it. The spread stays low and the alpha lower — .18 white at
      24px reads as light on bg-1 and as haze at .30. */
   .btn.v-bloom{
-    box-shadow:0 0 0 0 rgba(255,255,255,0);
+    box-shadow:0 0 0 0 rgba(var(--sheen),0);
     transition:box-shadow var(--t-4) var(--e-out), border-color var(--t-3) ease;
   }
   .btn.v-bloom:hover,
   .btn.v-bloom:focus-visible{
-    box-shadow:0 0 24px 2px rgba(255,255,255,.18);
+    box-shadow:0 0 24px 2px rgba(var(--sheen),.18);
     border-color:var(--ink);
   }
 
@@ -7144,8 +7210,8 @@ document.addEventListener("DOMContentLoaded", function () {
      sentence the card always made, now with a middle. */
   .btn.v-inner{
     border-color:var(--line-ctl);
-    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,0),
-               inset 0 0 0 0 rgba(255,255,255,0);
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),0),
+               inset 0 0 0 0 rgba(var(--sheen),0);
     /* --e-out on both channels. It used to run the colour on a bare `ease`
        beside --e-out on the shadow: two curves inside one effect, which is what
        card 57's note calls «against the first rule of the doctrine». --t-3 and
@@ -7175,8 +7241,8 @@ document.addEventListener("DOMContentLoaded", function () {
      copy of the press. */
   .btn.v-inner.btn--line:hover,
   .btn.v-inner.btn--line:focus-visible{border-color:var(--ink-hover);
-    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,.24),
-               inset 0 0 7px 0 rgba(255,255,255,.07)}
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),.24),
+               inset 0 0 7px 0 rgba(var(--sheen),.07)}
   /* And the fill version inverts, because a white plate cannot be lit brighter:
      --ink IS the plate, and an inset white glow on it measures four units. So
      the arm is the same statement — «the edge is live» — in the only ink the
@@ -7199,8 +7265,8 @@ document.addEventListener("DOMContentLoaded", function () {
     transition-duration:var(--t-1);
   }
   .btn.v-inner:active{
-    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,.06),
-               inset 0 0 18px 0 rgba(255,255,255,.30);
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),.06),
+               inset 0 0 18px 0 rgba(var(--sheen),.30);
     transition-duration:var(--t-1);
   }
   /* ⚠️ AND THE OUTLINE VERSION NEEDS ITS OWN PRESS, for exactly the reason the
@@ -7213,8 +7279,8 @@ document.addEventListener("DOMContentLoaded", function () {
      own shadow, byte for byte. Equal specificity here, so it is source order
      that settles it, which is why this sits below the hover and not above. */
   .btn.v-inner.btn--line:active{
-    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,.06),
-               inset 0 0 18px 0 rgba(255,255,255,.30);
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),.06),
+               inset 0 0 18px 0 rgba(var(--sheen),.30);
     transition-duration:var(--t-1);
   }
 </style>
@@ -7398,9 +7464,18 @@ document.addEventListener("DOMContentLoaded", function () {
     content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
     border-radius:inherit;
     background:
-      linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,0) 1.5px),
+      linear-gradient(rgba(255,255,255,var(--y-lit-top,.16)), rgba(255,255,255,0) 1.5px),
       linear-gradient(rgba(0,0,0,0) 42%, rgba(0,0,0,.10) 74%, rgba(0,0,0,.28));
   }
+  /* The ONE depth rule --sheen gets wrong. Everything else here is a surface
+     catching light, and on a light ground the honest reading of that is a
+     shade — so the channel flips and the effect survives. A bevel is two
+     facets at once, and only the TOP one is the highlight: flip that to black
+     and the plate is shaded top and bottom, which is a groove, not a bevel.
+     A white highlight has no headroom on a near-white plate either, so it does
+     not stay. It goes to nothing, and the bottom shade carries the form on its
+     own — which is what a bevel lit from above actually looks like there. */
+  :root[data-theme="light"] .btn.y-lit::after{--y-lit-top:0}
   .btn.y-lit .lbl{position:relative; z-index:2; transition:color var(--t-2) ease}
   .btn.y-lit:hover .lbl,
   .btn.y-lit:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
@@ -7800,9 +7875,9 @@ document.addEventListener("DOMContentLoaded", function () {
        literal worth repeating. Measured on the card the steps are 7, 13 and 22
        in 8-bit — the fan is even in GEOMETRY, at a 4px pitch; the tone climbs
        rather than steps, because that is what stacked alpha does. */
-    --z-sheet-1:rgba(255,255,255,.10);
-    --z-sheet-2:rgba(255,255,255,.06);
-    --z-sheet-3:rgba(255,255,255,.03);
+    --z-sheet-1:rgba(var(--sheen),.10);
+    --z-sheet-2:rgba(var(--sheen),.06);
+    --z-sheet-3:rgba(var(--sheen),.03);
     background:var(--lift-bg);
     transform:translateY(0) scale(1) rotate(0.001deg);
     box-shadow:
@@ -9751,6 +9826,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // The version control is in the toolbar and in another IIFE; it announces
     // a change and the run is re-filtered here, where the hiding lives.
     document.addEventListener('bhl:version', function(){ apply(); });
+
+    // PANEL and WHITE are MEASURED off the rendered page — see where they are
+    // read — and the theme changes both of them. Left alone across a flip, the
+    // fit would go on holding colours against the dark card that is no longer
+    // there: on the light page every palette would be lifted LIGHTER, away from
+    // a floor it now clears from underneath, and the readout would quote a
+    // ratio for a background nobody is looking at. So the reading is retaken
+    // rather than the theme being made to reload.
+    function remeasure(){
+      PANEL = rgbOf(cards[0], 'backgroundColor');
+      var pr = document.createElement('span');
+      pr.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink)';
+      document.body.appendChild(pr);
+      WHITE_RGB = rgbOf(pr, 'color');
+      WHITE     = toHex(WHITE_RGB);
+      pr.remove();
+      BAD_COLOUR = getComputedStyle(document.documentElement)
+                     .getPropertyValue('--on-ink').trim().toLowerCase();
+    }
+    document.addEventListener('bhl:theme', function(){ remeasure(); paint(); });
 
     reset.addEventListener('click', function(){
       state = {fav:false, q:'', changes:[], answers:[], hoverInk:false};
@@ -11860,6 +11955,34 @@ document.addEventListener("DOMContentLoaded", function () {
         b.addEventListener('click', function(){ pickTreat(b); });
       });
       arrows(tTreat, tr, pickTreat);
+    }
+    // Same shape as the treatment control above, and deliberately not folded
+    // into it: that one writes a data attribute the STUDIES read, this one
+    // writes the theme the PAGE is drawn in, and they share only a look.
+    var tTheme = document.getElementById('v-theme');
+    if (tTheme){
+      var th = [].slice.call(tTheme.querySelectorAll('.vers-b'));
+      var pickTheme = function(b){
+        root.dataset.theme = b.dataset.theme;
+        th.forEach(function(x){
+          var on = x === b;
+          x.setAttribute('aria-checked', on ? 'true' : 'false');
+          x.tabIndex = on ? 0 : -1;
+        });
+        try { localStorage.setItem('bhl-theme', b.dataset.theme); } catch (e) {}
+        // Announced, not called: the colour machinery measures the page it is
+        // fitting against and lives in another IIFE.
+        document.dispatchEvent(new CustomEvent('bhl:theme'));
+      };
+      // The head script may already have stamped the root from storage, so the
+      // control reads the page rather than assuming its own markup is right.
+      th.forEach(function(b){
+        var on = b.dataset.theme === (root.dataset.theme || 'dark');
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+        b.tabIndex = on ? 0 : -1;
+        b.addEventListener('click', function(){ pickTheme(b); });
+      });
+      arrows(tTheme, th, pickTheme);
     }
     if (tLong){
       tLong.addEventListener('click', function(){
