@@ -29,8 +29,12 @@
 <meta property="og:title" content="Button Lab">
 <meta property="og:description" content="A specimen page of button hover animations, each one built and hoverable. Monochrome, layout-stable, interruptible, with notes on porting each to Framer.">
 <meta property="og:url" content="https://granqvistsanna-web.github.io/button-hover-lab/">
-<!-- The unfurl card: the header and the first three stages, captured at 1200x630@2x.
-     Reshoot it when the fold changes — it is a screenshot, not a design. -->
+<!-- The unfurl card: the masthead, the Restyle toolbar and the first two stages,
+     captured at 1200x630@2x — the toolbar shape rather than the wall, because
+     that is the layout most readers arrive in. Reshot 2026-08-30 for the console
+     redesign and the rename; the one it replaced still showed the deleted hero,
+     a count of 85, the old three-swatch control and the section name «WHOLE
+     BUTTON». Reshoot it when the fold changes — it is a screenshot, not a design. -->
 <meta property="og:image" content="https://granqvistsanna-web.github.io/button-hover-lab/og.png">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
@@ -1562,7 +1566,7 @@
        search field a thousand pixels wide invites a sentence rather than the
        one word this looks for. In the panel the header is 228px and the cap
        never bites. */
-    flex:1 1 190px; min-width:0; max-width:440px;
+    flex:1 1 auto; min-width:0; width:100%;
     padding:10px 12px; border-radius:var(--r-sm);
     border:0; background:var(--bg-2);
     color:var(--ink-hi); font:400 15px/1.2 var(--font-ui);
@@ -1572,10 +1576,11 @@
      <input> has no ::before to give one to. Inline SVG as a data URI: two
      shapes, smaller than the request it would otherwise cost, and it takes
      currentColor's job from the fill written into the URI per theme below. */
-  .rail-find{position:relative; display:flex; flex:1 1 190px; min-width:0}
+  .rail-find{position:relative; display:flex; flex:1 1 190px; min-width:0;
+    max-width:440px}
   .rail-q{background-image:var(--find-glyph); background-repeat:no-repeat;
-    background-position:12px 50%; background-size:15px 15px;
-    padding-left:35px; padding-right:46px}
+    background-position:11px 50%; background-size:15px 15px;
+    padding-left:32px; padding-right:41px}
   .rail-k{
     position:absolute; right:8px; top:50%; transform:translateY(-50%);
     pointer-events:none;
@@ -1584,7 +1589,10 @@
   }
   .rail-q:hover + .rail-k{background:var(--bg-4)}
   .rail-q:focus + .rail-k{opacity:0}
-  .rail-q::placeholder{color:var(--ink-faint)}
+  /* The hint is a size down from the value. In the 288px wall the field is
+     208px and the glyph and the ⌘K chip take 73 of it, so the placeholder at
+     15px ran 6px under the chip; the typed value keeps its own size. */
+  .rail-q::placeholder{color:var(--ink-faint); font-size:13.5px}
   .rail-q:hover{background:var(--bg-3)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
 
@@ -1954,7 +1962,7 @@
        The top inset clears the title fixed above it. */
     .rail-head{display:grid; grid-template-columns:minmax(0,1fr) auto;
       align-items:center; gap:10px; padding:82px var(--pad-panel) 20px}
-    .rail-head .rail-q{max-width:none}
+    .rail-head .rail-find{max-width:none}
     .rail-head .fav-only{grid-column:1 / -1; justify-self:start}
     .rail-fold{
       display:grid; width:30px; height:30px; place-items:center; padding:0;
@@ -2240,7 +2248,7 @@
            can be positioned against the input rather than against the row. -->
       <div class="rail-find">
         <input class="rail-q" id="rail-q" type="search" autocomplete="off"
-               placeholder="Name, word or number">
+               placeholder="Name, word, number">
         <!-- Written by the page: ⌘ on a Mac, Ctrl everywhere else. aria-hidden
              because the shortcut is announced by nothing and read by eye. -->
         <kbd class="rail-k" aria-hidden="true">⌘K</kbd>

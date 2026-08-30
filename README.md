@@ -1,6 +1,6 @@
 # Button Lab
 
-Ninety-one button hover animations, actually built. Hover, tab and press all of them.
+Ninety button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -16,7 +16,7 @@ script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the ninety-one obeys all five:
+Every one of the ninety obeys all five:
 
 | | |
 |---|---|
@@ -24,7 +24,7 @@ Every one of the ninety-one obeys all five:
 | **Interruptible** | Hover out halfway and the animation turns smoothly from wherever it is — no waiting for it to finish. |
 | **In one way, out another** | The exit takes its own path — and its own clock, one rung down the ladder. |
 | **Reduced motion** | Everything falls back to plain colour and opacity changes. |
-| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the ninety-one effects; the toolbar chrome runs on the design system's own `--t-fast`. |
+| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the ninety effects; the toolbar chrome runs on the design system's own `--t-fast`. |
 
 And, without exception: no layout shift — every button's own box stays identical to three
 decimals, and in the group cards the row does too, the one deliberate exception being
@@ -39,16 +39,19 @@ Each group names the part of the button that performs, because that is what you 
 before you arrive: a text link has no fill to move, a button with no icon cannot relay an
 arrow, and an effect that reads the row needs a row to put it in.
 
+One word each, on one axis — the part of the button that performs:
+
 | | |
 |---|---|
-| **Whole button** | it lifts, scales, leans, settles, or answers a press |
-| **Fill** | a fill arrives or leaves |
-| **Border, corner and rule** | an outline draws, a radius changes, a rule moves |
-| **Label** | the word moves as one unit |
-| **Label, per character** | the word is split and the parts move separately |
-| **Icon** | an arrow, dot, caret, needle or dash does the work |
-| **Material and light** | the button looks like a thing — glass, metal, letterpress, grain |
-| **Buttons in a row** | siblings react to the one you are on |
+| **Plate** | the whole surface answers at once — it scales, lifts, leans, or argues with the pointer about its own weight |
+| **Fill** | a fill arrives or leaves; what differs is where from, and whether you see it travel |
+| **Edge** | the outline works and the plate holds still — an underline, a rule, a drawn border, a corner that changes shape |
+| **Label** | the word performs, as one piece and then split into its characters |
+| **Mark** | a small mark beside the label carries the gesture — an arrow travels, an icon redraws, a caret points |
+| **Material** | the button behaves like a physical thing, and hover changes the material rather than the layout |
+| **State** | these answer the click rather than the pointer, and report on it in place |
+| **Row** | siblings react to the one you are on, so the row is the unit |
+| **Compound** | two of the mechanisms above on one curve — the pairing is the study |
 
 They replaced twenty-one lettered sections, which recorded where each study was written
 rather than what it does. Half of those names were provenance — *the challengers*, *from a
@@ -68,13 +71,16 @@ cannot quietly lose a study the next time it runs.
 Search, the derived facets and the starred shortlist do the rest of the narrowing — and the
 shortlist persists in your browser.
 
-The same toolbar carries four global settings that restyle all ninety-one at once:
-**text**, **accent**, **hover** and a **button radius**. All are written as custom properties
-on the root element, which is also where the copy buttons resolve from, so a snippet copied
-with colours set carries those colours rather than the defaults they replaced.
+The **Restyle** panel on the right carries the global settings, and they restyle all ninety
+at once. Colour is a 2x2 — **text** and **button**, each at rest and on hover — plus a row of
+palettes that set all four together; then a **button radius**, a **version**, and the page
+**theme**. All are written as custom properties on the root element, which is also where the
+copy buttons resolve from, so a snippet copied with colours set carries those colours rather
+than the defaults they replaced.
 
-Three colours, because a monochrome page hides the fact that `--ink` was doing three jobs at
-once. **Text** is the label at rest, and everything that belongs to the label — card 57's
+Four cells, because a monochrome page hides the fact that `--ink` was doing three jobs at
+once — and because the fourth, the colour of the label once the hover fill has arrived under
+it, used to be computed and could not be chosen at all. **Text** is the label at rest, and everything that belongs to the label — card 57's
 underline goes with it, not with the fill that arrives behind it. **Accent** is the fill and
 the mark: `--ink` and `--accent` together. **Hover** is whatever arrives when you point at
 something. Set all three the same and the page behaves exactly as it did when there was one
@@ -90,7 +96,7 @@ has always been. The fit walks lightness in **either** direction for exactly thi
 label on a near-white accent has to go down, and the one-way walk the single-primary toolbar
 used would have sent it to white on white.
 
-**Hover reaches about twenty of the ninety-one, and that is the page's own thesis
+**Hover reaches about twenty of the ninety, and that is the page's own thesis
 showing through rather than a gap.** These effects are geometric: most of them paint their
 arriving layer at rest and animate `transform`, `clip-path` or `height`, so the colour that
 arrives is the same declaration as the fill. Which ones count was settled by reading every
