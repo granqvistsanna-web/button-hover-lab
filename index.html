@@ -78,8 +78,19 @@
        control inverted at once, and neither is a colour a token could fix.
        So the two roles are named for the job rather than the rung, and each
        theme points them at the rung that does that job on ITS ground. */
-    --well:var(--bg-0);          /* recessed below the panel  */
+    /* --bg-1, not --bg-0. This was --bg-0 while the toolbar was a --bg-1
+       card; the console pass put the walls at --bg-0 and the trough then
+       composited to EXACTLY its own panel — measured 1.000, no track at all,
+       in dark only. --bg-0 is the end of the ladder, so a recess is not
+       available here: the track steps the one way there is, and the chip
+       still stands out of it (track 1.069 on the panel, chip 1.320 on the
+       track). Light is unaffected and keeps its own pair below. */
+    --well:var(--bg-1);          /* the track, one step off the panel */
     --raised:var(--bg-3);        /* standing up out of a well */
+    /* An <input> has no ::before, so the magnifier is a background image. A
+       data URI cannot read currentColor, so the stroke is written per theme
+       and the two are kept in step here. */
+    --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.4 10.4 14 14'/%3E%3C/svg%3E");
     --ink:var(--ink-hi);
     --ink-soft:var(--ink-mid);
     --muted:var(--ink-low);
@@ -251,6 +262,7 @@
     /* Away from white is down, toward white is up — see the roles' own note. */
     --well:var(--bg-2);
     --raised:var(--bg-0);
+    --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23636363' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.4 10.4 14 14'/%3E%3C/svg%3E");
   }
 
   *{box-sizing:border-box; margin:0; padding:0}
@@ -268,8 +280,8 @@
   .mast{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
   h1{color:var(--ink-hi); font-size:21px; font-weight:600;
     letter-spacing:-.01em; line-height:1.2; margin:0}
-  .mast-sub{margin:0; font:400 12px/1 var(--mono); letter-spacing:.06em;
-    text-transform:uppercase; color:var(--ink-low)}
+  .mast-sub{margin:0; font:400 12px/1 var(--mono); letter-spacing:.02em;
+    color:var(--ink-low)}
 
   /* ============ sections & cards ============ */
   /* The break between sections is AIR, not a rule. Nine full-bleed hairlines
@@ -323,7 +335,10 @@
   .sect, .sect>.grid{display:contents}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
      lightness — the card is bg-1 on bg-0 and carries no border and no shadow. */
-  .spec{background:var(--bg-1); border-radius:var(--r-xl); overflow:hidden;
+  /* 14px and not --r-xl's 20. Every other radius in the chrome is 8 (6 on the
+     panel rows), so a 20px card was 2.5x the largest thing around it and
+     competed with the pill buttons standing inside it. */
+  .spec{background:var(--bg-1); border-radius:14px; overflow:hidden;
     display:flex; flex-direction:column}
   /* Three demos are rows of controls rather than single buttons — a nav row, a
      button pair, a segmented pair — and want more width than one column gives.
@@ -411,7 +426,7 @@
      smallest mark that says «this opens», and it turns when it has. */
   .spec-more{margin-left:auto; display:inline-flex; align-items:center; gap:6px;
     padding:0; border:0; background:none;
-    font:inherit; color:var(--ink-low); cursor:pointer; letter-spacing:.04em;
+    font:500 12px/1.35 var(--font-ui); color:var(--ink-low); cursor:pointer;
     transition:color var(--t-fast) var(--ease)}
   .spec-more::after{content:""; width:6px; height:6px; margin-top:-3px;
     border-right:1.2px solid currentColor; border-bottom:1.2px solid currentColor;
@@ -555,8 +570,11 @@
   }
   .vers>*{pointer-events:auto}
   .vers-seg{display:flex; align-items:center; gap:2px}
+  /* Neither a readout nor a panel label, so neither mono nor uppercase — see
+     the type note at --well. Sentence case also buys the width that lets the
+     four sit on ONE row in the 276px wall. */
   .vers-b{
-    font:400 10.5px/1 var(--mono); letter-spacing:.09em; text-transform:uppercase;
+    font:500 11px/1 var(--font-ui); letter-spacing:0;
     color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
     padding:5px 7px; cursor:pointer;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
@@ -597,8 +615,14 @@
     box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
   /* Length is a toggle, not a fifth treatment, so it is outlined rather than
      seated in the track — a different shape for a different kind of answer. */
-  .tools .vers-long{border:0; padding:6px 10px; background:var(--well)}
+  /* Outlined, NOT seated in the track — which is what the note above always
+     claimed and what the console pass accidentally undid by swapping the
+     border for the track's own fill. Seated, full-width and directly under
+     the four, it read as a fifth treatment. */
+  .tools .vers-long{border:1px solid var(--line-ctl); padding:5px 9px;
+    background:none}
   .tools .vers-long[aria-pressed="true"]{background:var(--raised);
+    border-color:var(--line-ctl);
     box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
 
   .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
@@ -687,9 +711,24 @@
   .shutter:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
 
   /* 09 Ink fill — the fill grows from the point the pointer crossed, and the
-     radius is a guess: 240% of the plate. Card 110 is the argument against that
-     guess and should be read next to this one. What the guess costs HERE is the
-     label. A radius that overshoots covers the label early and by a different
+     radius is MEASURED to that point rather than guessed. It was 240% of the
+     plate, and card 110 Measured ripple existed to make the argument against
+     that guess; 110 retired INTO this card on 2026-08-30 and its measurement
+     came with it. A guess overshoots by a different amount on every plate
+     width, so the tail of the ease is spent off-screen and the fill READS
+     shorter than the rung it was given.
+
+     ⚠️ THE PLATE IS A STADIUM, NOT A RECTANGLE, and 110's own maths solved to
+     the four corners of the bounding RECT — corners that are not on the plate
+     at all once --btn-r:999px rounds the caps to h/2. A rounded rect's outline
+     is the inset rect [r, w-r] x [r, h-r] grown by r, so the farthest point on
+     it is the farthest INSET corner PLUS r. That is exact at every radius and
+     collapses to 110's corner formula at r=0. Checked against the real outline
+     rather than argued: 0.00px out, where the corner form ran up to 10px over
+     on the plates this page uses — an over-measure, which is why the plate read
+     full early.
+
+     What the guess used to cost was the label. A radius that overshoots covers the label early and by a different
      amount on every plate width, so a colour swap delayed against the fill
      cannot land — and this one was delayed by --d-2, which put the label a
      measured 125ms behind the ink that was already under it: light type on a
@@ -699,9 +738,13 @@
      type is dark before the ink reaches it. Out on --t-3 with no delay: the
      REST declaration is what paints the exit, and a slower return crossfades
      through the retreating front rather than racing it back to light while the
-     front still covers half the word. */
+     front still covers half the word.
+     ⚠️ That lead is now a CHOICE and no longer a workaround: with the radius
+     measured, --t-5 genuinely lands filled, so the delayed swap 110 carried
+     could land here too. Left exactly as it is, because this is the timing that
+     was signed off. */
   .inkfill{overflow:hidden; border:1px solid var(--line-ctl)}
-  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:240%; aspect-ratio:1; border-radius:50%; background:var(--ink-hover); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
+  .inkfill::before{content:""; position:absolute; left:var(--x,50%); top:var(--y,50%); width:calc(var(--i-r, 150px) * 2); aspect-ratio:1; border-radius:50%; background:var(--ink-hover); transform:translate(-50%,-50%) scale(0); transition:transform var(--t-5) var(--e-quint)}
   .inkfill:hover::before,
   .inkfill:focus-visible::before{transform:translate(-50%,-50%) scale(1)}
   .inkfill .lbl{position:relative; transition:color var(--t-3) ease}
@@ -1151,7 +1194,7 @@
      reason — an absence should not be drawn as one more colour. */
   .tools-fold-state{
     display:inline-flex; align-items:center; gap:7px;
-    font:400 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    font:500 12px/1 var(--font-ui); letter-spacing:0;
     color:var(--ink-mid); white-space:nowrap;
   }
   .tools-fold-state::before{content:""; width:9px; height:9px; flex:none;
@@ -1220,11 +1263,11 @@
   .set-grp{display:inline-flex; align-items:center; gap:10px; margin-right:12px}
   .set-grp:last-of-type{margin-right:0}
   .set-grp .tools-lbl{color:var(--ink-mid); margin-right:-2px}
-  .set-grp .set-cap{font-size:10px; letter-spacing:.1em; font-weight:500}
+  .set-grp .set-cap{font-size:11px; letter-spacing:0; font-weight:500}
   /* A readout that is also a control, so it looks like the version chips
      rather than like the static numbers beside the swatches. */
   .set-uses{
-    font:400 10.5px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    font:400 10.5px/1 var(--mono); letter-spacing:.02em;
     color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
     padding:5px 8px; margin-left:2px; cursor:pointer; white-space:nowrap;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
@@ -1234,8 +1277,8 @@
   .set-uses:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .set-pair{display:inline-flex; align-items:center; gap:2px}
   .set-lab{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
-  .set-cap{font-size:11px; font-weight:600; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--ink-low); transition:color var(--t-2) ease}
+  .set-cap{font-size:11px; font-weight:600; letter-spacing:0;
+    color:var(--ink-low); transition:color var(--t-2) ease}
   .set-lab:hover .set-cap{color:var(--ink-mid)}
   /* The marker the fit puts up when it had to move a colour. Inline with the
      caption rather than in the shared readout, because with three swatches a
@@ -1265,7 +1308,7 @@
   .set-presets{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
   .set-p{
     display:inline-flex; align-items:center; gap:6px;
-    font:400 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    font:500 12px/1 var(--font-ui); letter-spacing:0;
     color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
     padding:6px 9px; cursor:pointer; white-space:nowrap;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
@@ -1391,14 +1434,15 @@
     position:absolute; top:9px; right:9px; z-index:2;
     width:36px; height:36px; display:grid; place-items:center;
     background:none; border:0; border-radius:10px; cursor:pointer;
-    color:var(--ink-low); opacity:.34;
+    /* Same measurement as .copy above. */
+    color:var(--ink-mid); opacity:.8;
     transition:opacity var(--t-3) ease,color var(--t-3) ease,
                background var(--t-fast) var(--ease),transform var(--t-3) var(--e-out);
   }
   .spec:hover .fav,.spec:focus-within .fav,
   .fav:focus-visible,.fav[aria-pressed="true"]{opacity:1}
   /* Nothing will ever lift these on touch, so rest one step brighter there. */
-  @media (hover: none){ .fav{opacity:.6} }
+  @media (hover: none){ .fav{opacity:1} }
   .fav:hover{background:var(--bg-3); color:var(--ink-hi)}
   .fav[aria-pressed="true"]{color:var(--ink-hi)}
   .fav:active{transform:scale(.88)}
@@ -1421,8 +1465,14 @@
   .copy{
     display:flex; align-items:center; gap:7px; height:36px; padding:0 11px;
     background:none; border:0; border-radius:10px; cursor:pointer;
-    color:var(--ink-low); opacity:.34;
-    font:500 10.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    /* --ink-mid at .8, not --ink-low at .34. At .34 these composited to
+       1.68:1 in dark and 1.60:1 in light — a control, carrying 10.5px text,
+       under even the 3:1 non-text floor. --ink-low cannot pass AA at any
+       opacity (it is 5.19:1 on the card at FULL strength), so the colour had
+       to move, not the alpha: --ink-mid at .8 measures 5.89:1 dark and
+       4.72:1 light, and hover still lifts to 1. */
+    color:var(--ink-mid); opacity:.8;
+    font:500 11px/1 var(--font-ui); letter-spacing:.01em;
     white-space:nowrap;
     transition:opacity var(--t-3) ease,color var(--t-3) ease,
                background var(--t-fast) var(--ease),transform var(--t-3) var(--e-out);
@@ -1430,7 +1480,7 @@
   .spec:hover .copy,.spec:focus-within .copy,
   .copy:focus-visible,.copy[data-done="1"]{opacity:1}
   /* Nothing will ever lift these on touch, so rest one step brighter there. */
-  @media (hover: none){ .copy{opacity:.6} }
+  @media (hover: none){ .copy{opacity:1} }
   .copy:hover{background:var(--bg-3); color:var(--ink-hi)}
   .copy:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .copy:active{transform:scale(.94)}
@@ -1448,7 +1498,10 @@
      scroll-into-view clear of it. */
   .btn,.fav,.copy,.fav-only,.tools-reset{scroll-margin-top:160px}
   .spec[hidden],.sect[hidden]{display:none}
-  .tools-empty{margin-top:28px; padding:26px; border-radius:var(--r-md);
+  /* grid-column, because .feed is ONE grid and .sect/.grid are display:contents
+     — without it the message took a single card slot and left the rest of the
+     row blank beside it. */
+  .tools-empty{grid-column:1/-1; margin-top:28px; padding:26px; border-radius:var(--r-md);
     border:0; background:var(--bg-1); text-align:center;
     font-size:13.5px; color:var(--ink-low)}
 
@@ -1515,6 +1568,22 @@
     color:var(--ink-hi); font:400 15px/1.2 var(--font-ui);
     transition:background var(--t-fast) var(--ease);
   }
+  /* The magnifier is a background image and not a pseudo-element, because an
+     <input> has no ::before to give one to. Inline SVG as a data URI: two
+     shapes, smaller than the request it would otherwise cost, and it takes
+     currentColor's job from the fill written into the URI per theme below. */
+  .rail-find{position:relative; display:flex; flex:1 1 190px; min-width:0}
+  .rail-q{background-image:var(--find-glyph); background-repeat:no-repeat;
+    background-position:12px 50%; background-size:15px 15px;
+    padding-left:35px; padding-right:46px}
+  .rail-k{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    pointer-events:none;
+    font:500 10.5px/1 var(--font-ui); color:var(--ink-faint);
+    background:var(--bg-3); border-radius:5px; padding:4px 5px;
+  }
+  .rail-q:hover + .rail-k{background:var(--bg-4)}
+  .rail-q:focus + .rail-k{opacity:0}
   .rail-q::placeholder{color:var(--ink-faint)}
   .rail-q:hover{background:var(--bg-3)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
@@ -1556,7 +1625,6 @@
   /* The label above it is the .rail-lbl the Sections group uses, so the two
      region headings in the panel are one style. Its margin assumes a list
      indented by 9px; the field is not indented, so the label comes back. */
-  .rail-order .rail-lbl{margin-left:0}
 
   /* When the order is a date, every card says which date it is being sorted
      on. Without it the page reorders and gives no account of itself — the
@@ -1698,6 +1766,14 @@
     content:""; position:absolute; left:0; top:50%; width:2px; height:15px;
     margin-top:-7.5px; border-radius:1px; background:var(--accent);
   }
+  /* The two facet rows draw a disclosure caret and these drew nothing, so one
+     panel had two list idioms and the one that NAVIGATES was the one with no
+     affordance. A chevron, not a caret: these go somewhere, they do not open. */
+  .rail-sects a::after{content:"›"; flex:none; font-size:15px; line-height:1;
+    color:var(--ink-faint); transform:translateY(-1px);
+    transition:color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+  .rail-sects a:hover::after{color:var(--ink-mid); transform:translate(2px,-1px)}
+  .rail-sects a[aria-current="true"]::after{color:var(--ink-mid)}
   .rail-sects a[hidden]{display:none}
 
   /* ---- The status bar -------------------------------------------------- */
@@ -1789,23 +1865,37 @@
        276px column gives a four-across cell about 59px, which broke the one
        label that is two words onto two lines and made the whole control a
        row taller than the three beside it. */
-    .tools .vers-seg{display:grid; grid-template-columns:1fr 1fr; gap:2px}
-    .tools .vers-b{min-width:0; text-align:center; padding:7px 4px}
+    /* ONE row. It was a 2x2 because the four were mono uppercase at 10.5px
+       and would not fit 236px; sentence case at 11px does, and a segmented
+       control that wraps has stopped being one. */
+    .tools .vers-seg{display:flex; gap:1px}
+    .tools .vers-b{flex:1 1 0; min-width:0; text-align:center; padding:7px 2px}
     /* Length is not a fifth treatment, and full-width directly under the
        four of them said it was. Its own labelled row, with the air that
        every other group in this panel gets. */
-    .tools .vers-long{width:100%; text-align:center; margin-top:8px}
+    /* Not full width and not centred under the four: a toggle that fills the
+       row directly beneath a segmented control IS the fifth segment, whatever
+       its shape. It sits at the start of its own line, outlined. */
+    .tools .vers-long{width:auto; align-self:flex-start; margin-top:10px}
     .tools .set-read{margin-left:0}
     .tools .set-range{width:100%}
     /* The fold is a block in the stack here, not a chip on a line. */
     .tools-fold{flex:none}
     .tools-fold[open]{flex:none}
-    .tools-fold-sum{margin:18px var(--pad-panel) 0; padding:8px 10px;
+    /* The margin carries the inset and the padding only bleeds the hover
+       fill, the way the panel's rows do — with --pad-panel on the margin AND
+       10px of padding the label sat at 30 while every other label in this
+       wall sat at 20. */
+    .tools-fold-sum{margin:18px 10px 0; padding:8px 10px;
       justify-content:space-between}
     .tools-fold-body{padding:12px var(--pad-panel) 0; gap:16px; min-width:0}
     .tools-fold-body .tools-row{padding:0; min-width:0}
     .set-grp{display:flex; flex-direction:column; align-items:stretch;
       gap:8px; margin-right:0; min-width:0}
+    /* The -2px trims the trailing letter-space when the label sits BESIDE the
+       swatches. Stretched in a column it makes the label 2px wider than the
+       group that holds it, which is the whole of the row's 238-in-236. */
+    .tools-fold-body .set-grp .tools-lbl{margin-right:0}
     /* Text and Button side by side, each half the column. min-width:0 on
        every link in the chain: a flex item's automatic minimum size is its
        content, and two swatch groups that refuse to shrink measured 382px
@@ -1848,7 +1938,17 @@
       flex-direction:column; align-items:flex-start; gap:5px;
       transition:transform var(--t-med) var(--ease);
     }
-    body[data-rail="off"] .mast{transform:translateX(-100%)}
+    /* It used to ride the panel off the screen, and the argument for that —
+       «a panel's title is part of the panel» — is right about the TITLE and
+       wrong about the NAME. Folded, the page had no name, no count and no
+       wordmark anywhere: one 34px unlabelled icon and a grid. The state is
+       remembered, so that was the whole page for anyone who had ever folded
+       it. It moves beside the handle instead, on one line, in the band above
+       the feed's first row. */
+    body[data-rail="off"] .mast{
+      transform:none; left:58px; top:28px; width:auto; padding:0;
+      flex-direction:row; align-items:baseline; gap:10px;
+    }
     /* The handle rides with the field rather than above it: one row of
        chrome, and the panel's first line is still the thing it is for.
        The top inset clears the title fixed above it. */
@@ -1873,6 +1973,16 @@
     .rail-grp{padding:14px 0 0}
     .rail-foot{margin:0; padding:14px var(--pad-panel) 18px; background:var(--bg-0)}
     .rail-toggle{display:none}
+
+    /* ---- Jump margins ------------------------------------------------
+       120 and 160 were measured against the sticky toolbar, which at this
+       width is a wall on the right and covers nothing the feed uses. Left
+       alone, every section link landed its first card 120px down a column
+       whose OWN first card sits at 64 — so the jump was reliably wronger
+       than arriving. 24 is the same air the feed keeps above a row. */
+    .spec{scroll-margin-top:24px}
+    .btn,.fav,.copy,.fav-only,.tools-reset{scroll-margin-top:24px}
+    #studies{scroll-margin-top:0}
 
     /* ---- Folding the left wall away ---------------------------------
        transform and not display: the panel keeps its box, so nothing it
@@ -2125,17 +2235,28 @@
           aria-label="Show the find panel" hidden></button>
   <nav class="rail" id="rail" hidden aria-label="Find a study">
     <div class="rail-head">
+      <label class="sr" for="rail-q">Find a study</label>
+      <!-- The field, its glyph and its shortcut are one box so the two marks
+           can be positioned against the input rather than against the row. -->
+      <div class="rail-find">
+        <input class="rail-q" id="rail-q" type="search" autocomplete="off"
+               placeholder="Name, word or number">
+        <!-- Written by the page: ⌘ on a Mac, Ctrl everywhere else. aria-hidden
+             because the shortcut is announced by nothing and read by eye. -->
+        <kbd class="rail-k" aria-hidden="true">⌘K</kbd>
+      </div>
       <!-- The panel is 288px of a 1440px screen and it answers a question
            most visits ask once — «where is the one about X» — so it folds.
            Its own handle rather than a control somewhere else: the thing
            that closes a panel belongs on the panel, and the thing that
            re-opens it has to be somewhere the closed panel is not, which is
-           .rail-show below. -->
+           .rail-show below.
+           At the FAR RIGHT of the header, not left of the field: an outlined
+           square immediately left of a text input is a checkbox, and it was
+           also what pushed the search's left edge 38px in from every other
+           thing in this panel. -->
       <button type="button" class="rail-fold" aria-expanded="true"
               aria-controls="rail" aria-label="Hide the find panel"></button>
-      <label class="sr" for="rail-q">Find a study</label>
-      <input class="rail-q" id="rail-q" type="search" autocomplete="off"
-             placeholder="Name, word or number">
       <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
     </div>
 
@@ -2312,7 +2433,7 @@
         </button>
       </div>
       <h3><span class="num">131</span>Two targets</h3>
-        <p>The plate answers which half of itself you are on, and it reads that from structure rather than from coordinates: :has() asks which child is hovered. 75, 110 and 111 all measure where the pointer is and hand CSS the number; this needs no number and no script at all, because the question is not where but which of these two.</p>
+        <p>The plate answers which half of itself you are on, and it reads that from structure rather than from coordinates: :has() asks which child is hovered. 09, 75 and 111 all measure where the pointer is and hand CSS the number; this needs no number and no script at all, because the question is not where but which of these two.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -2391,16 +2512,7 @@
         <button type="button" class="btn inkfill"><span class="lbl">Start a project</span></button>
       </div>
       <h3><span class="num">09</span>Ink fill</h3>
-      <p>The fill grows from the exact point where the pointer entered — and retreats to where it left.</p>
-      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="y-reach" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn y-reach"><span class="lbl">Send the brief</span></button>
-      </div>
-      <h3><span class="num">110</span>Measured ripple</h3>
-      <p>The radius is measured to the farthest corner from the point you crossed, so the flood finishes exactly when the transition does. Card 09's 240% is a guess, and a guessed radius reads shorter on every plate width.</p>
+      <p>The fill grows from the exact point where the pointer entered — and retreats to where it left. The radius is measured to the farthest point of the plate from that point, so the ink lands exactly as the transition ends rather than nearly: a guessed radius overshoots by a different amount on every plate width, and spends the slow tail of the ease off-screen. The plate is a stadium, so the measurement is to its outline and not to the corners of its box.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -7892,45 +8004,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .btn.y-lit:focus-visible::before{opacity:1}
   }
 
-  /* 110 Measured ripple — the radius is measured to the farthest
-     corner from the point you crossed, so the flood finishes exactly as the
-     transition does. Card 09 uses width:240%, the tutorial uses 14em, and both
-     are guesses at a number only the plate can know. A guess that is too big is
-     not a harmless margin: the plate is covered before the scale reaches 1, so
-     the tail of the ease is spent off-screen and the fill READS shorter than
-     the rung it was given — by a different amount on every plate width on the
-     page. 240% of a 300px plate is a 360px radius where 305 was needed; the
-     last 15% of a quintic ease is its slowest 15%, so a third of the perceived
-     duration goes missing.
-     Measured, --t-5 means filled. The label's colour swap can then be delayed
-     against the fill and land right, which at a guessed radius it cannot.
-     Without JS the custom properties fall back to the centre and 150px, which
-     is card 09 — a floor, not a failure. */
-  .btn.y-reach{
-    background:var(--lift-bg);
-    overflow:hidden;
-  }
-  .btn.y-reach::before{
-    content:""; position:absolute; left:var(--y-x,50%); top:var(--y-y,50%); z-index:0;
-    width:calc(var(--y-r,150px) * 2); aspect-ratio:1; border-radius:50%;
-    background:var(--ink);
-    transform:translate(-50%,-50%) scale(0) rotate(0.001deg);
-    transition:transform var(--t-5) var(--e-quint);
-  }
-  .btn.y-reach:hover::before,
-  .btn.y-reach:focus-visible::before{transform:translate(-50%,-50%) scale(1) rotate(0.001deg)}
-  .btn.y-reach .lbl{position:relative; z-index:2; transition:color var(--t-2) ease}
-  .btn.y-reach:hover .lbl,
-  .btn.y-reach:focus-visible .lbl{color:var(--on-ink); transition-delay:var(--d-2)}
-  @media (prefers-reduced-motion: reduce){
-    .btn.y-reach::before{
-      transform:translate(-50%,-50%) scale(1) rotate(0.001deg); opacity:0;
-      transition:opacity var(--t-3) ease;
-    }
-    .btn.y-reach:hover::before,
-    .btn.y-reach:focus-visible::before{opacity:1}
-  }
-
   /* 111 Press fill — the flood starts on pointer-DOWN, from the point
      you pressed, and it is the only study on this page you can call off. Drag
      off the plate and it retracts and nothing fires; come back and it resumes
@@ -8029,34 +8102,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <script>
-  // 110 Measured ripple — the radius the plate actually needs.
-  // Measured on the way in and not cached: --btn-r and the toolbar can change
-  // the plate under it, and a rect read is cheap next to the paint it sizes.
-  (function(){
-    function fit(btn, cx, cy){
-      var r = btn.getBoundingClientRect();
-      // The transform is a scale about the circle's own centre, so the rect is
-      // the plate's own box whatever the press is doing to it.
-      var x = cx - r.left, y = cy - r.top;
-      var d = Math.max(
-        Math.hypot(x, y),                          Math.hypot(r.width - x, y),
-        Math.hypot(x, r.height - y),               Math.hypot(r.width - x, r.height - y));
-      btn.style.setProperty('--y-x', x.toFixed(1) + 'px');
-      btn.style.setProperty('--y-y', y.toFixed(1) + 'px');
-      // Ceil, not round: half a pixel short leaves a lit hairline in the corner
-      // at the exact moment the fill is meant to be complete.
-      btn.style.setProperty('--y-r', Math.ceil(d) + 'px');
-    }
-    document.querySelectorAll('.y-reach').forEach(function(btn){
-      btn.addEventListener('pointerenter', function(e){ fit(btn, e.clientX, e.clientY); });
-      // The keyboard crosses no edge: the centre, and the radius from it.
-      btn.addEventListener('focus', function(){
-        var r = btn.getBoundingClientRect();
-        fit(btn, r.left + r.width / 2, r.top + r.height / 2);
-      });
-    });
-  })();
-
   // 111 Press fill — pointer capture, so the moves keep arriving
   // after the pointer has left the plate. Everything visual is CSS reacting to
   // data-state; the script owns the state machine and nothing else.
@@ -8780,7 +8825,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* 131 Two targets — the plate answers WHICH HALF of itself you are on, and
      it reads that from structure rather than from coordinates: :has() asks
-     which child is hovered. 75, 110 and 111 all measure where the pointer is
+     which child is hovered. 09, 75 and 111 all measure where the pointer is
      and hand CSS the number; this needs no number, no listener and no
      script, because the question is not «where» but «which of these two».
 
@@ -8955,7 +9000,7 @@ document.addEventListener("DOMContentLoaded", function () {
      step behind it. Delaying the mark instead would be the more obvious
      sequence and the wrong one.
 
-     It costs less than the fills it argues with. 09, 110 and 111 all sample the
+     It costs less than the fills it argues with. 09 and 111 both sample the
      pointer; this one is a clip-path against a fixed point, so there is no
      listener and no per-entry measurement at all. */
   .j-plus{
@@ -9157,11 +9202,30 @@ document.addEventListener("DOMContentLoaded", function () {
   // Both halves read the crossing rather than the event: the card promises the
   // EXACT point on the way in and the place you left on the way out, and a
   // sample 23px inside the plate is neither.
+  // The farthest point of the PLATE from (x,y) — not of its bounding rect.
+  // A rounded rect's outline is the inset rect grown by the corner radius, so
+  // the farthest point on it is the farthest INSET corner plus that radius.
+  // getComputedStyle reports the AUTHORED length (999px), never the used one,
+  // so the clamp to half the shorter side has to be done here or every plate
+  // measures the same absurd radius.
+  function plateReach(btn, box, x, y){
+    var rr = parseFloat(getComputedStyle(btn).borderTopLeftRadius) || 0;
+    rr = Math.min(rr, box.width / 2, box.height / 2);
+    var ix = box.width - rr, iy = box.height - rr;
+    return rr + Math.max(
+      Math.hypot(x - rr, y - rr),  Math.hypot(x - ix, y - rr),
+      Math.hypot(x - rr, y - iy),  Math.hypot(x - ix, y - iy));
+  }
+
   document.querySelectorAll('.inkfill').forEach(function(b){
     function set(e){
       var r = b.getBoundingClientRect(), c = crossedPoint(b, e);
-      b.style.setProperty('--x', (c.x - r.left) + 'px');
-      b.style.setProperty('--y', (c.y - r.top) + 'px');
+      var x = c.x - r.left, y = c.y - r.top;
+      b.style.setProperty('--x', x + 'px');
+      b.style.setProperty('--y', y + 'px');
+      // Ceil, not round: half a pixel short leaves a lit hairline in the cap at
+      // the exact moment the fill is meant to be complete.
+      b.style.setProperty('--i-r', Math.ceil(plateReach(b, r, x, y)) + 'px');
     }
     b.addEventListener('pointerenter', set);
     b.addEventListener('pointerleave', set);
@@ -9439,7 +9503,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -9448,7 +9512,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -9457,6 +9521,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Toolbar: tags are read from each card's chips at runtime, so the filter
   // works on every card regardless of which section it came from.
   (function(){
+    // ⚠️ These keys are Swedish and 'bhl-theme' is not. Inconsistent on
+    // purpose from here on: renaming any of them silently discards every
+    // existing reader's stars, order, colours and panel state, because a
+    // renamed key reads as absent rather than as an error. If they are ever
+    // unified it needs a read-old / write-new migration, not a replace.
     var KEY  = 'knapplabbet-favoriter';       // the old scheme: display numbers
     var FKEY = 'knapplabbet-favoriter-key';   // the current one: effect keys
     var cards = [].slice.call(document.querySelectorAll('.spec'));
@@ -10791,6 +10860,34 @@ document.addEventListener("DOMContentLoaded", function () {
       // every other search box on the web does.
       qEl.addEventListener('keydown', function(e){
         if (e.key === 'Escape' && qEl.value){ qEl.value = ''; state.q = ''; apply(); }
+      });
+      // ⌘K / Ctrl-K. The hint chip beside the field promises this, so it has
+      // to exist — a shortcut drawn and not bound is worse than no shortcut.
+      // The chip's text is written here too rather than in the markup, because
+      // the modifier is the reader's platform and not the page's.
+      var mac = /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
+      var kEl = document.querySelector('.rail-k');
+      if (kEl && !mac) kEl.textContent = 'Ctrl K';
+      addEventListener('keydown', function(e){
+        if (e.key !== 'k' && e.key !== 'K') return;
+        if (!(mac ? e.metaKey : e.ctrlKey) || e.altKey || e.shiftKey) return;
+        // Never steal the key from something the reader is already typing in.
+        var a = document.activeElement;
+        if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' ||
+                  a.isContentEditable) && a !== qEl) return;
+        e.preventDefault();
+        // The field can be inside a panel that is folded away or, below 1360,
+        // inside one that has never been opened. Open it first, then focus:
+        // focusing a translated panel scrolls the page to nowhere.
+        if (document.body.dataset.rail === 'off'){
+          var show = document.querySelector('.rail-show');
+          if (show) show.click();
+        }
+        var tog = document.querySelector('.rail-toggle');
+        if (tog && tog.offsetParent !== null &&
+            tog.getAttribute('aria-expanded') !== 'true') tog.click();
+        qEl.focus();
+        qEl.select();
       });
     }
     // ---- The left wall folds ------------------------------------------
@@ -12685,10 +12782,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 

@@ -149,7 +149,6 @@ const ORDER_OF = {
     // Liquid: it spreads from the point of contact.
     'Ink fill',
     'Liquid fill',
-    'Measured ripple',
     'Press fill',
     'The plus is the source',
 
