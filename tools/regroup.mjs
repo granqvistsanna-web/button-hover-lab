@@ -242,7 +242,6 @@ const ORDER_OF = {
 
     // Marks that redraw themselves.
     'Mark walk',
-    'Mark hinge',
     'Mark tuck',
     'Buds a mark',
     'Plus to X',

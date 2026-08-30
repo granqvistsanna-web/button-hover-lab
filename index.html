@@ -138,16 +138,18 @@
     --pair-gap: 5px;
     /* A third curve, and the only one that leaves the 0-1 range. Card 54's
        wind-up dips BELOW zero inline; this is the same admission at the other
-       end, and it reopens a question this page had closed — a damped
-       spring written as a linear() curve, taken out because a sliding dash has
-       no mass to justify it. A hinge does: hardware that swings about a fixed
-       pin arrives at a stop, and overrunning it by a couple of degrees is what
-       a stop looks like. It is a token and not an inline curve because three
-       easings is still a vocabulary and four one-offs is not. Peak is 1.058 at
-       63% of the duration, so a -34deg swing overruns to -36deg. It belongs on
-       the OPENING only, for card 54's reason: the stop is at 0deg, and a hinge
-       that overshoots as it closes has swung through the plate it is fixed
-       to. */
+       end. It is a token and not an inline curve because three easings is still
+       a vocabulary and four one-offs is not. Peak is 1.058 at 63% of the
+       duration, which on a small displacement is a pop rather than a bounce.
+
+       ⚠️ ONE USER LEFT, and the argument that justified the token is not the
+       one that is still using it. It was written for a hinge — hardware
+       swinging about a fixed pin, overrunning its stop by a couple of degrees —
+       and that card was cut on 2026-08-30. What survives is card 85's eye-pop,
+       where the overrun is a lid opening past its own travel. Same rule either
+       way: it belongs on the OPENING only, for card 54's reason. The rest side
+       is quint, because a thing overshooting on the way back has passed through
+       the surface it is fixed to. */
     --e-back: cubic-bezier(0.34, 1.42, 0.64, 1);
   }
 
@@ -1009,6 +1011,17 @@
   .set-grp:last-of-type{margin-right:0}
   .set-grp .tools-lbl{color:var(--ink-mid); margin-right:-2px}
   .set-grp .set-cap{font-size:10px; letter-spacing:.1em; font-weight:500}
+  /* A readout that is also a control, so it looks like the version chips
+     rather than like the static numbers beside the swatches. */
+  .set-uses{
+    font:400 10.5px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
+    padding:5px 8px; margin-left:2px; cursor:pointer; white-space:nowrap;
+    transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+  }
+  .set-uses:hover{color:var(--ink-hi); background:var(--bg-2)}
+  .set-uses[aria-pressed="true"]{color:var(--ink-hi); background:var(--bg-3)}
+  .set-uses:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .set-pair{display:inline-flex; align-items:center; gap:2px}
   .set-lab{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
   .set-cap{font-size:11px; font-weight:600; letter-spacing:.14em;
@@ -1626,6 +1639,10 @@
           <button type="button" class="set-clear" data-clear="hover" hidden
                   aria-label="Clear Button colour that arrives on hover">&#10005;</button>
         </div>
+        <!-- Written by the page, never typed: the count of studies whose own
+             CSS reads --ink-hover. It is the answer to «when does the hover
+             colour apply», and pressing it shows exactly those. -->
+        <button type="button" class="set-uses" aria-pressed="false" hidden></button>
       </div>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
@@ -2358,14 +2375,6 @@
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="p-hinge" data-versions="built" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn p-hinge"><span class="p-hinge-row"><span class="p-hinge-plate">Book a call</span><span class="p-hinge-mark"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></button>
-      </div>
-      <h3><span class="num">70</span>Mark hinge</h3>
-      <p>It pivots on the seam rather than sliding along it, so it reads as hardware fixed to the plate. It overruns two degrees on the way open, the way a hinge reaches a stop &mdash; the one study leaving the plane.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
 
     <article class="spec" data-key="p-bud" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
       <div class="stage">
@@ -2386,7 +2395,7 @@
         <button type="button" class="btn btn--line w-redraw"><span class="lbl">Change the mark</span><span class="w-redraw-box" aria-hidden="true"><span class="w-redraw-cell w-redraw-n"></span><span class="w-redraw-cell w-redraw-w"></span><span class="w-redraw-cell w-redraw-c"></span><span class="w-redraw-cell w-redraw-e"></span><span class="w-redraw-cell w-redraw-s"></span></span></button>
       </div>
       <h3><span class="num">100</span>Plus to X</h3>
-      <p>A plus becomes an X without passing through a single angle: four cells step one place around the centre, 26ms apart, and the fifth is already where it needs to be. Card 70 hinges the mark; this one redraws it.</p>
+      <p>A plus becomes an X without passing through a single angle: four cells step one place around the centre, 26ms apart, and the fifth is already where it needs to be. Nothing rotates; the mark is redrawn.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -2468,7 +2477,7 @@
         <button type="button" class="btn btn--line v-inner"><span class="lbl">Press to arm</span></button>
       </div>
       <h3><span class="num">05</span>Inner light</h3>
-      <p>The press fills the plate with its own light instead of pushing it down. Card 43 answers the press with depth; this answers it with energy, the other thing a physical control does when you close it.</p>
+      <p>Light gathers along the bottom edge on hover and floods the whole plate on the press, instead of the plate pushing down. Card 43 answers the press with depth; this answers it with energy, the other thing a physical control does when you close it.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -5466,10 +5475,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
      There is no piece that vacates first, since each one is heading for the slot
      the other is still standing in. So they must overlap — two boxes trading
-     places along one axis cannot avoid each other — and the z-order stops being
-     the effect and becomes a tie-break. The mark stays on top. Underneath, it
-     would disappear behind the plate and reappear on the far side, which would
-     be a tuck behind the plate and not this.
+     places along one axis cannot avoid each other — and the z-order is the only
+     thing that decides what you see while they do.
+
+     🔑 THE MARK NOW GOES UNDER, AND THAT IS THE CARD'S SECOND ARGUMENT REVERSED.
+     It used to ride on top, and the note here defended that: underneath, it
+     said, the disc «would disappear behind the plate and reappear on the far
+     side, which would be a tuck behind the plate and not this». Watched, on top
+     is the worse of the two. A 46px disc of solid ink sliding across a label
+     covers the words for most of the crossing, and what you follow is a lozenge
+     travelling over type rather than two pieces changing places. Underneath,
+     the disc is visible in the slot it leaves, hidden for the crossing, and
+     visible again in the slot it takes — and because the plate is 142px wide
+     against the disc's 46, it really is hidden rather than dimmed.
+
+     THE TUCK IS THE POINT NOW, not the objection to it. Card 92 could not do
+     this: it crosses a BARE LABEL, so there is nothing to hide behind and it
+     has to crossfade two copies of its glyph instead. This card crosses a solid
+     plate, and the cheapest honest answer to «do not show me the mark mid-flight»
+     is to put the plate in front of it. Nothing was added to get it: one z-index
+     each, swapped.
 
      THEY DO NOT SHARE A DURATION, and that is this pass's correction — card
      92's correction, applied to the card that took 92's split and then kept the
@@ -5515,9 +5540,9 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-walk .p-walk-plate,
   .p-walk .p-walk-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px;
     position:relative; transform:translateX(0)}
-  .p-walk .p-walk-plate{padding:15px 26px; z-index:0;
+  .p-walk .p-walk-plate{padding:15px 26px; z-index:1;
     transition:transform var(--t-3) var(--e-quint)}
-  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px; z-index:1;
+  .p-walk .p-walk-mark{display:grid; place-items:center; width:46px; z-index:0;
     transition:transform var(--t-5) var(--e-quint)}
   .p-walk.p-is-set:hover .p-walk-mark,
   .p-walk.p-is-set:focus-visible .p-walk-mark{transform:translateX(var(--p-walk-x,0px))}
@@ -5654,125 +5679,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-cycle.p-cycle-run.p-cycle-b .p-cycle-lbl>span:first-child{
     animation-name:p-cycle-lbl-enter; animation-delay:var(--d-1)}
 
-  /* 70 Mark hinge — the only card on the page that leaves the plane.
-     transform-origin sits on the seam edge, so the mark pivots about the line
-     card 93 spends its hover erasing. backface-visibility because a
-     34-degree tip on a 46px plate is close enough to the edge to flicker
-     without it.
 
-     THE OPENING BOUNCES, AND --e-back WAS NOT ENOUGH OF ONE. That token peaks
-     at 1.058, so a 34-degree swing overran to 36 and settled — two degrees is a
-     stop being met, not a stop being hit, and at 46px across it is under a
-     pixel of travel at the far edge. This card is the one thing on the page
-     with a pin and a mass behind it, and the head of the token vocabulary says
-     so in as many words: a damped spring was taken out of the page because a
-     sliding dash has no mass to justify one, and «a hinge does». So the hinge
-     gets it, as a card-local linear() and NOT as a change to --e-back — that
-     token is also card 85's eye-pop, which is signed off and must not move
-     underneath itself. Traced at 8ms on the live page: three decaying
-     overshoots, −39.1deg, then back to −31.7, then −34.6, settling on −34.0.
-     The first bounce is 5.1 degrees past the stop where it was 2.
-
-     THE CLOSE keeps --e-quint, exactly as card 54 keeps the plain curve on the
-     way out: the stop is at 0deg and it is the plate, so a hinge cannot
-     overshoot shut. Only the timing function is stated on the hover side, so
-     the duration still falls a rung on the exit like everything else.
-
-     THE FACE DARKENS AS IT TURNS AWAY, which is the other half of leaving the
-     plane: a surface rotating out of the light gives some of it up. It is the
-     same colour move card 11 makes under its plate — a mix of --ink toward
-     --bg, no new token. --t-3 rather than the swing's --t-4, so the shade has
-     settled by the time the bounce is still deciding where to stop.
-
-     THE PLATE ANSWERS TOO, AND IT IS A DIFFERENT MATERIAL. A hinge with a dead
-     body is a flap on a wall; what makes it hardware is that the thing it is
-     pinned to takes the load. So the plate recoils 4px away from the seam and
-     mixes 8% toward --bg while the mark mixes 18% — TWO DEPTHS, not one shade
-     applied twice, and the ordering is the point: the piece that turned furthest
-     out of the light gives up the most of it.
-
-     The flap gets a DAMPED SPRING and the plate an ELASTIC one, on purpose.
-     They are not the same event. The flap meets a stop: it overshoots, comes
-     back and settles. The plate is absorbing a push: it overruns by a third of
-     its own travel, comes back past its rest position, and rings out. One curve
-     on both would have made the plate a smaller copy of the flap instead of the
-     thing the flap is fixed to.
-
-     ⚠️ BOTH CURVES WERE DRAWN BY HAND, AND THIS PASS DERIVES THEM INSTEAD.
-     They were tuned by eye until the trace looked right, which is how you get a
-     shape nobody can defend a single control point of. Apple's argument, and it
-     is the right one: state a spring as DAMPING RATIO and RESPONSE — two numbers
-     a person can reason about — and let the curve be the solution, not the
-     design. The two shapes barely moved (the flap's peak went 1.15 to 1.166,
-     the plate's 1.32 to 1.316) and that is the point: the same feel, now with a
-     derivation behind every stop. The parameters are at the top of the rule.
-
-     THE CLOSE IS A SPRING TOO NOW, critically damped, and that is a second
-     correction. It kept --e-quint, so the card sprang open and eased shut —
-     two different materials on the way out and the way back, for one hinge.
-     Mirrored, the return is the same spring with the bounce taken out, one
-     response-notch quicker, which is the page's «exit one rung down» said in
-     the spring's own parameter instead of the ladder's.
-
-     Every curve is card-local and NOT a change to --e-back, which is also card
-     85's eye-pop and is signed off. */
-  .p-hinge{padding:0; background:none; border:0; border-radius:999px;
-    /* DAMPING RATIO AND RESPONSE, and the curves below are what they solve to.
-       Response is the natural period in seconds, not a duration: a spring has
-       no duration, it has a settle time that falls out of the two numbers. The
-       durations here ARE those settle times, which is why they are off the
-       ladder — 600 and 700 are not rungs anybody chose.
-         flap  zeta 0.50, response 0.40s  ->  peak 1.166 at 231ms, settled 600
-         body  zeta 0.35, response 0.35s  ->  peak 1.316 at 188ms, settled 700
-         close zeta 1.00, response 0.30s  ->  no overshoot, settled 420        */
-    --h-flap-t:600ms; --h-body-t:700ms; --h-close-t:420ms;
-    --h-flap:linear(0, 0.0579 4%, 0.2012 8%, 0.3882 12%, 0.5853 15%, 0.768 19%, 0.9206 23%,
-             1.0357 27%, 1.1122 31%, 1.1534 35%, 1.1656 38%, 1.1563 42%, 1.133 46%,
-             1.1026 50%, 1.0704 54%, 1.0406 58%, 1.0157 62%, 0.9969 65%, 0.9844 69%,
-             0.9776 73%, 0.9756 77%, 0.9771 81%, 0.9809 85%, 0.9858 88%, 0.9911 92%,
-             0.9959 96%, 1);
-    --h-body:linear(0, 0.1032 4%, 0.3522 8%, 0.6566 12%, 0.9415 15%, 1.157 19%, 1.2812 23%,
-             1.3161 27%, 1.2806 31%, 1.2018 35%, 1.1074 38%, 1.0203 42%, 0.9553 46%,
-             0.9187 50%, 0.9094 54%, 0.9215 58%, 0.9464 62%, 0.9756 65%, 1.0022 69%,
-             1.0218 73%, 1.0326 77%, 1.035 81%, 1.0309 85%, 1.0231 88%, 1.014 92%,
-             1.0059 96%, 1);
-    /* Critically damped. Used for BOTH closes — a hinge cannot overshoot shut,
-       because the stop on the way back is the plate it is pinned to — and for
-       every colour channel, because there is nothing past a colour to overshoot
-       into and a mix over 100% is not a value. */
-    --h-settle:linear(0, 0.0459 4%, 0.1479 8%, 0.2702 12%, 0.3925 15%, 0.5049 19%, 0.6029 23%,
-             0.6856 27%, 0.7537 31%, 0.8087 35%, 0.8525 38%, 0.8871 42%, 0.9141 46%,
-             0.935 50%, 0.9511 54%, 0.9634 58%, 0.9729 62%, 0.98 65%, 0.9854 69%,
-             0.9895 73%, 0.9925 77%, 0.9948 81%, 0.9965 85%, 0.9978 88%, 0.9988 92%,
-             0.9995 96%, 1)}
-  .p-hinge .p-hinge-row{display:inline-flex; align-items:stretch; gap:var(--pair-gap); perspective:520px}
-  .p-hinge .p-hinge-plate,
-  .p-hinge .p-hinge-mark{background:var(--ink); color:var(--ink-on-fill); border-radius:999px}
-
-  /* THE SHADE RIDES THE SAME CLOCK AS THE MOVEMENT, which is the correction
-     this pass makes to both pieces. It used to run --t-3 against a swing on
-     --t-4 and then on a 600ms spring: two clocks inside one event, so the
-     surface finished turning colour while it was still turning. One duration
-     per piece, two curves — the motion bounces, the colour settles. */
-  .p-hinge .p-hinge-plate{padding:15px 26px; translate:0;
-    background-color:var(--ink);
-    transition:translate var(--h-close-t) var(--h-settle),
-               background-color var(--h-close-t) var(--h-settle)}
-  .p-hinge:hover .p-hinge-plate,
-  .p-hinge:focus-visible .p-hinge-plate{translate:-4px;
-    background-color:color-mix(in srgb, var(--ink) 92%, var(--bg));
-    transition-duration:var(--h-body-t);
-    transition-timing-function:var(--h-body), var(--h-settle)}
-  .p-hinge .p-hinge-mark{display:grid; place-items:center; width:46px;
-    transform-origin:left center; transform:rotateY(0deg); backface-visibility:hidden;
-    background-color:var(--ink);
-    transition:transform var(--h-close-t) var(--h-settle),
-               background-color var(--h-close-t) var(--h-settle)}
-  .p-hinge:hover .p-hinge-mark,
-  .p-hinge:focus-visible .p-hinge-mark{transform:rotateY(-34deg);
-    background-color:color-mix(in srgb, var(--ink) 82%, var(--bg));
-    transition-duration:var(--h-flap-t);
-    transition-timing-function:var(--h-flap), var(--h-settle)}
 </style>
 
 
@@ -7217,13 +7124,34 @@ document.addEventListener("DOMContentLoaded", function () {
      answers it with energy, which is the other thing a physical control does
      when you close it — an inset bloom, brightest at the boundary, so the plate
      reads as lit rather than as moved.
-     It is the one card here that spends its whole effect on :active. The hover
-     only arms it: a hairline that brightens, so the plate says it is live
-     before it says it is pressed. */
+     It is the one card here whose EVENT is the press. The hover arms it, and
+     that arm is now two things and not one: the hairline brightens, and light
+     gathers along the bottom edge — a third of the flood's reach at a third of
+     its alpha. It was only the hairline before and it read as inert beside a
+     press that fills the whole plate; a card whose hover does almost nothing
+     is not restraint, it is a card with one state fewer than it claims. The
+     three states are now a sentence with a middle: dark, charged, lit. */
+  /* TWO SHADOW LAYERS IN EVERY STATE, and that is not decoration — it is the
+     only way the three states interpolate. A box-shadow list only animates
+     between lists of the SAME LENGTH; one layer at rest against two on hover
+     does not tween, it cuts. So both layers are declared everywhere and the
+     ones that are not wanted yet are declared at zero alpha.
+
+     Layer 1 is the POOL: an inset glow pushed up from the bottom edge with a
+     negative spread, so it hugs the lower boundary instead of filling. Layer 2
+     is the FLOOD: a plain centred inset bloom. The hover pools, the press
+     floods, and the pool goes down as the flood comes up — which is the same
+     sentence the card always made, now with a middle. */
   .btn.v-inner{
     border-color:var(--line-ctl);
-    box-shadow:inset 0 0 0 0 rgba(255,255,255,0);
-    transition:box-shadow var(--t-2) var(--e-out), border-color var(--t-3) ease;
+    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,0),
+               inset 0 0 0 0 rgba(255,255,255,0);
+    /* --e-out on both channels. It used to run the colour on a bare `ease`
+       beside --e-out on the shadow: two curves inside one effect, which is what
+       card 57's note calls «against the first rule of the doctrine». --t-3 and
+       not --t-2 on the shadow, because the arm is a gathering and the press is
+       the event — the flood keeps --t-1 below. */
+    transition:box-shadow var(--t-3) var(--e-out), border-color var(--t-3) var(--e-out);
   }
   /* The arm is per version, and it has to be. Measured before it was believed:
      the hover changed ZERO pixels — not «barely», none. .btn--line already
@@ -7238,8 +7166,17 @@ document.addEventListener("DOMContentLoaded", function () {
      units. That one is a design decision about the study, not about its
      versions. */
   .btn.v-inner.btn--line{border-color:var(--line-ctl)}
+  /* The arm was ONE hairline and nothing else, and it read as inert next to a
+     press that floods the whole plate. It keeps the hairline and gains the
+     pool: light gathering along the bottom edge, a third of the flood's reach
+     at a third of its alpha, so the plate is visibly charged before it is
+     visibly lit. Bottom and not centred, because a filament warms from where it
+     is fixed — and because a centred glow at this strength is just a dimmer
+     copy of the press. */
   .btn.v-inner.btn--line:hover,
-  .btn.v-inner.btn--line:focus-visible{border-color:var(--ink-hover)}
+  .btn.v-inner.btn--line:focus-visible{border-color:var(--ink-hover);
+    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,.24),
+               inset 0 0 7px 0 rgba(255,255,255,.07)}
   /* And the fill version inverts, because a white plate cannot be lit brighter:
      --ink IS the plate, and an inset white glow on it measures four units. So
      the arm is the same statement — «the edge is live» — in the only ink the
@@ -7249,14 +7186,35 @@ document.addEventListener("DOMContentLoaded", function () {
      press. */
   .btn.v-inner.btn--solid:hover,
   .btn.v-inner.btn--solid:focus-visible{
-    box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--on-ink) 20%, transparent);
+    box-shadow:inset 0 -7px 11px -7px color-mix(in srgb, var(--on-ink) 26%, transparent),
+               inset 0 0 0 1px color-mix(in srgb, var(--on-ink) 20%, transparent);
   }
+  /* The pool does not vanish at the press, it is OVERTAKEN: it drops to a
+     quarter of its hover alpha while the flood comes up, so the light reads as
+     moving inward from the edge rather than as one glow being swapped for
+     another. */
   .btn.v-inner.btn--solid:active{
-    box-shadow:inset 0 0 18px 0 color-mix(in srgb, var(--on-ink) 24%, transparent);
+    box-shadow:inset 0 -7px 11px -7px color-mix(in srgb, var(--on-ink) 7%, transparent),
+               inset 0 0 18px 0 color-mix(in srgb, var(--on-ink) 24%, transparent);
     transition-duration:var(--t-1);
   }
   .btn.v-inner:active{
-    box-shadow:inset 0 0 18px 0 rgba(255,255,255,.30);
+    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,.06),
+               inset 0 0 18px 0 rgba(255,255,255,.30);
+    transition-duration:var(--t-1);
+  }
+  /* ⚠️ AND THE OUTLINE VERSION NEEDS ITS OWN PRESS, for exactly the reason the
+     fill version's note gives one rule up — a reason that only started applying
+     when the arm gained a shadow. While the hover was a bare border-color it
+     could not collide with the press: different property, no contest. Now that
+     it carries a box-shadow, .btn.v-inner.btn--line:hover is four classes deep
+     against .btn.v-inner:active's three, so the ARM WON AND THE PRESS DID
+     NOTHING. Measured, not reasoned: forcing :hover:active returned the hover's
+     own shadow, byte for byte. Equal specificity here, so it is source order
+     that settles it, which is why this sits below the hover and not above. */
+  .btn.v-inner.btn--line:active{
+    box-shadow:inset 0 -7px 11px -7px rgba(255,255,255,.06),
+               inset 0 0 18px 0 rgba(255,255,255,.30);
     transition-duration:var(--t-1);
   }
 </style>
@@ -9002,7 +8960,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-hinge":"moves tone|hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-reach":"moves fades tone seq|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","l-corner":"moves fades shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -9011,7 +8969,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-hinge":"70","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-reach":"110","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","l-corner":"48","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -9107,7 +9065,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var countEl = document.querySelector('.tools-count');
     var favBtn  = document.querySelector('.fav-only');
     var reset   = document.querySelector('.tools-reset');
-    var state   = {fav:false, q:'', changes:[], answers:[]};
+    var state   = {fav:false, q:'', changes:[], answers:[], hoverInk:false};
 
     function load(name){
       // `|| []` only catches null. Anything else valid JSON — an object, a
@@ -9362,6 +9320,7 @@ document.addEventListener("DOMContentLoaded", function () {
         : shown + ' of ' + cards.length;
       var filtered = state.fav || document.documentElement.dataset.vTreat
                   || state.q || state.changes.length || state.answers.length
+                  || state.hoverInk
                   || look.text || look.accent || look.hover || look.radius !== PILL
                   || sortNow !== 'grouped';
       reset.hidden = !filtered;
@@ -9794,7 +9753,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener('bhl:version', function(){ apply(); });
 
     reset.addEventListener('click', function(){
-      state = {fav:false, q:'', changes:[], answers:[]};
+      state = {fav:false, q:'', changes:[], answers:[], hoverInk:false};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
       look  = {text:'', textHover:'', accent:'', hover:'', radius:PILL};
@@ -9803,6 +9762,8 @@ document.addEventListener("DOMContentLoaded", function () {
       markPreset();   // …and Graphite is what «no override» is called
       saveLook();
       favBtn.setAttribute('aria-pressed', 'false');
+      var uses = document.querySelector('.set-uses');
+      if (uses) uses.setAttribute('aria-pressed', 'false');
       // And the version, for the same reason — it is literally the control
       // whose default is called «As built». Clicked rather than set, so the
       // aria-checked state, the roving tabindex and the re-render all happen
@@ -10091,6 +10052,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // what a reader means by it — and the groups are an AND with each other.
     function passes(card, skip){
       if (state.fav && favs.indexOf(card.dataset.key) < 0) return false;
+      /* «I don't see the hover colour» — because on 65 of the 93 studies there
+         is nothing for it to colour. This page is mostly about MOTION: the
+         hover moves a plate, draws a line, rolls a label. Only 28 studies
+         actually paint with --ink-hover, and until the toolbar said so the
+         swatch looked broken to anyone who happened to be looking at one of
+         the other 65. The readout names the number and this filters to them. */
+      if (state.hoverInk && !card.hasAttribute('data-hover-ink')) return false;
       /* The VERSION control filters, and this is the whole of it.
 
          It used to only re-render: picking «Link» set every study that owns a
@@ -10392,6 +10360,72 @@ document.addEventListener("DOMContentLoaded", function () {
     })();
     buildRail();
     spy();
+
+    // ---- Which studies actually paint with the hover colour -------------
+    // «I don't see the hover colour in action» — and the swatch was innocent.
+    // Sixty-five of the ninety-three studies hover by MOVING something: a
+    // plate rises, a line draws, a label rolls. There is nothing on them for
+    // --ink-hover to reach, so the picker looked broken to anyone standing on
+    // one of those. The page can answer that itself, by reading the same
+    // stylesheets the studies are written in.
+    //
+    // ⚠️ A CSSStyleRule in a browser with nesting ALSO carries a cssRules
+    // list, usually empty. `if (r.cssRules) { walk(r.cssRules); continue }` is
+    // therefore true of every ordinary rule, and this walk returned 0 of a
+    // known 40. Check the rule's OWN declarations first, and recurse only on a
+    // group that actually has children. The @keyframes half of the same trap
+    // is in tools/facet-manifest.mjs: a keyframes rule has a `name` and no
+    // `selectorText`, and its children cannot be matched against the DOM.
+    (function(){
+      var sels = [];
+      function walk(rules){
+        for (var i = 0; i < rules.length; i++){
+          var r = rules[i];
+          if (r.selectorText && r.style){
+            var t = r.style.cssText;
+            if (t.indexOf('--ink-hover') > -1 || t.indexOf('--on-ink-hover') > -1) sels.push(r.selectorText);
+          }
+          if (r.cssRules && r.cssRules.length && !(r.name && !r.selectorText)) walk(r.cssRules);
+        }
+      }
+      for (var i = 0; i < document.styleSheets.length; i++){
+        // A cross-origin sheet throws on .cssRules. tokens.css is served from
+        // another origin, and it holds no study rules, so skipping it is right.
+        try { walk(document.styleSheets[i].cssRules); } catch(e){}
+      }
+      // The selectors have to be matched against a DOM at rest, so the state
+      // pseudos come off. :focus-visible counts as arriving: this page pairs
+      // it with :hover everywhere, and a keyboard reader gets the same colour.
+      var q = [];
+      sels.forEach(function(sel){
+        sel.split(',').forEach(function(part){
+          var one = part.replace(/::?(hover|focus-visible|focus|active|before|after|first-line|placeholder)\b/g, '')
+                        .replace(/:is\(\s*\)/g, '').replace(/\s+/g, ' ').trim();
+          if (one && q.indexOf(one) < 0) q.push(one);
+        });
+      });
+      var all = document.querySelectorAll('.spec'), n = 0;
+      [].forEach.call(all, function(card){
+        var on = q.some(function(sel){
+          try { return !!card.querySelector(sel); } catch(e){ return false; }
+        });
+        if (on){ card.setAttribute('data-hover-ink', ''); n++; }
+      });
+      var btn = document.querySelector('.set-uses');
+      if (!btn) return;
+      // Never a hand-typed number — the same rule the lede's count follows.
+      btn.textContent = n + ' of ' + all.length + ' react';
+      btn.title = 'Only these studies paint with the hover colour. The rest hover by '
+                + 'moving something — a plate, a line, a label — so there is nothing on '
+                + 'them for it to reach. Press to show just the ' + n + '.';
+      btn.setAttribute('aria-label', 'Show only the ' + n + ' studies that use the hover colour');
+      btn.hidden = n === 0;
+      btn.addEventListener('click', function(){
+        state.hoverInk = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', state.hoverInk ? 'true' : 'false');
+        apply();
+      });
+    })();
 
     paint();
     // A restored look may be exactly a palette, so the chip says so on arrival
@@ -12036,10 +12070,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","70":"https://framer.com/m/MarkHinge-UBCtBT.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","110":"https://framer.com/m/MeasuredRipple-b5XOMp.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","48":"https://framer.com/m/ContinuousCorners-Mfkc9u.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","70":"60df677dd1cf4e68","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","110":"ba580341333e97c3","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","48":"ea0b767a55948f57","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 
