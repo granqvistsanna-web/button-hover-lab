@@ -996,6 +996,19 @@
      label, which is invalid, and which is why clearing a role needed a
      preventDefault to stop the picker opening on the way past. The button is
      a sibling of the label now and the hack came out with it. */
+  /* A group is its heading plus its two states. The heading is the only thing
+     that tells «Default» and «Hover» apart — there are two of each on the row
+     — so it sits with them and not in the row's own gap.
+     It also has to OUTRANK them. Drawn at the caption's own weight and colour,
+     «TEXT DEFAULT ✕ HOVER ✕ BUTTON DEFAULT ✕ HOVER ✕» is one run of eight
+     words with no shape: the heading goes a step up in ink and the state
+     captions a step down, so the row reads as two things with two states and
+     not as a sentence. The gap between groups is twice the gap inside one,
+     for the same reason. */
+  .set-grp{display:inline-flex; align-items:center; gap:10px; margin-right:12px}
+  .set-grp:last-of-type{margin-right:0}
+  .set-grp .tools-lbl{color:var(--ink-mid); margin-right:-2px}
+  .set-grp .set-cap{font-size:10px; letter-spacing:.1em; font-weight:500}
   .set-pair{display:inline-flex; align-items:center; gap:2px}
   .set-lab{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
   .set-cap{font-size:11px; font-weight:600; letter-spacing:.14em;
@@ -1560,36 +1573,59 @@
   </header>
 
   <div class="tools" role="group" aria-label="Restyle the studies">
+    <!-- Two questions, two swatches each. It used to be three swatches on one
+         line — Text, Accent, Hover — which is a mix of one TEXT role and two
+         SURFACE roles, and it hid the fourth setting entirely: the colour of
+         the label once the hover fill has arrived under it was computed and
+         could not be chosen. A button has two parts and two states, so the
+         control is the 2×2 that actually describes it, and every cell is a
+         colour someone can pick rather than three picks and one derivation. -->
     <div class="tools-row">
-      <div class="set-pair">
-        <label class="set-lab">
-          <span class="set-cap" data-cap="text">Text</span>
-          <input class="set-swatch" type="color" data-set="text" value="#ffffff"
-                 aria-label="Label text colour, applied to every study"
-                 aria-describedby="set-contrast">
-        </label>
-        <button type="button" class="set-clear" data-clear="text" hidden
-                aria-label="Clear Text, so it follows the colour above it again">&#10005;</button>
+      <div class="set-grp">
+        <span class="tools-lbl">Text</span>
+        <div class="set-pair">
+          <label class="set-lab">
+            <span class="set-cap" data-cap="text">Default</span>
+            <input class="set-swatch" type="color" data-set="text" value="#ffffff"
+                   aria-label="Label colour at rest"
+                   aria-describedby="set-contrast">
+          </label>
+          <button type="button" class="set-clear" data-clear="text" hidden
+                  aria-label="Clear Label colour at rest">&#10005;</button>
+        </div>
+        <div class="set-pair">
+          <label class="set-lab">
+            <span class="set-cap" data-cap="textHover">Hover</span>
+            <input class="set-swatch" type="color" data-set="textHover" value="#ffffff"
+                   aria-label="Label colour once the hover fill has arrived"
+                   aria-describedby="set-contrast">
+          </label>
+          <button type="button" class="set-clear" data-clear="textHover" hidden
+                  aria-label="Clear Label colour once the hover fill has arrived">&#10005;</button>
+        </div>
       </div>
-      <div class="set-pair">
-        <label class="set-lab">
-          <span class="set-cap" data-cap="accent">Accent</span>
-          <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
-                 aria-label="Fill and mark colour, applied to every study"
-                 aria-describedby="set-contrast">
-        </label>
-        <button type="button" class="set-clear" data-clear="accent" hidden
-                aria-label="Clear Accent, so it follows the colour above it again">&#10005;</button>
-      </div>
-      <div class="set-pair">
-        <label class="set-lab">
-          <span class="set-cap" data-cap="hover">Hover</span>
-          <input class="set-swatch" type="color" data-set="hover" value="#ffffff"
-                 aria-label="The colour that arrives on hover, applied to every study"
-                 aria-describedby="set-contrast">
-        </label>
-        <button type="button" class="set-clear" data-clear="hover" hidden
-                aria-label="Clear Hover, so it follows the colour above it again">&#10005;</button>
+      <div class="set-grp">
+        <span class="tools-lbl">Button</span>
+        <div class="set-pair">
+          <label class="set-lab">
+            <span class="set-cap" data-cap="accent">Default</span>
+            <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
+                   aria-label="Button fill and mark colour at rest"
+                   aria-describedby="set-contrast">
+          </label>
+          <button type="button" class="set-clear" data-clear="accent" hidden
+                  aria-label="Clear Button fill and mark colour at rest">&#10005;</button>
+        </div>
+        <div class="set-pair">
+          <label class="set-lab">
+            <span class="set-cap" data-cap="hover">Hover</span>
+            <input class="set-swatch" type="color" data-set="hover" value="#ffffff"
+                   aria-label="Button colour that arrives on hover"
+                   aria-describedby="set-contrast">
+          </label>
+          <button type="button" class="set-clear" data-clear="hover" hidden
+                  aria-label="Clear Button colour that arrives on hover">&#10005;</button>
+        </div>
       </div>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
@@ -1606,31 +1642,34 @@
          overridden — which is also the only place the page says out loud that
          white means «follow the system» rather than «the colour white».
 
-         Every palette sets all THREE roles, and the shape is the same each
-         time: a light tint for the label so it reads on the dark card, a DEEP
-         shade at rest, and a BRIGHT one on hover. Leaving the label unset was
-         tried first and is why the buttons kept their white text under a
-         palette — the fill went amber and the word on it did not. And rest and
-         hover a step apart on the same hue made the arrival almost invisible,
-         which is the one thing a page of hover studies cannot afford: deep to
-         bright is a change you can see across a card at arm's length.
-         The label flipping dark on the bright hover is not a fault — that is
-         --on-ink-hover doing the job it exists for, and it is now reported. -->
+         Every palette sets all FOUR cells, and the shape is the same each
+         time: a saturated brand colour at rest, a PALE tint of it on hover, a
+         light tint for the label so it reads on the dark card, and a deep
+         shade for the label once that pale fill is under it.
+         Leaving the label unset was tried first and is why the buttons kept
+         their white text under a palette — the fill went amber and the word on
+         it did not. Rest and hover a step apart on the same hue was tried too
+         and is worse: the accent is held to 4.5:1 on the card, so a deep rest
+         gets LIFTED into the mid-tones and lands next to its own hover.
+         Measured, that left Iris 0.12 apart in luminance. Saturated → pale is
+         a gap the floor cannot close, and it is the one thing a page of hover
+         studies cannot do without: a change you can see across a card at arm's
+         length. Every pair below is at least 0.42 apart. -->
     <div class="tools-row tools-row--sets">
       <span class="tools-lbl">Palette</span>
       <div class="set-presets" role="group" aria-label="Colour palette">
         <button type="button" class="set-p set-p--none" data-p=""
                 aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. White in a swatch means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
-        <button type="button" class="set-p" data-p="text:#ffd9a0,accent:#b45309,hover:#fbbf24"
-                style="--sw:#b45309" aria-pressed="false" title="Amber">Amber</button>
-        <button type="button" class="set-p" data-p="text:#cfc7ff,accent:#4c35d4,hover:#a78bfa"
-                style="--sw:#4c35d4" aria-pressed="false" title="Iris">Iris</button>
-        <button type="button" class="set-p" data-p="text:#a7f3d0,accent:#0b7a55,hover:#4ade80"
-                style="--sw:#0b7a55" aria-pressed="false" title="Mint">Mint</button>
-        <button type="button" class="set-p" data-p="text:#ffcdc4,accent:#c2352b,hover:#fb923c"
-                style="--sw:#c2352b" aria-pressed="false" title="Coral">Coral</button>
-        <button type="button" class="set-p" data-p="text:#a8c4f0,accent:#14213d,hover:#60a5fa"
-                style="--sw:#14213d" aria-pressed="false"
+        <button type="button" class="set-p" data-p="text:#ffe0b2,textHover:#5c3a00,accent:#f5a524,hover:#fff1d6"
+                style="--sw:#f5a524" aria-pressed="false" title="Amber">Amber</button>
+        <button type="button" class="set-p" data-p="text:#ddd6ff,textHover:#2e1d80,accent:#8b7bf7,hover:#ece8ff"
+                style="--sw:#8b7bf7" aria-pressed="false" title="Iris">Iris</button>
+        <button type="button" class="set-p" data-p="text:#b8f5d8,textHover:#06432c,accent:#3ecf8e,hover:#dcfce9"
+                style="--sw:#3ecf8e" aria-pressed="false" title="Mint">Mint</button>
+        <button type="button" class="set-p" data-p="text:#ffd5cc,textHover:#6e1c14,accent:#ff6b5e,hover:#ffe3dc"
+                style="--sw:#ff6b5e" aria-pressed="false" title="Coral">Coral</button>
+        <button type="button" class="set-p" data-p="text:#bcd4f7,textHover:#123a6b,accent:#5b9cf0,hover:#dbeafe"
+                style="--sw:#5b9cf0" aria-pressed="false"
                 title="Deep — dark enough that the page has to lift it to stay legible. The caption says so with an arrow.">Deep</button>
       </div>
     </div>
@@ -9212,10 +9251,19 @@ document.addEventListener("DOMContentLoaded", function () {
     //   set   the tokens the role writes directly. The label-on-a-fill tokens
     //         are NOT here: they depend on the text colour and on the fill at
     //         once, so paint() derives them after all three have been fitted.
+    // `name` is what the captions cannot say any more. Four swatches captioned
+    // «Default» and «Hover» twice are only legible under their group heading,
+    // and a tooltip reading «Default moved to #d1600a» names nothing.
+    //
+    // textHover is the role that did not exist. Its background is not the card
+    // — it is the hover FILL — so it is the one role pass one cannot fit, and
+    // it is fitted in pass two once that fill is known. Left unset it is
+    // derived exactly as before, so nothing that worked stops working.
     var ROLES = [
-      {key:'text',   min:4.5, set:['--ink-text']},
-      {key:'accent', min:4.5, set:['--ink', '--accent']},
-      {key:'hover',  min:3,   set:['--ink-hover']}
+      {key:'text',      name:'Text',           min:4.5, set:['--ink-text']},
+      {key:'textHover', name:'Text on hover',  min:4.5, set:[], onFill:true},
+      {key:'accent',    name:'Button',         min:4.5, set:['--ink', '--accent']},
+      {key:'hover',     name:'Button on hover',min:3,   set:['--ink-hover']}
     ];
     // '' — unset, meaning the page's own monochrome. Unset is not «follow
     // another swatch»: leaving the token off the root lets the authored alias
@@ -9224,7 +9272,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // --ink-hover is pinned to --ink so hover DOES follow the accent until it
     // is given a colour of its own. That is the behaviour a reader expects
     // from each: text stays put, hover goes along.
-    var look = {text:'', accent:'', hover:'', radius:PILL};
+    var look = {text:'', textHover:'', accent:'', hover:'', radius:PILL};
     var swatches = {}, caps = {}, clears = {};
     ROLES.forEach(function(r){
       swatches[r.key] = tools.querySelector('.set-swatch[data-set="' + r.key + '"]');
@@ -9321,8 +9369,12 @@ document.addEventListener("DOMContentLoaded", function () {
       var textRatio = null, moved = 0;
 
       // Pass one: fit each swatch against the card, independently of the others.
+      // Except the roles flagged onFill — their background is a colour this
+      // pass is still working out, so they wait for pass two.
       var fitted = {};
-      ROLES.forEach(function(r){ fitted[r.key] = look[r.key] ? fit(look[r.key], r.min) : null; });
+      ROLES.forEach(function(r){
+        fitted[r.key] = (!r.onFill && look[r.key]) ? fit(look[r.key], r.min) : null;
+      });
 
       // What a label actually sits on. Unset falls through the same alias chain
       // the stylesheet uses — hover follows the accent, the accent follows the
@@ -9349,30 +9401,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Pass two: write. Each token is written only while something it depends
       // on is set, so an untouched toolbar still leaves every alias standing.
-      var anyColour = !!(fitted.text || fitted.accent || fitted.hover);
+      var anyColour = !!(fitted.text || fitted.accent || fitted.hover || look.textHover);
       // Derived BEFORE the captions are written, because the text caption has
       // to be able to say that the label was moved on the fills even when it
       // sat still on the card.
       var onAccent = anyColour ? labelOn(accentRgb) : null;
-      var onHover  = anyColour ? labelOn(hoverRgb)  : null;
-      var fillMoved = !!(onAccent && onAccent.moved) || !!(onHover && onHover.moved);
+      // The hover label, at last a choice. Picked, it is fitted against the
+      // fill it will actually sit on rather than against the card — that fill
+      // is the only thing it is ever read against. Unpicked, it derives from
+      // the rest label exactly as it always did.
+      var onHover = null;
+      if (look.textHover) onHover = fitOn(look.textHover, 4.5, hoverRgb);
+      else if (anyColour) onHover = labelOn(hoverRgb);
+      fitted.textHover = look.textHover ? onHover : null;
+      // Only the DERIVED move belongs to the rest-label caption. A hover label
+      // that was picked and then fitted reports on its own caption, below.
+      var fillMoved = !!(onAccent && onAccent.moved)
+                   || (!look.textHover && !!(onHover && onHover.moved));
 
       ROLES.forEach(function(r){
         var cap = caps[r.key], sw = swatches[r.key], label = cap.getAttribute('data-label');
         var clr = clears[r.key];
         var f = fitted[r.key];
+        // «Default» and «Hover» are the captions, so the tooltip has to say the
+        // whole name or it names nothing — there are two of each on the row.
+        var name = r.name;
+        // What this role was fitted against, in words. Only textHover sits on
+        // a fill; everything else is read on the card.
+        var against = r.onFill ? 'on the hover fill' : 'on the card';
         if (f){
           r.set.forEach(function(p){ root.setProperty(p, f.hex); });
-          // The text role answers for two fits: itself against the card, and
+          // The rest label answers for two fits: itself against the card, and
           // itself against whatever fill it lands on. Either one moving earns
           // the arrow, or the arrow means «sometimes».
           var alsoOnFill = r.key === 'text' && fillMoved;
           cap.innerHTML = label + (f.moved || alsoOnFill ? ' <b>↑</b>' : '');
           clr.hidden = false;
           var why = f.moved
-            ? label + ' moved to ' + f.hex + ', so it clears ' + r.min
-              + ':1 on the card. A dark page cannot carry a dark colour.'
-            : label + ': ' + f.ratio.toFixed(1) + ':1 on the card.';
+            ? name + ' moved to ' + f.hex + ', so it clears ' + r.min + ':1 '
+              + against + '.'
+            : name + ': ' + f.ratio.toFixed(1) + ':1 ' + against + '.';
           if (alsoOnFill){
             why += ' On a filled button it is refitted against the fill and lands on '
                  + onAccent.hex + ' — ' + onAccent.ratio.toFixed(1) + ':1 there.';
@@ -9385,9 +9453,18 @@ document.addEventListener("DOMContentLoaded", function () {
           sw.value  = WHITE;
           cap.textContent = label;
           clr.hidden = true;
-          cap.title = label + ' is unset: ' + WHITE + ', graphite’s white. It is left as '
-                    + 'an alias rather than written to the root, so a copied snippet still '
-                    + 'reads the system token and follows the system it lands in.';
+          // Each unset role follows something different, and saying WHICH is
+          // the difference between «unset» reading as off and reading as
+          // inherited. The hover label follows the rest label onto the new
+          // fill; the rest label follows the page; the two surfaces follow
+          // the accent and then the page.
+          cap.title = name + ' is unset — ' + (
+              r.key === 'textHover' ? 'the label keeps the rest colour, refitted against the hover fill.'
+            : r.key === 'hover'     ? 'hover keeps the button’s own colour.'
+            : r.key === 'text'      ? 'the label follows the page, and is computed black-or-white on a fill.'
+            :                         'the button keeps graphite’s white.')
+            + ' Left as an alias rather than written to the root, so a copied '
+            + 'snippet still reads the system token and follows the system it lands in.';
         }
       });
       if (anyColour){
@@ -9481,7 +9558,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // choosing Amber after Deep must not leave Deep's hover behind.
     var presets = [].slice.call(tools.querySelectorAll('.set-p'));
     function parseP(v){
-      var out = {text:'', accent:'', hover:''};
+      var out = {text:'', textHover:'', accent:'', hover:''};
       String(v || '').split(',').forEach(function(bit){
         var kv = bit.split(':');
         if (kv.length === 2 && out.hasOwnProperty(kv[0].trim())) out[kv[0].trim()] = kv[1].trim();
@@ -9494,15 +9571,16 @@ document.addEventListener("DOMContentLoaded", function () {
     function markPreset(){
       presets.forEach(function(el){
         var want = parseP(el.getAttribute('data-p'));
-        var on = want.text === look.text && want.accent === look.accent
-              && want.hover === look.hover;
+        var on = want.text === look.text && want.textHover === look.textHover
+              && want.accent === look.accent && want.hover === look.hover;
         el.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
     }
     presets.forEach(function(el){
       el.addEventListener('click', function(){
         var want = parseP(el.getAttribute('data-p'));
-        look.text = want.text; look.accent = want.accent; look.hover = want.hover;
+        look.text = want.text; look.textHover = want.textHover;
+        look.accent = want.accent; look.hover = want.hover;
         ROLES.forEach(function(r){ swatches[r.key].value = look[r.key] || WHITE; });
         paint(); saveLook(); apply(); markPreset();
       });
@@ -9527,7 +9605,7 @@ document.addEventListener("DOMContentLoaded", function () {
       state = {fav:false, q:'', changes:[], answers:[]};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
-      look  = {text:'', accent:'', hover:'', radius:PILL};
+      look  = {text:'', textHover:'', accent:'', hover:'', radius:PILL};
       range.value  = PILL;
       paint();   // clears all three swatches back to WHITE on its unset branch
       markPreset();   // …and Graphite is what «no override» is called
