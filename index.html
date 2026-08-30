@@ -8,13 +8,21 @@
      before JS runs, so no number can live here). -->
 <meta name="description" content="Button hover animations, actually built. Hover, tab and press all of them. Monochrome, layout-stable, interruptible, reduced-motion aware — five durations, no more — with notes on porting each one to Framer.">
 <meta name="color-scheme" content="dark light">
+<!-- Mobile browser chrome, kept in step with the page. Not a media-query pair:
+     the theme here is a CHOICE, and a media query would leave the address bar
+     arguing with a page the reader has explicitly set the other way. -->
+<meta name="theme-color" content="#0f0f0f">
 <!-- The theme is stamped before the first paint, so a visitor who chose light
      last time never sees the dark page flash past on the way to it. -->
 <script>
   (function(){
     try{
       var t = localStorage.getItem('bhl-theme');
-      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      if (t === 'light' || t === 'dark'){
+        document.documentElement.dataset.theme = t;
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.content = t === 'light' ? '#ffffff' : '#0f0f0f';
+      }
     }catch(e){}
   })();
 </script>
@@ -58,6 +66,20 @@
     --bg:var(--bg-0);            /* canvas            */
     --stage:var(--bg-1);         /* card / panel      */
     --lift-bg:var(--bg-2);       /* control at rest   */
+    /* ---- The two roles a mirrored ladder cannot carry -------------------
+       «Elevation is lightness» is a DARK-mode rule, and it survives the mirror
+       everywhere except here. A card one step off the canvas mirrors fine — it
+       goes white → grey instead of black → grey and still reads as raised. A
+       RECESS does not: the light canvas is already at the end of the ladder, so
+       a well drawn as --bg-0 is the brightest thing in the panel and stands up
+       out of it. Measured, the toolbar's segment trough went from #0f0f0f in a
+       #171717 panel — recessed — to #ffffff in a #f4f4f4 one, with the selected
+       chip a shade DARKER than the trough it sits in: both halves of the
+       control inverted at once, and neither is a colour a token could fix.
+       So the two roles are named for the job rather than the rung, and each
+       theme points them at the rung that does that job on ITS ground. */
+    --well:var(--bg-0);          /* recessed below the panel  */
+    --raised:var(--bg-3);        /* standing up out of a well */
     --ink:var(--ink-hi);
     --ink-soft:var(--ink-mid);
     --muted:var(--ink-low);
@@ -179,9 +201,21 @@
      MIRRORED, not inverted. The surface ladder still steps AWAY from the canvas
      — white → grey rather than near-black → grey — so «a card is one step off
      the page» stays true in both themes and elevation reads the same way round.
-     Inverting the ladder literally was tried on paper and is wrong: it puts the
-     canvas at #f0f0f0 and hover at #c5c5c5, which is a heavier separation than
-     the dark page has and reads as a table, not a feed.
+     A literal channel inversion (255 minus each dark value) is the wrong tool:
+     it puts the canvas at #f0f0f0 and the card at #e8e8e8, which is a grey page
+     with a grey card on it. The canvas goes to white instead.
+
+     The rest of the rungs are then SOLVED rather than picked. Each one is the
+     grey that reproduces that rung's own contrast against bg-1 in the dark
+     theme, so the step you can actually see — a row lighting up under the
+     pointer — is the same size on both grounds. That matters more here than
+     anywhere: a page of hover studies whose hover feedback is a rung shallower
+     in one theme is a page that demonstrates itself worse in that theme.
+     Measured on bg-1: bg-2 1.13, bg-3 1.32, bg-4 1.58, matching dark's 1.13,
+     1.32 and 1.58. Hand-picked values were a rung shallower at the top end
+     (1.08 / 1.20 / 1.35) and the difference was visible on the row hover.
+     bg-1 itself is the one deliberate departure: 1.10 on the canvas where dark
+     takes 1.07, because a card on white has no glow to help it hold its edge.
 
      The ink ladder is pulled one rung further down than a straight mirror
      would put it. On a dark ground a tertiary grey at 3:1 is quiet; on a light
@@ -190,7 +224,7 @@
      theme manages and is the right way round for the lighter ground. */
   :root[data-theme="light"]{
     color-scheme:light;
-    --bg-0:#ffffff; --bg-1:#f4f4f4; --bg-2:#ebebeb; --bg-3:#e0e0e0; --bg-4:#d4d4d4;
+    --bg-0:#ffffff; --bg-1:#f4f4f4; --bg-2:#e7e7e7; --bg-3:#d6d6d6; --bg-4:#c5c5c5;
     --hairline:rgba(0,0,0,.10);
     --ink-hi:#121212; --ink-mid:#4b4b4b; --ink-low:#636363; --ink-faint:#6d6d6d;
     /* The inverse pair is still THE accent — it just points the other way, so a
@@ -203,6 +237,9 @@
        and silently un-drawn every control edge on the page. */
     --line-ctl:rgba(0,0,0,.36);
     --sheen:0,0,0;
+    /* Away from white is down, toward white is up — see the roles' own note. */
+    --well:var(--bg-2);
+    --raised:var(--bg-0);
   }
 
   *{box-sizing:border-box; margin:0; padding:0}
@@ -461,9 +498,15 @@
      answers, and the pressed answer rises back to bg-3. */
   .tools .vers-long::before{display:none}
   .tools .vers-seg{gap:1px; padding:2px; border-radius:var(--r-sm);
-    background:var(--bg-0); box-shadow:inset 0 0 0 1px var(--hairline)}
+    background:var(--well); box-shadow:inset 0 0 0 1px var(--hairline)}
   .tools .vers-b{padding:5px 8px}
-  .tools .vers-b[aria-checked="true"]{box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
+  /* The chip in the trough is the one place on the page that has to stand up
+     out of a recess, so it takes the role and not the rung — see --raised.
+     Scoped to .tools on purpose: a card's own version chips sit on the card
+     rather than in a well, where «filled means selected» reads correctly in
+     both themes and --bg-3 is still the right answer. */
+  .tools .vers-b[aria-checked="true"]{background:var(--raised);
+    box-shadow:0 1px 2px rgba(var(--shadow-rgb),.55)}
   /* Length is a toggle, not a fifth treatment, so it is outlined rather than
      seated in the track — a different shape for a different kind of answer. */
   .tools .vers-long{border:1px solid var(--hairline); padding:5px 9px}
@@ -1378,8 +1421,14 @@
     border:1px solid var(--line-ctl); background-color:var(--bg-0);
     color:var(--ink-hi); font:400 14px/1.2 var(--font-ui);
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    /* The literal above is --ink-low's dark value. A data URI cannot read a
+       custom property, so the light theme cannot override the COLOUR — it has
+       to restate the whole mark. Written once, here, next to the original. */
     background-repeat:no-repeat; background-position:right 11px center;
     background-size:10px 7px;
+  }
+  :root[data-theme="light"] .rail-sort{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%23636363' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
   .rail-sort:hover{color:var(--ink-hi); border-color:var(--ink-faint)}
   .rail-sort:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
@@ -2754,7 +2803,7 @@
         </div>
       </div>
       <h3><span class="num">61</span>Travelling rule</h3>
-      <p>One rule serves the whole row and slides to whichever item you point at, parking back on the current one when you leave.</p>
+      <p>One rule serves the whole row and slides to whichever item you point at, taking that item&rsquo;s own width as it goes rather than a fixed quarter of the row, and parking back on the current one when you leave.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -4747,9 +4796,35 @@ document.addEventListener("DOMContentLoaded", function () {
   /* 61 Travelling rule — one rule for the whole row, moved by a custom
      property the row sets from :has(). It parks on the current item rather than
      vanishing, which is what a real nav does.
-     THE CONSTRAINT, and it is honest: the columns are equal, so one step is
-     always 100% of the bar's own width. Unequal widths need a measured offset
-     per item, which means JavaScript — and that is a different card. */
+
+     THE OLD CONSTRAINT WAS NOT A CONSTRAINT, and the note that stated it was
+     simply wrong. It said the columns had to be equal so that one step could be
+     100% of the bar's own width, and that «unequal widths need a measured offset
+     per item, which means JavaScript — and that is a different card». They do
+     not. The bar's two insets are anchor() functions naming the item, and BOTH
+     INSETS INTERPOLATE — swapping which item they name makes the rule travel and
+     resize in one movement, in CSS, with nothing measured. Traced at 900ms so
+     the samples are legible: x runs 0 → 44.8 → 131.8 → 254.3 while the width
+     runs 71.9 → 65.2 → 52.0 → 33.5. It never jumps.
+
+     THE RULE IS THE ITEM'S OWN WIDTH NOW. It used to be a flat 25% of the row —
+     74.3px under every label, against ink of 66.3, 49.5, 36.0 and 26.2 — so
+     under «Log» the underline was 2.84× the word it underlined. The ratio is 1
+     at every stop.
+
+     AND THE COLUMNS ARE CONTENT-SIZED, which is the other half of it. Four equal
+     1fr cells centre four labels of unequal width, so the gaps between the WORDS
+     came out 16.4 / 31.5 / 43.2 — a 2.6× spread, reading as spacing nobody
+     chose. max-content columns on one gap make every gap identical by
+     construction, and the gap is 14px, card 60's, so the two rows in this
+     section space alike.
+
+     anchor-scope keeps the four names inside this row. anchor-name is
+     document-wide otherwise, and this study is meant to be pasted into a page
+     that may already have a nav in it.
+
+     Below the @supports is the fallback, and it is what shipped before: equal
+     columns, a 25% bar, one step per item. */
   .k-ind{position:relative; display:grid; grid-template-columns:repeat(4,1fr); --k-n:0}
   .k-ind .k-ind-i{justify-content:center}
   .k-ind .k-ind-bar{
@@ -4762,6 +4837,30 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-ind:has(.k-ind-i:nth-child(2):is(:hover,:focus-visible)){--k-n:1}
   .k-ind:has(.k-ind-i:nth-child(3):is(:hover,:focus-visible)){--k-n:2}
   .k-ind:has(.k-ind-i:nth-child(4):is(:hover,:focus-visible)){--k-n:3}
+
+  @supports (anchor-name: --a){
+    .k-ind{
+      grid-template-columns:repeat(4,max-content); gap:14px;
+      anchor-scope:--k-ind-1,--k-ind-2,--k-ind-3,--k-ind-4;
+    }
+    .k-ind .k-ind-i:nth-child(1){anchor-name:--k-ind-1}
+    .k-ind .k-ind-i:nth-child(2){anchor-name:--k-ind-2}
+    .k-ind .k-ind-i:nth-child(3){anchor-name:--k-ind-3}
+    .k-ind .k-ind-i:nth-child(4){anchor-name:--k-ind-4}
+    /* width:auto and transform:none retire the fallback's two dials rather than
+       fighting them: the insets are the only thing placing the bar now. */
+    .k-ind .k-ind-bar{
+      width:auto; transform:none;
+      left:anchor(--k-ind-1 left); right:anchor(--k-ind-1 right);
+      transition:left var(--t-4) var(--e-quint), right var(--t-4) var(--e-quint);
+    }
+    .k-ind:has(.k-ind-i:nth-child(2):is(:hover,:focus-visible)) .k-ind-bar{
+      left:anchor(--k-ind-2 left); right:anchor(--k-ind-2 right)}
+    .k-ind:has(.k-ind-i:nth-child(3):is(:hover,:focus-visible)) .k-ind-bar{
+      left:anchor(--k-ind-3 left); right:anchor(--k-ind-3 right)}
+    .k-ind:has(.k-ind-i:nth-child(4):is(:hover,:focus-visible)) .k-ind-bar{
+      left:anchor(--k-ind-4 left); right:anchor(--k-ind-4 right)}
+  }
 
   /* 62 Conserved compression — a retired card conserved one button's measure
      by trading its gap against its padding, one registered length feeding two
@@ -11970,6 +12069,8 @@ document.addEventListener("DOMContentLoaded", function () {
           x.tabIndex = on ? 0 : -1;
         });
         try { localStorage.setItem('bhl-theme', b.dataset.theme); } catch (e) {}
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = b.dataset.theme === 'light' ? '#ffffff' : '#0f0f0f';
         // Announced, not called: the colour machinery measures the page it is
         // fitting against and lives in another IIFE.
         document.dispatchEvent(new CustomEvent('bhl:theme'));
