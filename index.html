@@ -1551,8 +1551,11 @@
      rung further FROM the panel on both grounds — dark 23 → 34 → 46, light
      231 → 244 → 255 — so the mirror is already handled in the token layer and
      this needs no theme fork of its own. */
-  .rail-list label:active,.rail-sects a:active,
   .rail-sum:active,.tools-fold-sum:active{background:var(--ctl-hi)}
+  /* The two rows that carry a gradient deepen the gradient instead — a
+     background-color under it would be covered by the fill it is meant to
+     replace. Same rung either way. */
+  .rail-list label:active,.rail-sects a:active{--row-fill:var(--ctl-hi)}
   .fav-only[aria-pressed="true"]{color:var(--ink-hi)}
   .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
@@ -1968,7 +1971,34 @@
     padding:7px 9px; border-radius:var(--r-xs); cursor:pointer;
     font:400 15px/1.3 var(--font-ui); color:var(--ink-mid);
   }
-  .rail-list label:hover{background:var(--ctl); color:var(--ink-hi)}
+  /* ---- The row fill arrives from the edge you crossed -----------------
+     A nod to what the page is about, on the one piece of chrome that can
+     carry it without competing: the fill enters from the top when you came
+     down onto the row and from the bottom when you came up, and it LEAVES
+     through the edge you are heading for rather than retracting the way it
+     came. Direction is read from the pointer's previous position — the one
+     outside the row — because pointerover reports a point already well
+     inside the box, and «nearest edge» from there is reliably the wrong edge.
+
+     A background-image and not a ::before. Both pseudo-elements on a section
+     link are already spoken for — ::before is the accent bar that says where
+     you are, ::after is the chevron — and a gradient sized from 0% to 100%
+     needs neither of them, nor a stacking context, nor a z-index. The fill
+     colour is a variable so the press can deepen it without a second layer.
+
+     Reduced motion needs nothing: background-size is a transition and the
+     *,*::before,*::after rule stops it, so the row fills at once. */
+  .rail-list label,.rail-sects a{
+    --row-fill:var(--ctl);
+    background-image:linear-gradient(var(--row-fill),var(--row-fill));
+    background-repeat:no-repeat;
+    background-size:100% 0%;
+    background-position:50% var(--wipe,0%);
+    transition:background-size var(--t-2) var(--ease),
+               color var(--t-fast) var(--ease);
+  }
+  .rail-list label:hover,.rail-sects a:hover{background-size:100% 100%}
+  .rail-list label:hover{color:var(--ink-hi)}
   /* A ticked row reads as ticked without the pointer on it. The 13px box is
      the only other signal and it is 13px; on a list of ten rows scanned at a
      glance that is not enough to say which two are doing the filtering. */
@@ -2012,11 +2042,13 @@
     font:400 14px/1.35 var(--font-ui); color:var(--ink-low);
     text-decoration:none;
   }
-  .rail-sects a:hover{background:var(--ctl); color:var(--ink-hi)}
+  .rail-sects a:hover{color:var(--ink-hi)}
   .rail-sects a:focus-visible{outline:2px solid var(--ink-low); outline-offset:-1px}
   /* Where you are, stated once. aria-current carries it for a screen reader
      and the same attribute does the styling, so the two cannot disagree. */
-  .rail-sects a[aria-current="true"]{color:var(--ink-hi); background:var(--ctl)}
+  /* Filled by the same machinery rather than by its own background, so the
+     current row and a hovered row are one mechanism and cannot disagree. */
+  .rail-sects a[aria-current="true"]{color:var(--ink-hi); background-size:100% 100%}
   /* White is the page's only accent and this is the only place in the panel
      that earns it: one thing is true at a time, and it is where you are. The
      bar is on the row's own left edge rather than the panel's, so it reads as
@@ -11495,6 +11527,44 @@ document.addEventListener("DOMContentLoaded", function () {
       // to exist — a shortcut drawn and not bound is worse than no shortcut.
       // The chip's text is written here too rather than in the markup, because
       // the modifier is the reader's platform and not the page's.
+      /* Which edge the fill comes from, and the answer is different for the
+         row being entered and the row being left — one sample cannot serve
+         both, which is the whole subtlety here.
+
+         ENTERING: by the time pointerover fires the pointer is already
+         twenty-odd pixels inside the row, so its own coordinate says which
+         HALF you landed in, not which edge you crossed. The previous position
+         is the one outside the row, so that is the one that answers.
+
+         LEAVING: boundary events fire BEFORE the pointermove at the new
+         position, so at that instant the tracked previous position is still
+         inside the row being left — and reading it gave the wrong edge every
+         time the pointer sat in the far half before moving. Measured: rest at
+         a row's bottom, leave upward, and the fill retreated DOWNWARD. The
+         event's own coordinate is already outside that row, so it is the one
+         that answers here. Enter reads the journey, exit reads the arrival. */
+      var railEl = document.getElementById('rail');
+      if (railEl){
+        var lastY = 0, lastRow = null;
+        addEventListener('pointermove', function(e){ lastY = e.clientY; }, {passive:true});
+        var wipeEdge = function(row, y){
+          var r = row.getBoundingClientRect();
+          return y < r.top + r.height / 2 ? '0%' : '100%';
+        };
+        var ROWS = '.rail-list label,.rail-sects a';
+        railEl.addEventListener('pointerover', function(e){
+          var row = e.target.closest ? e.target.closest(ROWS) : null;
+          if (row === lastRow) return;
+          if (lastRow) lastRow.style.setProperty('--wipe', wipeEdge(lastRow, e.clientY));
+          if (row) row.style.setProperty('--wipe', wipeEdge(row, lastY));
+          lastRow = row;
+        });
+        railEl.addEventListener('pointerleave', function(e){
+          if (lastRow) lastRow.style.setProperty('--wipe', wipeEdge(lastRow, e.clientY));
+          lastRow = null;
+        });
+      }
+
       var mac = /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
       var kEl = document.querySelector('.rail-k');
       if (kEl && !mac) kEl.textContent = 'Ctrl K';
