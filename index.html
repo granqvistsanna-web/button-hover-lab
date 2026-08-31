@@ -467,6 +467,11 @@
      where the eye starts losing its place on the way back. Capped at the
      lede's own measure rather than a new number invented for three cards. */
   .spec--wide>p{max-width:62ch}
+  /* See the FLIP block in the script. A card travels on the compositor and
+     nothing else — transform only — and the class carries the timing alone, so
+     the duration lives in the sheet with every other duration on this page
+     rather than as a number typed into a style attribute. */
+  .spec--flip{transition:transform var(--t-5) var(--e-quint)}
   /* One stage height for every study, so the hairline under every stage
      lands on the same line right across the page — and the chips are pinned to
      the card's bottom edge, so the panels close level too. The slack from a
@@ -1294,6 +1299,23 @@
      would land on different lines from the label that introduces them.
      No rule under the summary and no box around the body — the fold is
      already marked by the chevron and by the indent of what it opens. */
+  /* Below 1360 the Restyle group is an inline toolbar under the masthead, not
+     a wall — there is nothing to fold away and no gutter to give back, so
+     neither handle is drawn and neither is a tab stop. */
+  .tools-hide, .tools-show{display:none}
+  /* ⚠️ Both panels set .hidden on the handle that is off duty, and on all four
+     of them the attribute did NOTHING: [hidden] is display:none at the UA's
+     specificity and every one of these carries display:grid from a class, so
+     the off-duty handle stayed rendered — off screen, unseeable, and still a
+     tab stop. Measured before this rule: a fresh 1440 load put .tools-hide at
+     x:1670 and .rail-fold at x:-276, both outside the viewport, and Tab landed
+     on the first of them at stop 3 of the page.
+     One attribute selector out-specifies all four class rules wherever they
+     sit, so it does not matter that they are declared inside a media query.
+     The rail's two were already wrong before the right wall was built; they are
+     fixed here rather than left as the thing the mirror was copied from. */
+  .rail-fold[hidden], .rail-show[hidden],
+  .tools-hide[hidden], .tools-show[hidden]{display:none}
   .tools-fold{flex:0 0 auto; min-width:0}
   .tools-fold[open]{flex:1 0 100%}
   .tools-fold-sum{
@@ -2064,9 +2086,29 @@
      growing while the screen kept going, which put an increasingly wide
      empty margin either side of a page whose entire content is a grid. */
   @media (min-width: 1360px){
+    /* Both gutters animate, not just the left one. The panel slides out over
+       --t-panel and the column has to come with it: with padding-right left to
+       snap, closing the right wall re-laid the whole feed on frame one and the
+       panel then slid away over a grid that had already moved. The left wall
+       has always animated its side; this is the right wall being given the
+       same gesture rather than a second one to learn.
+       ⚠️ Known cost, and it is the reason this is the page's ONLY animated
+       layout property: it is a full-page layout pass per frame on a 3,400-node
+       document. It buys the one moment on the page where the grid itself is
+       the thing moving, and it is bounded — two handles, no scroll, no hover. */
     body{padding-left:var(--rail-w); padding-right:var(--insp-w);
-      transition:padding-left var(--t-med) var(--ease)}
+      transition:padding-left var(--t-med) var(--ease),
+                 padding-right var(--t-med) var(--ease)}
     .wrap{max-width:none; padding-top:32px}
+    /* With both walls folded the column is the whole screen, and auto-fill
+       would spend that on a FOURTH card rather than a bigger one: at
+       minmax(320px) a 1440 screen gives four 321px cards, which is a smaller
+       stage for every button than the two 402px cards it replaces. Taking the
+       walls down to make the buttons smaller is not a trade worth making, so
+       the floor goes up with the width instead — three cards of 450px at 1440,
+       four of 455px at 1920. A column gained AND a wider stage, which is the
+       only reason to have folded anything. */
+    .feed{grid-template-columns:repeat(auto-fill,minmax(380px,1fr))}
 
     /* ---- The inspector ---------------------------------------------- */
     .tools{
@@ -2280,6 +2322,56 @@
       background:currentColor; border-radius:2px 0 0 2px;
     }
     .rail-show::after{margin-left:1.9px; border-radius:0 2px 2px 0}
+
+    /* ---- Folding the right wall away ---------------------------------
+       The mirror of the left, down to the coordinates: the same 34px box, the
+       same mark reflected, the same two-handles-one-state rule, the same
+       remembered choice. Two walls that fold by two different gestures are two
+       things to learn about a page whose subject is somewhere else.
+       ⚠️ position:fixed on BOTH handles, where the rail's pair is absolute.
+       .tools is the scroll container here (the rail scrolls a child instead),
+       so an absolute handle inside it would scroll away from the reader half
+       a panel down and there would be no way to shut the thing. Fixed, at the
+       one pair of coordinates, and only ever one of them on screen. */
+    .tools{transition:transform var(--t-panel) var(--e-panel)}
+    body[data-insp="off"]{padding-right:0}
+    body[data-insp="off"] .tools{transform:translateX(100%)}
+    body[data-insp="off"] .tools-show{display:grid}
+    /* The title clears the handle, the way the rail's header does. */
+    .tools-head{padding-right:calc(var(--pad-panel) + 30px)}
+    .tools-hide{
+      display:grid; position:fixed; right:12px; top:24px; z-index:33;
+      width:34px; height:34px; place-items:center; padding:0;
+      border:0; border-radius:var(--r-sm); cursor:pointer;
+      background:none; color:var(--ink-low);
+      transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+                 transform var(--t-fast) var(--e-out);
+    }
+    .tools-hide:hover{background:var(--ctl); color:var(--ink-hi)}
+    .tools-hide:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+    .tools-hide:active,.tools-show:active{transform:scale(.92)}
+    .tools-show{
+      display:none; position:fixed; right:12px; top:24px; z-index:32;
+      width:34px; height:34px; place-items:center; padding:0;
+      border:0; border-radius:var(--r-sm); cursor:pointer;
+      background:var(--ctl); color:var(--ink-mid);
+      transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .tools-show:hover{background:var(--ctl-hi); color:var(--ink-hi)}
+    .tools-show:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+    /* The rail's mark, reflected: the filled bar is the wall this handle
+       belongs to, so it stands on the right here and on the left there. */
+    .tools-hide::before, .tools-show::before{
+      content:""; position:absolute; left:50%; top:50%;
+      width:11px; height:11px; margin:-5.5px 0 0 -5.5px;
+      border:1.4px solid currentColor; border-radius:2px;
+    }
+    .tools-hide::after, .tools-show::after{
+      content:""; position:absolute; left:50%; top:50%;
+      width:3.6px; height:11px; margin:-5.5px 0 0 1.9px;
+      background:currentColor; border-radius:0 2px 2px 0;
+    }
+    .tools-show::after{margin-left:-5.5px; border-radius:2px 0 0 2px}
   }
   @media (max-width: 1359px){
     .rail:not([hidden]){display:none; margin-top:12px}
@@ -2307,6 +2399,25 @@
 </style>
 </head>
 <body>
+<!-- Both walls arrive closed, and that is stamped HERE rather than in the two
+     panels' own scripts. Those run at DOMContentLoaded, by which time the page
+     has already painted a 288px gutter down one side and 276px down the other
+     and then taken them both away again — a 564px jump on the first frame the
+     reader sees. <body> is the earliest point the attributes they key on can
+     be written, and nothing has painted yet.
+     Default OFF both ways: the fold belongs to the studies, and a reader who
+     wants a wall says so once and is remembered. Only the literal 'on' opens
+     one, so a cleared or unreadable store lands on the quiet page. -->
+<script>
+  (function(){
+    var open = function(k){
+      try{ return localStorage.getItem(k) === 'on' ? 'on' : 'off'; }
+      catch(e){ return 'off'; }
+    };
+    document.body.dataset.rail = open('knapplabbet-panel');
+    document.body.dataset.insp = open('knapplabbet-restyle');
+  })();
+</script>
 <div class="wrap">
   <!-- Every card costs five or six tab stops and there are dozens of
        them, so the panel is fifteen presses of overhead paid on
@@ -2333,12 +2444,23 @@
     <p class="mast-sub" aria-live="polite"></p>
   </header>
 
-  <div class="tools" role="group" aria-labelledby="tools-h">
+  <!-- Outside .tools on purpose, and for the same reason .rail-show is outside
+       .rail: a button inside a panel that has been translated off the screen is
+       a button off the screen. -->
+  <button type="button" class="tools-show" aria-expanded="false" aria-controls="tools"
+          aria-label="Show the restyle panel" hidden></button>
+  <div class="tools" id="tools" role="group" aria-labelledby="tools-h">
     <!-- Only drawn where the panel is a wall (1360 and up). In the toolbar
          shape below that width the group already sits under the masthead
          with nothing between them, and a title there is a heading for a
          thing you can see the whole of. -->
     <div class="tools-head"><span class="tools-h" id="tools-h">Restyle</span></div>
+    <!-- The wall is 276px of a 1440px screen and it answers a question most
+         visits never ask at all — every knob in it restyles all ninety studies
+         at once — so it folds, and it arrives folded. Its handle is the rail's
+         handle mirrored; see «Folding the right wall away» in the stylesheet. -->
+    <button type="button" class="tools-hide" aria-expanded="true"
+            aria-controls="tools" aria-label="Hide the restyle panel"></button>
     <!-- Two questions, two swatches each. It used to be three swatches on one
          line — Text, Accent, Hover — which is a mix of one TEXT role and two
          SURFACE roles, and it hid the fourth setting entirely: the colour of
@@ -10223,12 +10345,91 @@ document.addEventListener("DOMContentLoaded", function () {
     var firstSect = document.querySelector('.sect');
     firstSect.parentNode.insertBefore(empty, firstSect);
 
+    /* ---- The grid keeps its place --------------------------------------
+       Filtering was a teleport. Ninety cards, a filter lands, and the
+       survivors are simply somewhere else on the next frame — which is
+       indistinguishable from a DIFFERENT SET of cards, the one thing a filter
+       must never look like. FLIP instead: measure where every visible card is,
+       let apply() do whatever it does, measure again, put each card back where
+       it was with a transform and release it. The layout is never animated,
+       only the transform, so the travel stays on the compositor.
+
+       ⚠️ The measure is paid only when the visible set has actually MOVED.
+       apply() runs on every keystroke, and a rect over ninety cards forces a
+       layout of a sixteen-thousand-pixel page — three times across a pass.
+       passes() reads state and datasets and nothing else, so the decision is
+       taken as data first and the layouts happen only when that data changed.
+
+       Only what can be SEEN travels. A card eight thousand pixels down the
+       page moving is invisible and still costs a composited layer, so anything
+       outside a viewport either side of the fold simply arrives. That is also
+       what keeps the mover count near the number of cards on screen rather
+       than near ninety, and FLIP_MAX is left as a backstop: past forty this
+       stops reading as «that card went there» and becomes the whole page
+       sliding, which is slower to follow than an instant swap.
+
+       Cards that ARRIVE do not travel. They were nowhere to travel from, and
+       inventing an origin for them is the sort of motion this page argues
+       against everywhere else.
+
+       Interruption is free and it is not an accident: getBoundingClientRect
+       reports the TRANSFORMED box, so a card caught mid-flight is measured
+       where it visually is, the residual transform is cleared before the
+       second measure, and the new travel starts from the presentation value
+       rather than jumping to the layout one. */
+    var FLIP_MAX = 40;
+    var flipPrev = null, flipTimer = null, flipSig = null;
+    var flipRM = matchMedia('(prefers-reduced-motion: reduce)');
+    function flipMeasure(){
+      if (flipRM.matches){ flipPrev = null; return; }
+      var m = new Map();
+      // One read pass with no writes between it: the browser flushes layout
+      // once and the other eighty-nine reads come off that same flush.
+      cards.forEach(function(c){ if (!c.hidden) m.set(c, c.getBoundingClientRect()); });
+      flipPrev = m;
+    }
+    function flipPlay(){
+      var prev = flipPrev; flipPrev = null;
+      if (!prev) return;
+      // Residual transforms come off BEFORE the second measure, or the delta
+      // would be computed against a box that is still travelling.
+      prev.forEach(function(r, c){
+        if (c.style.transform){ c.classList.remove('spec--flip'); c.style.transform = ''; }
+      });
+      var vh = innerHeight, movers = [];
+      cards.forEach(function(c){
+        if (c.hidden) return;
+        var o = prev.get(c); if (!o) return;
+        var n = c.getBoundingClientRect();
+        if (n.bottom < -vh || n.top > vh * 2) return;
+        var dx = o.left - n.left, dy = o.top - n.top;
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+        movers.push([c, dx, dy]);
+      });
+      if (!movers.length || movers.length > FLIP_MAX) return;
+      movers.forEach(function(p){
+        p[0].classList.remove('spec--flip');
+        p[0].style.transform = 'translate(' + p[1] + 'px,' + p[2] + 'px)';
+      });
+      void document.body.offsetHeight;   // one reflow for the whole set
+      movers.forEach(function(p){
+        p[0].classList.add('spec--flip');
+        p[0].style.transform = '';
+      });
+      clearTimeout(flipTimer);
+      flipTimer = setTimeout(function(){
+        movers.forEach(function(p){ p[0].classList.remove('spec--flip'); });
+      }, 600);
+    }
+
     function apply(){
       var shown = 0;
-      cards.forEach(function(card){
-        var ok = passes(card);
-        card.hidden = !ok;
-        if (ok) shown++;
+      var oks = cards.map(function(c){ return passes(c); });
+      var sig = oks.join('');
+      if (sig !== flipSig){ flipMeasure(); flipSig = sig; }
+      cards.forEach(function(card, i){
+        card.hidden = !oks[i];
+        if (oks[i]) shown++;
       });
       // Hide a section heading whose cards have all been filtered out — and,
       // since the orders below empty the authored sections entirely rather
@@ -10266,6 +10467,10 @@ document.addEventListener("DOMContentLoaded", function () {
                   || sortNow !== 'grouped';
       reset.hidden = !filtered;
       paintRail();
+      // Last, and after paintRail on purpose: below 1360 the panel is in the
+      // flow, so its own counts changing can move the feed. The second measure
+      // has to see every consequence of this pass, not most of them.
+      flipPlay();
     }
 
 
@@ -11351,9 +11556,41 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       var saved = null;
       try{ saved = localStorage.getItem(KEY); }catch(e){}
-      set(saved === 'off', false);
+      set(saved !== 'on', false);
       fold.addEventListener('click', function(){ set(true, true); show.focus(); });
       show.addEventListener('click', function(){ set(false, true); fold.focus(); });
+    })();
+
+    // ---- The right wall folds -----------------------------------------
+    // Deliberately the same shape as the block above it: one state on <body>,
+    // two handles that are never both on screen, one remembered key, and the
+    // focus handed to whichever handle is taking the other's place so the
+    // keyboard never lands on a button that just left.
+    // Closed by default. Every control in this panel restyles all ninety
+    // studies at once, which is a thing to reach for rather than a thing to
+    // arrive in — and arriving in it spent 276px of the first screen on a
+    // question most visits never ask.
+    (function(){
+      var hide = document.querySelector('.tools-hide');
+      var show = document.querySelector('.tools-show');
+      if (!hide || !show) return;
+      // Swedish, like every other key on this page. See the note above.
+      var KEY = 'knapplabbet-restyle';
+      function set(off, remember){
+        document.body.setAttribute('data-insp', off ? 'off' : 'on');
+        hide.setAttribute('aria-expanded', off ? 'false' : 'true');
+        show.setAttribute('aria-expanded', off ? 'false' : 'true');
+        // hidden as well as display:none — the handle that is not on screen
+        // must not be a tab stop, and CSS alone cannot say that.
+        hide.hidden = off;
+        show.hidden = !off;
+        if (remember){ try{ localStorage.setItem(KEY, off ? 'off' : 'on'); }catch(e){} }
+      }
+      var saved = null;
+      try{ saved = localStorage.getItem(KEY); }catch(e){}
+      set(saved !== 'on', false);
+      hide.addEventListener('click', function(){ set(true, true); show.focus(); });
+      show.addEventListener('click', function(){ set(false, true); hide.focus(); });
     })();
 
     if (railToggle && rail){
