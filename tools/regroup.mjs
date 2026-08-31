@@ -124,6 +124,7 @@ const ORDER_OF = {
     'Fixed shadow',
     'Slab tilt',
     'Answers back',
+    'It has an interior',
     'Stack fan',
 
     // Mass: it has weight, and the pointer has to argue with it.
@@ -142,6 +143,7 @@ const ORDER_OF = {
     // repaint-never-re-measure rule, which card 128 opened and 136 inherits.
     'Grows its word',
     'Tightens',
+    'Only the ends are pixels',
 
     // The reduction: almost nothing, on purpose.
     'Hairline only',
@@ -232,6 +234,7 @@ const ORDER_OF = {
     'Weight wave',
     'Nervous type',
     'Each letter keeps its area',
+    'Hinged at the first letter',
 
     // The word assembles: it was not there, and then it is.
     'It prints',
@@ -244,6 +247,7 @@ const ORDER_OF = {
     // Arrows that travel.
     'Arrow relay',
     'Dot to arrow',
+    'One dot, five times',
     'Ellipsis arrow',
     'Sprite arrow',
     'Clipped relay',
