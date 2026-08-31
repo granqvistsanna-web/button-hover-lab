@@ -12,42 +12,42 @@
 //   node tools/versions.mjs            # apply
 //   node tools/versions.mjs --check    # report drift, change nothing
 //
-// A key with no button is an ERROR, not a skip: it means the study was retired
-// or its class renamed, and the manifest has to say so deliberately.
+// A key with no study is an ERROR, not a skip: it means the study was retired
+// or renamed, and the manifest has to say so deliberately. All of them are
+// collected and reported together, and nothing is written until the manifest
+// and the page agree — reporting one name per attempt is how twenty-two stale
+// declarations passed for a bug in the tool for weeks. Those twenty-two were
+// retired on 2026-08-31.
 import {readFileSync, writeFileSync} from 'fs';
 
 export const VERSIONS = {
   // — Whole button ——————————————————————————————————————————————
-  'v-grow':'fill outline link', 'v-shrink':'fill outline link',
-  'v-from':'fill outline link', 'v-bloom':'fill outline',
-  'v-inner':'fill outline',     'v-live':'fill outline',
+  'v-bloom':'fill', 'v-inner':'fill',
   // pure transform or label: no plate for the mechanism to depend on
-  'magnet':'fill outline link', 'j-order':'fill outline link',
-  'o-quiet':'fill outline link',
+  'magnet':'outline link', 'o-quiet':'fill link',
   // geometric, but the gesture is about a plate — a link has none to give
-  'i-mass':'fill outline', 't-mark':'fill outline',
-  't-hold':'fill outline',  'q-riser':'fill outline',
+  'i-mass':'outline', 't-mark':'fill',
+  't-hold':'fill',  'q-riser':'outline',
   // The riser is the mechanism and a riser is a box-shadow, which every
   // surface can carry. 43 names its wall as a token so each treatment states
   // what the cap is made of; 116's sheets do the same one card down. Neither
   // is a link: a wall and a stack both need a plate to stand under.
-  'g-key':'built fill outline', 'z-stack':'fill outline',
+  'g-key':'outline', 'z-stack':'outline',
   // owns its surface outright
-  'i-give':'built', 'g-measure':'built', 'lift':'built',
+  'g-measure':'', 'lift':'',
   // — Fill ————————————————————————————————————————————————————
-  'sweep':'fill outline link', 'shutter':'fill outline',
-  'inkfill':'built fill',      'sheen':'built outline',
-  'o-plate':'built',
+  'sweep':'fill link', 'shutter':'fill',
+  'inkfill':'fill',      'sheen':'outline',
   // No link version: the mechanism is a plate entering from any of four edges,
   // and a 1.5px rule on the bottom edge can only ever answer one of them.
-  'j-dir':'fill outline',
+  'j-dir':'fill',
   // 129 is 75's tile on an authored cycle, so it takes 75's fill and stops
   // exactly where 75 stops — four edges, one rule to answer them with.
   'j-turns':'fill',
   // 91's staircase is a HEIGHT — six columns rising off the floor with a
   // jagged leading edge — so a 1.5px rule has nothing for it to happen in.
   // Card 08's absence, one axis over.
-  'o-step':'fill outline',
+  'o-step':'fill',
   // 130's plate is nailed down and only the word drifts, in pixels read off
   // the plate's own rect, so no treatment can reach the mechanism at all.
   // Fill only, and for what it BUYS rather than what it survives: the cap is
@@ -60,30 +60,22 @@ export const VERSIONS = {
   // length. No outline: .btn--line IS the ring 136 already draws for itself.
   'h-grow':'fill link',
   // — Material and light ————————————————————————————————————————
-  'f-glas':'built', 'f-motljus':'built', 'f-lykta':'built',
-  's-bevel':'built', 's-crt':'built', 's-sprite':'built',
-  'l-knurl':'built', 'l-deboss':'built', 'x-bevel':'built', 'w-pitch':'built',
-  'o-hatch':'built',
-  // the tag is the effect and it hangs off the button rather than on it
-  'l-plate':'fill outline link',
+  'f-glas':'', 'f-motljus':'', 'f-lykta':'',
+  's-bevel':'', 's-sprite':'', 'l-knurl':'', 'x-bevel':'',
   // — Icon ————————————————————————————————————————————————————
   // The mark is a child that moves, fades or redraws; the button's own surface
   // is not part of the mechanism, so all three treatments hold. The five with a
   // «-mark» child are in here rather than below because that child carries only
   // position, transform and opacity — it is an icon wrapper, not a plate.
-  'relay':'fill outline link',   'dotm':'fill outline link',
-  'h-ellip':'fill outline link', 'h-caret':'fill outline link',
-  'i-settle':'fill outline link','i-anti':'fill outline link',
-  'i-space':'fill outline link', 'i-throw':'fill outline link',
-  'j-out':'fill outline link',   'j-optic':'fill outline link',
-  'q-spin':'fill outline link',  'n-cross':'fill outline link',
-  'w-grid':'fill outline link',  'w-frames':'fill outline link',
-  'w-redraw':'fill outline link','x-needle':'fill outline link',
+  'relay':'outline link',   'dotm':'fill link',
+  'i-anti':'outline link',  'i-throw':'outline link',
+  'j-out':'fill',   'j-optic':'fill link',
+  'q-spin':'fill link',  'n-cross':'fill link',
+  'w-grid':'outline link',  'w-redraw':'fill link',
   // Two plates joined, not one button: a label plate and a 46px mark plate that
   // carries its own --ink fill and --on-ink label. A treatment on the outer
   // button is a THIRD surface arguing with the two inside it, so there is none.
-  'p-part':'built', 'p-walk':'built', 'p-trade':'built', 'p-cycle':'built',
-  'p-hinge':'built', 'p-slip':'built', 'n-join':'built',
+  'p-part':'', 'p-walk':'', 'p-cycle':'', 'n-join':'',
   // — Label ————————————————————————————————————————————————————
   // The word performs and the plate is only what it stands on, so these hold
   // whatever treatment the label can be drawn in. None of the three fills
@@ -95,17 +87,17 @@ export const VERSIONS = {
   // the switch skips any label node with element children, so a structured
   // label loses Long and keeps the treatment switch. Which is also the whole
   // of what these three give up — no Long control on 20, 24 or 85.
-  'u-roll':'fill outline link', 'u-centre':'fill outline link',
-  'q-jitter':'fill outline link',
-  // 127 is the one card here that keeps a 1px border in every version and only
-  // recolours it, so its built and fill boxes measure identical rather than a
-  // border apart. Its two label copies are plain text, so it keeps Long.
-  'h-arc':'built fill link',
+  'u-roll':'fill link', 'u-centre':'fill link',
+  'q-jitter':'fill link',
+  // 127 keeps a 1px border in every version and only recolours it, so its own
+  // plate and a generic .btn--solid measure identical rather than a border
+  // apart — which is why the fill is not offered twice and only the link is
+  // declared. Its two label copies are plain text, so it keeps Long.
+  'h-arc':'link',
   // — Two at once ————————————————————————————————————————————————
-  // A compound is only as portable as its stricter half. 118 owns its surface
-  // outright: the corner shape IS the study, and a treatment over it is a
-  // second opinion about the same edge. 123 was filed beside it as «a lit
-  // plate» and that was wrong by half — card 10, the sheen it is half made of,
+  // A compound is only as portable as its stricter half. 123 was filed as «a
+  // lit plate» and that was wrong by half — card 10, the sheen it is half made
+  // of,
   // ships filled already and inverts its streak to --on-ink there, so 123 in
   // fill is 49 x 10 read on 10's plate. It stops at fill: outline and link
   // have no plate to raise and nothing for the light to cross.
@@ -115,14 +107,71 @@ export const VERSIONS = {
   // itself, which skips any label node with element children. So 121 loses
   // Long and keeps the treatment, and it earns the fill outright: on an --ink
   // plate the tide inverts to --on-ink and the letters that arrive go back to
-  // --ink. No link and no built — a level needs a surface to rise against, and
-  // with the border gone the card is invisible until you point at it.
+  // --ink. No link — a level needs a surface to rise against, and with the
+  // border gone the card is invisible until you point at it.
   // 122's ellipse needs a surface, and a link has none. 124 sets its own
   // border and radius, so a treatment on top of it is a third opinion. Only
   // the two pure roll-plus-transform cards survive all three.
-  'c-chassis':'built', 'c-crest':'built fill', 'c-regis':'built',
-  'c-relay':'fill outline', 'c-tide':'fill outline',
-  'c-swell':'fill outline link', 'c-mass':'fill outline link',
+  'c-crest':'', 'c-regis':'',
+  'c-relay':'fill', 'c-tide':'fill',
+  'c-swell':'outline link', 'c-mass':'outline link',
+};
+
+/* The version each study SHIPS in — one of the three, for every study on the
+ * page. It used to be four, the fourth being «As built»: the studies that
+ * supply their own surface carried no treatment class, so the control had a
+ * position that named the ABSENCE of one. Fifty-one studies sat behind it —
+ * knurling, a keycap, frost, a bevel, six rows of links — filed under a word
+ * that describes the source rather than the button.
+ *
+ * Derived, not decided. Each of these was measured: the study was rendered
+ * over a stage forced to a colour nothing on the page uses, and the button's
+ * interior and perimeter read back off a screenshot. An interior that paints
+ * over the stage is a plate (fill); an interior that does not, inside a
+ * perimeter that does, is an edge (outline); neither is a label (link). Run
+ * against the forty-six studies that already carried a treatment class, that
+ * test reproduced all forty-six.
+ *
+ * The class still wins where a study carries one — it IS the fact — so these
+ * entries only have to answer for the fifty-one that do not. They are listed
+ * for all ninety-seven anyway, because a manifest that covers a subset is one
+ * nobody can check against the page.
+ */
+export const NATIVE = {
+  // — Fill: the study paints its own plate ————————————————————————
+  'p-slot':'fill', 'o-caps':'fill', 'p-index':'fill',
+  'sheen':'fill', 'relay':'fill', 'roll':'fill', 'h-second':'fill',
+  'h-marq':'fill', 'u-lift':'fill', 'u-words':'fill', 'u-shuffle':'fill',
+  'e-chamfer':'fill', 'e-count':'fill', 'f-motljus':'fill', 'f-lykta':'fill',
+  's-bevel':'fill', 's-sprite':'fill', 'g-measure':'fill', 'f-kant':'fill',
+  'g-key':'fill', 'l-knurl':'fill', 'lift':'fill', 'magnet':'fill',
+  'i-mass':'fill', 'i-anti':'fill', 'i-throw':'fill', 'k-pair':'fill',
+  'p-part':'fill', 'p-walk':'fill', 'p-cycle':'fill', 'q-riser':'fill',
+  'n-join':'fill', 'w-grid':'fill', 'w-corner':'fill', 'x-bevel':'fill',
+  'y-lit':'fill', 'y-hold':'fill', 'z-lurch':'fill', 'z-stack':'fill',
+  'z-gum':'fill', 'c-swell':'fill', 'c-mass':'fill', 'c-crest':'fill',
+  'squash':'fill', 'h-arc':'fill', 'p-bud':'fill', 'k-lamp':'fill',
+  'c-against':'fill', 'c-wash':'fill', 'p-face':'fill', 'u-burst':'fill',
+  'u-area':'fill', 'p-tighten':'fill',
+  // — Outline: an edge and no plate ——————————————————————————————
+  'q-hinge':'outline',
+  'v-bloom':'outline', 'v-inner':'outline', 'sweep':'outline',
+  'shutter':'outline', 'inkfill':'outline', 'dotm':'outline',
+  'u-roll':'outline', 'u-centre':'outline', 'e-wave':'outline',
+  'e-draw':'outline', 'f-glas':'outline', 'l-plate-wrap':'outline',
+  'i-rule':'outline', 'k-share':'outline',
+  't-report':'outline', 't-mark':'outline', 't-hold':'outline',
+  'j-dir':'outline', 'j-out':'outline', 'j-optic':'outline',
+  'j-resolve':'outline', 'q-spin':'outline', 'q-jitter':'outline',
+  'o-quiet':'outline', 'o-step':'outline', 'n-cross':'outline',
+  'w-redraw':'outline', 'c-tide':'outline', 'c-relay':'outline',
+  'e-race':'outline', 'j-turns':'outline', 'i-loose':'outline',
+  'g-two':'outline', 'k-fit':'outline', 'k-hand':'outline',
+  'j-plus':'outline', 'h-grow':'outline', 'o-pix':'outline',
+  // — Link: a label, and nothing drawn around it ————————————————
+  'k-ind':'link',
+  'corners':'link', 'uline':'link', 's-mid':'link', 'i-beam':'link',
+  'k-recede':'link', 'k-rep':'link', 'k-div':'link', 'c-regis':'link',
 };
 
 const F = new URL('../index.html', import.meta.url).pathname;
@@ -130,20 +179,60 @@ let s = readFileSync(F, 'utf8');
 const check = process.argv.includes('--check');
 let applied = 0, already = 0; const drift = [];
 
-for (const [key, v] of Object.entries(VERSIONS)){
-  const m = new RegExp('class="btn[^"]*\\b' + key.replace(/-/g,'\\-') + '\\b').exec(s);
-  if (!m) throw new Error('no button carries .' + key + ' — retired or renamed?');
-  const a = s.lastIndexOf('<article class="spec', m.index);
-  if (a === -1) throw new Error('.' + key + ' is not inside an article');
+/* Set one attribute on an article's opening tag, or remove it where the value
+ * is empty. An empty data-versions is not the same as data-versions="": it
+ * means the study offers nothing BEYOND the version it ships in, which is what
+ * an absent attribute has always meant on this page. */
+function set (head, name, value) {
+  const stripped = head.replace(new RegExp('\\s*' + name + '="[^"]*"'), '');
+  return value
+    ? stripped.slice(0, -1).trimEnd() + ` ${name}="${value}">`
+    : stripped;
+}
+
+/* Both facts land in one pass, because they are one fact seen twice: the
+ * version a study ships in and the ones it can also hold are the same question
+ * about the same article, and writing them in two passes is how they drift. */
+const KEYS = [...new Set([...Object.keys(NATIVE), ...Object.keys(VERSIONS)])];
+
+/* Resolved by the article's data-key and NOT by a class on the button, which
+ * is what this used to do. The key IS the article's attribute — the identity
+ * pass in the page says so — and a study whose key sits on a wrapper rather
+ * than on the .btn was simply unreachable: l-plate-wrap is one, and the six
+ * k-row studies are six more. Matching the class also matched prefixes of
+ * other keys, which the \b only half protected against. */
+const missing = [];
+for (const key of KEYS){
+  const m = new RegExp('<article class="spec[^>]*data-key="' + key + '"').exec(s);
+  if (!m){ missing.push(key); continue; }
+  const a = m.index;
   const head = s.slice(a, s.indexOf('>', a) + 1);
-  const has = /data-versions="([^"]*)"/.exec(head);
-  if (has && has[1] === v){ already++; continue; }
-  if (has) drift.push(key + ': "' + has[1] + '" → "' + v + '"');
-  const stripped = head.replace(/\s*data-versions="[^"]*"/, '');
-  const next = stripped.slice(0, -1).trimEnd() + ` data-versions="${v}">`;
+
+  let next = head;
+  for (const [name, want] of [['data-native',   NATIVE[key]],
+                              ['data-versions', VERSIONS[key]]]){
+    if (want === undefined) continue;           // this manifest says nothing
+    const has = new RegExp(name + '="([^"]*)"').exec(next);
+    const now = has ? has[1] : '';
+    if (now === want) continue;
+    drift.push(key + ' ' + name + ': "' + now + '" → "' + want + '"');
+    next = set(next, name, want);
+  }
+  if (next === head){ already++; continue; }
   if (!check) s = s.slice(0, a) + next + s.slice(a + head.length);
   applied++;
 }
+/* A key with no study is an ERROR, not a skip: it means the study was retired
+ * or renamed, and the manifest has to say so deliberately. Collected rather
+ * than thrown on the first one, because the first one is never the only one —
+ * this refused to run for weeks while reporting a single name per attempt, so
+ * nobody could see it was twenty-one stale declarations rather than a bug. */
+if (missing.length) {
+  console.error(`${missing.length} manifest keys have no study on the page — retired, ` +
+    `or renamed:\n  ${missing.join('\n  ')}\n` +
+    'Nothing written. Remove them from VERSIONS/NATIVE, or restore the studies.');
+  process.exit(1);
+}
 if (!check && applied) writeFileSync(F, s);
-console.log(`${Object.keys(VERSIONS).length} declared · ${already} already correct · ${applied} ${check ? 'would change' : 'written'}`);
+console.log(`${KEYS.length} studies · ${already} already correct · ${applied} ${check ? 'would change' : 'written'}`);
 if (drift.length) console.log('drift:\n  ' + drift.join('\n  '));
