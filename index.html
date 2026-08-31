@@ -623,6 +623,137 @@
     --line:var(--a-soft,      rgba(0,0,0,.10));
     --line-soft:var(--a-soft, rgba(0,0,0,.10));
   }
+
+  /* ---- The plate a material study is made of ---------------------------
+     🔑 SEVEN STUDIES SPELL THEIR SURFACE AS A NEUTRAL RUNG, AND A RUNG IS THE
+     ONE THING THE COLOUR CONTROLS DO NOT WRITE. 34 and 104 paint --bg-3 and
+     --bg-2; 36 paints --bg-2 on a pseudo-element; 44, 109 and 113 paint
+     --lift-bg. The toolbar writes --ink-text, --ink, --accent and --ink-hover,
+     so on those six the label took the colour, the flood took the colour, the
+     stair and the border took the colour — and the plate under all of it
+     stayed graphite. Reported as «some buttons have gray bg even when a colour
+     setting is set», and it is exactly that: not a bug in the map, a surface
+     the map was never asked about.
+
+     ⚠️ AND IT CANNOT BE FIXED BY PUTTING THE LADDER TINT BACK. That tint came
+     out on 2026-08-31 and the argument for taking it out still holds: it was a
+     capped color-mix, so the amount of tint was a function of the HUE, it was
+     off entirely in light, and it repointed every neutral surface on all
+     ninety studies — seventeen of which paint a neutral because they mean a
+     neutral. One pick came out as several colours and no reader could see the
+     rule, because there wasn't one.
+
+     So the rule is stated instead, and it is one rule:
+
+       ✦ A MATERIAL'S LADDER IS REPAINTED IN THE PICK. Every rung keeps its own
+         LIGHTNESS and takes the pick's HUE and SATURATION — a projection, not
+         a blend, so there is no fraction to cap and no hue it behaves
+         differently for. Lightness is what the ladder encodes, so every
+         relationship the material is built out of survives by construction:
+         the bevel's two facets stay the same two steps either side of its
+         face, the knurl's ridges stay .17 over their plate, the lamp stays
+         the same distance above the surface it lights.
+       ✦ WHERE SOMETHING ARRIVES ON THE PLATE, THE PLATE MOVES OUT OF ITS WAY.
+         109's flood is --ink and 36, 44 and 113's is --ink-hover; a plate you
+         cannot see the effect happen on is not a material, it is a fill. So
+         --m-face — and only --m-face — is walked in lightness until what lands
+         on it clears the step named at M_STEP. The two bevels have nothing
+         arriving, so they are handed an empty list and never move. One
+         function, six rungs, and the difference between the two groups is an
+         argument rather than a branch.
+
+     A GREY PICK RETURNS THE RUNG UNCHANGED, which is the identity case falling
+     out of the arithmetic: Ash has no saturation to give, so its plates stay
+     the graphite they already were, and nothing had to test for it.
+
+     SCOPED TO THE SIX AND NOT TO .btn. That is the whole difference from the
+     tint that came out: a study whose plate means «a neutral surface» — 43,
+     49, 116 — is not in this list and does not move. Opting in is a selector,
+     which is a thing a reader can see.
+
+     ⚠️ 113 IS IN THE LIST AND ITS REST LABEL IS STILL NOT THE PICK, which is
+     the one place this hands back something it cannot make honest. That label
+     is --ink-hover under mix-blend-mode:difference — the same arithmetic 32
+     opts out over — so what you read at rest is |plate − label|, and a plate in
+     the pick returns the pick's COMPLEMENT: Rose paints a green word on a
+     crimson pill. It stays in, and the reason is that the alternative is worse
+     rather than that a complement is fine. 113's SUBJECT is the bar and the
+     roll and both survive whole: the bar IS the pick, and the instant it
+     arrives under the label the difference goes to exact black, which is what
+     the blend is spent on. The state being replaced was not a chosen colour
+     either — it was |grey − label|, measured by tools/a11y.mjs at 1.24:1 in
+     light with NOTHING set, a label nobody could read. A complement at 2.7:1 is
+     the better of the two. And it is the harvest rather than the toolbar
+     readout that can measure a blend: the readout models TOKENS, and no token
+     is what 113 paints.
+
+     ⚠️ 32 IS NOT IN THE LIST AND MUST NEVER BE. It resets the accent inputs to
+     «initial» two hundred lines down and says why: its light is a difference
+     blend, |backdrop − source| per channel, so inverting a tinted plate
+     returns that tint's complement — violet came back green, measured. It is
+     the one study that cannot take a colour, and it now says so on its own
+     chip rather than accepting the control and doing nothing.
+
+     ⚠️ THE FALLBACKS ARE LITERALS, for the reason the boundary remap gives
+     four rules up: --bg-2:var(--m-2, var(--bg-2)) is a cycle, because a
+     custom property substitutes at the element where it is USED and the inner
+     var() would resolve against this very declaration. Duplicated per theme,
+     on purpose, next to the ladder it copies. */
+  /* The two bevels. Nothing arrives on either, so every rung comes back at the
+     lightness it went in at — except the LIT EDGE, which is a control boundary
+     and is walked to 3:1 on the card the way every boundary on this page is.
+     Not decoration: the same L is not the same luminance at every hue, so the
+     projection alone put dark Violet's lit edge at 2.73:1 and light Fern's at
+     2.28:1, under the 3:1 --line-ctl's own comment measures itself against. The
+     walk moves those two and nothing else — the other twelve palette/theme
+     pairs clear it where the projection left them. */
+  .btn.s-bevel, .btn.x-bevel{
+    --bg-0:var(--m-0,     #0f0f0f);
+    --bg-2:var(--m-2,     #222222);
+    --bg-3:var(--m-3,     #2e2e2e);
+    --ink-low:var(--m-low, #8a8a8a);
+    --ink-mid:var(--m-mid, #b3b3b3);
+  }
+  :root[data-theme="light"] .btn.s-bevel, :root[data-theme="light"] .btn.x-bevel{
+    --bg-0:var(--m-0,     #ffffff);
+    --bg-2:var(--m-2,     #e7e7e7);
+    --bg-3:var(--m-3,     #d6d6d6);
+    --ink-low:var(--m-low, #636363);
+    --ink-mid:var(--m-mid, #4b4b4b);
+  }
+  /* The four the colour ARRIVES on. One face between them: --lift-bg and
+     --bg-2 are one rung apart and no card here shows both, so a second value
+     would buy a difference nobody is positioned to see. */
+  .btn.s-sprite, .btn.l-knurl, .btn.y-lit, .btn.z-lurch{
+    --lift-bg:var(--m-face, #3a3a3a);
+    --bg-2:var(--m-face,    #222222);
+  }
+  :root[data-theme="light"] .btn.s-sprite, :root[data-theme="light"] .btn.l-knurl,
+  :root[data-theme="light"] .btn.y-lit,    :root[data-theme="light"] .btn.z-lurch{
+    --lift-bg:var(--m-face, #e7e7e7);
+    --bg-2:var(--m-face,    #e7e7e7);
+  }
+  /* The label on a plate that is no longer the card's own grey. --ink-text is
+     fitted against the CARD, which was near enough while the plates were a rung
+     off it; a projection keeps a rung's lightness and NOT its luminance — hsl L
+     .23 is luminance .165 at hue 60 and .013 at hue 240, thirteen times apart —
+     so the label has to be fitted against the plates themselves or the readout
+     is quoting a background nobody is looking at. paint() fits it and the
+     readout reports the worst of them, so the number stays a measurement.
+     ⚠️ TWO INKS AND NOT ONE, and the second was bought the hard way. A single
+     fit has to clear its floor on EVERY plate at once, and in light the two
+     groups land at opposite ends of the ladder — Rose gives the bevels #ffadd4
+     and the walked face #cf0063 — so no colour clears both and the fit falls
+     back to its extreme. Measured: black, at 2.6:1 on light Azure's face, with
+     the readout correctly reporting «below AA» for a page that had just been
+     made worse. Two grounds, two inks.
+     Here and not in each study's own rule for the four: .btn already sets its
+     own colour and this is one class more specific, so no study rule changes
+     shape. The two bevels reach theirs through their own colour declaration,
+     which is further down the file and would otherwise win on source order. */
+  .btn.s-sprite, .btn.l-knurl, .btn.y-lit, .btn.z-lurch{
+    color:var(--m-face-ink, var(--ink-text));
+  }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
   .btn--solid{background:var(--ink); color:var(--ink-on-fill)}
@@ -1589,11 +1720,17 @@
      12.5px/500 with a 7px gap and no width it was the smallest interactive
      text in the panel and the only one whose hover was a colour change rather
      than a fill, so it read as an afterthought on top of the real controls.
-     Same font, same padding, same radius and the same row fill as the checkbox
-     rows underneath, and the star takes the checkbox's 13px gutter so the
-     three filter rows share one control column. */
+     Same font, same padding, same radius and the same row fill as the two
+     summaries beside it.
+
+     IT USED TO CARRY A STAR, and the star was what stopped it being a peer.
+     The glyph took the checkbox column's 13px gutter, which aligned this row
+     with the ticks INSIDE the two disclosures — a level down — and set its
+     text 21px in from «What changes» and «How it runs», the two rows it
+     actually sits beside. One zone, three filters, three left edges. The
+     gutter went with the glyph, so the three now start on one line. */
   .fav-only{
-    display:flex; align-items:center; gap:8px; width:100%;
+    display:flex; align-items:center; width:100%;
     /* 500, the same as the two summaries beside it. All three rows in this zone
        are filters and they are peers; at 400 the star was the one row in the
        set that read a step quieter than the others, which is the imbalance the
@@ -1604,14 +1741,6 @@
     padding:7px 9px; margin:0; cursor:pointer; text-align:left;
     transition:color var(--t-fast) var(--ease);
   }
-  /* The glyph is the same mark the per-card control uses, so the toggle and
-     the thing it filters on are recognisably one pair. */
-  /* Hollow off, solid on — the same reading as the star on every card, and
-     the state is carried by the GLYPH rather than by a fill, so the control
-     can stay a link. */
-  .fav-only::before{content:"☆"; font-size:13px; line-height:1; color:inherit;
-    width:13px; flex:none; text-align:center}
-  .fav-only[aria-pressed="true"]::before{content:"★"}
   .fav-only:hover{color:var(--ink-hi)}
   /* Feedback on the press, not on the release: everything on this page that
      can be pressed repeatedly says so the instant it goes down. */
@@ -1629,7 +1758,14 @@
      background-color under it would be covered by the fill it is meant to
      replace. Same rung either way. */
   .rail-list label:active,.rail-sects a:active,.fav-only:active{--row-fill:var(--ctl-hi)}
-  .fav-only[aria-pressed="true"]{color:var(--ink-hi)}
+  /* On, without the pointer on it. The hollow-to-solid glyph carried this
+     state and went with the star, and the colour change left behind is the
+     same one hover makes — so a filter set five rows ago read as nothing at
+     all. The filled row says it instead, which is the mechanism the section
+     list already uses for «where you are»: one declaration, two meanings of
+     ON, and the row fill is the only thing in this panel that persists
+     without the pointer. */
+  .fav-only[aria-pressed="true"]{color:var(--ink-hi); background-size:100% 100%}
   /* Inset, like the two summaries beside it: at +2px a full-width row's ring
      bulges past every other row in the zone. The per-card .fav is a small
      glyph and keeps its outside ring. */
@@ -1940,13 +2076,11 @@
      The one control in this panel that reorders rather than removes. It is
      drawn as the search field's sibling — same border, same radius, same
      field background — because both take a value from you, where the facet
-     rows below take a tick. The chevron is a background image rather than the
-     UA's own arrow: appearance:none is needed to get the plate to match the
-     search field at all, and that takes the arrow with it. Drawn as two lines
-     in an inline SVG so it is the same mark as the .rail-sum chevron and needs
-     no network. It is stroked in currentColor via a data URI, which cannot
-     read a custom property, so the colour is written out once here — the one
-     literal in the panel, and it is the token's own value. */
+     rows below take a tick. appearance:none is what makes the plate match the
+     search field at all, and it takes the UA's own arrow with it, so the
+     chevron is drawn: see «One chevron, at one size» below. It hangs off a
+     wrapper rather than being a background image, which is what let the two
+     data-URI literals and the light-theme fork they forced come out. */
   .rail-order{margin:0}
   .rail-sort{
     appearance:none; -webkit-appearance:none;
@@ -1954,18 +2088,10 @@
     padding:10px 30px 10px 9px; border-radius:var(--r-sm);
     border:0; background-color:var(--ctl);
     color:var(--ink-hi); font:400 14px/1.2 var(--font-ui);
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    /* The literal above is --ink-low's dark value. A data URI cannot read a
-       custom property, so the light theme cannot override the COLOUR — it has
-       to restate the whole mark. Written once, here, next to the original. */
-    background-repeat:no-repeat; background-position:right 11px center;
-    background-size:10px 7px;
-  }
-  :root[data-theme="light"] .rail-sort{
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%23636363' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
   .rail-sort:hover{color:var(--ink-hi); background-color:var(--bg-3)}
   .rail-sort:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
+  .rail-pick{position:relative; display:block}
   /* The list itself is drawn by the OS and inherits nothing, so the two colours
      it does take are set explicitly — without them a dark page opens a white
      menu on Windows. */
@@ -2013,16 +2139,61 @@
   .rail-sum:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px;
     color:var(--ink-hi)}
   .rail-sum-t{flex:1; min-width:0}
-  /* The chevron is drawn, not typed. A ▾ glyph sits on a different baseline in
-     every face and rotating one about its own box never lands where the eye
-     expects; two borders on a square do, and they scale with the row. */
-  .rail-sum::after{
-    content:""; width:6px; height:6px; flex:none; margin-right:3px;
-    border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+  /* ---- One chevron, at one size ---------------------------------------
+     The panel drew this mark three ways and so carried it at three sizes: a
+     10 x 7 SVG on the Order field, a 6px border square on the two
+     disclosures, and a typed › in the section list. Taken to the drawn
+     extents, the SVG painted 9.50 x 5.50 and the square 8.92 x 5.21 — near
+     enough to read as a mistake rather than as a difference — and the glyph
+     was neither, thinner than both and on a baseline no rule here could
+     reach.
+
+     The chevron is drawn, not typed, and this is why: a ▾ or a › sits
+     differently in every face, and rotating one about its own box never lands
+     where the eye expects. Two borders on a square do, and they scale with
+     the row. So one declaration now, and three rotations of it — right for a
+     link, right-then-down for a disclosure, down for the picker.
+
+     Each site keeps its own COLOUR: --ink-mid on a summary, --ink-low on the
+     field, --ink-faint on a section row. That is the panel's hierarchy and it
+     was never the thing that did not match. */
+  .rail-sum::after,
+  .rail-sects a::after,
+  .rail-pick::after{
+    content:""; width:6px; height:6px; flex:none;
+    border-right:1.5px solid currentColor;
+    border-bottom:1.5px solid currentColor;
     transform:rotate(-45deg);
-    transition:transform var(--t-2) var(--ease);
   }
+  /* The 3px is the rotated box's own overhang, and it belongs to both ROWS:
+     pointing right, the mark's vertex lands 4.74px from the box centre against
+     a 3px half-box, so 1.74px of it hangs into the row's own 9px of padding.
+     The two lists carry the same padding and the same width, so the same
+     margin puts their chevrons on one vertical line — which they were not on
+     while the section list drew a glyph instead. The picker is absolutely
+     placed against a filled field and keeps its own 11px. */
+  .rail-sum::after,
+  .rail-sects a::after{margin-right:3px}
+  .rail-sum::after{transition:transform var(--t-2) var(--ease)}
   .rail-drop[open] > .rail-sum::after{transform:translateY(-2px) rotate(45deg)}
+  /* The picker's own. Absolute, which also blockifies it: a ::after on a
+     display:block wrapper is inline by default and would drop the width and
+     height the rule above gives it. It sits on the WRAPPER and not on the
+     field because a <select> is a replaced element and its pseudo-elements
+     are not ours to draw, and pointer-events:none keeps the whole plate one
+     click target. It has to come AFTER the shared rule to keep its rotation:
+     same specificity, and the shared rest state points right. */
+  .rail-pick::after{
+    position:absolute; right:11px; top:50%;
+    /* -3 centres the BOX; the other -2 centres the MARK inside it. Pointing
+       down, the vertex swings 4.24px below the box centre while the two arm
+       ends stay level with it, so the ink sits low in its own box. It is the
+       page's own number: the open disclosure adds the same translateY(-2px)
+       for the same reason, on the same rotation. */
+    margin-top:-5px;
+    color:var(--ink-low); pointer-events:none;
+    transform:rotate(45deg);
+  }
   /* How many boxes are ticked inside. --ink-low would read as another label;
      the accent pair is the page's one piece of emphasis and this is the one
      thing in the panel that has to survive being glanced at. */
@@ -2145,11 +2316,15 @@
   }
   /* The two facet rows draw a disclosure caret and these drew nothing, so one
      panel had two list idioms and the one that NAVIGATES was the one with no
-     affordance. A chevron, not a caret: these go somewhere, they do not open. */
-  .rail-sects a::after{content:"›"; flex:none; font-size:15px; line-height:1;
-    color:var(--ink-faint); transform:translateY(-1px);
-    transition:color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
-  .rail-sects a:hover::after{color:var(--ink-mid); transform:translate(2px,-1px)}
+     affordance. It points right and never turns: these go somewhere, they do
+     not open. align-self, because the row is baseline-aligned for its name and
+     its count and a drawn box has no baseline to give — it would hang from
+     the row's bottom edge. */
+  .rail-sects a::after{
+    align-self:center; color:var(--ink-faint);
+    transition:color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+  }
+  .rail-sects a:hover::after{color:var(--ink-mid); transform:translate(2px,0) rotate(-45deg)}
   .rail-sects a[aria-current="true"]::after{color:var(--ink-mid)}
   .rail-sects a[hidden]{display:none}
 
@@ -2815,13 +2990,17 @@
            chosen after a filter reads as a correction. -->
       <div class="rail-order">
         <label class="rail-lbl" for="rail-sort">Order</label>
-        <select class="rail-sort" id="rail-sort">
-          <option value="grouped" selected>Grouped, as built</option>
-          <option value="updated">Latest update</option>
-          <option value="added">Recently added</option>
-          <option value="name">Name, A&ndash;Z</option>
-          <option value="num">Number</option>
-        </select>
+        <!-- The wrapper exists to hang the chevron off, the way .rail-find
+             hangs a glyph and a shortcut off the search input. -->
+        <div class="rail-pick">
+          <select class="rail-sort" id="rail-sort">
+            <option value="grouped" selected>Grouped, as built</option>
+            <option value="updated">Latest update</option>
+            <option value="added">Recently added</option>
+            <option value="name">Name, A&ndash;Z</option>
+            <option value="num">Number</option>
+          </select>
+        </div>
       </div>
 
       <!-- ---- Filter: one zone, three controls -------------------------
@@ -2884,6 +3063,82 @@
     <div id="studies" tabindex="-1"></div>
     <div class="feed">
     <section class="sect">
+  <h2>Compound</h2>
+  <p class="sect-intro">Two mechanisms from the sections below, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.</p>
+  <div class="grid">
+
+    <article class="spec" data-key="c-swell" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--solid c-swell"><span class="track"><span class="inner"><span>Start the trial</span><span aria-hidden="true">Start the trial</span></span></span></button>
+      </div>
+      <h3><span class="num">119</span>Swell</h3>
+      <p>Card 15's roll against a plate that grows under it. They do not fuse into one movement because they are on different axes &mdash; the label translates on Y while the plate scales &mdash; and the grow is capped at 1.03: at 1.06 the plate wins and the roll becomes something you notice afterwards.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec" data-key="c-crest" data-versions="built fill" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn c-crest"><span class="lbl">Download the pack</span></button>
+      </div>
+      <h3><span class="num">123</span>Crest</h3>
+      <p>The one sequenced pairing here: card 10's sheen is delayed by exactly the duration of card 49's lift, so the light crosses the face only once the face has arrived. Played together they read as two effects on one button; played in order they read as one material catching a light it just moved into. Elevation stays lightness &mdash; bg-2 to bg-3, no shadow.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec" data-key="c-tide" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line c-tide"><span class="lbl"><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>C</span><span>C</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>o</span><span>o</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>t</span><span>t</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>i</span><span>i</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>u</span><span>u</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>e</span><span>e</span></span></span></span><span class="sr">Continue</span></button>
+      </div>
+      <h3><span class="num">121</span>Tide</h3>
+      <p>Card 09's fill rising under card 20's letters, and the 26ms stagger is not decoration: it is the fill's own arrival time, sampled per letter, so each character flips just after the front has passed it. The roll is shorter than the fill, so the last letter still lands before the plate is full.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="c-against" data-added="2026-08-31T14:12:00+02:00" data-updated="2026-08-31T14:12:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--solid c-against"><span class="track"><span class="inner"><span class="lbl" data-label>Send the brief</span><span data-label aria-hidden="true">Send the brief</span></span></span><span class="c-against-mark" aria-hidden="true"><span class="inner"><span><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span><span><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
+      </div>
+      <h3><span class="num">138</span>Counter-rolling pair</h3>
+      <p>Card 15's roll, run twice with opposite sign: the label lifts to its duplicate while the mark drops to its own, both across the same distance on the same curve. Every other pairing here takes two different mechanisms; this takes one and turns half of it around, which is the cheapest way to get the tension 124 names &mdash; two channels leaving the same way would be the same word said twice, and the only thing separating repetition from a pair is that one of them goes against. The plate carries the shared curve underneath, so there is one arrival and two readings of it.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec" data-key="c-mass" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--solid c-mass"><span class="track"><span class="inner"><span>Book a call</span><span aria-hidden="true">Book a call</span></span></span></button>
+      </div>
+      <h3><span class="num">120</span>Lands first</h3>
+      <p>The same two ingredients as 119, argued from card 52 instead: one curve, DIFFERENT rungs. The label is light and lands at 200ms; the plate is heavy and is still settling at 450ms, darkening a step as it goes. The compound is the gap between the two arrivals, and nothing rotates.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec" data-key="c-relay" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line c-relay"><span class="lbl">Send the file</span>
+            <span class="slot" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+              <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+            </span>
+          </button>
+      </div>
+      <h3><span class="num">122</span>Leading edge</h3>
+      <p>Card 07 sweeping under card 11's arrow, with one change to the sweep: the front is an ellipse pinned to the left edge rather than a scaled rectangle, because a scaleX front is a flat vertical line and that is the one shape a wave never has. The arrow leaves by the edge the front is heading for, so the pair reads as a single movement.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="c-regis" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+      <div class="stage">
+        <button type="button" class="btn c-regis"><span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">View the plate</span></button>
+      </div>
+      <h3><span class="num">124</span>Closing marks</h3>
+      <p>Card 13's marks close IN while the label grows. Marks out and label open would be two channels saying the same word twice; a frame tightening against type expanding is a tension, and that is what makes it read as one gesture. The label grows on a transform and not on tracking, because tracking changes the label's width and a hug-content button is as wide as its label.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+  </div>
+</section>
+
+<section class="sect">
   <h2>Plate</h2>
   <p class="sect-intro">The whole surface answers at once: it scales, lifts, leans, or argues with the pointer about its own weight.</p>
   <div class="grid">
@@ -3105,6 +3360,15 @@
       </div>
       <h3><span class="num">91</span>Stepped fill</h3>
       <p>Six columns rise on a stagger, so the fill arrives with a jagged leading edge and resolves flat. It does not retract: on the way out it collapses toward the ceiling, last column first. Blocks arriving, not a front moving.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="o-pix" data-added="2026-08-31T14:12:00+02:00" data-updated="2026-08-31T14:12:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn btn--line o-pix"><span class="o-pix-raster" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="track"><span class="inner"><span class="lbl" data-label>Run the export</span><span data-label aria-hidden="true">Run the export</span></span></span></button>
+      </div>
+      <h3><span class="num">137</span>Pixel dissolve</h3>
+      <p>The plate is a raster and the fill arrives cell by cell rather than as a front: twenty-four cells, eight by three, each waiting its own turn. The order is authored, not random &mdash; cell <i>i</i> goes at rank (i &times; 7) mod 24, and because 7 is coprime with 24 no two neighbours hold neighbouring delays. That is card 25's argument moved from letters to a grid, and 91 is the nearest fill: it arrives in visible units too, but in six columns that still read as a front. The leave is the same order compressed to a fraction of its spread, so the plate dissolves out the way it came instead of clearing in one frame. And the label is never recoloured mid-fill, for the reason 91 sets out at length &mdash; it rolls, whole, one rung behind the raster, so its duplicate arrives in the fill's colour onto a plate that is already the fill.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3561,7 +3825,7 @@
       </div>
       <h3><span class="num">32</span>Backlight</h3>
         <p>A light rises behind the button and turns surface and label in the same movement — one layer handles both colour states. This is the one study the colour controls do not reach, and the mechanism is the reason rather than an omission: <code>difference</code> paints the gap between the layer and whatever sits under it, so inverting a tinted surface returns that tint&rsquo;s complement — a violet plate comes back green. Every part of this button is held neutral so the inversion is the only thing you see.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span><span class="chip">No colour</span></div>
     </article>
 
     <article class="spec" data-key="f-lykta" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
@@ -3840,73 +4104,6 @@
       <h3><span class="num">133</span>The row that doesn’t fit</h3>
       <p>The other six rows on this page assume every item is on screen. This one is wider than what holds it, which is what a filter row actually looks like on a phone: the end of it goes under a mask, and pointing at the last stretch of track advances the row by exactly one item. The mask is a mask and not a gradient painted in the card colour, so the row keeps working on any ground you drop it on.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-  </div>
-</section>
-
-<section class="sect">
-  <h2>Compound</h2>
-  <p class="sect-intro">Two mechanisms from the sections above, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.</p>
-  <div class="grid">
-
-    <article class="spec" data-key="c-swell" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--solid c-swell"><span class="track"><span class="inner"><span>Start the trial</span><span aria-hidden="true">Start the trial</span></span></span></button>
-      </div>
-      <h3><span class="num">119</span>Swell</h3>
-      <p>Card 15's roll against a plate that grows under it. They do not fuse into one movement because they are on different axes &mdash; the label translates on Y while the plate scales &mdash; and the grow is capped at 1.03: at 1.06 the plate wins and the roll becomes something you notice afterwards.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="c-crest" data-versions="built fill" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn c-crest"><span class="lbl">Download the pack</span></button>
-      </div>
-      <h3><span class="num">123</span>Crest</h3>
-      <p>The one sequenced pairing here: card 10's sheen is delayed by exactly the duration of card 49's lift, so the light crosses the face only once the face has arrived. Played together they read as two effects on one button; played in order they read as one material catching a light it just moved into. Elevation stays lightness &mdash; bg-2 to bg-3, no shadow.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="c-tide" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line c-tide"><span class="lbl"><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>C</span><span>C</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>o</span><span>o</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>t</span><span>t</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>i</span><span>i</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>u</span><span>u</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>e</span><span>e</span></span></span></span><span class="sr">Continue</span></button>
-      </div>
-      <h3><span class="num">121</span>Tide</h3>
-      <p>Card 09's fill rising under card 20's letters, and the 26ms stagger is not decoration: it is the fill's own arrival time, sampled per letter, so each character flips just after the front has passed it. The roll is shorter than the fill, so the last letter still lands before the plate is full.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="c-mass" data-versions="fill outline link" data-nolong data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--solid c-mass"><span class="track"><span class="inner"><span>Book a call</span><span aria-hidden="true">Book a call</span></span></span></button>
-      </div>
-      <h3><span class="num">120</span>Lands first</h3>
-      <p>The same two ingredients as 119, argued from card 52 instead: one curve, DIFFERENT rungs. The label is light and lands at 200ms; the plate is heavy and is still settling at 450ms, darkening a step as it goes. The compound is the gap between the two arrivals, and nothing rotates.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="c-relay" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--line c-relay"><span class="lbl">Send the file</span>
-            <span class="slot" aria-hidden="true">
-              <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
-              <svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
-            </span>
-          </button>
-      </div>
-      <h3><span class="num">122</span>Leading edge</h3>
-      <p>Card 07 sweeping under card 11's arrow, with one change to the sweep: the front is an ellipse pinned to the left edge rather than a scaled rectangle, because a scaleX front is a flat vertical line and that is the one shape a wave never has. The arrow leaves by the edge the front is heading for, so the pair reads as a single movement.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="c-regis" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn c-regis"><span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">View the plate</span></button>
-      </div>
-      <h3><span class="num">124</span>Closing marks</h3>
-      <p>Card 13's marks close IN while the label grows. Marks out and label open would be two channels saying the same word twice; a frame tightening against type expanding is a tension, and that is what makes it read as one gesture. The label grows on a transform and not on tracking, because tracking changes the label's width and a hug-content button is as wide as its label.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
   </div>
@@ -7538,7 +7735,7 @@ document.addEventListener("DOMContentLoaded", function () {
      under the 3:1 a boundary owes. That is the reason --line-ctl exists at
      all; the measurement is at the token. */
   .btn.s-bevel{
-    background:var(--bg-3); color:var(--ink-text);
+    background:var(--bg-3); color:var(--m-ink, var(--ink-text));
     border:2px solid; border-radius:0; padding:13px 26px;
     border-color:var(--ink-low) var(--bg-0) var(--bg-0) var(--ink-low);
     transition:border-color var(--t-2) ease;
@@ -8668,7 +8865,7 @@ document.addEventListener("DOMContentLoaded", function () {
        them on, so this card sets its own radius and does not follow the
        toolbar — the same admission card 98 makes for the same reason. */
     border-radius:2px;
-    background:var(--bg-2); color:var(--ink-text);
+    background:var(--bg-2); color:var(--m-ink, var(--ink-text));
     border:2px solid;
     border-color:var(--ink-low) var(--bg-3) var(--bg-3) var(--ink-low);
     padding:13px 26px;
@@ -10132,6 +10329,139 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 </style>
 
+<style>
+  /* ============ 137 Pixel dissolve · 138 Counter-rolling pair ============
+     From the 2026-08-31 reference bench: six outside buttons rebuilt in the
+     page's own system and compared on mechanism. Four turned out to be studies
+     this page already owns — the neubrutalist offset is 117 exactly, the letter
+     swipe is 20, 21 and 24, the glass is 31, and a surface wave is a third pass
+     over 121 and 123. These two are the ones that proposed something the
+     ninety did not have. */
+
+  /* ---- 137 Pixel dissolve -------------------------------------------
+     A fill that arrives in units, like 91, but on a grid rather than in
+     columns — so there is no front to read and no direction to leave by.
+
+     --t-pix is DERIVED from the page's own stagger rather than typed: a third
+     of --t-stagger, which puts the last cell 199ms behind the first and keeps
+     the whole raster inside one rung. A literal would have survived only the
+     rung it was written at.
+
+     THE LEAVE IS THE SAME ORDER, COMPRESSED. Clearing every cell in one frame
+     throws the effect away exactly where it is being read: the plate goes from
+     raster to flat between two frames and the last thing seen is a rectangle.
+     At 0.45 of the spread it comes apart the way it went together, and --t-2
+     is already a rung shorter at rest, so the exit is short twice over — which
+     is the page's standing asymmetry and not a second decision. */
+  .o-pix{position:relative; overflow:hidden; isolation:isolate; --t-pix:calc(var(--t-stagger) / 3)}
+  .o-pix .o-pix-raster{position:absolute; inset:0; display:grid; pointer-events:none;
+    grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(3,1fr)}
+  /* The cell scales from its own centre, so a landing cell reads as a pixel
+     switching on rather than as a tile sliding in from somewhere. --e-out and
+     not a back-eased curve: twenty-four overshoots at once is a shimmer. */
+  .o-pix .o-pix-raster span{background:var(--accent);
+    transform:scale(0); transform-origin:center;
+    transition:transform var(--t-2) var(--e-out);
+    transition-delay:calc(var(--r) * var(--t-pix) * 0.45)}
+  .o-pix:hover .o-pix-raster span,
+  .o-pix:focus-visible .o-pix-raster span{transform:scale(1);
+    transition-delay:calc(var(--r) * var(--t-pix))}
+
+  /* The authored permutation. Written out rather than computed, because the
+     page has no randomness to reach for and a rule you can read is a rule you
+     can argue with: rank = (i - 1) x 7 mod 24. Seven is coprime with 24, so
+     the sequence visits every cell exactly once and no two cells that touch
+     hold delays that touch. */
+  .o-pix .o-pix-raster span:nth-child(1){--r:0}
+  .o-pix .o-pix-raster span:nth-child(2){--r:7}
+  .o-pix .o-pix-raster span:nth-child(3){--r:14}
+  .o-pix .o-pix-raster span:nth-child(4){--r:21}
+  .o-pix .o-pix-raster span:nth-child(5){--r:4}
+  .o-pix .o-pix-raster span:nth-child(6){--r:11}
+  .o-pix .o-pix-raster span:nth-child(7){--r:18}
+  .o-pix .o-pix-raster span:nth-child(8){--r:1}
+  .o-pix .o-pix-raster span:nth-child(9){--r:8}
+  .o-pix .o-pix-raster span:nth-child(10){--r:15}
+  .o-pix .o-pix-raster span:nth-child(11){--r:22}
+  .o-pix .o-pix-raster span:nth-child(12){--r:5}
+  .o-pix .o-pix-raster span:nth-child(13){--r:12}
+  .o-pix .o-pix-raster span:nth-child(14){--r:19}
+  .o-pix .o-pix-raster span:nth-child(15){--r:2}
+  .o-pix .o-pix-raster span:nth-child(16){--r:9}
+  .o-pix .o-pix-raster span:nth-child(17){--r:16}
+  .o-pix .o-pix-raster span:nth-child(18){--r:23}
+  .o-pix .o-pix-raster span:nth-child(19){--r:6}
+  .o-pix .o-pix-raster span:nth-child(20){--r:13}
+  .o-pix .o-pix-raster span:nth-child(21){--r:20}
+  .o-pix .o-pix-raster span:nth-child(22){--r:3}
+  .o-pix .o-pix-raster span:nth-child(23){--r:10}
+  .o-pix .o-pix-raster span:nth-child(24){--r:17}
+
+  /* THE LABEL IS BLENDED, NOT TIMED — and it is the raster that forces it.
+     91 solves the same problem by revealing a twin in the fill's colour in the
+     same six steps the fill arrives in, because its fill has a front and a
+     twin can be clipped against one. A raster has no front. Every ordering was
+     tried and each fails in its own direction: hold the roll until the plate
+     has landed and the OUTGOING word spends the whole fill going white on
+     white; roll it early and the incoming word sits dark on a plate that is
+     still two-thirds dark. There is no delay that is right, because the defect
+     is structural — at every moment of this fill the word covers cells on both
+     sides of the flip.
+     So the label reads the plate instead of being told about it: difference,
+     the same answer 32 and 113 give, which resolves per pixel and therefore
+     per cell. Both faces of the roll are white and neither is ever recoloured;
+     what changes is what is underneath them. isolation:isolate keeps the blend
+     inside the button — without it the label would difference against the card
+     and the page behind it. The roll is then free to be timed for the reading
+     rather than for legibility: a third of the spread behind the raster, so it
+     is caused by the fill rather than merely simultaneous, and no delay at all
+     on the way out, so the label leaves first. */
+  .o-pix .track{display:block; overflow:hidden; height:1.25em; position:relative; z-index:1;
+    mix-blend-mode:difference; color:#fff}
+  .o-pix .inner{display:block; transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-3) var(--e-quint)}
+  .o-pix .inner span{display:block; line-height:1.25; color:#fff}
+  .o-pix:hover .inner,
+  .o-pix:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg);
+    transition-delay:calc(var(--t-pix) * 23 * 0.35)}
+
+  /* ---- 138 Counter-rolling pair --------------------------------------
+     15 against itself. The label channel and the mark channel are the same
+     mechanism, the same distance and the same curve; the only thing that
+     differs is the sign, and the sign is the study. The mark's track is
+     parked one face UP at rest, so restoring it to zero is a fall — the pair
+     is a property of where the tracks start, not of a second timing table. */
+  .c-against{overflow:hidden; transition:background var(--t-5) var(--e-out)}
+  .c-against:hover,
+  .c-against:focus-visible{background:var(--ink-hover)}
+  .c-against .track,
+  .c-against .c-against-mark{display:block; overflow:hidden; height:1.25em}
+  .c-against .inner{display:block; transform:translateY(0) rotate(0.001deg);
+    transition:transform var(--t-5) var(--e-quint)}
+  /* The label's faces are text and take their height from line-height. The
+     mark's are a 14px svg, which does not — so the face was 14px inside an
+     18.75px channel and the one below it showed as a sliver under the arrow.
+     The mark's faces are given the channel's own height and centre in it. */
+  .c-against .inner > span{display:block; line-height:1.25}
+  .c-against .c-against-mark .inner > span{height:1.25em; display:grid; place-items:center}
+  .c-against .c-against-mark .inner{transform:translateY(-50%) rotate(0.001deg)}
+  .c-against:hover .track .inner,
+  .c-against:focus-visible .track .inner{transform:translateY(-50%) rotate(0.001deg)}
+  .c-against:hover .c-against-mark .inner,
+  .c-against:focus-visible .c-against-mark .inner{transform:translateY(0) rotate(0.001deg)}
+
+  /* Forced colours: the raster is a field of background:Highlight overlays,
+     which is the failure the page already documents — the plate goes solid and
+     takes the label with it. The cells drop out entirely and the border and
+     underline the global block already draws carry both studies. */
+  @media (forced-colors: active){
+    .o-pix .o-pix-raster{display:none}
+    .o-pix .track{mix-blend-mode:normal; color:CanvasText}
+    .c-against{background:ButtonFace}
+  }
+</style>
+
+
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -10604,7 +10934,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover","c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover"}</script>
+<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -10613,7 +10943,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133","c-swell":"119","c-crest":"123","c-tide":"121","c-mass":"120","c-relay":"122","c-regis":"124"}</script>
+<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-shuffle":"25","e-wave":"26","q-jitter":"85","j-resolve":"80","relay":"11","dotm":"12","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -11158,6 +11488,30 @@ document.addEventListener("DOMContentLoaded", function () {
     var BAD_COLOUR = getComputedStyle(document.documentElement)
                        .getPropertyValue('--on-ink').trim().toLowerCase();
 
+    // ---- The ladder the material studies are made of --------------------
+    // MEASURED, for the reason PANEL and WHITE are: these arrive from a
+    // stylesheet this page does not own, they may be authored in any colour
+    // syntax, and they move with the theme — a literal here would be a third
+    // copy of the ladder to keep in step.
+    // ⚠️ READ OFF A PROBE AND NEVER OFF A .btn. Inside a button these very
+    // names are remapped onto --m-*, so a reading taken there would be a
+    // reading of the answer, and the second paint would project the projection.
+    // The probe is a bare span, so it resolves the root chain and nothing else.
+    var M_RUNGS = ['--bg-0','--bg-2','--bg-3','--lift-bg','--ink-low','--ink-mid'];
+    function readRungs(){
+      var el = document.createElement('span');
+      el.style.cssText = 'position:absolute;left:-9999px;visibility:hidden';
+      document.body.appendChild(el);
+      var out = {};
+      M_RUNGS.forEach(function (n){
+        el.style.setProperty('background-color', 'var(' + n + ')');
+        out[n] = rgbOf(el, 'backgroundColor');
+      });
+      el.remove();
+      return out;
+    }
+    var RUNGS = readRungs();
+
     // WHITE above is MEASURED — graphite ships its white a shade under pure, so
     // it comes back #f2f2f2. Pure #ffffff means the same thing to a visitor and
     // is the easier one to land on: the swatch markup ships it, and the top
@@ -11381,15 +11735,40 @@ document.addEventListener("DOMContentLoaded", function () {
       var l = (mx + mn) / 2;
       return [h, d ? d / (1 - Math.abs(2 * l - 1)) : 0];
     }
+    // ⚠️ …AND A PLATE IS NOT THE ONLY THING THAT CAN IDENTIFY A CONTROL, which
+    // stopped being a theoretical point the moment the material studies began
+    // painting their plates in the pick. 34 and 104 ARE a boundary — two pixels
+    // of it on four edges, walked to 3:1 on the card by the same projection that
+    // made their plate the pick — so they answer 1.4.11 before the ring is asked
+    // about, and the ring is then not a second guarantee but a line drawn over
+    // the effect: an outline is ONE colour on all four edges, and «the four
+    // edges are lit differently» is the whole of card 34. Measured on light
+    // Rose, the pair that reaches it: both bevels came back as a flat pink
+    // rectangle where two lit edges and two shaded ones had been.
+    //
+    // ⚠️ THE TEST IS THE WIDTH AND NOT THE COLOUR, and that is not laziness. A
+    // computed style read in the same task as the write returns the value a
+    // transition is LEAVING, not the one it is going to, and every study on this
+    // page transitions border-color — so a colour test here reads the palette
+    // you just left. Measured: switching Fern → Violet, 44 kept Fern's green
+    // edge for the length of the test and lost a ring it had earned, while a
+    // fresh load of the same palette granted it. Width is not transitioned by
+    // anything, so it reads true whenever it is read.
+    // It is also the honest test on THIS page rather than a proxy for one:
+    // 2px is the structural register and belongs to exactly two rules, both of
+    // them a bevel; 1px is the hairline register, which is subordinate by
+    // definition and is why 44 keeps its ring while 34 and 104 lose theirs.
     function ringable(A){
       var list = [];
       [].forEach.call(document.querySelectorAll('.spec .btn'), function (b){
-        var m = (getComputedStyle(b).backgroundColor || '').match(/-?[\d.]+/g);
+        var cs = getComputedStyle(b);
+        var m = (cs.backgroundColor || '').match(/-?[\d.]+/g);
         if (!m) return;
         if (m.length > 3 && Number(m[3]) < .9) return;      // not an opaque plate
         var c = [+m[0], +m[1], +m[2]];
         if (ratio(c, PANEL) >= 3) return;                   // identifies itself already
         if (!isPick(c, A)) return;                          // not this control's doing
+        if ((parseFloat(cs.borderTopWidth) || 0) >= 2) return;    // …by its own edge
         list.push(b);
       });
       return list;
@@ -11498,8 +11877,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return {rgb: best.rgb, hex: toHex(best.rgb), moved: true, ratio: worst(best.rgb)};
       }
-      function labelOn(rgb){
-        var gs = grounds(rgb);
+      // Split from labelOn so the same fit can be aimed at a set of grounds
+      // that is not «a fill and its two shades» — the material plates are three
+      // opaque surfaces that no study mixes, so they are their own list.
+      function labelOnGrounds(gs){
         if (fitted.text) return fitOnAll(look.text, 4.5, gs);
         // Unpicked, the label is computed black-or-white. Pick the one that
         // survives the worst ground rather than the flat accent.
@@ -11509,6 +11890,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var pick = scoreB >= scoreW ? b : w;
         return {hex: toHex(pick), moved: false, ratio: Math.max(scoreB, scoreW)};
       }
+      function labelOn(rgb){ return labelOnGrounds(grounds(rgb)); }
 
       // Pass two: write. Each token is written only while something it depends
       // on is set, so an untouched toolbar still leaves every alias standing.
@@ -11577,6 +11959,124 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         A_TOKENS.forEach(function (n){ root.removeProperty(n); });
       }
+
+      // ---- The plate a material study is made of --------------------------
+      // Seven studies own their surface outright and spell it as a rung of the
+      // grey ladder, which is the one thing no role writes — so the label, the
+      // flood, the stair and the border all took the pick and the plate under
+      // them stayed graphite. The rule, and the argument for it, is at the
+      // remap in the stylesheet. Here is the arithmetic:
+      //
+      //   the rung's LIGHTNESS, the pick's HUE and SATURATION.
+      //
+      // A projection and not a mix. There is no fraction, so there is nothing
+      // to cap and nothing that behaves differently per hue — which is what
+      // sank the --a-2/3/4 tint this replaces. And lightness is what a ladder
+      // encodes, so every step a material is built out of survives it.
+      var M_SET = {'--bg-0':'--m-0', '--bg-2':'--m-2', '--bg-3':'--m-3',
+                   '--lift-bg':'--m-face', '--ink-low':'--m-low', '--ink-mid':'--m-mid'};
+      // 🔑 THE STEP A PLATE HAS TO LEAVE FOR WHAT LANDS ON IT, and the number
+      // was swept rather than chosen. NOT 3:1 — that is the boundary floor, and
+      // a boundary is a line ON a plate where this is a plate under another
+      // plate. Held to 3 the walk overshoots: in light it takes every palette
+      // 62 to 80 points of lightness DOWN, and Violet lands on #1a0036 at
+      // 19.1:1 against the white card — the material gone and a near-black fill
+      // in its place. Held to 1.5 it undershoots the other way, stopping at the
+      // first rung that technically clears: light Violet #f4e9ff and light
+      // Azure #f8fbff, a wash 1.5:1 from the thing sweeping over it.
+      // At 1.8, swept over all seven palettes in both themes: DARK NEVER WALKS
+      // AT ALL — every material keeps the exact rung it was authored on, Ash
+      // included — and light walks 20 to 67 points, which is the light theme's
+      // own geometry answering honestly. A pale hover colour on a plate the
+      // ladder puts at 90% lightness cannot be seen arriving; there is nowhere
+      // above it to stand, so the plate goes under it.
+      var M_STEP = 1.8;
+      // Hue comes from the Button swatch, or from Button-on-hover when that is
+      // the only one set — a plate has to be made of something, and the arriving
+      // colour is the only pick there is in that case.
+      var mSource = fitted.accent ? fitted.accent.rgb
+                  : fitted.hover  ? fitted.hover.rgb : null;
+      var onPlate = null;
+      if (mSource){
+        var mh = toHsl(mSource);
+        var project = function (rgb, lands){
+          var l0 = toHsl(rgb)[2];
+          var mk = function (L){ return fromHsl(mh[0], mh[1], L).map(Math.round); };
+          // ROUNDED before the test, for the reason at fitOn: rounded is what
+          // gets painted, and a walk that clears its floor on fractional
+          // channels can land under it once the paint rounds them.
+          var ok = function (c){
+            return lands.every(function (g){ return ratio(c, g) >= M_STEP; });
+          };
+          var flat = mk(l0);
+          // A grey pick has no saturation to give, so this IS the rung and the
+          // identity case needs no branch of its own.
+          if (ok(flat)) return flat;
+          var best = null;
+          [1, -1].forEach(function (dir){
+            for (var i = 1; i <= 100; i++){
+              var L = l0 + dir * i * .01;
+              if (L < 0 || L > 1) break;
+              var c = mk(L);
+              if (ok(c)){ if (!best || i < best.i) best = {c: c, i: i}; break; }
+            }
+          });
+          if (best) return best.c;
+          // No lightness of this hue leaves room for what lands on it — two
+          // fills a third of the ladder apart can bracket every rung between
+          // them. Take the one that leaves the MOST rather than a rung that
+          // leaves none, which is fitOn's own answer to the same shape.
+          var far = null, score = -1;
+          for (var j = 0; j <= 100; j++){
+            var c2 = mk(j / 100);
+            var s = lands.reduce(function (m, g){ return Math.min(m, ratio(c2, g)); }, Infinity);
+            if (s > score){ score = s; far = c2; }
+          }
+          return far;
+        };
+        // Only --m-face is walked for an arrival, because only --m-face has one:
+        // 109 floods with --ink, 36, 44 and 113 with --ink-hover, and one face
+        // serves all four so it clears BOTH. The bevels are handed an empty list
+        // and their rungs come back at the lightness they went in at.
+        var lands = [accentRgb, hoverRgb];
+        var mv = {};
+        M_RUNGS.forEach(function (n){
+          mv[n] = project(RUNGS[n], n === '--lift-bg' ? lands : []);
+        });
+        // …and the two rungs that draw the bevel's lit edge are CONTROL
+        // BOUNDARIES, which have one number and it is 3:1 against the card —
+        // the same number --line-ctl's comment measures itself against, and the
+        // reason that token exists at all. Lightness survives a projection;
+        // LUMINANCE does not, so a hue can keep its rung and still fall under
+        // the floor the rung was chosen for. Measured over seven palettes and
+        // two themes, two do: dark Violet at 2.73:1 and light Fern at 2.28:1.
+        // Those two move and the other twelve stand still, and --ink-mid — the
+        // same edge in its lit state — never moves at all, because it is the
+        // higher-contrast half of the pair by construction.
+        ['--ink-low', '--ink-mid'].forEach(function (n){
+          mv[n] = fitOn(toHex(mv[n]), 3, PANEL).rgb.map(Math.round);
+        });
+        M_RUNGS.forEach(function (n){ root.setProperty(M_SET[n], toHex(mv[n])); });
+        // The label on those plates, and it is TWO fits rather than one. A
+        // single fit has to clear its floor on every plate at once; in light the
+        // bevels sit near the top of the ladder and the walked face near the
+        // bottom, so no colour clears both and the fit falls back to its
+        // extreme — measured at 2.6:1 on light Azure. So the two groups are
+        // fitted separately, and the readout below reports whichever is worse.
+        var onBevel = labelOnGrounds([mv['--bg-2'], mv['--bg-3']]);
+        var onFace  = labelOnGrounds([mv['--lift-bg']]);
+        root.setProperty('--m-ink',      onBevel.hex);
+        root.setProperty('--m-face-ink', onFace.hex);
+        onPlate = onBevel.ratio <= onFace.ratio ? onBevel : onFace;
+        // One flag for the caption, and it has to answer for both: a fit that
+        // moved on either group is a fit the reader was not told about.
+        onPlate = {hex: onPlate.hex, ratio: onPlate.ratio,
+                   moved: onBevel.moved || onFace.moved};
+      } else {
+        M_RUNGS.forEach(function (n){ root.removeProperty(M_SET[n]); });
+        root.removeProperty('--m-ink');
+        root.removeProperty('--m-face-ink');
+      }
       // The hover label, at last a choice. Picked, it is fitted against the
       // fill it will actually sit on rather than against the card — that fill
       // is the only thing it is ever read against. Unpicked, it derives from
@@ -11613,7 +12113,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // Only the DERIVED move belongs to the rest-label caption. A hover label
       // that was picked and then fitted reports on its own caption, below.
       var fillMoved = !!(onAccent && onAccent.moved)
-                   || (!look.textHover && !!(onHover && onHover.moved));
+                   || (!look.textHover && !!(onHover && onHover.moved))
+                   // …and on a material plate, which is a third surface the
+                   // same label lands on. A fit nobody is told about is the
+                   // silent fit fitOn's comment promises never to make.
+                   || !!(onPlate && onPlate.moved);
 
       ROLES.forEach(function(r){
         var cap = caps[r.key], sw = swatches[r.key], label = cap.getAttribute('data-label');
@@ -11661,6 +12165,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 + ' — ' + inkText.ratio.toFixed(1) + ':1 on the card.'
               : ' The label at rest takes it unchanged — '
                 + inkText.ratio.toFixed(1) + ':1 on the card.';
+          }
+          // The six studies that are MADE of the accent rather than filled with
+          // it, and the one that is made of nothing it can offer. Named on the
+          // Button caption because the Button swatch is what they follow.
+          if (r.key === 'accent' && onPlate){
+            why += ' Six material studies take it at their own lightness rather'
+                 + ' than as a fill; the label on those plates lands on '
+                 + onPlate.hex + ' — ' + onPlate.ratio.toFixed(1) + ':1 there.'
+                 + ' Card 32 takes none of it: its light is a difference blend,'
+                 + ' and inverting a tint returns that tint’s complement.';
           }
           if (alsoOnFill){
             why += ' On a filled button it is refitted against the fill and lands on '
@@ -11757,7 +12271,14 @@ document.addEventListener("DOMContentLoaded", function () {
       // and it is named so the figure still has a noun.
       if (anyColour && onAccent && onAccent.ratio < textRatio){
         textRatio = onAccent.ratio;
-        subject = 'on a fill, which is the lower of the two';
+        subject = 'on a fill, which is the lowest of them';
+      }
+      // …and on a material plate, which is a fourth. It is not the fill and it
+      // is not the card: a projection keeps a rung's lightness and not its
+      // luminance, so this number is nobody else's and it can be the smallest.
+      if (onPlate && onPlate.ratio < textRatio){
+        textRatio = onPlate.ratio;
+        subject = 'on a material plate, which is the lowest of them';
       }
       // …and the label on the CARD, which is a third number now that it is
       // derived from the fill rather than equal to it. Reporting the floor
@@ -11765,7 +12286,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // good as the two it happened to look at.
       if (inkText && inkText.ratio < textRatio){
         textRatio = inkText.ratio;
-        subject = 'on the card, which is the lowest of the three';
+        subject = 'on the card, which is the lowest of them';
       }
       // A ratio on its own is a number without a verdict — «4.6:1» only means
       // something to someone who already knows the thresholds, and the whole
@@ -11932,6 +12453,10 @@ document.addEventListener("DOMContentLoaded", function () {
       pr.remove();
       BAD_COLOUR = getComputedStyle(document.documentElement)
                      .getPropertyValue('--on-ink').trim().toLowerCase();
+      // The whole ladder mirrors across a flip — --bg-0 is the darkest rung in
+      // dark and the LIGHTEST in light — so a projection held over from the
+      // other theme would paint a bevel with its facets swapped.
+      RUNGS = readRungs();
     }
     document.addEventListener('bhl:theme', function(){ remeasure(); paint(); });
 

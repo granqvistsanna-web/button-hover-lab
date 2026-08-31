@@ -34,17 +34,26 @@ const CHECK = process.argv.includes('--check');
 // internal keys here while the headings carried long forms of them. The page
 // had renamed itself and the headings had not followed.
 //
-// Order: the six that name a part of one button keep the old progression —
-// whole, surface, outline, contents, substance. The three that are NOT one
-// button hovering (state answers a click, row needs siblings, compound runs
-// two mechanisms) form the tail, so the axis switches once, at a seam, rather
-// than twice at random.
+// Order: Compound leads, on Sanna's call. It is the section that shows what
+// the page is FOR — two mechanisms on one curve — and it was last, behind
+// eighty-odd studies, which is a long way to scroll to find the argument.
+//
+// The eight underneath keep the progression they had: the six that name a
+// part of one button run whole, surface, outline, contents, substance, and
+// the two that are NOT one button hovering (state answers a click, row needs
+// siblings) form the tail. So the axis still switches once, at a seam.
+//
+// Compound's standfirst says «the sections below» and means it: the pairing
+// is only legible once the parts are, and a reader who starts here is told
+// where the parts are rather than assumed to have passed them.
 //
 // Each carries a standfirst, drawn under the heading. One sentence, and the
 // sentence answers «why are these together», not «what is this» — a part is
 // not a criterion, and the one-word headings need the sentence more than the
 // long ones did.
 const GROUPS = [
+  ['compound', 'Compound',
+   'Two mechanisms from the sections below, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.'],
   ['plate',    'Plate',
    'The whole surface answers at once: it scales, lifts, leans, or argues with the pointer about its own weight.'],
   ['fill',     'Fill',
@@ -61,13 +70,11 @@ const GROUPS = [
    'A small mark beside the label carries the gesture: an arrow travels, an icon redraws itself, a caret points.'],
   ['material', 'Material',
    'The button behaves like a physical thing — lit, glazed, printed, knurled or cut — and hover changes the material, not the layout.'],
-  // The three that follow are not one button answering a pointer.
+  // The two that follow are not one button answering a pointer.
   ['state',    'State',
    'These answer the click rather than the pointer: the button takes an instruction and reports on it in place, with no spinner and no second surface.'],
   ['row',      'Row',
    'These need siblings to be read. Hovering one changes the others, so the row is the unit and a single button shows nothing.'],
-  ['compound', 'Compound',
-   'Two mechanisms from the sections above, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.'],
 ];
 
 // The two material aliases were declared on the SECTION, which made a card's
@@ -154,6 +161,7 @@ const ORDER_OF = {
 
     // Stepped and screened: the fill arrives in visible units.
     'Stepped fill',
+    'Pixel dissolve',
     'Hatch exit',
 
     // Whole-plate: no travel, the surface just changes.
@@ -329,6 +337,7 @@ const ORDER_OF = {
     'Crest',
     'Tide',
     'Under load',
+    'Counter-rolling pair',
 
     // One leads and the other follows.
     'Lands first',
