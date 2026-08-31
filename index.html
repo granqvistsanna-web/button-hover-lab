@@ -732,17 +732,27 @@
      2.28:1, under the 3:1 --line-ctl's own comment measures itself against. The
      walk moves those two and nothing else — the other twelve palette/theme
      pairs clear it where the projection left them. */
-  .btn.s-bevel, .btn.x-bevel{
+  /* ⚠️ FOUR, NOT TWO, since 2026-08-31. 49 Elevation step and 123 Crest are
+     three-rung ladders — bg-2 at rest, bg-3 under the pointer, bg-4 pressed —
+     and a ladder is what this group projects: every rung keeps its own
+     lightness, so the three steps stay three steps in any hue. They were left
+     out of the first pass as «the plate MEANS a neutral», which was wrong about
+     the reason: what they mean is a STEP, and a step in the pick's hue is still
+     a step. --bg-4 had to join the set for them; the two bevels do not read it
+     and are unaffected by its arrival. */
+  .btn:is(.s-bevel, .x-bevel, .lift, .c-crest, .e-draw){
     --bg-0:var(--m-0,     #0f0f0f);
     --bg-2:var(--m-2,     #222222);
     --bg-3:var(--m-3,     #2e2e2e);
+    --bg-4:var(--m-4,     #3a3a3a);
     --ink-low:var(--m-low, #8a8a8a);
     --ink-mid:var(--m-mid, #b3b3b3);
   }
-  :root[data-theme="light"] .btn.s-bevel, :root[data-theme="light"] .btn.x-bevel{
+  :root[data-theme="light"] .btn:is(.s-bevel, .x-bevel, .lift, .c-crest, .e-draw){
     --bg-0:var(--m-0,     #ffffff);
     --bg-2:var(--m-2,     #e7e7e7);
     --bg-3:var(--m-3,     #d6d6d6);
+    --bg-4:var(--m-4,     #c5c5c5);
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
@@ -757,13 +767,13 @@
      :is() and not thirteen written-out pairs, so the light rule states the list
      once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
   .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
-          .f-kant, .w-corner, .y-hold, .c-wash,
+          .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
   :root[data-theme="light"] .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
-          .f-kant, .w-corner, .y-hold, .c-wash,
+          .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #e7e7e7);
     --bg-2:var(--m-face,    #e7e7e7);
@@ -799,6 +809,47 @@
      the same rung to RECEDE, and receding is neutral by definition. */
   .btn.c-wash{ --ink-mid:var(--m-mid, #b3b3b3) }
   :root[data-theme="light"] .btn.c-wash{ --ink-mid:var(--m-mid, #4b4b4b) }
+  /* 🔑 27 IS IN THE LADDER GROUP AND NOT THE FACE GROUP, AND THE REASON IS ITS
+     LABEL. Its plate ARRIVES — clipped away at rest — so the label has two
+     grounds, the card and then the plate, and one ink has to serve both.
+     Measured on the face: --m-face is WALKED, which in light lands the plate at
+     mid lightness, and no single ink clears 4.5:1 on a white card and a
+     mid-tone plate at once — the best available was black at 3.61:1. A ladder
+     rung is not walked: --m-3 keeps #d6d6d6's own lightness, so the plate stays
+     as pale as the grey it replaces and the label that already read on the card
+     still reads on it. The rule below the plate worried that «a white plate
+     would take the white stroke with it»; a projection cannot do that, because
+     the plate keeps a rung's lightness and the stroke is the pick's own. */
+  /* 🔑 A MARK DRAWN IN A SECONDARY INK IS STILL THE SUBJECT. 55's rule and
+     124's corner marks are what those studies ARE, and both spelled themselves
+     --muted / --ink-low, so they stayed graphite while everything around them
+     took the pick. Projected onto --m-low, so they keep the one thing the rung
+     was chosen for — quieter than the label, 3:1 against the card — in the
+     picked hue.
+     ⚠️ BOTH TOKENS, AND --muted IS NOT REDUNDANT. :root declares
+     --muted:var(--ink-low), and a custom property's var() is substituted where
+     the property is DECLARED — at :root — not where it is used. So --muted had
+     already computed to the grey literal before .btn was reached, and remapping
+     --ink-low alone left 55 exactly as graphite as before. Measured: 124 moved
+     and 55 did not.
+     ⚠️ NOT 60, 80 or 133. Those read the same rungs to RECEDE, and receding is
+     neutral by definition — 60 is literally called «Others recede». */
+  /* 🔑 49, 123 AND 27 NEED THE LADDER'S INK, and unlike the two bevels they
+     have no colour declaration of their own to reach it through — they inherit
+     .btn's, which is --ink-text: the accent fitted to the CARD. So the moment
+     their plate stopped being the card's grey, the label was being measured
+     against a background it no longer sat on. Measured before this line: 49 and
+     123 at 3.26–3.73:1 across the palettes, 27 no better. --m-ink is fitted
+     against all three rungs of the ladder they actually paint. */
+  .btn:is(.lift, .c-crest, .e-draw){ color:var(--m-ink, var(--ink-text)) }
+  .btn:is(.i-beam, .c-regis){
+    --ink-low:var(--m-low, #8a8a8a);
+    --muted:var(--m-low,    #8a8a8a);
+  }
+  :root[data-theme="light"] .btn:is(.i-beam, .c-regis){
+    --ink-low:var(--m-low, #636363);
+    --muted:var(--m-low,    #636363);
+  }
   /* The label on a plate that is no longer the card's own grey. --ink-text is
      fitted against the CARD, which was near enough while the plates were a rung
      off it; a projection keeps a rung's lightness and NOT its luminance — hsl L
@@ -818,7 +869,7 @@
      shape. The two bevels reach theirs through their own colour declaration,
      which is further down the file and would otherwise win on source order. */
   .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
-          .f-kant, .w-corner, .y-hold, .c-wash,
+          .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten){
     color:var(--m-face-ink, var(--ink-text));
   }
@@ -11951,7 +12002,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // names are remapped onto --m-*, so a reading taken there would be a
     // reading of the answer, and the second paint would project the projection.
     // The probe is a bare span, so it resolves the root chain and nothing else.
-    var M_RUNGS = ['--bg-0','--bg-2','--bg-3','--lift-bg','--ink-low','--ink-mid'];
+    var M_RUNGS = ['--bg-0','--bg-2','--bg-3','--bg-4','--lift-bg','--ink-low','--ink-mid'];
     function readRungs(){
       var el = document.createElement('span');
       el.style.cssText = 'position:absolute;left:-9999px;visibility:hidden';
@@ -12428,6 +12479,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // sank the --a-2/3/4 tint this replaces. And lightness is what a ladder
       // encodes, so every step a material is built out of survives it.
       var M_SET = {'--bg-0':'--m-0', '--bg-2':'--m-2', '--bg-3':'--m-3',
+                   '--bg-4':'--m-4',
                    '--lift-bg':'--m-face', '--ink-low':'--m-low', '--ink-mid':'--m-mid'};
       // 🔑 THE STEP A PLATE HAS TO LEAVE FOR WHAT LANDS ON IT, and the number
       // was swept rather than chosen. NOT 3:1 — that is the boundary floor, and
@@ -12521,7 +12573,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // bottom, so no colour clears both and the fit falls back to its
         // extreme — measured at 2.6:1 on light Azure. So the two groups are
         // fitted separately, and the readout below reports whichever is worse.
-        var onBevel = labelOnGrounds([mv['--bg-2'], mv['--bg-3']]);
+        // THREE rungs and not two: 49 and 123 press to --bg-4, so a label that
+        // only clears bg-2 and bg-3 is a label nobody measured in the state it
+        // is read in. The two bevels do not paint bg-4, and one rung further
+        // down a ladder they already span costs them nothing measurable.
+        var onBevel = labelOnGrounds([mv['--bg-2'], mv['--bg-3'], mv['--bg-4']]);
         var onFace  = labelOnGrounds([mv['--lift-bg']]);
         root.setProperty('--m-ink',      onBevel.hex);
         root.setProperty('--m-face-ink', onFace.hex);
