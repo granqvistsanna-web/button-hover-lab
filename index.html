@@ -752,19 +752,39 @@
      ⚠️ WIDENED FROM FOUR 2026-08-31, and the nine that came in are the nine
      Sanna photographed: 42, 98, 111, 132, 139, 140, 141, 142, 143 — every one
      an orange label on a graphite pill, because each spells its rest plate
-     --lift-bg and no role wrote it. 132 opts in on .k-lamp-i and not .k-lamp:
-     the study class sits on the ROW, and the plate is on the buttons inside it.
+     --lift-bg and no role wrote it. 132 is not in this list — it opts in
+     through its row, in the rule below, and the comment there says why.
      :is() and not thirteen written-out pairs, so the light rule states the list
      once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
   .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
-          .f-kant, .w-corner, .y-hold, .k-lamp-i, .c-wash,
+          .f-kant, .w-corner, .y-hold, .c-wash,
           .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
   :root[data-theme="light"] .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
-          .f-kant, .w-corner, .y-hold, .k-lamp-i, .c-wash,
+          .f-kant, .w-corner, .y-hold, .c-wash,
           .p-face, .u-burst, .u-area, .p-tighten){
+    --lift-bg:var(--m-face, #e7e7e7);
+    --bg-2:var(--m-face,    #e7e7e7);
+  }
+  /* 🔑 132 OPTS IN THROUGH ITS ROW, and it is the only one that can't join the
+     list. Its study class sits on .k-lamp — a k-row wrapper — while the plates
+     are on the .btn children, so a .btn.k-lamp entry above would match nothing.
+     ⚠️ AND .btn.k-lamp-i, WHICH DOES MATCH, WOULD HAVE SHIPPED A BROKEN
+     SNIPPET. The Copy collector picks a study's rules with
+     /\.<key>(?![\w-])/ (matcher(), further down this file) and the card's key
+     is «k-lamp», so .k-lamp-i fails that guard on the trailing -i: the page
+     would have shown a coloured plate while the copied CSS and the Framer
+     module carried the effect with graphite under it. Spelled with the
+     descendant instead, which the collector sees and which is the same 0-2-0
+     as the list. */
+  .k-lamp .btn{
+    --lift-bg:var(--m-face, #3a3a3a);
+    --bg-2:var(--m-face,    #222222);
+    color:var(--m-face-ink, var(--ink-text));
+  }
+  :root[data-theme="light"] .k-lamp .btn{
     --lift-bg:var(--m-face, #e7e7e7);
     --bg-2:var(--m-face,    #e7e7e7);
   }
@@ -798,7 +818,7 @@
      shape. The two bevels reach theirs through their own colour declaration,
      which is further down the file and would otherwise win on source order. */
   .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
-          .f-kant, .w-corner, .y-hold, .k-lamp-i, .c-wash,
+          .f-kant, .w-corner, .y-hold, .c-wash,
           .p-face, .u-burst, .u-area, .p-tighten){
     color:var(--m-face-ink, var(--ink-text));
   }
