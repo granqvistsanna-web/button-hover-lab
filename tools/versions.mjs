@@ -60,7 +60,7 @@ export const VERSIONS = {
   // length. No outline: .btn--line IS the ring 136 already draws for itself.
   'h-grow':'fill link',
   // — Material and light ————————————————————————————————————————
-  'f-glas':'', 'f-motljus':'', 'f-lykta':'',
+  'f-glas':'', 'f-lykta':'',
   's-bevel':'', 's-sprite':'', 'l-knurl':'', 'x-bevel':'',
   // — Icon ————————————————————————————————————————————————————
   // The mark is a child that moves, fades or redraws; the button's own surface
@@ -139,16 +139,15 @@ export const VERSIONS = {
  */
 export const NATIVE = {
   // — Fill: the study paints its own plate ————————————————————————
-  'p-slot':'fill', 'o-caps':'fill', 'p-index':'fill',
-  'sheen':'fill', 'relay':'fill', 'roll':'fill', 'h-second':'fill',
-  'h-marq':'fill', 'u-lift':'fill', 'u-words':'fill', 'u-shuffle':'fill',
-  'e-chamfer':'fill', 'e-count':'fill', 'f-motljus':'fill', 'f-lykta':'fill',
+  'o-caps':'fill', 'p-index':'fill',
+  'sheen':'fill', 'relay':'fill', 'roll':'fill',   'h-marq':'fill', 'u-lift':'fill', 'u-words':'fill', 'u-shuffle':'fill',
+  'e-chamfer':'fill', 'e-count':'fill', 'f-lykta':'fill',
   's-bevel':'fill', 's-sprite':'fill', 'g-measure':'fill', 'f-kant':'fill',
   'g-key':'fill', 'l-knurl':'fill', 'lift':'fill', 'magnet':'fill',
   'i-mass':'fill', 'i-anti':'fill', 'i-throw':'fill', 'k-pair':'fill',
   'p-part':'fill', 'p-walk':'fill', 'p-cycle':'fill', 'q-riser':'fill',
   'n-join':'fill', 'w-grid':'fill', 'w-corner':'fill', 'x-bevel':'fill',
-  'y-lit':'fill', 'y-hold':'fill', 'z-lurch':'fill', 'z-stack':'fill',
+  'y-lit':'fill', 'y-hold':'fill', 'z-stack':'fill',
   'z-gum':'fill', 'c-swell':'fill', 'c-mass':'fill', 'c-crest':'fill',
   'squash':'fill', 'h-arc':'fill', 'p-bud':'fill', 'k-lamp':'fill',
   'c-against':'fill', 'c-wash':'fill', 'p-face':'fill', 'u-burst':'fill',
@@ -158,14 +157,14 @@ export const NATIVE = {
   'v-bloom':'outline', 'v-inner':'outline', 'sweep':'outline',
   'shutter':'outline', 'inkfill':'outline', 'dotm':'outline',
   'u-roll':'outline', 'u-centre':'outline', 'e-wave':'outline',
-  'e-draw':'outline', 'f-glas':'outline', 'l-plate-wrap':'outline',
+  'f-glas':'outline', 'l-plate-wrap':'outline',
   'i-rule':'outline', 'k-share':'outline',
   't-report':'outline', 't-mark':'outline', 't-hold':'outline',
   'j-dir':'outline', 'j-out':'outline', 'j-optic':'outline',
   'j-resolve':'outline', 'q-spin':'outline', 'q-jitter':'outline',
   'o-quiet':'outline', 'o-step':'outline', 'n-cross':'outline',
   'w-redraw':'outline', 'c-tide':'outline', 'c-relay':'outline',
-  'e-race':'outline', 'j-turns':'outline', 'i-loose':'outline',
+  'j-turns':'outline', 'i-loose':'outline',
   'g-two':'outline', 'k-fit':'outline', 'k-hand':'outline',
   'j-plus':'outline', 'h-grow':'outline', 'o-pix':'outline',
   // — Link: a label, and nothing drawn around it ————————————————

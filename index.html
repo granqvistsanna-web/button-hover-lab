@@ -753,7 +753,7 @@
      the reason: what they mean is a STEP, and a step in the pick's hue is still
      a step. --bg-4 had to join the set for them; the two bevels do not read it
      and are unaffected by its arrival. */
-  .btn:is(.s-bevel, .x-bevel, .lift, .c-crest, .e-draw){
+  .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
     --bg-0:var(--m-0,     #0f0f0f);
     --bg-2:var(--m-2,     #222222);
     --bg-3:var(--m-3,     #2e2e2e);
@@ -761,7 +761,7 @@
     --ink-low:var(--m-low, #8a8a8a);
     --ink-mid:var(--m-mid, #b3b3b3);
   }
-  :root[data-theme="light"] .btn:is(.s-bevel, .x-bevel, .lift, .c-crest, .e-draw){
+  :root[data-theme="light"] .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
     --bg-0:var(--m-0,     #ffffff);
     --bg-2:var(--m-2,     #e7e7e7);
     --bg-3:var(--m-3,     #d6d6d6);
@@ -854,7 +854,7 @@
      against a background it no longer sat on. Measured before this line: 49 and
      123 at 3.26–3.73:1 across the palettes, 27 no better. --m-ink is fitted
      against all three rungs of the ladder they actually paint. */
-  .btn:is(.lift, .c-crest, .e-draw){ color:var(--m-ink, var(--ink-text)) }
+  .btn:is(.lift, .c-crest){ color:var(--m-ink, var(--ink-text)) }
   .btn:is(.i-beam, .c-regis){
     --ink-low:var(--m-low, #8a8a8a);
     --muted:var(--m-low,    #8a8a8a);
@@ -886,14 +886,6 @@
           .p-face, .u-burst, .u-area, .p-tighten){
     color:var(--m-face-ink, var(--ink-text));
   }
-  /* 🔑 113 HAS ITS OWN PLATE AND IS IN NO FACE LIST. Its rest label is not a
-     colour, it is |plate − --ink-hover| — see the walk in paint(). A shared face
-     cannot serve it: the same plate that lets the bar be SEEN arriving can put
-     the resting word at 1.53:1, and moving one moves fifteen studies. It takes
-     no --m-face-ink either: .lbl declares its own colour, so a button-level ink
-     would never reach the word. */
-  .btn.z-lurch{ --lift-bg:var(--m-lurch, #3a3a3a) }
-  :root[data-theme="light"] .btn.z-lurch{ --lift-bg:var(--m-lurch, #e7e7e7) }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
   .btn--solid{background:var(--ink); color:var(--ink-on-fill)}
@@ -3440,15 +3432,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="p-slot" data-native="fill" data-added="2026-08-31T21:35:00+02:00" data-updated="2026-08-31T21:35:00+02:00">
-      <div class="stage">
-        <button type="button" class="btn p-slot" data-copy-key="key_9f2c4a71b0e35d82fa604Q2A"><span class="p-slot-in"><span class="p-slot-back" aria-hidden="true"><span class="p-slot-key">key_9f2c&hellip;4Q2A</span><span class="p-slot-done">Copied</span></span><span class="p-slot-lid"><span class="lbl">Reveal key</span></span></span></button>
-      </div>
-      <h3><span class="num">147</span>It has an interior</h3>
-      <p>140 gave the plate a back. This gives it an inside &mdash; a 22px recess with lit walls, hinged at the top edge, so opening is a depth event rather than a rotation. The lid keeps its own underside, because only the label&rsquo;s backface is hidden, and you watch it turn instead of it disappearing the moment it passes vertical. And it does the job rather than miming it: the click puts the key on the clipboard and the confirmation is written on the back wall where the key was, which is the one surface already in the room.</p>
-      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
     <article class="spec" data-key="z-stack" data-native="fill" data-versions="outline" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn z-stack"><span class="lbl">Duplicate the layout</span></button>
@@ -3693,28 +3676,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="e-race" data-native="outline" data-added="2026-08-29T19:05:18+02:00" data-updated="2026-08-29T19:05:18+02:00">
-      <div class="stage">
-        <button type="button" class="btn e-race">Track your order
-          <svg class="e-race-frame" aria-hidden="true"><path class="e-race-track" pathLength="40"/><path class="e-race-light" pathLength="40"/></svg>
-        </button>
-      </div>
-      <h3><span class="num">125</span>Racing line</h3>
-        <p>A light rides the outline at the point nearest the pointer, on a critically damped spring. Card 27's pen draws its lap from a fixed seam; this line has no seam, because the start point is wherever you came in — and on the way out it coasts on your exit velocity, fading as it rolls.</p>
-      <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="e-draw" data-native="outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn e-draw"><span class="lbl">Read the manifesto</span>
-          <svg class="e-draw-frame" aria-hidden="true"><rect class="e-draw-guide" pathLength="40"/><rect class="e-draw-ink" pathLength="40"/><rect class="e-draw-nib" pathLength="40"/></svg>
-        </button>
-      </div>
-      <h3><span class="num">27</span>Drawn outline</h3>
-        <p>A graphite plate rises to meet the pen: it lands one rung before the stroke closes, so the surface arrives first and the outline is the punctuation. Going out the stroke does not travel at all &mdash; it holds where the pen left it and goes out on opacity, uncovering a base rule that is already whole.</p>
-      <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
     <article class="spec" data-key="corners" data-native="link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn corners">Read the report<i aria-hidden="true"></i></button>
@@ -3779,21 +3740,6 @@
       </div>
       <h3><span class="num">127</span>Arc swap</h3>
         <p>The swap travels an arc rather than a rail: both copies pivot ten line-heights below the baseline, so one rotation of five degrees carries the sideways drift and the tilt as consequences instead of as two more properties timed to agree with it. 15 is this gesture on a straight line and 70 pivots the mark; this pivots the word, and the ground draws back three pixels behind it while the border stays where it is.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
-    <article class="spec" data-key="h-second" data-native="fill" data-versions="link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T20:29:47+02:00">
-      <div class="stage">
-        <button type="button" class="btn btn--solid h-second">
-          <span class="h-second-stack">
-            <span class="h-second-ghost" aria-hidden="true">Book an intro call<span class="h-second-ghost-add"><span>&nbsp;· 20 min</span></span></span>
-            <span class="h-second-row" aria-hidden="true">Book an intro call<span class="h-second-add"><span>&nbsp;· 20 min</span></span></span>
-            <span class="sr">Book an intro call, 20 minutes</span>
-          </span>
-        </button>
-      </div>
-      <h3><span class="num">16</span>Second line</h3>
-        <p>The label unfolds the detail it was withholding, and the plate is measured for the wide state from the start — nothing outside the button moves.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -4128,15 +4074,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="f-motljus" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn f-motljus">Read the annual report<i class="f-sol" aria-hidden="true"></i></button>
-      </div>
-      <h3><span class="num">32</span>Backlight</h3>
-        <p>A light rises behind the button and turns surface and label in the same movement — one layer handles both colour states. This is the one study the colour controls do not reach, and the mechanism is the reason rather than an omission: <code>difference</code> paints the gap between the layer and whatever sits under it, so inverting a tinted surface returns that tint&rsquo;s complement — a violet plate comes back green. Every part of this button is held neutral so the inversion is the only thing you see.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span><span class="chip">No colour</span></div>
-    </article>
-
     <article class="spec" data-key="f-lykta" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn f-lykta"><span class="lbl">See the case</span></button>
@@ -4257,15 +4194,6 @@
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="z-lurch" data-native="fill" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T19:06:34+02:00">
-      <div class="stage">
-        <button type="button" class="btn z-lurch"><span class="lbl"><span class="z-lurch-track"><span class="z-lurch-inner"><span class="z-lurch-row">Run the export</span><span class="z-lurch-row" aria-hidden="true">Exported</span></span></span></span></button>
-      </div>
-      <h3><span class="num">113</span>Honest progress</h3>
-      <p>A progress bar that stalls at a quarter and then leaps, because real work is uneven and a linear bar is the one shape no job has, and the label rolls to the finished state on the frame the bar lands. The gallery animates width in 1.2s of keyframes; this is one scaleX transition.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
-    </article>
-
     <article class="spec" data-key="q-spin" data-native="outline" data-versions="fill link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line q-spin"><span class="lbl">Run the export</span><span class="q-spin-slot"><svg class="icon q-spin-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="q-spin-ring" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="9" pathLength="56" stroke-dasharray="3 4"/></svg></span></button>
@@ -4375,7 +4303,7 @@
         </div>
       </div>
       <h3><span class="num">132</span>One light for the row</h3>
-      <p>One source lights the whole row, so a button you are not pointing at is still lit if its neighbour is. Card 125 gives every button its own lamp and the row reads as four separate objects; here the four share a coordinate space, and what changes between them is only how far each one sits from the light.</p>
+      <p>One source lights the whole row, so a button you are not pointing at is still lit if its neighbour is. Give every button its own lamp and the row reads as four separate objects; here the four share a coordinate space, and what changes between them is only how far each one sits from the light.</p>
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -4446,128 +4374,6 @@
     .e-wave:hover .e-wave-live{font-variation-settings:"wght" 660}
   }
 
-  /* 27 Drawn outline — three lines, ONE number.
-     --draw is the ink's dashoffset. On a pathLength of 40 the dasharray is
-     41 41, so the pattern repeats every 82 and every state change is the same
-     move: subtract 41. 41.5 and -40.5 are both hidden, 0.5 and -81.5 both fully
-     drawn, and the pen never retraces.
-
-     The half-unit is the point. A dash of exactly 40 on a path of exactly 40
-     CAN be positioned to hide the line, but only by laying the gap over the
-     path end to end — which puts a dash boundary on the path's own start point,
-     and Blink rasterises that zero-length remnant as a ~0.5x2px mark at full
-     --ink. It sat on the top edge of the resting button for the life of this
-     study. No offset removes it, because at dash == path there is nowhere for
-     the boundary to go. Widening both dash and gap to 41 buys half a unit of
-     clearance at each end: the gap now overhangs the path, the boundary falls
-     off the geometry, and the resting button measures zero lit pixels instead
-     of six. The drawn state gains the ten pixels it was losing at the seam.
-
-     The other two lines are pure functions of that number:
-
-       guide  --draw + 41   the exact complement — visible only where the pen
-                            has NOT been, so the faint rule retreats ahead of
-                            the stroke and returns behind the tail. The drawn
-                            line REPLACES the rule instead of covering it, and
-                            it inherits the same clearance.
-       nib    --draw - 41   a 2-unit dash sitting on the leading edge. On the
-                            way in it rides the head from corner to corner; on
-                            the way out the head is parked at the end and the
-                            phase carries the nib into the gap, so it is off the
-                            path exactly when there is no pen to show.
-
-     Because all three are derived, no interruption can drift them out of step —
-     there is no second piece of state to get behind. The old CSS border is now
-     transparent: the guide took its job, but removing it outright would shrink
-     the button by 2px and move the demo in its stage. */
-  .e-draw{--draw:41.5; border-radius:12px; border:1px solid transparent}
-  /* The plate rises to meet the pen. clip-path and not scaleY: scaling a
-     rounded rect stretches its radius, and this plate has to keep the same 12px
-     the drawn corner is cut to, at every frame of the way up.
-     --t-4 against the stroke's --t-5, so the surface has landed before the line
-     closes over it. Graphite and not the accent: a white plate would take the
-     white stroke with it and the study would end with nothing drawn on it. */
-  .e-draw::before{
-    content:""; position:absolute; inset:0; z-index:0; background:var(--bg-3);
-    clip-path:inset(100% 0 0 0 round 12px);
-    transition:clip-path var(--t-4) var(--e-quint);
-  }
-  .e-draw:hover::before,
-  .e-draw:focus-visible::before{clip-path:inset(0 0 0 0 round 12px)}
-  .e-draw .lbl{position:relative; z-index:2}
-  .e-draw .e-draw-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible; z-index:1}
-  /* rx 11.25 + half of the 1.5 stroke = 12, so the drawn corner matches the
-     12px border-radius exactly. At 11.5 it measured 12.25 and the corners read
-     a quarter-pixel softer on hover than at rest. */
-  .e-draw .e-draw-frame rect{
-    x:0.75px; y:0.75px; width:calc(100% - 1.5px); height:calc(100% - 1.5px); rx:11.25px; ry:11.25px;
-    fill:none;
-    /* One curve, because the dash now only ever travels one way. This rule
-       used to carry an ease-in as the EXIT and let :hover swap in the ease-out
-       for the draw — an asymmetry on a second axis, which the study argued for
-       on the grounds that a pen accelerating away is not a pen settling into
-       place. There is no pen accelerating away any more: the stroke leaves on
-       opacity with the dash held still, so the exit curve had nothing left to
-       describe and the override that restored the draw-in has nothing left to
-       restore. */
-    transition:stroke-dashoffset var(--t-5) var(--e-quint);
-  }
-  .e-draw .e-draw-guide{stroke:var(--line-ctl); stroke-width:1; stroke-linecap:butt;
-    stroke-dasharray:41 41; stroke-dashoffset:calc(var(--draw) + 41)}
-  /* butt, not round. Round caps on the zero-length dash at the seam painted a
-     ~1.4px dot at full --ink; butt cut that down to a ~0.5x2px tick but did NOT
-     remove it — the note that used to sit here claimed a cure it had not got,
-     and the tick was still on the resting button. The dash boundary itself is
-     what had to go, and the 41 41 pattern above is what moves it off the path.
-     Butt stays anyway: it is what makes the head and tail abut cleanly when the
-     line closes. The pen character is not lost — the nib below is the round end,
-     and it is the one you actually watch. */
-  .e-draw .e-draw-ink{stroke:var(--ink); stroke-width:1.5; stroke-linecap:butt;
-    stroke-dasharray:41 41; stroke-dashoffset:var(--draw); opacity:1;
-    /* The shared rect rule above is 0-2-1 and states stroke-dashoffset only, so
-       naming a second property here would drop the first. Both, or neither. */
-    transition:stroke-dashoffset var(--t-5) var(--e-quint), opacity var(--t-3) var(--e-out)}
-  /* rect.e-draw-nib, not .e-draw-nib: the shared rect rule below is 0-2-1 and this
-     was 0-2-0, so this element's whole transition list lost the cascade and the
-     opacity half of it never ran at all. Matching the rect makes it 0-3-1. */
-  .e-draw .e-draw-frame rect.e-draw-nib{stroke:var(--ink-hover); stroke-width:2.5; stroke-linecap:round;
-    stroke-dasharray:2 80; stroke-dashoffset:calc(var(--draw) - 41); opacity:0;
-    transition:stroke-dashoffset var(--t-5) var(--e-quint), opacity var(--t-3) var(--e-out)}
-  /* 0s, not a duration: a pen is at full weight the moment it touches down. The
-     draw-in is a quintic ease-out, so 133ms — the fade this used to ask for —
-     is already 83% of the way round the button. Going out it fades over the
-     whole withdrawal, which is also when the dash wraps back onto the start. */
-  .e-draw:hover .e-draw-frame rect.e-draw-nib,
-  .e-draw:focus-visible .e-draw-frame rect.e-draw-nib{opacity:1;
-    transition-timing-function:var(--e-quint), linear;
-    transition-duration:var(--t-5), 0s}
-  /* ---- THE EXIT IS A FADE ----------------------------------------------
-     The stroke does not travel on the way out. data-fading holds the dash
-     exactly where the pen left it and takes the ink and the nib out on opacity
-     alone, over --t-3 — one rung down from the --t-5 draw, which is the page's
-     rule and not this card's invention.
-     The guide is snapped to 82.5 rather than transitioned there. Two reasons,
-     and both matter: at that instant it is underneath a still-opaque ink, so
-     the snap cannot be seen; and 82.5 is congruent to 0.5 on the 82-unit
-     pattern AND is exactly what calc(var(--draw) + 41) returns once --draw is
-     re-armed to 41.5 — so the re-arm afterwards moves the guide by nothing and
-     needs no suppression of its own. Transitioning it would have drawn the
-     faint rule back round, which is the very lap this change removes. */
-  .e-draw[data-fading] .e-draw-ink,
-  .e-draw[data-fading] .e-draw-frame rect.e-draw-nib{opacity:0}
-  .e-draw[data-fading] .e-draw-guide{stroke-dashoffset:82.5; transition:none}
-  /* Re-arming the dash for the next hover must not be a visible move. The
-     plate is NOT in this list: it is driven by :hover alone, so killing its
-     transition for a frame would snap it open instead of raising it. */
-  .e-draw[data-snap] .e-draw-frame rect{transition:none}
-
-  /* Fallback with no script: --draw never moves off 41.5, so :hover has to
-     drive all three itself, and with no init to set data-fading it draws in and
-     erases back the way it came. A floor, not a failure — the plate, which is
-     the louder half of this study, needs no script at all. */
-  .e-draw:hover,
-  .e-draw:focus-visible{--draw:0.5}
-
   /* 28 Chamfered corner — clip-path morph; the fill lives on ::before so the focus ring is never clipped */
   .e-chamfer{border-radius:0; color:var(--ink-on-fill)}
   .e-chamfer::before{
@@ -4596,51 +4402,6 @@
   .e-count:hover .e-count-n,
   .e-count:focus-visible .e-count-n{--e-n:3; opacity:1}
 
-  /* 125 Racing line — the outline is a track and the pointer drives.
-     Card 27's dash pattern is 41 41 on a path of 40 — LONGER than the
-     outline, deliberately, and that is also what anchors it: a pattern
-     longer than the path cannot wrap, so the pen must start and finish at
-     the path's own seam. This pattern sums to exactly 40 — the period IS
-     the perimeter — so it tiles the closed outline with no boundary
-     anywhere, and a phase shift is travel rather than a state change.
-
-     Two numbers, both written by the spring in the script below, and the
-     dashes derive from them the way 27's three lines derive from --draw:
-
-       --rl-hd   where the light's centre is, in path units
-       --rl-ln   how long the arc is
-       --rl-lo   its opacity — held at 0 until there is line to show,
-                 because round caps paint a dot at zero length (the same
-                 artifact 27's seam note documents, met the other way)
-
-     They are not registered @property and carry no transition ON PURPOSE:
-     a transition cannot be grabbed mid-flight, and this must be — leave
-     while the light is moving and it coasts on the spring's own live
-     velocity; re-enter and the spring re-targets from wherever the coast
-     has carried it. The only transition on the card is the reduced-motion
-     fallback's fade, where there is no motion left to interrupt. */
-  .e-race{--rl-hd:0; --rl-ln:0; --rl-lo:0; border-radius:12px; border:1px solid transparent}
-  .e-race .e-race-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible}
-  .e-race .e-race-frame path{fill:none}
-  /* the track is 27's resting rule, at the same weight and token */
-  .e-race .e-race-track{stroke:var(--line-ctl); stroke-width:1; stroke-linecap:butt}
-  .e-race .e-race-light{stroke:var(--ink-hover); stroke-width:2.5; stroke-linecap:round;
-    stroke-dasharray:var(--rl-ln) calc(40 - var(--rl-ln));
-    stroke-dashoffset:calc(var(--rl-ln) / 2 - var(--rl-hd));
-    opacity:var(--rl-lo);
-    /* the one trace a JS-driven property leaves in the stylesheet — card 50's
-       argument, and what files this card under Size-and-shape beside 27 */
-    will-change:stroke-dashoffset;
-  }
-  /* The follower is a movement, so it stands down entirely: the outline
-     simply arrives — a position, not a movement — on the lab's own fade,
-     and the fade reads the ladder so the exit is still one rung down. */
-  @media (prefers-reduced-motion: reduce){
-    .e-race .e-race-light{stroke-dasharray:none; stroke-dashoffset:0; stroke-width:1.5;
-      opacity:0; transition:opacity var(--t-5) linear}
-    .e-race:hover .e-race-light,
-    .e-race:focus-visible .e-race-light{opacity:1}
-  }
 </style>
 
 
@@ -4717,53 +4478,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   })();
 
-  // 27 Drawn outline — the pen draws in, and goes out where it stands.
-  // The dash still carries the whole drawing: on a pathLength of 40 with
-  // dasharray:41 41 the pattern repeats every 82, so 41.5 is hidden and 0.5 is
-  // fully drawn, and the guide and the nib are calc()s off that one number and
-  // cannot be told a different story than the ink.
-  // What changed is the exit. This used to subtract 41 on EVERY state change,
-  // so leaving carried the stroke on round the far side and the pen never
-  // retraced. Now leaving sets data-fading, which holds the dash exactly where
-  // it is and takes the ink out on opacity; once it has gone, the dash is
-  // re-armed to 41.5 with the rect transitions suppressed for one frame, so the
-  // next hover draws from the seam again instead of continuing round.
-  // The 280ms is the fade's own --t-3 at rest (133ms) with room either side —
-  // it only has to outlast the fade, and coming back early cancels it.
-  (function(){
-    var HIDDEN = 41.5, DRAWN = 0.5;
-    document.querySelectorAll('.e-draw').forEach(function(btn){
-      if (!btn.querySelector('.e-draw-ink')) return;
-      var on = false, hovering = false, focused = false, t = null;
-
-      function rearm(){
-        btn.setAttribute('data-snap', '');
-        btn.style.setProperty('--draw', HIDDEN);
-        btn.removeAttribute('data-fading');
-        void btn.offsetWidth;             // forced reflow, or the re-arm animates
-        btn.removeAttribute('data-snap');
-      }
-      function sync(){
-        var next = hovering || focused;
-        if (next === on) return;          // a click fires pointerenter AND focus
-        on = next;
-        if (on){
-          clearTimeout(t);
-          // Back before the fade finished: the line is still fully drawn, so
-          // there is nothing to draw and everything to un-hide.
-          btn.removeAttribute('data-fading');
-          btn.style.setProperty('--draw', DRAWN);
-        } else {
-          btn.setAttribute('data-fading', '');
-          t = setTimeout(function(){ if (!on) rearm(); }, 280);
-        }
-      }
-      btn.addEventListener('pointerenter', function(){ hovering = true;  sync(); });
-      btn.addEventListener('pointerleave', function(){ hovering = false; sync(); });
-      btn.addEventListener('focus',        function(){ focused  = true;  sync(); });
-      btn.addEventListener('blur',         function(){ focused  = false; sync(); });
-    });
-  })();
 });
 </script>
 
@@ -4775,7 +4489,7 @@ document.addEventListener("DOMContentLoaded", function () {
      what makes the difference knockout and the light edges turn the RIGHT way in both themes. */
   /* --f-lys is the LIGHT half of the pair, --f-mork the dark one. Dark-only
      now, so --ink is the light half — no theme guard left to keep in sync. */
-  .f-glas, .f-motljus, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }
+  .f-glas, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }
 
   /* 31 Frostat glas — suddning, yta och ljuskant materialiseras samtidigt */
   .stage.f-ruta{ background-image:repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 10px) }
@@ -4798,69 +4512,6 @@ document.addEventListener("DOMContentLoaded", function () {
     -webkit-backdrop-filter:blur(9px) saturate(1.06);
     backdrop-filter:blur(9px) saturate(1.06);
   }
-
-  /* 32 Backlight — a rising light turns surface AND label in a single layer (difference) */
-  /* ⚠️ The light is WHITE and does not follow the colour controls, which is the
-     only value that makes this card work — and it is arithmetic, not taste.
-     mix-blend-mode:difference paints |backdrop − source| per channel, so what
-     you see is a function of what is UNDER it: white is the operator that
-     inverts, and any other source both weakens the flip and rewrites its hue.
-     Two faults came from reaching for var(--ink) here, and one line closes both.
-       1. --ink is near-white in dark and near-BLACK in light, and difference
-          with black is a no-op. Measured in light with nothing set: the label's
-          luminance swing was 0.006 — the effect was already all but dead there,
-          against 0.888 in dark.
-       2. With a palette set, difference against a LIGHT plate returns the
-          COMPLEMENT. Measured in light: Amber 36° painted 216°, Ember 20° → 200°,
-          Rose 331° → 151°, Violet 269° → 96°, Azure 215° → 29°, Fern 145° → 325°.
-          Sanna reported the violet case as «a dark green active hover», which is
-          exactly what 269° → 96° looks like.
-     No source colour can make a difference blend equal a chosen colour, because
-     the backdrop varies across the plate and the label. So this card opts OUT of
-     the colour controls rather than lying about them, and says so in its text. */
-  /* ⚠️ THE ONE CARD THAT OPTS OUT OF THE COLOUR CONTROLS, and the reason is
-     arithmetic rather than taste. mix-blend-mode:difference paints
-     |backdrop − source| per channel, so what you see is a function of what is
-     UNDER it — and inverting a TINTED surface returns that tint's complement.
-     Three things had to be neutral before this card could be honest, and only
-     the third is obvious:
-       1. the light itself — --f-lys was var(--ink);
-       2. the label — accent-coloured;
-       3. ⚠️ THE PLATE, and this is the trap. Every «neutral» rung is aliased to
-          an accent-tinted --a-* INSIDE .btn (see the .btn token block above:
-          --bg-2, --bg-3, --bg-4, --hairline, --line-ctl, --ink-low, --ink-mid,
-          --lift-bg). So background:var(--bg-2) is NOT grey on a button — it is
-          14% accent over grey. Reaching for a rung cannot get you out; the
-          --a-* inputs have to be reset, and then every var(--a-2, #222222)
-          falls back to the literal the .btn block already carries for each
-          theme, which is exactly the neutral wanted.
-     Measured before: in light, Amber 36° painted 216°, Ember 20° → 200°, Rose
-     331° → 151°, Violet 269° → 96°, Azure 215° → 29°, Fern 145° → 325° — the
-     complement every time. Sanna reported the Violet case as «a dark green
-     active hover», which is what 269° → 96° looks like. And with nothing set at
-     all the effect was already all but dead in light: the label's luminance
-     swing measured 0.006 there against 0.888 in dark, because --ink is
-     near-BLACK in light and difference with black is a no-op. White is the
-     value that inverts; it is the operator, not a colour choice. */
-  .f-motljus{
-    --a-edge:initial; --a-soft:initial; --a-quiet:initial; --a-mid:initial;
-    --a-2:initial; --a-3:initial; --a-4:initial;
-    --f-lys:#fff;
-    background:var(--lift-bg); color:var(--ink-hi);
-    border:1px solid var(--line-ctl);
-    overflow:hidden; isolation:isolate }
-  /* No :hover colour rule here. One was written and taken back out: it restated
-     the rest value, so it changed nothing on screen — but a `color` declaration
-     in a :hover block is how the facet derivation decides a study animates
-     TONE, and it made card 32 file itself under a property it does not touch.
-     The stamp was right and the CSS was wrong; the fix is the CSS. */
-  .f-motljus .f-sol{
-    position:absolute; left:50%; bottom:0; width:240%; height:240%;
-    border-radius:50%; background:var(--f-lys); mix-blend-mode:difference;
-    pointer-events:none; transform:translate(-50%,100%);
-    transition:transform var(--t-5) var(--e-quint);
-  }
-  .f-motljus:hover .f-sol, .f-motljus:focus-visible .f-sol{ transform:translate(-50%,44%) }
 
   /* 33 Lantern — the light follows the pointer across a dark plate */
   .f-lykta{
@@ -5396,28 +5047,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <style>
   /* ============ Section D — The word and the mark ============ */
-
-  /* 16 Second line — the hidden addition grows from 0fr to content width; the plate is measured for it from the start */
-  .h-second .h-second-stack{display:inline-grid; justify-items:center}
-  .h-second .h-second-ghost,
-  .h-second .h-second-row{grid-area:1/1; white-space:nowrap}
-  .h-second .h-second-ghost{visibility:hidden}
-  .h-second .h-second-add,
-  .h-second .h-second-ghost-add{display:inline-grid; grid-template-columns:minmax(0,1fr); vertical-align:baseline}
-  .h-second .h-second-add{
-    grid-template-columns:minmax(0,0fr);
-    transition:grid-template-columns var(--t-5) var(--e-quint);
-  }
-  .h-second .h-second-add>span,
-  .h-second .h-second-ghost-add>span{
-    overflow:hidden; white-space:nowrap;
-    color:color-mix(in srgb,var(--on-ink) 66%,transparent);
-  }
-  .h-second .h-second-add>span{opacity:0; transition:opacity var(--t-4) ease}
-  .h-second:hover .h-second-add,
-  .h-second:focus-visible .h-second-add{grid-template-columns:minmax(0,1fr)}
-  .h-second:hover .h-second-add>span,
-  .h-second:focus-visible .h-second-add>span{opacity:1; transition-delay:var(--d-2)}
 
   /* 19 Overflow only — the label moves only if it is actually clipped */
   .h-marq{max-width:min(100%,264px)}
@@ -9498,79 +9127,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
      The prefix is z-. */
 
-  /* 113 Honest progress — the gallery's progress bar stalls at a
-     quarter, sits there, then leaps to full. That shape is the one true thing
-     about it: real work is uneven, and a bar that rises linearly reads as
-     decoration precisely because nothing that actually takes time is linear.
-     Everything around the shape is wrong, and all of it is fixable. It animates
-     WIDTH, which is a layout property, so the gallery's version reflows the
-     button every frame for eleven hundred milliseconds; scaleX is the same
-     picture on the compositor. It runs 1.2s, two and a half times this page's
-     ceiling. And it is an @keyframes, so it cannot be interrupted — leave
-     halfway and it plays on to the end, against the second house rule.
-     Written as an easing instead of a keyframe list, the whole shape becomes
-     one interruptible transition on --t-5, and the stall survives intact. The
-     stops are the gallery's own frames, renormalised: it reached full at 60% of
-     its duration and spent the rest fading, so each time is divided by .6.
-     --z-work is deliberately LOCAL and not a fifth easing token. The four in
-     the head are a vocabulary — three general curves and --e-back, which is
-     gated to openings — where this is data, the shape of one uneven job, and a
-     token would invite it onto things that are not that job.
-     It stays a bar and not a real report: bound to nothing, a progress bar is a
-     lie about state. Card 72 is the honest one, bound to work that exists —
-     it starts on the click and ends when the work does. This card owns the
-     SHAPE; 72 owns the binding. */
-  .btn.z-lurch{
-    --z-work:linear(0, 0.15 16.7%, 0.25 41.7%, 0.35 66.7%, 0.75 91.7%, 1);
-    background:var(--lift-bg);
-    overflow:hidden;
-    isolation:isolate;
-  }
-  .btn.z-lurch::before{
-    content:""; position:absolute; inset:0; z-index:0;
-    background:var(--ink-hover);
-    transform:scaleX(0); transform-origin:left center;
-    transition:transform var(--t-5) var(--z-work);
-  }
-  .btn.z-lurch:hover::before,
-  .btn.z-lurch:focus-visible::before{transform:scaleX(1)}
-  /* The exit is not the work running backwards — a job does not un-stall. It
-     leaves on the house curve, one rung down, which is the asymmetry rule doing
-     what it was written for. */
-  .btn.z-lurch::before{transition-timing-function:var(--e-out)}
-  .btn.z-lurch:hover::before,
-  .btn.z-lurch:focus-visible::before{transition-timing-function:var(--z-work)}
-  /* Both on --ink-hover: the base and the fill are one colour or the
-     black stops being exact. */
-  .btn.z-lurch .lbl{position:relative; z-index:1; color:var(--ink-hover); mix-blend-mode:difference}
-  /* THE JOB FINISHES, which the bar on its own never said. A progress bar is
-     STATUS feedback and this card stopped there; the roll is the COMPLETION,
-     and a card whose whole subject is how real work behaves was missing the one
-     moment every real job has. It is card 15's idiom verbatim — a clipped track
-     and an inner carrying a hair of rotation, so the type does not visibly
-     change weight the frame it starts to move.
-
-     THE DELAY IS THE BAR'S OWN --t-5 and not a number invented to match it, so
-     the label cannot drift out of step with the thing it is reporting on: move
-     the bar's duration and the roll follows it. The rest side states 0ms, so the
-     label leaves at once instead of playing its arrival backwards — the
-     delay-asymmetry rule, and the reason both sides are written out. */
-  .btn.z-lurch .z-lurch-track{display:block; overflow:hidden; height:1.25em}
-  .btn.z-lurch .z-lurch-inner{display:block; transform:translateY(0) rotate(0.001deg);
-    transition:transform var(--t-3) var(--e-out) 0ms}
-  .btn.z-lurch .z-lurch-row{display:block; height:1.25em; line-height:1.25em}
-  .btn.z-lurch:hover .z-lurch-inner,
-  .btn.z-lurch:focus-visible .z-lurch-inner{
-    transform:translateY(-1.25em) rotate(0.001deg); transition-delay:var(--t-5)}
-  @media (prefers-reduced-motion: reduce){
-    .btn.z-lurch::before{
-      transform:scaleX(1); opacity:0;
-      transition:opacity var(--t-3) ease;
-    }
-    .btn.z-lurch:hover::before,
-    .btn.z-lurch:focus-visible::before{opacity:1}
-  }
-
   /* 116 Stack fan — the plate lifts and three more appear under
      it, fanned. They are not shadows and this card is not an exception to
      section L: a shadow is an absence of light and would be invisible on a
@@ -10636,7 +10192,7 @@ document.addEventListener("DOMContentLoaded", function () {
       text-decoration:underline; text-decoration-color:Highlight;
       text-decoration-thickness:2px; text-underline-offset:3px;
     }
-    /* 32 Backlight and 113 Honest progress compute their label out of the plate
+    /* 137 Pixel dissolve computes its label out of the plate
        with mix-blend-mode:difference. The plate is a system colour here, so the
        result is a guess; both take the plain path. */
     .btn .lbl{ mix-blend-mode:normal }
@@ -11092,72 +10648,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.o-caps .lbl{ position:relative }
 
-  /* ---- 147 · Item-Box, but the depth is the subject. The lid hinges at its top
-     edge and keeps its own underside; hiding the LID's backface (as the source
-     does) makes it vanish the instant it passes 90° and you never see it turn.
-     backface-visibility needs the label in a 3D context of its own, hence the
-     preserve-3d on the lid and the hair of translateZ on the label. */
-  .btn.p-slot{ padding:0; perspective:640px; --btn-r:var(--r-sm) }
-  .btn.p-slot .p-slot-in{ display:grid; transform-style:preserve-3d }
-  .btn.p-slot .p-slot-back,
-  .btn.p-slot .p-slot-lid{ grid-area:1/1; display:grid; place-items:center; padding:15px 24px; border-radius:var(--r-sm) }
-  .btn.p-slot .p-slot-back{
-    transform:translateZ(-22px); background:var(--well); color:var(--ink-soft);
-    font:500 13px/1 var(--mono); letter-spacing:.03em;
-    box-shadow:inset 0 0 0 1px var(--hairline),
-               inset 0 15px 18px -12px rgba(var(--shadow-rgb),1),
-               inset 0 -7px 11px -9px rgba(var(--sheen),.12);
-  }
-  .btn.p-slot .p-slot-lid{
-    background:var(--lift-bg); color:var(--ink); transform-origin:50% 0%;
-    transform-style:preserve-3d; box-shadow:inset 0 0 0 1px var(--line-ctl);
-    transition:transform var(--t-5) var(--e-quint);
-  }
-  .btn.p-slot .p-slot-lid .lbl{ backface-visibility:hidden; transform:translateZ(.01px) }
-  .btn.p-slot:hover .p-slot-lid{ transform:rotateX(-104deg) }
-  /* The confirmation states its own duration: it answers a CLICK, and the
-     page's hover ladder has no business timing it. */
-  .btn.p-slot .p-slot-key,
-  .btn.p-slot .p-slot-done{ grid-area:1/1; transition:opacity 110ms var(--e-out) }
-  .btn.p-slot .p-slot-done{ opacity:0; color:var(--ink) }
-  .btn.p-slot[data-copied] .p-slot-key{ opacity:0 }
-  .btn.p-slot[data-copied] .p-slot-done{ opacity:1 }
 </style>
 
-<script>
-// 147 — hover opens the lid, the click takes the key. Deferred for the reason
-// set out at the other script blocks: a script above its own markup finds
-// nothing, and the studies are interleaved with the style tail.
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".btn.p-slot[data-copy-key]").forEach(function (btn) {
-    var timer = null;
-    function done() {
-      btn.dataset.copied = "";
-      clearTimeout(timer);
-      timer = setTimeout(function () { delete btn.dataset.copied; }, 1400);
-    }
-    // writeText rejects on an insecure origin or a denied permission, and the
-    // page is opened from file:// as often as from Pages — so the textarea path
-    // is the one a local reader actually takes, not defensive padding.
-    function fallback() {
-      var ta = document.createElement("textarea");
-      ta.value = btn.dataset.copyKey;
-      ta.setAttribute("readonly", "");
-      ta.style.cssText = "position:fixed;top:-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand("copy"); } catch (e) {}
-      document.body.removeChild(ta);
-      done();
-    }
-    btn.addEventListener("click", function () {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(btn.dataset.copyKey).then(done, fallback);
-      } else { fallback(); }
-    });
-  });
-});
-</script>
 
 <script>
 // 141 and 142 split their label into per-character spans. Deferred for the
@@ -11493,180 +10985,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   })();
 
-  // 125 Racing line — a light on the outline spring-follows the pointer.
-  // The card's CSS says why the two numbers carry no transition; everything
-  // here exists to write them. The spring is critically damped (damping is
-  // derived as 2*sqrt(k), the way card 50's is), response 420ms, and it runs
-  // on the LOOP coordinate: the outline is unrolled to 40 path units and the
-  // target is always reached the short way round, so crossing the seam is
-  // not an event — there is no seam. On leave nothing is retargeted: the
-  // spring's live velocity is simply left to decay at scroll-deceleration
-  // rate (0.998 per ms) while the arc shrinks, so the light is thrown out of
-  // the button at exactly the speed it was travelling when the pointer left.
-  // A Tab has no pointer to follow: focus parks the light at top centre and
-  // opens it to the whole outline; blur closes it back to the same point —
-  // the exit retraces the entrance.
-  (function(){
-    var rm = matchMedia('(prefers-reduced-motion: reduce)');
-    var R = 11.25, INSET = 0.75;    // 27's stroke centreline, kept exactly
-    var L_REST = 3.2;               // resting arc, path units (~37px here)
-    var RESPONSE = 0.42;            // seconds to reach a new target
-    var K = Math.pow(2 * Math.PI / RESPONSE, 2);
-    var C = 2 * Math.sqrt(K);       // critical damping IS 2*sqrt(k) — derived
-    var DECEL = 0.998;              // per-ms decay of the released velocity
-    var L_TAU = 0.085;              // seconds — how fast the arc re-fits
-
-    function box(btn){
-      var b = btn.getBoundingClientRect();
-      return {x:INSET, y:INSET, w:(b.width + 2) - 1.5, h:(b.height + 2) - 1.5, r:R,
-              left:b.left, top:b.top};
-    }
-    function segs(g){
-      var W = Math.max(0.01, g.w - 2*g.r), H = Math.max(0.01, g.h - 2*g.r), A = Math.PI*g.r/2;
-      return [W, A, H, A, W, A, H, A];
-    }
-    function cums(S){ var c = [0], i; for (i = 0; i < 8; i++) c.push(c[i] + S[i]); return c; }
-    function arcAt(g, i){
-      if (i === 1) return {cx:g.x + g.w - g.r, cy:g.y + g.r,       a0:-Math.PI/2};
-      if (i === 3) return {cx:g.x + g.w - g.r, cy:g.y + g.h - g.r, a0:0};
-      if (i === 5) return {cx:g.x + g.r,       cy:g.y + g.h - g.r, a0:Math.PI/2};
-      return             {cx:g.x + g.r,       cy:g.y + g.r,       a0:Math.PI};
-    }
-    function pointAt(g, s){
-      var S = segs(g), Cs = cums(S), P = Cs[8];
-      s = ((s % P) + P) % P;
-      var i = 0; while (i < 7 && s >= Cs[i+1]) i++;
-      var t = s - Cs[i];
-      if (i === 0) return {x:g.x + g.r + t,       y:g.y};
-      if (i === 2) return {x:g.x + g.w,           y:g.y + g.r + t};
-      if (i === 4) return {x:g.x + g.w - g.r - t, y:g.y + g.h};
-      if (i === 6) return {x:g.x,                 y:g.y + g.h - g.r - t};
-      var a = arcAt(g, i), th = a.a0 + t / g.r;
-      return {x:a.cx + g.r * Math.cos(th), y:a.cy + g.r * Math.sin(th)};
-    }
-    function num(v){ return Math.round(v * 100) / 100; }
-    // the same rounded rectangle 27's <rect> walks, in the same order, so a
-    // dash distance means the same place on both cards
-    function pathD(g){
-      var d = 'M' + num(g.x + g.r) + ' ' + num(g.y), S = segs(g), Cs = cums(S), i, q;
-      for (i = 0; i < 8; i++){
-        q = pointAt(g, Cs[i+1] === Cs[8] ? 0 : Cs[i+1]);
-        d += (i % 2)
-          ? ' A' + num(g.r) + ' ' + num(g.r) + ' 0 0 1 ' + num(q.x) + ' ' + num(q.y)
-          : ' L' + num(q.x) + ' ' + num(q.y);
-      }
-      return d;
-    }
-    // nearest point of the outline to the pointer, as a perimeter distance.
-    // This is the right question WHILE THE POINTER IS INSIDE — the mark rides
-    // the outline abreast of the cursor, and nearest is what abreast means.
-    // It is the wrong question at the moment of entry, and the line above this
-    // one used to claim otherwise: «pointerenter fires with the cursor a pixel
-    // or two past the border, so nearest IS the crossing point». Measured on
-    // this page, an ordinary flick puts that first sample 28px in, against a
-    // 23.5px half-height — so a pointer arriving from the LEFT projected onto
-    // the TOP edge and the mark appeared on the wrong side of the button,
-    // every time, which is the one thing «appear where you came in» promises
-    // it will not do. The entry now reads the crossing point instead; nearest
-    // keeps the job it is actually correct for.
-    function nearestS(g, px, py){
-      var S = segs(g), Cs = cums(S), x = g.x, y = g.y, w = g.w, h = g.h, r = g.r;
-      function fit(v, hi){ return Math.max(0, Math.min(hi, v)); }
-      if (px < x + r && py < y + r){
-        var a = Math.atan2(py - (y + r), px - (x + r)); if (a < 0) a += 2*Math.PI;
-        return Cs[7] + fit((a - Math.PI) * r, S[7]);
-      }
-      if (px > x + w - r && py < y + r)
-        return Cs[1] + fit((Math.atan2(py - (y + r), px - (x + w - r)) + Math.PI/2) * r, S[1]);
-      if (px > x + w - r && py > y + h - r)
-        return Cs[3] + fit(Math.atan2(py - (y + h - r), px - (x + w - r)) * r, S[3]);
-      if (px < x + r && py > y + h - r)
-        return Cs[5] + fit((Math.atan2(py - (y + h - r), px - (x + r)) - Math.PI/2) * r, S[5]);
-      var dL = px - x, dR = (x + w) - px, dT = py - y, dB = (y + h) - py;
-      var m = Math.min(dL, dR, dT, dB);
-      if (m === dT) return Cs[0] + fit(px - (x + r), S[0]);
-      if (m === dR) return Cs[2] + fit(py - (y + r), S[2]);
-      if (m === dB) return Cs[4] + fit((x + w - r) - px, S[4]);
-      return             Cs[6] + fit((y + h - r) - py, S[6]);
-    }
-    // the short way round the 40-unit loop: (-20, 20]
-    function wrap(d){ return d - 40 * Math.round(d / 40); }
-
-    // The crossing point comes from `crossedPoint` at the top of this block —
-    // one sample and one clip for both cards that need it. This card wants the
-    // POINT rather than which of the four sides it lies on, and hands it
-    // straight to nearestS to become a perimeter distance.
-
-    document.querySelectorAll('.e-race').forEach(function(btn){
-      if (rm.matches) return;                    // the CSS fade handles it
-      var perim = 1;
-      function draw(){
-        var g = box(btn); if (!g.w) return;
-        perim = cums(segs(g))[8];
-        var d = pathD(g);
-        btn.querySelectorAll('path').forEach(function(p){ p.setAttribute('d', d); });
-      }
-      draw();
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
-      if (window.ResizeObserver) new ResizeObserver(draw).observe(btn);
-
-      var pos = 0, vel = 0, len = 0, lo = 0;
-      var target = 0, mode = 'off', raf = null, last = 0;
-
-      function put(cx, cy){ target = nearestS(box(btn), cx, cy) / perim * 40; }
-
-      function frame(now){
-        raf = null;
-        var dt = Math.min(0.032, (now - last) / 1000 || 0.016);
-        last = now;
-        if (mode === 'follow' || mode === 'focus'){
-          var dx = wrap(target - pos);
-          vel += (K * dx - C * vel) * dt;
-          pos += vel * dt;
-          var Lt = mode === 'focus' ? 39.99 : L_REST;
-          len += (Lt - len) * Math.min(1, dt / L_TAU);
-          lo = Math.min(1, len / 1.5);
-        } else if (mode === 'coast'){
-          vel *= Math.pow(DECEL, dt * 1000);
-          pos += vel * dt;
-          len += (0 - len) * Math.min(1, dt / (L_TAU * 1.6));
-          lo = Math.min(1, len / 1.5);
-          if (len < 0.05){ mode = 'off'; len = 0; lo = 0; vel = 0; }
-        }
-        pos = ((pos % 40) + 40) % 40;
-        btn.style.setProperty('--rl-hd', pos.toFixed(3));
-        btn.style.setProperty('--rl-ln', Math.min(39.99, len).toFixed(3));
-        btn.style.setProperty('--rl-lo', lo.toFixed(3));
-        if (mode !== 'off') raf = requestAnimationFrame(frame);
-      }
-      function kick(){ if (raf === null){ last = performance.now(); raf = requestAnimationFrame(frame); } }
-
-      btn.addEventListener('pointerenter', function(e){
-        var g = box(btn), c = crossedPoint(btn, e);
-        put(c.x - g.left + 1, c.y - g.top + 1);
-        if (mode === 'off'){ pos = target; vel = 0; }   // appear where you came in
-        mode = 'follow'; kick();
-      });
-      btn.addEventListener('pointermove', function(e){
-        if (mode !== 'follow') return;
-        var g = box(btn);
-        put(e.clientX - g.left + 1, e.clientY - g.top + 1);
-        kick();
-      });
-      btn.addEventListener('pointerleave', function(){
-        if (mode === 'follow'){ mode = 'coast'; kick(); }
-      });
-      btn.addEventListener('focus', function(){
-        if (mode === 'follow') return;                  // a click also focuses
-        var g = box(btn), S = segs(g);
-        pos = (S[0] / 2) / perim * 40; target = pos; vel = 0;
-        mode = 'focus'; kick();
-      });
-      btn.addEventListener('blur', function(){
-        if (mode === 'focus'){ mode = 'coast'; kick(); }
-      });
-    });
-  })();
 });
 </script>
 
@@ -11678,7 +10996,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","p-slot":"moves fades|js hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","e-race":"fades shape|js hover","e-draw":"fades shape|js hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-second":"fades shape seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-motljus":"moves|hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","z-lurch":"moves fades seq|hover","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
+<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -11687,7 +11005,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","p-slot":"147","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","e-race":"125","e-draw":"27","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-second":"16","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-motljus":"32","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","z-lurch":"113","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
+<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -12864,89 +12182,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       // (guard: the walk needs a pick to walk toward)
       if (mSource){
-        // ---- 113's plate has ONE MORE JOB THAN A FACE, and it is arithmetic --
-        // ⚠️ ONLY WHEN A PALETTE IS SET, AND THE DEFAULT WAS TRIED FIRST. With
-        // nothing picked the plate is #e7e7e7 in light and the label lands on
-        // #d5d5d5 — 1.19:1, one of the 21 the a11y gate reports. It is not
-        // fixable from the plate: unpicked, --ink-hover resolves to #121212, so
-        // |plate − ink| is plate minus eighteen at EVERY lightness and the
-        // difference tracks the plate whatever you do. Walked, the best available
-        // was #aaaaaa showing #989898 — 1.24:1, measured. So the walk stays
-        // inside the branch, the default rendering is untouched, and light
-        // Graphite's 113 remains the known failure it already was.
-        // 🔑 113's rest label is --ink-hover under mix-blend-mode:difference, so
-        // what a reader sees at rest is |plate − ink| per channel. On a graphite
-        // plate that was a grey word (measured 1.24:1 in light with nothing set).
-        // On a plate in the pick it is the pick's COMPLEMENT: Fern's #007832
-        // returned #b66f98, a mauve label at 1.53:1 — measured on COMPOSITED
-        // PIXELS, because a blend is per-pixel and the token readout modelled it
-        // at 1.85–4.31:1 and could not see it. Reported as «some bugs» with a
-        // screenshot whose only two saturated colours were those exact values.
-        //
-        // The blend is not the bug and must not be removed: the instant the bar
-        // arrives under the label the difference goes to exact black, and that
-        // is what the blend is spent on. The label cannot move either — it has
-        // to EQUAL the bar for that to happen. So the free variable is the
-        // PLATE, and it carries two constraints instead of one:
-        //
-        //   · |plate − ink| must clear 4.5:1 against the plate  — the rest label
-        //   · plate vs ink must clear M_STEP                    — the arriving bar
-        //
-        // Same walk as project(), one more predicate. Solvable at an extreme by
-        // construction: as the plate approaches black the difference approaches
-        // the ink itself, so the ratio grows without bound.
         var absdiff = function (a, b){
             return [0,1,2].map(function (i){ return Math.abs(a[i] - b[i]); });
           };
-        var okLurch = function (c){
-            return ratio(absdiff(c, lurchInk), c) >= 4.5 && ratio(c, lurchInk) >= M_STEP;
-          };
-        // The ink to difference AGAINST. --ink-hover resolves through --ink to
-        // --ink-hi, which is a different colour per theme, so it is PROBED rather
-        // than assumed — WHITE_RGB is dark's answer and light's is #121212, and
-        // assuming the first is how a light-theme walk goes the wrong way.
-        var lurchInk = fitted.hover ? fitted.hover.rgb
-                     : fitted.accent ? fitted.accent.rgb
-                     : (function (){
-                         var el = document.createElement('span');
-                         el.style.cssText = 'position:fixed;left:-9999px;top:-9999px;'
-                                          + 'width:1px;height:1px;background-color:var(--ink-hover)';
-                         document.body.appendChild(el);
-                         var v = rgbOf(el, 'backgroundColor');
-                         el.remove();
-                         return v;
-                       })();
-        // Sat 0 with no pick, so Graphite's plate stays grey and only its
-        // LIGHTNESS moves. Dark already clears at the rung it was authored on, so
-        // the walk returns it unchanged there and only light travels.
-        var lurchHsl = mSource ? mh : [0, 0, 0];
-        var lurchAt = function (L){ return fromHsl(lurchHsl[0], lurchHsl[1], L).map(Math.round); };
-        var l0 = toHsl(RUNGS['--lift-bg'])[2];
-        var lurch = null;
-        if (okLurch(lurchAt(l0))) lurch = lurchAt(l0);
-        if (!lurch){
-          var bestL = null;
-            [1, -1].forEach(function (dir){
-              for (var i = 1; i <= 100; i++){
-              var L = l0 + dir * i * .01;
-              if (L < 0 || L > 1) break;
-              if (okLurch(lurchAt(L))){ if (!bestL || i < bestL.i) bestL = {c: lurchAt(L), i: i}; break; }
-              }
-            });
-          if (bestL) lurch = bestL.c;
-          }
-        if (!lurch){
-          // Nothing clears both. Take the plate that leaves the rest label the
-          // most, which is project()'s own answer to the same shape.
-          var far = null, score = -1;
-            for (var j = 0; j <= 100; j++){
-            var c3 = lurchAt(j / 100);
-            var sc = Math.min(ratio(absdiff(c3, lurchInk), c3), ratio(c3, lurchInk));
-            if (sc > score){ score = sc; far = c3; }
-            }
-            lurch = far;
-          }
-        root.setProperty('--m-lurch', toHex(lurch));
         // ---- 137's LABEL is the difference, and it has two grounds ---------
         // 🔑 Same family as 113, solved from the other end. 137's word is one
         // colour under difference over TWO grounds — the card where no cell has
@@ -12990,7 +12228,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         root.setProperty('--m-pix', toHex(pixBest.c));
       } else {
-        root.removeProperty('--m-lurch');
         root.removeProperty('--m-pix');
       }
       // The hover label, at last a choice. Picked, it is fitted against the
@@ -13086,12 +12323,10 @@ document.addEventListener("DOMContentLoaded", function () {
           // it, and the one that is made of nothing it can offer. Named on the
           // Button caption because the Button swatch is what they follow.
           if (r.key === 'accent' && onPlate){
-            why += ' Fifteen material studies take it at their own lightness rather'
+            why += ' Fourteen material studies take it at their own lightness rather'
                  + ' than as a fill — the plate keeps the rung it was authored'
                  + ' on and takes the pick\'s hue; the label on those plates lands on '
-                 + onPlate.hex + ' — ' + onPlate.ratio.toFixed(1) + ':1 there.'
-                 + ' Card 32 takes none of it: its light is a difference blend,'
-                 + ' and inverting a tint returns that tint’s complement.';
+                 + onPlate.hex + ' — ' + onPlate.ratio.toFixed(1) + ':1 there.';
           }
           if (alsoOnFill){
             why += ' On a filled button it is refitted against the fill and lands on '
@@ -15903,7 +15138,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","125":"https://framer.com/m/RacingLine-WNSegH.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"10":"https://framer.com/m/Sheen-eN4I5o.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","111":"https://framer.com/m/PressFill-lXFzHB.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-sync">{"04":"7310f29dc23057d0","05":"acd7d8ea86b2a19b","07":"0d03f882853a4d74","08":"1b88d34c370d334a","09":"baf7202a713aebc8","10":"e0fa474861ec89bf","100":"00bf85ff3ee6fbca","104":"be7bc2bae6db0245","109":"deae0fa15cde1d69","11":"d789557132feef14","111":"a9a33d1f7d915527","113":"6d0796c5c562476b","116":"b1334b38445f0123","117":"80003383f402e22b","119":"6a2fae216df3e841","12":"7becb9c48a06e793","120":"e356ca7055bc6a87","121":"20e7b6c6a10cc1ea","122":"12deb5ac4c8c5366","123":"f1ea95c074f74565","124":"31eeec43cc273fa3","125":"b4377518175f4566","126":"330d03a44875db02","127":"0c4e3da3e0d5ff6f","128":"0e86a669cef74476","129":"6f398fc69602c4ea","13":"df2bf03791f78049","130":"102221d7197813df","131":"090c871a8ef88864","132":"9bb5d0179133ba46","133":"27dfb76efeeadcfe","134":"49a2f29a342d485e","135":"7a85873851c12f89","136":"74ab893be4ea7973","14":"3f29b5d4cf8f2dfb","15":"178c5161000b3008","16":"17404dcd70ed7a7f","19":"2d2f12cab921ab16","20":"ab0dc155ad83c061","21":"5b18cfecbd0801aa","23":"8e0e89303ede1bf0","24":"281921d9a1988712","25":"6afc02d03311772e","26":"f73bf111397fcbd2","27":"b2d72e62c2ebef83","28":"beb1cdbcc9f0e05c","30":"cd167b13092206b8","31":"4a128aeb4b9296b0","32":"6680946093835806","33":"d88720a0d4a79dde","34":"3ed84c7a17508138","36":"681f115a1fc779a5","39":"62a60e76f2aa7b8c","41":"dd05d70c23533303","42":"4adda82991663545","43":"f7299e235546a344","44":"601e2172b1c5b3ba","47":"c4bc173344a7dbdb","49":"5d93f7e97b50820c","50":"2f52eceafc902563","52":"5b65e06bf5879e66","54":"a8be3c3f9048451d","55":"30e584832c7f1ad1","57":"051f789fdb5a5681","59":"c3afbd8d89c5b675","60":"3fe68a462a96283b","61":"0a436d5dac71528f","62":"156c6074920230de","63":"b8a14fa2db723777","64":"fe4ad33729c9153e","65":"f88ff4f135f2a036","66":"b0cfb82250271e5f","67":"f86b88d08dc4cff0","69":"51546e3da3580a40","72":"9ef76258315b932e","73":"d410a003e9125272","74":"0a0ad445e50cf2db","75":"7e6754a9009c16e7","78":"cba7b6f59b609aef","79":"9f015db2d8d75af8","80":"5554562438565bb4","82":"c2bcb7c5aac6e746","83":"1b07384d41a0af08","85":"82379a80ed642bf5","91":"e35d80621dbc24a2","92":"4c0e85e75a9965d7","93":"3595b09aca90b388","97":"819c0a325f8a0ad3","98":"4b2ecbc4bf0347d3"}</script>

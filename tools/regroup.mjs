@@ -85,7 +85,7 @@ const GROUPS = [
 // Every copied snippet then carries the alias if and only if it reads it.
 const ALIAS_REHOME = [
   ['  .f-mat{ --f-lys:var(--ink); --f-mork:var(--on-ink) }',
-   '  .f-glas, .f-motljus, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }'],
+   '  .f-glas, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }'],
   // The .l-mat -> .l-deboss rehoming is gone WITH ITS CARD: Deboss was culled
   // (ef1ea6c) and the alias left the stylesheet with it, so there is nothing
   // left to move and nothing left that reads it. If a card reading --l-lys
@@ -124,7 +124,6 @@ const ORDER_OF = {
     'Fixed shadow',
     'Slab tilt',
     'Answers back',
-    'It has an interior',
     'Stack fan',
 
     // Mass: it has weight, and the pointer has to argue with it.
@@ -184,10 +183,8 @@ const ORDER_OF = {
     // Rules that are not underlines.
     'Line gauge',
     'Rule bend',
-    'Racing line',
 
     // Outlines and marks around the whole plate.
-    'Drawn outline',
     'Crop marks',
     'Edge light',
     'Dotted focus',
@@ -203,7 +200,6 @@ const ORDER_OF = {
     // Rolls: one label leaves as another arrives.
     'Label roll',
     'Arc swap',
-    'Second line',
     'One full turn',
     'Split-flap',
     'Ticker label',
@@ -282,7 +278,6 @@ const ORDER_OF = {
     // Light: something is emitting.
     'Bloom',
     'Inner light',
-    'Backlight',
     'Lantern',
     'Light flip',
     'Fixed light',
@@ -315,7 +310,6 @@ const ORDER_OF = {
     'Status button',
     'Plate to check',
     'Hold to confirm',
-    'Honest progress',
     'Working state',
   ],
 
