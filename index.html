@@ -644,21 +644,34 @@
      never asked about. --lift-bg → --on-card-hi → --bg-4 → #3a3a3a, the same
      rung the rail and the toolbar are drawn from.
 
-     FIFTEEN OPT IN. Two bevels (34, 104) take the whole ladder; thirteen take
-     one face — 36, 42, 44, 98, 109, 111, 113, 132, 139, 140, 141, 142, 143.
-     EIGHT STAY OUT, and each has a reason rather than an omission:
+     TWENTY-TWO OPT IN, in four groups, and WHICH GROUP IS AN ARGUMENT about
+     what the plate MEANS:
+       · LADDER — 34, 104, 49, 123, 27. Every rung projected, lightness kept,
+              never walked. 49 and 123 are three-rung ladders (bg-2 → bg-3 →
+              bg-4); what they mean is a STEP, and a step in the pick's hue is
+              still a step. 27 is here and not in FACE because its plate
+              ARRIVES: the label has two grounds, and on a walked face no single
+              ink clears 4.5:1 on a white card and a mid plate at once —
+              measured, the best available was black at 3.61:1.
+       · FACE  — 36, 42, 43, 44, 98, 109, 111, 116, 132, 139, 140, 141, 142,
+              143. One face, WALKED until what lands on it clears M_STEP.
+       · 113   its own plate, and the walk is below in paint(): its rest label
+              is not a colour, it is |plate − --ink-hover| under a difference
+              blend, so the plate carries a second constraint no shared face
+              can. Measured on composited pixels — the token readout cannot see
+              a blend.
+       · MARK  — 55, 124. --ink-low AND --muted → --m-low. A mark drawn in a
+              secondary ink is still the SUBJECT of its study.
+     AND THE ONES THAT STAY OUT, each with a reason rather than an omission:
        · 32   a difference blend returns the pick's COMPLEMENT. Says so on its
               own chip, and resets the accent inputs two hundred lines down.
-       · 43, 49, 116, 123  the plate MEANS a neutral surface: a keycap, an
-              elevation step, a stack of sheets, a crest. 49 and 123 are
-              three-rung ladders whose subject IS the ladder.
+              113 differs from it: 113's blend has somewhere to land — the bar
+              arrives underneath and the difference goes to exact black — so its
+              plate can be solved for. 32's has nothing arriving.
        · 52, 72  already follow the pick — their grounds are
               color-mix(--ink 86%, --bg-0), a darkening of the accent.
-       · 27   its plate ARRIVES rather than resting, and graphite is argued for
-              in the rule itself: a plate in the pick would take the pick's own
-              stroke with it and the study would end with nothing drawn on it.
-              The honest fix needs the label fitted against two grounds — the
-              card at rest and the plate on hover — and that is not this pass.
+       · 60, 80, 133  read the same rungs to RECEDE, and receding is neutral by
+              definition. 60 is called «Others recede».
 
      ⚠️ AND IT CANNOT BE FIXED BY PUTTING THE LADDER TINT BACK. That tint came
      out on 2026-08-31 and the argument for taking it out still holds: it was a
@@ -12793,61 +12806,6 @@ document.addEventListener("DOMContentLoaded", function () {
           mv[n] = fitOn(toHex(mv[n]), 3, PANEL).rgb.map(Math.round);
         });
         M_RUNGS.forEach(function (n){ root.setProperty(M_SET[n], toHex(mv[n])); });
-        // ---- 113's plate has ONE MORE JOB THAN A FACE, and it is arithmetic --
-        // 🔑 113's rest label is --ink-hover under mix-blend-mode:difference, so
-        // what a reader sees at rest is |plate − ink| per channel. On a graphite
-        // plate that was a grey word (measured 1.24:1 in light with nothing set).
-        // On a plate in the pick it is the pick's COMPLEMENT: Fern's #007832
-        // returned #b66f98, a mauve label at 1.53:1 — measured on COMPOSITED
-        // PIXELS, because a blend is per-pixel and the token readout modelled it
-        // at 1.85–4.31:1 and could not see it. Reported as «some bugs» with a
-        // screenshot whose only two saturated colours were those exact values.
-        //
-        // The blend is not the bug and must not be removed: the instant the bar
-        // arrives under the label the difference goes to exact black, and that
-        // is what the blend is spent on. The label cannot move either — it has
-        // to EQUAL the bar for that to happen. So the free variable is the
-        // PLATE, and it carries two constraints instead of one:
-        //
-        //   · |plate − ink| must clear 4.5:1 against the plate  — the rest label
-        //   · plate vs ink must clear M_STEP                    — the arriving bar
-        //
-        // Same walk as project(), one more predicate. Solvable at an extreme by
-        // construction: as the plate approaches black the difference approaches
-        // the ink itself, so the ratio grows without bound.
-        var absdiff = function (a, b){
-          return [0,1,2].map(function (i){ return Math.abs(a[i] - b[i]); });
-        };
-        var okLurch = function (c){
-          return ratio(absdiff(c, hoverRgb), c) >= 4.5 && ratio(c, hoverRgb) >= M_STEP;
-        };
-        var lurchAt = function (L){ return fromHsl(mh[0], mh[1], L).map(Math.round); };
-        var l0 = toHsl(RUNGS['--lift-bg'])[2];
-        var lurch = null;
-        if (okLurch(lurchAt(l0))) lurch = lurchAt(l0);
-        if (!lurch){
-          var bestL = null;
-          [1, -1].forEach(function (dir){
-            for (var i = 1; i <= 100; i++){
-              var L = l0 + dir * i * .01;
-              if (L < 0 || L > 1) break;
-              if (okLurch(lurchAt(L))){ if (!bestL || i < bestL.i) bestL = {c: lurchAt(L), i: i}; break; }
-            }
-          });
-          if (bestL) lurch = bestL.c;
-        }
-        if (!lurch){
-          // Nothing clears both. Take the plate that leaves the rest label the
-          // most, which is project()'s own answer to the same shape.
-          var far = null, score = -1;
-          for (var j = 0; j <= 100; j++){
-            var c3 = lurchAt(j / 100);
-            var sc = Math.min(ratio(absdiff(c3, hoverRgb), c3), ratio(c3, hoverRgb));
-            if (sc > score){ score = sc; far = c3; }
-          }
-          lurch = far;
-        }
-        root.setProperty('--m-lurch', toHex(lurch));
         // The label on those plates, and it is TWO fits rather than one. A
         // single fit has to clear its floor on every plate at once; in light the
         // bevels sit near the top of the ladder and the walked face near the
@@ -12871,6 +12829,93 @@ document.addEventListener("DOMContentLoaded", function () {
         M_RUNGS.forEach(function (n){ root.removeProperty(M_SET[n]); });
         root.removeProperty('--m-ink');
         root.removeProperty('--m-face-ink');
+      }
+      // (guard: the walk needs a pick to walk toward)
+      if (mSource){
+        // ---- 113's plate has ONE MORE JOB THAN A FACE, and it is arithmetic --
+        // ⚠️ ONLY WHEN A PALETTE IS SET, AND THE DEFAULT WAS TRIED FIRST. With
+        // nothing picked the plate is #e7e7e7 in light and the label lands on
+        // #d5d5d5 — 1.19:1, one of the 21 the a11y gate reports. It is not
+        // fixable from the plate: unpicked, --ink-hover resolves to #121212, so
+        // |plate − ink| is plate minus eighteen at EVERY lightness and the
+        // difference tracks the plate whatever you do. Walked, the best available
+        // was #aaaaaa showing #989898 — 1.24:1, measured. So the walk stays
+        // inside the branch, the default rendering is untouched, and light
+        // Graphite's 113 remains the known failure it already was.
+        // 🔑 113's rest label is --ink-hover under mix-blend-mode:difference, so
+        // what a reader sees at rest is |plate − ink| per channel. On a graphite
+        // plate that was a grey word (measured 1.24:1 in light with nothing set).
+        // On a plate in the pick it is the pick's COMPLEMENT: Fern's #007832
+        // returned #b66f98, a mauve label at 1.53:1 — measured on COMPOSITED
+        // PIXELS, because a blend is per-pixel and the token readout modelled it
+        // at 1.85–4.31:1 and could not see it. Reported as «some bugs» with a
+        // screenshot whose only two saturated colours were those exact values.
+        //
+        // The blend is not the bug and must not be removed: the instant the bar
+        // arrives under the label the difference goes to exact black, and that
+        // is what the blend is spent on. The label cannot move either — it has
+        // to EQUAL the bar for that to happen. So the free variable is the
+        // PLATE, and it carries two constraints instead of one:
+        //
+        //   · |plate − ink| must clear 4.5:1 against the plate  — the rest label
+        //   · plate vs ink must clear M_STEP                    — the arriving bar
+        //
+        // Same walk as project(), one more predicate. Solvable at an extreme by
+        // construction: as the plate approaches black the difference approaches
+        // the ink itself, so the ratio grows without bound.
+        var absdiff = function (a, b){
+            return [0,1,2].map(function (i){ return Math.abs(a[i] - b[i]); });
+          };
+        var okLurch = function (c){
+            return ratio(absdiff(c, lurchInk), c) >= 4.5 && ratio(c, lurchInk) >= M_STEP;
+          };
+        // The ink to difference AGAINST. --ink-hover resolves through --ink to
+        // --ink-hi, which is a different colour per theme, so it is PROBED rather
+        // than assumed — WHITE_RGB is dark's answer and light's is #121212, and
+        // assuming the first is how a light-theme walk goes the wrong way.
+        var lurchInk = fitted.hover ? fitted.hover.rgb
+                     : fitted.accent ? fitted.accent.rgb
+                     : (function (){
+                         var el = document.createElement('span');
+                         el.style.cssText = 'position:fixed;left:-9999px;top:-9999px;'
+                                          + 'width:1px;height:1px;background-color:var(--ink-hover)';
+                         document.body.appendChild(el);
+                         var v = rgbOf(el, 'backgroundColor');
+                         el.remove();
+                         return v;
+                       })();
+        // Sat 0 with no pick, so Graphite's plate stays grey and only its
+        // LIGHTNESS moves. Dark already clears at the rung it was authored on, so
+        // the walk returns it unchanged there and only light travels.
+        var lurchHsl = mSource ? mh : [0, 0, 0];
+        var lurchAt = function (L){ return fromHsl(lurchHsl[0], lurchHsl[1], L).map(Math.round); };
+        var l0 = toHsl(RUNGS['--lift-bg'])[2];
+        var lurch = null;
+        if (okLurch(lurchAt(l0))) lurch = lurchAt(l0);
+        if (!lurch){
+          var bestL = null;
+            [1, -1].forEach(function (dir){
+              for (var i = 1; i <= 100; i++){
+              var L = l0 + dir * i * .01;
+              if (L < 0 || L > 1) break;
+              if (okLurch(lurchAt(L))){ if (!bestL || i < bestL.i) bestL = {c: lurchAt(L), i: i}; break; }
+              }
+            });
+          if (bestL) lurch = bestL.c;
+          }
+        if (!lurch){
+          // Nothing clears both. Take the plate that leaves the rest label the
+          // most, which is project()'s own answer to the same shape.
+          var far = null, score = -1;
+            for (var j = 0; j <= 100; j++){
+            var c3 = lurchAt(j / 100);
+            var sc = Math.min(ratio(absdiff(c3, lurchInk), c3), ratio(c3, lurchInk));
+            if (sc > score){ score = sc; far = c3; }
+            }
+            lurch = far;
+          }
+        root.setProperty('--m-lurch', toHex(lurch));
+      } else {
         root.removeProperty('--m-lurch');
       }
       // The hover label, at last a choice. Picked, it is fitted against the
