@@ -962,14 +962,21 @@
      It goes on the PLATE and not on the button: an inset shadow on the button
      paints under its own ::before, so the arriving plate covers it and the
      hairline never appears — measured at 1.06:1 with the rule in place, which
-     is how it was caught. border-radius:inherit is what keeps it on the pill
-     rather than cutting its corners against overflow:hidden.
-     Card 09 needs none of it: its own --line-ctl border sits over the white
-     plate it keeps underneath, so the dark circle arrives inside a ring that
-     already measures 16.7:1. */
+     is how it was caught. The border-radius:inherit that used to be restated
+     here is gone: both fronts carry it in their own base rules now — 07 for
+     its leading cap, 08 for the same reason — so a second copy on the fill
+     version was one declaration saying a thing the study already said.
+     Cards 09 and 129 take this rule too, and 09 used to be recorded here as
+     the study that did not need it, on the grounds that its own --line-ctl
+     border was already drawing the ring. It was not. Their hairlines are on
+     the BUTTON rather than on the arriving plate, so what showed once the
+     plate landed was the 1px of resting --ink the border box keeps
+     underneath — 17.76:1 against the arrived plate in dark and 19.80:1 in
+     light, against the 3.31 and 3.36 the studies here measure. Both are fed
+     by their own blocks now. */
   .sweep.btn--solid::before,
   .shutter.btn--solid::before{
-    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+    box-shadow:inset 0 0 0 1px var(--line-ctl);
   }
 
   /* 07 in fill and link */
@@ -987,9 +994,47 @@
   .shutter.btn--solid:hover .lbl,
   .shutter.btn--solid:focus-visible .lbl{color:var(--on-hover-set, var(--ink))}
 
-  /* 09 in fill. The --line-ctl hairline it draws for itself is a white at .36
-     and disappears against a white plate, which is correct rather than a loss:
-     a filled button does not need a boundary drawn on top of its own. */
+  /* 09 in fill. HALF THE OLD NOTE MEASURED OUT AND HALF OF IT WAS BACKWARDS.
+     The hairline does disappear on the resting plate. White at .36 over --ink
+     reads 247 against 242, a ratio of 1.042; in light it is a black at .45
+     over a near-black plate and reads 10 against 18, 1.057. With any colour
+     picked --line-ctl resolves to --a-edge, which paint() writes as the accent
+     whole — the same value --ink takes — so border and plate are one number
+     and the ratio is exactly 1.000. Sampled off the rendered edge in both
+     themes, all eight palettes and nine hand-picked accents: invisible at rest
+     in every setting the toolbar can write. That much the note had right.
+     WHAT IT GOT WRONG IS THAT THE RING ON HOVER IS NOT THE HAIRLINE. Its
+     premise — that a filled button does not need a boundary on top of its own
+     plate — is the page's rule and holds. Filing THIS declaration as therefore
+     inert did not. background-clip is border-box, so the resting --ink plate
+     paints UNDER the 1px border, while overflow:hidden clips the arriving
+     circle to the PADDING box. The moment the ink lands, that 1px strip is a
+     band of the button's own resting plate, with the .36 hairline adding five
+     values of 255 on top of it: 247 against a 16 plate is 17.76:1, and
+     19.80:1 in light. Cards 07, 08, 75, 78 and 121 all land on 3.31:1 and
+     3.36:1, because their boundary is --line-ctl over the plate that arrived.
+     09 was five to six times its own family, which is why it was the one that
+     read as a drawn border while the others read as a hairline. Card 129 was
+     the same construction and the same number, and takes the same fix.
+     So it joins them rather than being excused. overflow-clip-margin hands the
+     arriving circle the BORDER box, so the plate reaches the edge and there is
+     no strip of resting plate left to see; the hairline comes off the button;
+     and the boundary goes back on a ring ABOVE the plate — the ::after at
+     z-index 2 that 75 and 121 already use, and for their reason: an inset
+     shadow on the button itself paints under its own ::before and never
+     appears. Measured after: 3.31:1 against the card in dark, 3.36:1 in light.
+     Its own family's number, and 1.4.11 still met.
+     THE BOX DOES NOT MOVE — border-color only. Never border:none and never a
+     width: 09 pads its label inside that 1px, and the page's promise is that a
+     study measures identical in all its versions at rest and on hover.
+     Verified 159.781 x 47.000 in both versions and both states, before and
+     after. pointer-events:none because the ring covers the plate the study
+     reads --x and --y off. */
+  .inkfill.btn--solid{overflow:clip; overflow-clip-margin:1px;
+    border-color:transparent}
+  .inkfill.btn--solid::after{content:""; position:absolute; inset:-1px;
+    z-index:2; pointer-events:none; border-radius:inherit;
+    box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .inkfill.btn--solid::before{background:var(--hover-set, var(--on-ink))}
   .inkfill.btn--solid:hover .lbl,
   .inkfill.btn--solid:focus-visible .lbl{color:var(--on-hover-set, var(--ink))}
@@ -3054,7 +3099,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="o-step" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T12:37:56+02:00">
+    <article class="spec" data-key="o-step" data-versions="fill outline" data-added="2026-08-27T07:45:03+02:00" data-updated="2026-08-29T12:37:56+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line o-step"><span class="o-step-fill" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="lbl" data-label>Start the build</span><span class="o-step-on" data-label aria-hidden="true">Start the build</span></button>
       </div>
@@ -5476,9 +5521,18 @@ document.addEventListener("DOMContentLoaded", function () {
      square ring with its corners cut off against the pill. A separate ring at
      z-index 2 keeps the pill whatever the plate underneath is doing. It is
      drawn at rest as well, where --line-ctl's white at .36 vanishes into the
-     white fill — the same non-loss card 09 records: a filled button does not
-     need a boundary drawn on top of its own. It earns its keep once the dark
-     plate is in, which on --bg-1 measures 1.06:1 without it. */
+     white fill: measured 1.042:1 against it in dark, 1.057:1 in light, and
+     exactly 1.000:1 with any colour picked, because --line-ctl is then the
+     accent whole and so is the plate. That is the page's rule holding rather
+     than a loss — a filled button carries no control boundary on top of its
+     own plate — and it is this ring's PLACEMENT that earns it: above the
+     plate, not on the button. It earns its keep once the dark plate is in,
+     which on --bg-1 measures 1.06:1 without it; with it, 3.31:1 in dark and
+     3.36:1 in light, the numbers 07, 08, 78 and 121 land on too. Card 09 was
+     cited here as the same non-loss and was not: its hairline was on the
+     button, so a band of its own resting plate showed through the border box
+     instead, at 17.76:1. It is built the way this one is now — see the
+     09-in-fill block. */
   .j-dir.btn--solid .j-dir-tile{background:var(--hover-set, var(--on-ink))}
   .j-dir.btn--solid .j-dir-on{color:var(--on-hover-set, var(--ink))}
   .j-dir.btn--solid::after{
@@ -6594,6 +6648,43 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-step:focus-visible .o-step-fill span:nth-child(5){transition-delay:calc(var(--t-stagger) * 4)}
   .o-step:hover .o-step-fill span:nth-child(6),
   .o-step:focus-visible .o-step-fill span:nth-child(6){transition-delay:calc(var(--t-stagger) * 5)}
+  /* 91 in fill. The page's rule holds and the mechanism is untouched by it: on
+     a fill the arriving plate is the INVERSE, so the six columns go --on-ink
+     and the twin riding them goes back to --ink. The stagger, the origin flip
+     and the steps(6,start) lock are the study; the treatment only says what
+     colour the staircase is made of.
+
+     THE SEAM SHADOW IS RECOLOURED WITH THE COLUMN, and it has to be. It is a
+     1px repeat of the column painted under its neighbour, so left at --accent
+     it would draw a LIGHT hairline down each of the five seams for exactly the
+     frames the neighbour is shorter than this column — the defect the shadow
+     exists to fix, inverted, and visible only while the card moves. One
+     declaration, two properties, or the fix becomes the bug.
+
+     The boundary is an ::after ring and NOT the inset hairline 07 and 08 put on
+     their plate, for the same reason those two do not put it on the button:
+     this plate is six CHILDREN of .o-step-fill, and an inset shadow on the
+     container paints with the container's own background, under every one of
+     them. Card 75's ring, arrived at from the other direction. It is drawn at
+     rest too, where --line-ctl's white at .36 vanishes into the white fill —
+     the non-loss card 09 records — and it earns its keep the moment the dark
+     staircase is in, which on --bg-1 measures 1.06:1 without it.
+
+     No link version, and the absence is the same one card 08 records one axis
+     over. This mechanism is a HEIGHT: six columns rising off the floor with a
+     jagged leading edge, staggered so the jag is visible. A 1.5px rule has no
+     floor to rise off and no height to be jagged in, so the only thing left to
+     stagger is six segments appearing along a line — which is a different
+     study, not this one in another treatment. */
+  .o-step.btn--solid .o-step-fill span{
+    background:var(--hover-set, var(--on-ink));
+    box-shadow:1px 0 0 0 var(--hover-set, var(--on-ink));
+  }
+  .o-step.btn--solid .o-step-on{color:var(--on-hover-set, var(--ink))}
+  .o-step.btn--solid::after{
+    content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
      card would still arrive in sequence with nothing animating between the
      steps — six jumps instead of one. These are the delays this section adds,
@@ -9637,23 +9728,39 @@ document.addEventListener("DOMContentLoaded", function () {
      the authored order, the exit by the opposite one are the study — and the
      treatment only says what colour arrives.
 
-     THE BOUNDARY IS THE BUTTON'S OWN BORDER HERE, which is where this parts
-     company with 75. That card animates its plate's radius and had to draw a
-     separate ring; this tile is inset:0 inside a border box and overflow:hidden
-     clips it to the padding edge, so the border is never covered and one
-     declaration does the job. It has to be --line-ctl and not the built
-     --line: once the dark tile is fully in, --line measures 1.06:1 against the
-     card and the button reads as gone rather than as switched — the same
-     measurement the family's own note records. --line-ctl clears 3:1, and on
-     the white plate at rest it is a white at .36 laid on a white, which is
-     card 09's non-loss again.
+     THE BOUNDARY GOES ON A RING ABOVE THE PLATE, WHICH IS 75's ANSWER AND NOT
+     THE BUTTON'S OWN BORDER. It was the border first, on the reasoning that
+     the tile is inset:0 inside a border box and overflow:hidden clips it to
+     the padding edge, so the border is never covered and one declaration does
+     the job. Both halves of that are true and the conclusion still failed,
+     because what is never covered is not only the hairline: background-clip is
+     border-box, so the resting --ink plate paints under that 1px too. Once the
+     dark tile is in, the strip is a band of the button's own white plate with
+     a white at .36 on top of it. The note here claimed --line-ctl clears 3:1;
+     measured off the rendered edge it cleared 17.76:1 in dark and 19.80:1 in
+     light, against the 3.31 and 3.36 every other study in the family sits on.
+     Card 09 had the same construction and the same number, and takes the same
+     fix — its block is the long version of this argument.
+     So: overflow-clip-margin hands the tile the BORDER box, the tile is inset
+     to match, the hairline comes off the button, and the ring goes on an
+     ::after at z-index 2. --line-ctl and not --line for the reason the old
+     note gave, which still holds: once the dark tile is fully in, --line
+     measures 1.06:1 against the card and the button reads as gone rather than
+     as switched. The box does not move — border-color only, 182.156 x 47.000
+     before and after — and the tile's extra 2px of travel is 1.2% of a
+     182px plate on a --t-5 that nothing else reads off.
 
      The label needs both ends stated. Its rest colour is --ink-text, which is
      the label on a CARD and is a white word on a white plate here; and the
      arrived colour is --on-ink-hover, which is dark and would be a dark word
      on the dark tile it is meant to sit on. Both flip. */
-  .btn.j-turns.btn--solid{ border-color:var(--line-ctl) }
-  .j-turns.btn--solid .j-turns-tile{ background:var(--hover-set, var(--on-ink)) }
+  .btn.j-turns.btn--solid{ overflow:clip; overflow-clip-margin:1px;
+    border-color:transparent }
+  .j-turns.btn--solid::after{ content:""; position:absolute; inset:-1px;
+    z-index:2; pointer-events:none; border-radius:inherit;
+    box-shadow:inset 0 0 0 1px var(--line-ctl) }
+  .j-turns.btn--solid .j-turns-tile{ inset:-1px;
+    background:var(--hover-set, var(--on-ink)) }
   .j-turns.btn--solid .lbl{ color:var(--ink-on-fill) }
   .j-turns.btn--solid.j-turns-in .lbl{ color:var(--on-hover-set, var(--ink)) }
 

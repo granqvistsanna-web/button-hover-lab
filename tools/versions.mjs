@@ -44,6 +44,10 @@ export const VERSIONS = {
   // 129 is 75's tile on an authored cycle, so it takes 75's fill and stops
   // exactly where 75 stops — four edges, one rule to answer them with.
   'j-turns':'fill',
+  // 91's staircase is a HEIGHT — six columns rising off the floor with a
+  // jagged leading edge — so a 1.5px rule has nothing for it to happen in.
+  // Card 08's absence, one axis over.
+  'o-step':'fill outline',
   // 130's plate is nailed down and only the word drifts, in pixels read off
   // the plate's own rect, so no treatment can reach the mechanism at all.
   // Fill only, and for what it BUYS rather than what it survives: the cap is
