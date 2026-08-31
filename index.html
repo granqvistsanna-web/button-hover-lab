@@ -1173,9 +1173,15 @@
      nothing else on the page wants a rung this long, and a sixth token would
      be one study wide. Only :focus-visible ever saw this effect properly, at
      the unshifted 450ms. Card 123 carries the same value for the same reason. */
-  .sheen{--sheen-t:583ms; background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  .sheen{--sheen-t:583ms; background:var(--ink); color:var(--ink-on-fill); overflow:hidden; transition:background var(--t-3) ease,color var(--t-3) ease,transform var(--t-1) var(--e-out)}
+  /* The label has to arrive with the plate. --ink-on-fill is fitted against the
+     FILL, so once the plate swaps to the hover colour that token is answering
+     the wrong question — white on a light pick measured 1.76:1. --on-ink-hover
+     is the same fit taken against the colour that actually lands. The line
+     variant keeps --ink: its hover plate is 8% ink on transparent, not a fill. */
   .sheen:hover,
-  .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
+  .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg));
+    color:var(--on-ink-hover)}
   /* Wider and five-stop: a bright core with a broad dim shoulder reads as
      light, where the old 36% three-stop strip read as a bar. The travel
      tightens with it — -150% to 340% spent a seventh of the run off-plate,
@@ -9798,13 +9804,18 @@ document.addEventListener("DOMContentLoaded", function () {
      press keeps the whole thing on --t-1 so the tone answers as fast as the
      scale does. */
   .c-mass{transition:transform var(--t-5) var(--e-quint),
-                     background-color var(--t-5) var(--e-quint)}
+                     background-color var(--t-5) var(--e-quint),
+                     color var(--t-5) var(--e-quint)}
   .c-mass .track{display:block; overflow:hidden; height:1.25em}
   .c-mass .inner{display:block; transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-3) var(--e-quint)}
   .c-mass .inner span{display:block; line-height:1.25}
+  /* The label travels with the plate, on the plate's own curve — see 10. The
+     colour is the slow channel here too, so it is still settling while the
+     label has already landed, which is the study. */
   .c-mass:hover, .c-mass:focus-visible{transform:scale(.964) rotate(0.001deg);
-    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
+    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg));
+    color:var(--on-ink-hover)}
   .c-mass:hover .inner,
   .c-mass:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg)}
   .c-mass:active{transform:scale(.945) rotate(0.001deg); transition-duration:var(--t-1)}
@@ -10750,9 +10761,14 @@ document.addEventListener("DOMContentLoaded", function () {
      differs is the sign, and the sign is the study. The mark's track is
      parked one face UP at rest, so restoring it to zero is a fall — the pair
      is a property of where the tracks start, not of a second timing table. */
-  .c-against{overflow:hidden; transition:background var(--t-5) var(--e-out)}
+  .c-against{overflow:hidden; transition:background var(--t-5) var(--e-out),
+    color var(--t-5) var(--e-out)}
+  /* Both channels are currentColor — the label spans and the mark's svg stroke —
+     so one declaration turns the pair over with the plate. Without it the label
+     kept --ink-on-fill, fitted against the fill and not against what arrives:
+     measured 1.90:1, white on a light hover pick. */
   .c-against:hover,
-  .c-against:focus-visible{background:var(--ink-hover)}
+  .c-against:focus-visible{background:var(--ink-hover); color:var(--on-ink-hover)}
   .c-against .track,
   .c-against .c-against-mark{display:block; overflow:hidden; height:1.25em}
   .c-against .inner{display:block; transform:translateY(0) rotate(0.001deg);
