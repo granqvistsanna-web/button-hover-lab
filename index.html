@@ -622,6 +622,25 @@
   .btn--line{border:1px solid var(--ink)}
   .btn--text{padding:8px 4px; border-radius:2px}
 
+  /* ---- The boundary a quiet fill gets instead of being moved ------------
+     WCAG 1.4.11 asks 3:1 of whatever identifies a control. A filled button is
+     identified by its plate, so a plate under 3:1 against the card needs
+     something — and the page used to buy that by walking the plate's lightness
+     until it cleared 4.5:1, which is how a picked colour stopped being the
+     colour on screen. A boundary buys the same thing without touching the
+     fill: paint() stamps data-ring on the studies whose plate IS the accent
+     and publishes --accent-ring, the pick walked to 3:1.
+
+     `outline` and not a border or a box-shadow: it is the one boundary
+     property no study decorates with, it follows border-radius, and it costs
+     no layout — a border would move every label by a pixel and a box-shadow
+     would collide with the twelve material studies that own theirs. The focus
+     ring is restated at (0,3,0) so it still outranks this at (0,2,0); without
+     it a ringed button would lose its focus indicator, which is a worse
+     accessibility bug than the one being fixed. */
+  .btn[data-ring]{ outline:1px solid var(--accent-ring, var(--line-ctl)); outline-offset:-1px }
+  .btn[data-ring]:focus-visible{ outline:2px solid var(--ink-low); outline-offset:3px }
+
   /* ---- The four versions ----------------------------------------------
      Fill, outline and link are the three surface treatments; LONG is a label
      length, and it composes with all three rather than replacing them — a long
@@ -10691,11 +10710,31 @@ document.addEventListener("DOMContentLoaded", function () {
     //
     //   min   4.5 is the AA floor for text. 3 is WCAG 1.4.11 for a non-text
     //         boundary, which is the same argument --line-ctl already makes a
-    //         few hundred lines up. ACCENT is held to 4.5 rather than 3 even
-    //         though it is a fill token: card 31's --f-lys and card 44's
-    //         --l-lys are local pair aliases fed from --ink, and both put it
-    //         behind a label. One token reaching text by a route this pass
-    //         cannot see is enough to make the stricter floor the honest one.
+    //         few hundred lines up.
+    //   fill  🔑 THE ROLE IS A SURFACE, SO IT IS PAINTED EXACTLY AS PICKED.
+    //         This is the page's one colour promise and it used to be untrue.
+    //         Both fill roles were walked in LIGHTNESS until they cleared 4.5:1
+    //         against the card, both directions tried and the smaller move
+    //         winning — so the direction was a function of the THEME, not of
+    //         the pick, and the same hex came out lighter in one theme and
+    //         darker in the other. Swept over 432 ordinary brand colours (36
+    //         hues x 3 saturations x 4 lightnesses): 64% survived verbatim in
+    //         dark, 24% in light, and **0% in both**. A single hex cannot clear
+    //         4.5:1 against #222222 and #ffffff at once, so the old rule
+    //         GUARANTEED that every brand colour was rewritten somewhere.
+    //         #ff52a5 was kept in dark and silently repainted #e6006e in light.
+    //
+    //         The floor was also stricter than the standard asks. A fill is a
+    //         surface: WCAG 1.4.11 wants 3:1 on the boundary that identifies
+    //         the control, and 4.5:1 on the LABEL — which labelOn() already
+    //         fits separately, against every plate a study can show. Holding
+    //         the fill itself to a text floor bought nothing that fit did not
+    //         already buy, and cost every brand colour.
+    //
+    //         So: fills, plates, marks and edges are the colour that was
+    //         picked. Labels are DERIVED from it. `min` on a fill role is now
+    //         the 3:1 identification floor, and falling under it draws a ring
+    //         rather than moving the fill — see needsRing below.
     //   set   the tokens the role writes.
     //   set   the tokens the role writes directly. The label-on-a-fill tokens
     //         are NOT here: they depend on the text colour and on the fill at
@@ -10711,8 +10750,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var ROLES = [
       {key:'text',      name:'Text',           min:4.5, set:['--ink-text']},
       {key:'textHover', name:'Text on hover',  min:4.5, set:[], onFill:true},
-      {key:'accent',    name:'Button',         min:4.5, set:['--ink', '--accent']},
-      {key:'hover',     name:'Button on hover',min:3,   set:['--ink-hover']}
+      {key:'accent',    name:'Button',         min:3,   set:['--ink', '--accent'], fill:true},
+      {key:'hover',     name:'Button on hover',min:3,   set:['--ink-hover'],         fill:true}
     ];
     // '' — unset, meaning the page's own monochrome. Unset is not «follow
     // another swatch»: leaving the token off the root lets the authored alias
@@ -10811,8 +10850,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       return {rgb: best.rgb, hex: toHex(best.rgb), moved: true, ratio: ratio(best.rgb, bg)};
     }
-    // The card is what the three swatches are fitted against.
+    // The card is what the TEXT swatches are fitted against.
     function fit(hex, min){ return fitOn(hex, min, PANEL); }
+    // …and what a FILL is only measured against. Nothing is walked here: the
+    // colour comes back exactly as it was picked, with the number it actually
+    // scores and a flag saying whether it needs a boundary to stay
+    // identifiable. Same shape as fitOn's result so every caller downstream is
+    // unchanged; `moved` is false by construction, which is the whole point.
+    function asPicked(hex, min){
+      var rgb = toRgb(hex), r = ratio(rgb, PANEL);
+      return {rgb: rgb, hex: toHex(rgb), moved: false, ratio: r, needsRing: r < min};
+    }
     // Text ON a fitted colour. The fit above guarantees the colour is lighter
     // than the panel, so this resolves to black in practice — it is computed
     // anyway rather than assumed, because the guarantee lives in another
@@ -10821,16 +10869,75 @@ document.addEventListener("DOMContentLoaded", function () {
       return ratio(rgb, [0, 0, 0]) >= ratio(rgb, [255, 255, 255]) ? '#000000' : '#ffffff';
     }
 
+    // Which studies are identified by their PLATE and cannot do it on their own
+    // — the ones a ring goes on. The test is the WCAG condition itself: an
+    // opaque rest background that does not clear 3:1 against the card. Asking
+    // that rather than «is this plate exactly the accent» is what catches the
+    // studies that mix — 126 Squash paints `--accent 84%, --bg` and 11 Relay
+    // mixes `--ink 86%`, so a plate that is 12 units off the pick is still the
+    // pick, still low-contrast, and still needs the boundary.
+    //
+    // Read fresh rather than memoised. An earlier version cached this per theme
+    // on the grounds that «does this study fill itself from --ink» is a fact
+    // about its CSS — true, but the question being asked here is about the
+    // COLOUR, and the answer changes with every pick. It only runs when a ring
+    // is actually needed, which the sweep puts at roughly one brand colour in
+    // five in dark and one in two in light, so the forced layout is rare and
+    // paid for.
+    // …and the plate has to BE the pick, which is the half a first version got
+    // wrong. Testing only «opaque and under 3:1» ringed the neutral plates too:
+    // --lift-bg is a pale grey on the white card and has ALWAYS been under 3:1
+    // there, so cards 43, 49 and 116 came back with a pink outline around a grey
+    // pill the moment any colour was chosen — a ring in the accent's colour
+    // around something the accent never touched, appearing and disappearing with
+    // a control that does not own it. A plate is the pick when it is within a
+    // few units of it, or when it is a MIX of it: same hue family, both
+    // saturated. A greyscale pick has no hue to match on, so it relies on the
+    // first test, which is exactly the case where a mix is closest anyway.
+    function isPick(c, A){
+      if (Math.abs(c[0] - A[0]) + Math.abs(c[1] - A[1]) + Math.abs(c[2] - A[2]) <= 24) return true;
+      var h = hueSat(c), a = hueSat(A);
+      if (h[1] < .12 || a[1] < .12) return false;
+      return Math.abs(((h[0] - a[0] + 540) % 360) - 180) < 20;
+    }
+    function hueSat(c){
+      var r = c[0] / 255, g = c[1] / 255, b = c[2] / 255;
+      var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+      if (d){
+        if (mx === r)      h = ((g - b) / d + (g < b ? 6 : 0));
+        else if (mx === g) h = (b - r) / d + 2;
+        else               h = (r - g) / d + 4;
+        h *= 60;
+      }
+      var l = (mx + mn) / 2;
+      return [h, d ? d / (1 - Math.abs(2 * l - 1)) : 0];
+    }
+    function ringable(A){
+      var list = [];
+      [].forEach.call(document.querySelectorAll('.spec .btn'), function (b){
+        var m = (getComputedStyle(b).backgroundColor || '').match(/-?[\d.]+/g);
+        if (!m) return;
+        if (m.length > 3 && Number(m[3]) < .9) return;      // not an opaque plate
+        var c = [+m[0], +m[1], +m[2]];
+        if (ratio(c, PANEL) >= 3) return;                   // identifies itself already
+        if (!isPick(c, A)) return;                          // not this control's doing
+        list.push(b);
+      });
+      return list;
+    }
+
     function paint(){
       var root = document.documentElement.style;
       var textRatio = null, moved = 0;
 
-      // Pass one: fit each swatch against the card, independently of the others.
-      // Except the roles flagged onFill — their background is a colour this
-      // pass is still working out, so they wait for pass two.
+      // Pass one: settle each swatch against the card, independently of the
+      // others. A TEXT role is fitted — walked until it is legible. A FILL role
+      // is taken as picked and only measured. Roles flagged onFill sit on a
+      // colour this pass is still working out, so they wait for pass two.
       var fitted = {};
       ROLES.forEach(function(r){
-        fitted[r.key] = (!r.onFill && look[r.key]) ? fit(look[r.key], r.min) : null;
+        if (r.onFill || !look[r.key]){ fitted[r.key] = null; return; }
+        fitted[r.key] = r.fill ? asPicked(look[r.key], r.min) : fit(look[r.key], r.min);
       });
 
       // What a label actually sits on. Unset falls through the same alias chain
@@ -10955,94 +11062,49 @@ document.addEventListener("DOMContentLoaded", function () {
       // declaration it is feeding. The rungs are MEASURED off the page for the
       // same reason WHITE and PANEL are — they move with the theme, and a
       // literal here would be a third copy of the ladder to keep in step.
+      // Only the two ACCENT-SHAPED tokens are written. The five ladder rungs
+      // below them used to be written too, and they are what made one pick look
+      // like several colours.
+      //
+      // 🔑 THE GREY LADDER IS NO LONGER TINTED. .btn remaps --bg-2/3/4,
+      // --lift-bg, --ink-low, --muted and --ink-mid onto --a-2/3/4/quiet/mid,
+      // so writing those repointed every neutral surface and every secondary
+      // ink on a button toward the accent. Measured with #ff52a5 set, 17 of the
+      // 90 studies painted a colour nobody chose: 13 showed #3d2832 (--a-2, 14%
+      // accent over the grey rung, reached through --bg-2 and --lift-bg) and 5
+      // showed #ca6b99 (--a-quiet, over --ink-low). Both read as «a muddier
+      // version of my pink» while the other 73 studies showed the pink itself,
+      // which is exactly the inconsistency the control was being blamed for.
+      //
+      // The cap made it worse rather than better. capTint backed the tint off
+      // in 2% steps until the accent cleared its floor against the rung, so the
+      // amount of tint was a function of the hue: #ffcc00 tinted all three
+      // surface rungs, #ff52a5 tinted one and left --a-3 and --a-4 pure grey,
+      // #0066ff tinted none, and in LIGHT the feature was off for every brand
+      // colour tested. Three rungs meant to step together did not, and no
+      // reader could see the rule because there wasn't one.
+      //
+      // Leaving them unwritten is not a loss of the cap — it is the cap's own
+      // terminal value. Each remap reads var(--a-N, <literal>) and the literal
+      // is the untinted rung, so a neutral surface on a button is now the same
+      // neutral it is everywhere else on the page. It also closes the --a-3 /
+      // --a-4 failure the previous pass measured and could not fix (49, 86, 34,
+      // 123, 104 at 3.15–3.85:1): there is no tinted rung left to fail on.
       var A_TOKENS = ['--a-edge','--a-soft','--a-2','--a-3','--a-4','--a-quiet','--a-mid'];
+      var LADDER   = ['--a-2','--a-3','--a-4','--a-quiet','--a-mid'];
       if (fitted.accent){
-        // Rounded here and not trusted from the fit: fitOn walks HSL and hands
-        // back fractional channels, which are legal in rgb() but would put
-        // «221.4999999999999» in a value the Copy buttons hand over as text.
+        // Rounded and not trusted from the result: a picked colour is integers
+        // already, but asPicked shares its shape with fitOn, which walks HSL and
+        // hands back fractional channels — those are legal in rgb() and would
+        // put «221.4999999999999» in a value the Copy buttons hand over as text.
         var A = fitted.accent.rgb.map(Math.round);
-        var rung = function (name){
-          var probe = document.createElement('span');
-          probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(' + name + ')';
-          document.body.appendChild(probe);
-          var v = rgbOf(probe, 'color'); probe.remove(); return v;
-        };
-        var mix = function (base, amount){
-          return 'rgb(' + [0,1,2].map(function (i){
-            return Math.round(A[i] * amount + base[i] * (1 - amount));
-          }).join(',') + ')';
-        };
         var rgba = function (a){ return 'rgba(' + A.join(',') + ',' + a + ')'; };
-        // The boundary takes the accent whole. It is the fit's own output, so it
-        // is already 4.5:1 on the card and clears a 3:1 edge with room to spare.
+        // The boundary takes the accent whole — it IS the pick, unmoved.
         root.setProperty('--a-edge',  'rgb(' + A.join(',') + ')');
         // A hairline is subordinate by definition — at full strength it stops
         // being a detail and becomes a second border.
         root.setProperty('--a-soft',  rgba(.30));
-        // The rungs keep their own lightness and take a tint, so the ladder the
-        // studies climb still steps the same distance it did in graphite.
-        //
-        // ⚠️ THE TINT IS CAPPED, and it has to be. Tinting a SURFACE toward the
-        // accent while the INK on it is already the accent walks the two
-        // together, and the gap closes with nothing watching: an accent label on
-        // --lift-bg (which is --a-2) measured 2.90–4.21:1 across the palettes,
-        // and card 31's hover overlay 3.82–4.48:1, against 10.9–14.7:1 in
-        // graphite. Nothing here tested it, so the page reported AA and painted
-        // less.
-        //
-        // Backing the TINT off is the fix rather than moving the accent: --ink
-        // and --accent are read by all ninety studies, and the rung is read by
-        // twelve.
-        //
-        // 🚨 IT DOES NOT ALWAYS CONVERGE, and an earlier version of this note
-        // claimed it did. The claim was «at zero tint the rung is the untinted
-        // ladder, and the accent was already fitted against the card, which is
-        // that rung». That holds for --bg-2 and for nothing else: --bg-3 and
-        // --bg-4 are LIGHTER than the card, so an accent fitted against the
-        // card was never fitted against them. Measured: dark Violet falls all
-        // the way through to the plain #2e2e2e and #ae61ff on it is 3.850:1,
-        // and in light every rung falls through to the untinted ladder at
-        // 3.15–3.24:1 for all seven palettes. Five studies sit there — 49 lift,
-        // 86 o-quiet, 34 s-bevel, 123 c-crest, 104 x-bevel.
-        //
-        // So this closes --a-2, which is what --lift-bg reads and what card 32
-        // and card 31's rest state were failing on, and it honestly cannot
-        // close --a-3 or --a-4. Doing that needs the ACCENT fitted against the
-        // lightest rung an accent label ever lands on, which moves a chosen
-        // colour further from what was chosen — a trade Sanna has to price, not
-        // one to make in a helper. The walk still returns the best available
-        // value rather than the authored one, so the failures it cannot fix are
-        // smaller than they were.
-        // capTint tests the accent against the rung; capTintOn tests the RUNG
-        // against a ground it is read on. Two questions, two helpers, because
-        // an ink rung and a surface rung fail in opposite directions.
-        var capTintOn = function (name, want, floor, ground){
-          var base = rung(name);
-          for (var t = want; t > 0; t -= .02){
-            var m = [0,1,2].map(function (i){ return Math.round(A[i] * t + base[i] * (1 - t)); });
-            if (ratio(m, ground) >= floor) return 'rgb(' + m.join(',') + ')';
-          }
-          return 'rgb(' + base.join(',') + ')';
-        };
-        var capTint = function (name, want, floor){
-          var base = rung(name);
-          for (var t = want; t > 0; t -= .02){
-            var m = [0,1,2].map(function (i){ return Math.round(A[i] * t + base[i] * (1 - t)); });
-            if (ratio(A, m) >= floor) return 'rgb(' + m.join(',') + ')';
-          }
-          return 'rgb(' + base.join(',') + ')';
-        };
-        // 4.5 on the surfaces, because an accent LABEL lands on them (cards 31
-        // and 32 both do it). The two ink rungs are read against --a-2, which is
-        // the surface they sit on once both are tinted.
-        root.setProperty('--a-2',     capTint('--bg-2', .14, 4.5));
-        root.setProperty('--a-3',     capTint('--bg-3', .24, 4.5));
-        root.setProperty('--a-4',     capTint('--bg-4', .34, 4.5));
-        // The two INK rungs, capped against the card they are read on. They were
-        // written blind and measured 4.36–4.40 in dark, which is under the floor
-        // by less than the surfaces were but under it all the same.
-        root.setProperty('--a-quiet', capTintOn('--ink-low', .55, 4.5, PANEL));
-        root.setProperty('--a-mid',   capTintOn('--ink-mid', .55, 4.5, PANEL));
+        LADDER.forEach(function (n){ root.removeProperty(n); });
       } else {
         A_TOKENS.forEach(function (n){ root.removeProperty(n); });
       }
@@ -11054,6 +11116,31 @@ document.addEventListener("DOMContentLoaded", function () {
       if (look.textHover) onHover = fitOn(look.textHover, 4.5, hoverRgb);
       else if (anyColour) onHover = labelOn(hoverRgb);
       fitted.textHover = look.textHover ? onHover : null;
+      // ---- The label at rest, when nobody picked one ----------------------
+      // 🔑 A FILL IS A SURFACE AND A LABEL IS TEXT, AND --ink-text ALIASES TO
+      // --ink. That single alias is why the fill used to be walked at all: the
+      // stylesheet hands the button's rest label the same token as its plate,
+      // so painting the plate verbatim would have dragged the words with it and
+      // put a 3.0:1 label on the card. Nothing else on the page reaches text by
+      // a route this pass cannot see — .btn's own `color` is --ink-text, and
+      // every `color:var(--ink)` in a study sits on --on-ink, which labelOn
+      // derives against the accent and is therefore safe by construction.
+      //
+      // So the two jobs come apart here, and this is the whole rule the page
+      // now keeps: FILLS ARE THE COLOUR THAT WAS PICKED, LABELS ARE DERIVED
+      // FROM IT. The rest label takes the accent walked to 4.5:1 against the
+      // card — the same fit the Text swatch would get, because it IS the text
+      // swatch's job — while --ink and --accent stay exactly as picked. A
+      // reader who sets a text colour overrides this, as they always could.
+      // Computed here because the captions below need it; WRITTEN after the
+      // ROLES loop, because that loop removes --ink-text for an unset text role
+      // and would wipe it on the way past.
+      var inkText = (!fitted.text && fitted.accent) ? fit(fitted.accent.hex, 4.5) : null;
+      // The boundary colour, if the fill needs one. Pure arithmetic, so it is
+      // settled here where the captions can name it; the DOM stamping that uses
+      // it has to wait until the plates have been written, and does, below.
+      var ringHex = (fitted.accent && fitted.accent.needsRing)
+                  ? fitOn(fitted.accent.hex, 3, PANEL).hex : null;
       // Only the DERIVED move belongs to the rest-label caption. A hover label
       // that was picked and then fitted reports on its own caption, below.
       var fillMoved = !!(onAccent && onAccent.moved)
@@ -11074,19 +11161,44 @@ document.addEventListener("DOMContentLoaded", function () {
           // The rest label answers for two fits: itself against the card, and
           // itself against whatever fill it lands on. Either one moving earns
           // the arrow, or the arrow means «sometimes».
+          // The ↑ means «this was moved». A fill is not, ever, so it never
+          // carries one — that is the promise made visible. The accent earns it
+          // only for the LABEL derived off it, which is the one thing that did
+          // move, and the tooltip says which.
           var alsoOnFill = r.key === 'text' && fillMoved;
-          cap.innerHTML = label + (f.moved || alsoOnFill ? ' <b>↑</b>' : '');
+          var derivedMoved = r.key === 'accent' && !!(inkText && inkText.moved);
+          cap.innerHTML = label + (f.moved || alsoOnFill || derivedMoved ? ' <b>↑</b>' : '');
           clr.hidden = false;
           var why = f.moved
             ? name + ' moved to ' + f.hex + ', so it clears ' + r.min + ':1 '
               + against + '.'
             : name + ': ' + f.ratio.toFixed(1) + ':1 ' + against + '.';
+          // A fill is never moved, and saying so is the point of saying
+          // anything: the number that follows is a measurement, not a
+          // correction, and it is the one thing a reader wanted to know when
+          // they opened the picker.
+          if (r.fill){
+            why = name + ' is painted exactly as picked — ' + f.hex + ', '
+                + f.ratio.toFixed(1) + ':1 ' + against + '.';
+            if (f.needsRing){
+              why += ' Under 3:1, so the filled studies take a ' + ringHex
+                   + ' boundary; the fill itself is untouched.';
+            }
+          }
+          // The one place the pick bends, named where it happens.
+          if (r.key === 'accent' && inkText){
+            why += inkText.moved
+              ? ' The label at rest is derived from it and lands on ' + inkText.hex
+                + ' — ' + inkText.ratio.toFixed(1) + ':1 on the card.'
+              : ' The label at rest takes it unchanged — '
+                + inkText.ratio.toFixed(1) + ':1 on the card.';
+          }
           if (alsoOnFill){
             why += ' On a filled button it is refitted against the fill and lands on '
                  + onAccent.hex + ' — ' + onAccent.ratio.toFixed(1) + ':1 there.';
           }
           cap.title = why;
-          if (f.moved || alsoOnFill) moved++;
+          if (f.moved || alsoOnFill || derivedMoved) moved++;
           if (r.key === 'text') textRatio = f.ratio;
         } else {
           r.set.forEach(function(p){ root.removeProperty(p); });
@@ -11101,12 +11213,27 @@ document.addEventListener("DOMContentLoaded", function () {
           cap.title = name + ' is unset — ' + (
               r.key === 'textHover' ? 'the label keeps the rest colour, refitted against the hover fill.'
             : r.key === 'hover'     ? 'hover keeps the button’s own colour.'
-            : r.key === 'text'      ? 'the label follows the page, and is computed black-or-white on a fill.'
+            : r.key === 'text'      ? 'the label follows the button colour, walked until it clears 4.5:1 on the card, and is computed black-or-white on a fill. The button’s own fill is never walked.'
             :                         'the button keeps graphite’s white.')
             + ' Left as an alias rather than written to the root, so a copied '
             + 'snippet still reads the system token and follows the system it lands in.';
         }
       });
+      // ---- The ring, for a fill that cannot identify itself ---------------
+      // Published and stamped after the tokens, because ringable() reads the
+      // plates back off the page and the plates are what was just written.
+      [].forEach.call(document.querySelectorAll('.btn[data-ring]'), function (b){
+        b.removeAttribute('data-ring');
+      });
+      if (ringHex){
+        root.setProperty('--accent-ring', ringHex);
+        ringable(fitted.accent.rgb).forEach(function (b){ b.setAttribute('data-ring', ''); });
+      } else {
+        root.removeProperty('--accent-ring');
+      }
+      // The rest label, derived off the fill. After the loop, for the reason
+      // given where inkText is computed.
+      if (inkText) root.setProperty('--ink-text', inkText.hex);
       if (anyColour){
         root.setProperty('--on-ink',      onAccent.hex);
         root.setProperty('--on-accent',   onAccent.hex);
@@ -11137,6 +11264,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (anyColour && onAccent && onAccent.ratio < textRatio){
         textRatio = onAccent.ratio;
         subject = 'on a fill, which is the lower of the two';
+      }
+      // …and the label on the CARD, which is a third number now that it is
+      // derived from the fill rather than equal to it. Reporting the floor
+      // means reporting the floor of all three, or the guarantee is only as
+      // good as the two it happened to look at.
+      if (inkText && inkText.ratio < textRatio){
+        textRatio = inkText.ratio;
+        subject = 'on the card, which is the lowest of the three';
       }
       // A ratio on its own is a number without a verdict — «4.6:1» only means
       // something to someone who already knows the thresholds, and the whole
