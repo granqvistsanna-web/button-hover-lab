@@ -341,10 +341,18 @@
     ::view-transition-old(root){ animation:none }
     ::view-transition-new(root){
       z-index:1;
-      /* The top rung of the ladder, because this is the largest surface the
-         page ever moves — and --e-quint rather than --e-out because a big
-         travel wants the harder decelerate at the end of it. */
-      animation:bhl-theme-wipe var(--t-5) var(--e-quint) both;
+      /* --t-4 and not the top rung, on Sanna's «a bit faster» (2026-08-31):
+         450ms is long enough that the eye follows the seam across the screen
+         and starts reading it as an object. At 300ms it is a change of
+         ground, which is what it is.
+         --e-out rather than --e-quint, on «a bit smoother» in the same
+         breath. Both decelerate, but quint leaves the origin at roughly
+         twice the speed and pays for it with a longer settle — over this
+         travel that front-load is what reads as a whip. --e-out spends the
+         same 300ms at a more even rate, so the seam moves rather than
+         lunges. The two changes also protect each other: the harder curve
+         is exactly the one that would have felt abrupt shortened. */
+      animation:bhl-theme-wipe var(--t-4) var(--e-out) both;
     }
   }
   /* Reduced motion keeps the cross-fade rather than falling back to the hard
