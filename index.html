@@ -317,8 +317,11 @@
   .mast{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
   h1{color:var(--ink-hi); font-size:21px; font-weight:600;
     letter-spacing:-.01em; line-height:1.2; margin:0}
+  /* Tabular figures: this is the page's live count now and it changes under
+     the reader's hand, so a proportional 1 would make the line twitch as the
+     digits swap. */
   .mast-sub{margin:0; font:400 12px/1 var(--mono); letter-spacing:.02em;
-    color:var(--ink-low)}
+    color:var(--ink-low); font-variant-numeric:tabular-nums}
 
   /* ============ sections & cards ============ */
   /* The break between sections is AIR, not a rule. Nine full-bleed hairlines
@@ -1355,8 +1358,13 @@
     padding:6px 9px; cursor:pointer; white-space:nowrap;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
   }
+  /* The ring is on EVERY dot, not only the none-swatch, so all eight read as
+     one set — and so a dot near either panel's own value cannot disappear into
+     it, which is what retired Chalk (#f5f5f5) would have done on the light
+     wall. Inset, so it never changes the dot's size. */
   .set-p::before{content:""; width:9px; height:9px; border-radius:50%;
-    background:var(--sw); flex:none}
+    background:var(--sw); flex:none;
+    box-shadow:inset 0 0 0 1px var(--line-ctl)}
   .set-p--none::before{background:none;
     box-shadow:inset 0 0 0 1.2px var(--line-ctl)}
   .set-p:hover{color:var(--ink-hi); background:var(--ctl)}
@@ -1423,25 +1431,25 @@
   .set-grade[data-pass="part"]{color:var(--ink-hi)}
   .fav-only{
     display:inline-flex; align-items:center; gap:7px;
-    font:500 14px/1 var(--font-ui); color:var(--ink-mid);
-    background:var(--ctl); border:0; border-radius:var(--r-sm);
-    padding:9px 13px; cursor:pointer;
-    transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+    font:500 12.5px/1 var(--font-ui); color:var(--ink-low);
+    background:none; border:0; border-radius:var(--r-xs);
+    padding:5px 0; margin:0 0 4px 9px; cursor:pointer;
+    transition:color var(--t-fast) var(--ease);
   }
   /* The glyph is the same mark the per-card control uses, so the toggle and
      the thing it filters on are recognisably one pair. */
-  .fav-only::before{content:"★"; font-size:11px; line-height:1; color:var(--ink-low)}
-  .fav-only:hover{background:var(--ctl-hi); color:var(--ink-hi)}
+  /* Hollow off, solid on — the same reading as the star on every card, and
+     the state is carried by the GLYPH rather than by a fill, so the control
+     can stay a link. */
+  .fav-only::before{content:"☆"; font-size:13px; line-height:1; color:inherit}
+  .fav-only[aria-pressed="true"]::before{content:"★"}
+  .fav-only:hover{color:var(--ink-hi)}
   /* Feedback on the press, not on the release: everything on this page that
      can be pressed repeatedly says so the instant it goes down. */
   .fav-only:active,.vers-b:active,.set-p:active,.set-uses:active,
   .rail-toggle:active,.tools-reset--inline:active{transform:scale(.96)}
-  .fav-only:hover::before,
-  .fav-only[aria-pressed="true"]::before{color:inherit}
-  .fav-only[aria-pressed="true"]{background:var(--inverse-bg); color:var(--inverse-ink)}
+  .fav-only[aria-pressed="true"]{color:var(--ink-hi)}
   .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
-  .tools-count{font:500 13px/1 var(--mono); color:var(--ink-mid);
-    font-variant-numeric:tabular-nums}
   .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
     background:none; border:0; padding:6px 2px; cursor:pointer}
   .tools-reset:hover{color:var(--ink-hi)}
@@ -1838,9 +1846,12 @@
   .rail-sects a[hidden]{display:none}
 
   /* ---- The status bar -------------------------------------------------- */
+  /* :has(), so the bar is governed by its own contents rather than by a class
+     JS has to remember to keep in step with the button it already toggles. */
+  .rail-foot:not(:has(.tools-reset:not([hidden]))){display:none}
   .rail-foot{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
     margin-top:18px; padding-top:0}
-  .rail-foot .tools-reset{margin-left:auto}
+  .rail-foot .tools-reset{margin-left:0}
 
   .rail-toggle{
     display:inline-flex; align-items:center; gap:7px;
@@ -2024,7 +2035,6 @@
     .rail-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
       padding:82px var(--pad-panel) 20px}
     .rail-head .rail-find{max-width:none}
-    .rail-head .fav-only{grid-column:1 / -1; justify-self:start}
     /* ---- One handle, one place ----------------------------------------
        Close was at the far right of the header and re-open was a separate
        button at the viewport's left edge, so the panel left in one direction
@@ -2141,10 +2151,18 @@
        scroll before the page did the one thing it is for. The name and the
        count are what a title has to carry; everything the ledes said is said
        better by the cards themselves, which are hoverable from the first
-       row up. The count is never typed — see the .mast-n fill below. -->
+       row up. The count is never typed — see the .mast-sub fill below. -->
   <header class="mast">
     <h1>Button Lab</h1>
-    <p class="mast-sub"><span class="mast-n"></span>&nbsp;studies</p>
+    <!-- The page's one count, and it is the LIVE one. It used to be the total
+         here and the live figure in the panel's status bar, which meant the
+         same set was counted twice in one 288px column AND that with a filter
+         on the two disagreed on screen — «90 studies» over «4 of 90». One
+         noun, one number, written by the page. It is here rather than in the
+         status bar because the bar is inside the panel: below 1360 that panel
+         is a closed disclosure and folded above it the panel is gone, so a
+         count down there is a count the page often does not state at all. -->
+    <p class="mast-sub" aria-live="polite"></p>
   </header>
 
   <div class="tools" role="group" aria-labelledby="tools-h">
@@ -2258,17 +2276,44 @@
       <div class="set-presets" role="group" aria-label="Colour palette">
         <button type="button" class="set-p set-p--none" data-p=""
                 aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. A swatch showing the page&rsquo;s own ink means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
-        <button type="button" class="set-p" data-p="text:#ffe0b2,textHover:#5c3a00,accent:#f5a524,hover:#fff1d6"
-                style="--sw:#f5a524" aria-pressed="false" title="Amber">Amber</button>
-        <button type="button" class="set-p" data-p="text:#ddd6ff,textHover:#2e1d80,accent:#8b7bf7,hover:#ece8ff"
-                style="--sw:#8b7bf7" aria-pressed="false" title="Iris">Iris</button>
-        <button type="button" class="set-p" data-p="text:#b8f5d8,textHover:#06432c,accent:#3ecf8e,hover:#dcfce9"
-                style="--sw:#3ecf8e" aria-pressed="false" title="Mint">Mint</button>
-        <button type="button" class="set-p" data-p="text:#ffd5cc,textHover:#6e1c14,accent:#ff6b5e,hover:#ffe3dc"
-                style="--sw:#ff6b5e" aria-pressed="false" title="Coral">Coral</button>
-        <button type="button" class="set-p" data-p="text:#bcd4f7,textHover:#123a6b,accent:#5b9cf0,hover:#dbeafe"
-                style="--sw:#5b9cf0" aria-pressed="false"
-                title="Deep — dark enough that the page has to lift it to stay legible. The caption says so with an arrow.">Deep</button>
+        <!-- Sanna's set, revised 2026-08-31. The BASE colour is the accent
+             exactly as given; the other three cells are derived from it, and
+             every one was measured before it was written down:
+               rest → hover  ≥ 0.42 luminance apart — the gap you can see across
+                             a card at arm's length, and the reason a palette is
+                             saturated → pale rather than one hue two rungs apart
+               text          ≥ 4.5:1 on the card it rests on
+               textHover     ≥ 4.5:1 on the pale fill once that fill has arrived
+             The label cells walk whichever way clears 4.5 in the SHORTER move,
+             so they stay as near the palette's own hue as legibility allows.
+
+             ⚠️ Chalk (#f5f5f5) and Ink (#000000) were here for a day and are
+             gone. Chalk and Ash read as ONE palette at two lightnesses, not two
+             palettes: measured, they are ΔE76 30.7 apart and BOTH achromatic,
+             so nothing but lightness separated them — and Chalk was also the
+             page's own default button wearing a palette's name, which Graphite
+             already covers. Removing Chalk took the only inverted case with it
+             (a near-white plate has nowhere paler to arrive from, so its hover
+             had to go deeper — a special case earning its keep for one swatch).
+             The row is now six hues plus one grey, and its closest pair is
+             Amber/Ember at ΔE76 41.0, which differ in hue AND chroma rather
+             than in lightness alone. Hues: 20° 36° 145° 215° 269° 331°. -->
+        <button type="button" class="set-p" data-p="text:#ffa51e,textHover:#9a6412,accent:#ffa51e,hover:#fff3e1"
+                style="--sw:#ffa51e" aria-pressed="false" title="Amber">Amber</button>
+        <button type="button" class="set-p" data-p="text:#ff5500,textHover:#ab3900,accent:#ff5500,hover:#ffd0b9"
+                style="--sw:#ff5500" aria-pressed="false" title="Ember">Ember</button>
+        <button type="button" class="set-p" data-p="text:#ff52a5,textHover:#a8366d,accent:#ff52a5,hover:#ffd0e7"
+                style="--sw:#ff52a5" aria-pressed="false" title="Rose">Rose</button>
+        <button type="button" class="set-p" data-p="text:#ae61ff,textHover:#6a00d9,accent:#7d00ff,hover:#d8b3ff"
+                style="--sw:#7d00ff" aria-pressed="false"
+                title="Violet — below the card’s floor at rest, so the page lifts the label off it. The caption says so with an arrow.">Violet</button>
+        <button type="button" class="set-p" data-p="text:#3086ff,textHover:#0751ba,accent:#096fff,hover:#adcfff"
+                style="--sw:#096fff" aria-pressed="false"
+                title="Azure — below the card’s floor at rest, so the page lifts the label off it. The caption says so with an arrow.">Azure</button>
+        <button type="button" class="set-p" data-p="text:#00aa46,textHover:#00702e,accent:#00aa46,hover:#b6e7ca"
+                style="--sw:#00aa46" aria-pressed="false" title="Fern">Fern</button>
+        <button type="button" class="set-p" data-p="text:#a0a0a0,textHover:#666666,accent:#a0a0a0,hover:#e4e4e4"
+                style="--sw:#a0a0a0" aria-pressed="false" title="Ash — the row's one grey, and the only palette the page could have derived for itself.">Ash</button>
       </div>
     </div>
       </div>
@@ -2342,10 +2387,19 @@
            thing in this panel. -->
       <button type="button" class="rail-fold" aria-expanded="true"
               aria-controls="rail" aria-label="Hide the find panel"></button>
-      <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
     </div>
 
     <div class="rail-body">
+      <!-- A filter, so it sits with the filters rather than up in the header
+           beside the search — the header is «type to find», this narrows by an
+           attribute exactly as the two groups below it do. A link and not the
+           filled pill it was: at 124x36 with a background it read as the
+           panel's primary control, which it is not, and it was the only filled
+           thing above the fold. The star is the mark the per-card control
+           uses, hollow off and solid on, so the toggle and the thing it
+           filters on stay recognisably one pair. -->
+      <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
+
       <!-- Order. A <select> and not the segmented control the toolbar uses for
            versions: that one has four options that are each one word and all
            four earn being on screen at once, and this one has five whose names
@@ -2399,8 +2453,10 @@
       </div>
     </div>
 
+    <!-- Reset only, now the count has gone to the masthead — and the bar takes
+         itself off screen when Reset is hidden rather than leaving 45px of
+         empty panel at the foot of every unfiltered visit. -->
     <div class="rail-foot">
-      <span class="tools-count" aria-live="polite"></span>
       <button type="button" class="tools-reset" hidden>Reset</button>
     </div>
   </nav>
@@ -9695,7 +9751,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // These three moved into the rail, so they are looked up on the document
     // rather than inside the toolbar.
-    var countEl = document.querySelector('.tools-count');
+    // The masthead's sub IS the count now — there is no second one in the
+    // status bar to keep in step with it.
+    var countEl = document.querySelector('.mast-sub');
     var favBtn  = document.querySelector('.fav-only');
     var reset   = document.querySelector('.tools-reset');
     var state   = {fav:false, q:'', changes:[], answers:[], hoverInk:false};
@@ -9948,9 +10006,12 @@ document.addEventListener("DOMContentLoaded", function () {
         sect.hidden = own.every(function(c){ return c.hidden; });
       });
       empty.hidden = shown > 0;
-      countEl.textContent = shown === cards.length
-        ? cards.length + ' buttons'
-        : shown + ' of ' + cards.length;
+      // One noun for one unit, everywhere on the page: a card is a STUDY.
+      // «buttons» was the third word for it, after «studies» in the masthead
+      // and «button» in the rail's row labels.
+      if (countEl) countEl.textContent = shown === cards.length
+        ? cards.length + ' studies'
+        : shown + ' of ' + cards.length + ' studies';
       var filtered = state.fav || document.documentElement.dataset.vTreat
                   || state.q || state.changes.length || state.answers.length
                   || state.hoverInk
@@ -10928,7 +10989,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
           var row = lab.closest('label');
           row.querySelector('.rail-n').textContent = n;
-          row.querySelector('.sr').textContent = n + (n === 1 ? ' button' : ' buttons');
+          row.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
           if (n) row.removeAttribute('data-empty'); else row.setAttribute('data-empty', '');
         });
       });
@@ -10954,7 +11015,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var own = [].slice.call(sect.querySelectorAll('.spec'));
         var n = own.filter(function(c){ return !c.hidden; }).length;
         a.querySelector('.rail-n').textContent = n;
-        a.querySelector('.sr').textContent = n + (n === 1 ? ' button' : ' buttons');
+        a.querySelector('.sr').textContent = n + (n === 1 ? ' study' : ' studies');
         a.hidden = n === 0;
         if (n) live++;
       });
@@ -11091,8 +11152,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // hand-typed number in that sentence went stale twice; this one cannot.
     // Empty in the source rather than a placeholder digit: a number that is
     // wrong until JS runs is worse than no number at all.
-    var mastN = document.querySelector('.mast-n');
-    if (mastN) mastN.textContent = cards.length;
+    // The unfiltered figure, so the masthead says something correct before the
+    // first apply() runs. Every later write comes from apply() itself.
+    var mastSub = document.querySelector('.mast-sub');
+    if (mastSub && !mastSub.textContent) mastSub.textContent = cards.length + ' studies';
     // The taxonomy above is DERIVED, so a bug in tag() mis-files studies in
     // silence — the rail shows wrong numbers as confidently as right ones.
     // #facet-manifest holds the tags as they stood when last stamped, and the
