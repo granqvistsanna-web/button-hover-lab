@@ -27,8 +27,13 @@ export const VERSIONS = {
   // geometric, but the gesture is about a plate — a link has none to give
   'i-mass':'fill outline', 't-mark':'fill outline',
   't-hold':'fill outline',  'q-riser':'fill outline',
+  // The riser is the mechanism and a riser is a box-shadow, which every
+  // surface can carry. 43 names its wall as a token so each treatment states
+  // what the cap is made of; 116's sheets do the same one card down. Neither
+  // is a link: a wall and a stack both need a plate to stand under.
+  'g-key':'built fill outline', 'z-stack':'fill outline',
   // owns its surface outright
-  'g-key':'built', 'i-give':'built', 'g-measure':'built', 'lift':'built',
+  'i-give':'built', 'g-measure':'built', 'lift':'built',
   // — Fill ————————————————————————————————————————————————————
   'sweep':'fill outline link', 'shutter':'fill outline',
   'inkfill':'built fill',      'sheen':'built outline',
@@ -36,6 +41,20 @@ export const VERSIONS = {
   // No link version: the mechanism is a plate entering from any of four edges,
   // and a 1.5px rule on the bottom edge can only ever answer one of them.
   'j-dir':'fill outline',
+  // 129 is 75's tile on an authored cycle, so it takes 75's fill and stops
+  // exactly where 75 stops — four edges, one rule to answer them with.
+  'j-turns':'fill',
+  // 130's plate is nailed down and only the word drifts, in pixels read off
+  // the plate's own rect, so no treatment can reach the mechanism at all.
+  // Fill only, and for what it BUYS rather than what it survives: the cap is
+  // the study and a hard edge is what a cap is judged against. An outline
+  // would restate the hairline the card already draws, and a link has no
+  // frame for a label to be loose inside.
+  'i-loose':'fill',
+  // 136's silhouette is the subject, and a plate, a ring and a rule are three
+  // ways to state one — the rule shows the most of it, having nothing but
+  // length. No outline: .btn--line IS the ring 136 already draws for itself.
+  'h-grow':'fill link',
   // — Material and light ————————————————————————————————————————
   'f-glas':'built', 'f-motljus':'built', 'f-lykta':'built',
   's-bevel':'built', 's-crt':'built', 's-sprite':'built',
@@ -61,17 +80,44 @@ export const VERSIONS = {
   // button is a THIRD surface arguing with the two inside it, so there is none.
   'p-part':'built', 'p-walk':'built', 'p-trade':'built', 'p-cycle':'built',
   'p-hinge':'built', 'p-slip':'built', 'n-join':'built',
+  // — Label ————————————————————————————————————————————————————
+  // The word performs and the plate is only what it stands on, so these hold
+  // whatever treatment the label can be drawn in. None of the three fills
+  // needs a rule of its own: a mask, a duplicate, a translate and a tilt ask
+  // nothing of the ground, and .btn--solid hands a split label the same
+  // --ink-on-fill it hands a label that was never split.
+  // They used to declare NO versions at all, to keep the Long toggle from
+  // writing textContent over their per-character spans. That trade is gone:
+  // the switch skips any label node with element children, so a structured
+  // label loses Long and keeps the treatment switch. Which is also the whole
+  // of what these three give up — no Long control on 20, 24 or 85.
+  'u-roll':'fill outline link', 'u-centre':'fill outline link',
+  'q-jitter':'fill outline link',
+  // 127 is the one card here that keeps a 1px border in every version and only
+  // recolours it, so its built and fill boxes measure identical rather than a
+  // border apart. Its two label copies are plain text, so it keeps Long.
+  'h-arc':'built fill link',
   // — Two at once ————————————————————————————————————————————————
-  // A compound is only as portable as its stricter half. 118 and 123 own their
-  // surface outright (a corner shape, a lit plate); 121 is absent on purpose — its label is
-  // per-letter spans inside .lbl, and the version bar's Long toggle writes
-  // textContent back over them, so it opts out the way card 20 does; 122's
-  // ellipse needs a surface,
-  // and a link has none. 124 sets its own border and radius, so a treatment on
-  // top of it is a third opinion. Only the two pure roll-plus-transform cards
-  // survive all three.
-  'c-chassis':'built', 'c-crest':'built', 'c-regis':'built',
-  'c-relay':'fill outline',
+  // A compound is only as portable as its stricter half. 118 owns its surface
+  // outright: the corner shape IS the study, and a treatment over it is a
+  // second opinion about the same edge. 123 was filed beside it as «a lit
+  // plate» and that was wrong by half — card 10, the sheen it is half made of,
+  // ships filled already and inverts its streak to --on-ink there, so 123 in
+  // fill is 49 x 10 read on 10's plate. It stops at fill: outline and link
+  // have no plate to raise and nothing for the light to cross.
+  // 121 was absent on purpose and the purpose has expired. The argument was
+  // that its label is per-letter spans inside .lbl and the Long toggle writes
+  // textContent back over them — true then, and answered since in the switch
+  // itself, which skips any label node with element children. So 121 loses
+  // Long and keeps the treatment, and it earns the fill outright: on an --ink
+  // plate the tide inverts to --on-ink and the letters that arrive go back to
+  // --ink. No link and no built — a level needs a surface to rise against, and
+  // with the border gone the card is invisible until you point at it.
+  // 122's ellipse needs a surface, and a link has none. 124 sets its own
+  // border and radius, so a treatment on top of it is a third opinion. Only
+  // the two pure roll-plus-transform cards survive all three.
+  'c-chassis':'built', 'c-crest':'built fill', 'c-regis':'built',
+  'c-relay':'fill outline', 'c-tide':'fill outline',
   'c-swell':'fill outline link', 'c-mass':'fill outline link',
 };
 

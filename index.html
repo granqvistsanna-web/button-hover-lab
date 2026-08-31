@@ -812,7 +812,16 @@
      them earns it. What this card is actually about is that it never reverses,
      and the name now says so. */
   .sweep{overflow:hidden}
-  .sweep::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
+  /* THE LEADING EDGE IS THE PLATE'S OWN CAP, and it is the same cap in every
+     version. Without a radius here the arriving plate is a rectangle that only
+     reads as a pill because the button clips it, so it crosses on a hard
+     vertical line — while the fill version, which inherits the radius further
+     down to hang its hairline on, crosses on a curved one. One study was
+     sweeping two different shapes depending on which treatment you had picked.
+     The radius is squashed by the scaleX rather than held circular, and that is
+     the point: what arrives is the plate's own end, not a shape travelling
+     across it. */
+  .sweep::before{content:""; position:absolute; inset:0; border-radius:inherit; background:var(--ink-hover); transform:scaleX(0); transform-origin:right; transition:transform var(--t-5) var(--e-quint)}
   .sweep:hover::before,
   .sweep:focus-visible::before{transform:scaleX(1); transform-origin:left}
   .sweep .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
@@ -831,7 +840,9 @@
      the whole distinction, which is why it is now written down rather than
      inherited from a default. */
   .shutter{overflow:hidden}
-  .shutter::before{content:""; position:absolute; inset:0; background:var(--ink-hover); transform:scaleY(0); transform-origin:top; transition:transform var(--t-4) var(--e-quint)}
+  /* The same cap on the other axis — 08 had 07's fault exactly, a square-edged
+     plate on every version but the fill. */
+  .shutter::before{content:""; position:absolute; inset:0; border-radius:inherit; background:var(--ink-hover); transform:scaleY(0); transform-origin:top; transition:transform var(--t-4) var(--e-quint)}
   .shutter:hover::before,
   .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
@@ -2856,7 +2867,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="g-key" data-versions="built" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="g-key" data-versions="built fill outline" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn g-key">Sign up</button>
       </div>
@@ -2892,7 +2903,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="z-stack" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="z-stack" data-versions="fill outline" data-added="2026-08-27T13:02:36+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn z-stack"><span class="lbl">Duplicate the layout</span></button>
       </div>
@@ -2910,7 +2921,7 @@
       <div class="chips"><span class="chip chip--kod">JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="i-loose" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
+    <article class="spec" data-key="i-loose" data-versions="fill" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
       <div class="stage">
         <button type="button" class="btn i-loose">
           <span class="lbl">Set the line</span>
@@ -2942,7 +2953,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="h-grow" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
+    <article class="spec" data-key="h-grow" data-versions="fill link" data-added="2026-08-30T09:12:00+02:00" data-updated="2026-08-30T09:12:00+02:00">
       <div class="stage">
         <button type="button" class="btn h-grow">
           <svg class="icon h-grow-mark" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M7 1.5v11M1.5 7h11"/></svg>
@@ -2991,7 +3002,7 @@
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="j-turns" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
+    <article class="spec" data-key="j-turns" data-versions="fill" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
       <div class="stage">
         <button type="button" class="btn j-turns">
           <span class="j-turns-tile" aria-hidden="true"></span>
@@ -3175,7 +3186,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="h-arc" data-versions="fill link" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-31T12:10:00+02:00">
+    <article class="spec" data-key="h-arc" data-versions="built fill link" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-31T12:10:00+02:00">
       <div class="stage">
         <button type="button" class="btn h-arc">
           <span class="h-arc-mask">
@@ -3227,7 +3238,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="u-roll" data-versions="link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T20:29:47+02:00">
+    <article class="spec" data-key="u-roll" data-versions="fill outline link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T20:29:47+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line u-roll"><span class="lbl"><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>G</span><span>G</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>e</span><span>e</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>i</span><span>i</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>n</span><span>n</span></span></span> <span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>t</span><span>t</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>o</span><span>o</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>u</span><span>u</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>c</span><span>c</span></span></span><span class="u-roll-c" aria-hidden="true"><span class="u-roll-i"><span>h</span><span>h</span></span></span></span><span class="sr">Get in touch</span></button>
       </div>
@@ -3254,7 +3265,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="u-centre" data-versions="link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T20:29:47+02:00">
+    <article class="spec" data-key="u-centre" data-versions="fill outline link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-08-29T20:29:47+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line u-centre"><span class="lbl"><span class="u-centre-c" aria-hidden="true">R</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">a</span><span class="u-centre-c" aria-hidden="true">d</span> <span class="u-centre-c" aria-hidden="true">t</span><span class="u-centre-c" aria-hidden="true">h</span><span class="u-centre-c" aria-hidden="true">e</span> <span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">e</span><span class="u-centre-c" aria-hidden="true">p</span><span class="u-centre-c" aria-hidden="true">o</span><span class="u-centre-c" aria-hidden="true">r</span><span class="u-centre-c" aria-hidden="true">t</span></span><span class="sr">Read the report</span></button>
       </div>
@@ -3287,7 +3298,7 @@
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="q-jitter" data-versions="link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-29T20:29:47+02:00">
+    <article class="spec" data-key="q-jitter" data-versions="fill outline link" data-added="2026-08-27T09:32:28+02:00" data-updated="2026-08-29T20:29:47+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line q-jitter"><span aria-hidden="true"><span class="q-jitter-l">S</span><span class="q-jitter-l">k</span><span class="q-jitter-l">e</span><span class="q-jitter-l">t</span><span class="q-jitter-l">c</span><span class="q-jitter-l">h</span> <span class="q-jitter-l">i</span><span class="q-jitter-l">t</span> <span class="q-jitter-l">o</span><span class="q-jitter-l">u</span><span class="q-jitter-l">t</span></span><span class="sr">Sketch it out</span></button>
       </div>
@@ -3803,7 +3814,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="c-crest" data-versions="built" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="c-crest" data-versions="built fill" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn c-crest"><span class="lbl">Download the pack</span></button>
       </div>
@@ -3812,7 +3823,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="c-tide" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="c-tide" data-versions="fill outline" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn btn--line c-tide"><span class="lbl"><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>C</span><span>C</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>o</span><span>o</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>t</span><span>t</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>i</span><span>i</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>n</span><span>n</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>u</span><span>u</span></span></span><span class="c-tide-c" aria-hidden="true"><span class="c-tide-i"><span>e</span><span>e</span></span></span></span><span class="sr">Continue</span></button>
       </div>
@@ -4740,9 +4751,15 @@ document.addEventListener("DOMContentLoaded", function () {
      a key goes DOWN, it does not shrink. This is one of the few places on the
      page where dropping the shared press is the honest answer. */
   .g-key{
+    /* THE WALL AND THE FACE ARE ONE OBJECT, so the riser is named rather than
+       written into three box-shadows. The travel budget stays where it is —
+       3px at rest, 4 hovered, 0 pressed — and the two surface versions below
+       re-point these two declarations and inherit the arithmetic untouched. */
+    --g-riser:color-mix(in srgb,var(--ink) 20%,var(--line));
+    --g-riser-hi:color-mix(in srgb,var(--ink) 34%,var(--line));
     background:var(--lift-bg);
     border:1px solid var(--line-ctl);
-    box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 20%,var(--line));
+    box-shadow:0 3px 0 var(--g-riser);
     transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-2) var(--e-out), box-shadow var(--t-2) var(--e-out),
                background-color var(--t-3) ease, border-color var(--t-3) ease;
@@ -4751,11 +4768,11 @@ document.addEventListener("DOMContentLoaded", function () {
   .g-key:focus-visible{
     transform:translateY(-1px) rotate(0.001deg);
     border-color:color-mix(in srgb,var(--ink) 32%,var(--line));
-    box-shadow:0 4px 0 color-mix(in srgb,var(--ink) 34%,var(--line));
+    box-shadow:0 4px 0 var(--g-riser-hi);
   }
   .btn.g-key:active{
     transform:translateY(3px) rotate(0.001deg);
-    box-shadow:0 0 0 color-mix(in srgb,var(--ink) 34%,var(--line)),
+    box-shadow:0 0 0 var(--g-riser-hi),
                inset 0 2px 3px rgba(var(--shadow-rgb),.2);
     background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
     border-color:color-mix(in srgb,var(--ink) 55%,var(--line));
@@ -4767,6 +4784,62 @@ document.addEventListener("DOMContentLoaded", function () {
                background-color 0ms linear calc(var(--t-1) * .6),
                border-color 0ms linear calc(var(--t-1) * .6);
   }
+
+  /* ---- 43 in fill and outline ------------------------------------------
+     THE WALL IS THE FACE SEEN EDGE-ON, and that is the whole port. Carry the
+     built riser across unchanged and it stops being the side of one object and
+     becomes a shadow parked under a different one — a mid grey wall under a
+     white cap is two materials, not one moulding. So the riser is made of
+     whatever the cap is made of, and nothing else moves: the travel is still
+     one number, the foot still never moves, the commit still lands at 60% of
+     the stroke. The treatment only says what the plastic is.
+
+     ON FILL the cap is --ink, so the wall is --ink IN SHADE — the same white
+     walked toward --on-ink rather than a grey lifted off the ladder. It climbs
+     on hover exactly as the built wall does, so the cap still stands INTO the
+     light on its way up. Sampled on the card: #8c8c8c to #b3b3b3 under a
+     #f2f2f2 face, three tones of one piece.
+
+     The plate is restated here and not left to .btn--solid, for the collision
+     card 42 records: .g-key's own background is (0,1,0) and stated later in
+     the sheet, so it wins. Measured before this rule existed, the fill version
+     kept the grey cap and inverted only the label — a dark word on a grey
+     plate, which is neither version.
+
+     THE PRESS NEEDS ITS OWN RULE and not only for specificity. The built press
+     darkens the cap 55% toward --stage, and 55% of that distance from white
+     lands at #8f8f8f — three units off this version's own wall. The cap would
+     bottom out INTO its riser and the object would come apart at the one frame
+     it most has to hold together. 86%, the step card 11 uses, keeps them
+     apart at #d3d3d3.
+
+     ON OUTLINE there is no material at all, only an edge, so the wall is that
+     edge: --ink at the weight a 3px bar can carry before it reads as an
+     underline rather than as a side. It sits under a full --ink hairline and
+     rises to meet it, which is the sentence the built version makes with two
+     greys. background:none because .btn--line means the plate to be gone, and
+     nothing shows through the empty cap: the riser is an OUTER shadow and a
+     box never paints one inside its own border box.
+     Both the built hover and the built press restate the border — at a 37% and
+     a 59% white — which is a RISE from --line-ctl's 36 and a loss from this
+     version's full --ink. Both are restated at --ink here: the riser carries
+     the state and the edge holds, which is what an edge is for. */
+  .btn--solid.g-key{
+    background:var(--ink); color:var(--ink-on-fill);
+    --g-riser:color-mix(in srgb,var(--ink) 55%,var(--on-ink));
+    --g-riser-hi:color-mix(in srgb,var(--ink) 72%,var(--on-ink));
+  }
+  .btn.btn--solid.g-key:active{
+    background-color:color-mix(in srgb,var(--ink) 86%,var(--on-ink));
+  }
+  .btn--line.g-key{
+    background:none; border-color:var(--ink);
+    --g-riser:color-mix(in srgb,var(--ink) 38%,transparent);
+    --g-riser-hi:color-mix(in srgb,var(--ink) 62%,transparent);
+  }
+  .btn--line.g-key:hover,
+  .btn--line.g-key:focus-visible{border-color:var(--ink)}
+  .btn.btn--line.g-key:active{background-color:transparent; border-color:var(--ink)}
 </style>
 
 
@@ -7288,6 +7361,12 @@ document.addEventListener("DOMContentLoaded", function () {
     to{transform:translateY(var(--q-y,1px)) rotate(var(--q-a,4deg))}
   }
 
+  /* 85 in fill on card 20's argument. The sway is geometry and asks the ground
+     nothing: the worst letter reaches 19deg and 1.7px inside a 15px padding,
+     so a tilt that clears the card's edge clears the plate's by the same
+     margin. A hand-drawn word on a solid plate is the version most people
+     would actually ship, which is reason enough to let them see it. */
+
   @media (prefers-reduced-motion: reduce){
     /* Two loops in this section now, and the global clamp turns a loop into a
        blur rather than into stillness, so each is stopped outright. What happens
@@ -8052,6 +8131,24 @@ document.addEventListener("DOMContentLoaded", function () {
   .u-roll .u-roll-c:nth-child(9){--i:8}
   .u-roll .u-roll-c:nth-child(10){--i:9}
 
+  /* 20 in fill, and there is no rule for it — which is the finding rather than
+     an omission. The mechanism is a mask, a duplicate and a translate, and not
+     one of the three asks the ground behind it a question: both copies of a
+     character are the same glyph in the same colour, so .btn--solid hands them
+     both its own --ink-on-fill and the letter that arrives is the letter that
+     left. The mask crops against the plate instead of against the card and
+     crops exactly the same amount, because the box is 1.25em either way.
+     Card 121 is this roll with a fill under it and needs six lines for the
+     same version, and the difference is the whole point: there the incoming
+     copy is the INVERSE of the outgoing one, so the ground it lands on has
+     moved and the colour has to move with it. Cards 24 and 85 take their
+     fills on this argument too.
+     What the fill costs is the Long toggle, and nothing else. .lbl holds ten
+     element children, the switch skips any label node that does, and a
+     structured label was never a label the toggle could honestly rewrite —
+     card 121 used to declare no versions AT ALL to buy that safety, which
+     paid for it with the treatment switch as well. */
+
   /* The two curves the four lifts share. A lift that returns cannot be a
      transition: a transition needs an end state to travel TO, and the end
      state of this gesture is where it began. So it is one animation per
@@ -8154,6 +8251,10 @@ document.addEventListener("DOMContentLoaded", function () {
   .u-centre .u-centre-c:nth-child(11){--i:4}
   .u-centre .u-centre-c:nth-child(12){--i:5}
   .u-centre .u-centre-c:nth-child(13){--i:6}
+
+  /* 24 in fill on card 20's argument: a lift is a translate, the ground takes
+     no part in it, and the label inherits .btn--solid's --ink-on-fill entire.
+     3px of rise inside 15px of padding crosses nothing. */
 
   /* 25 Random stagger — the same lift with the order taken away. Cards
      21 and 24 both answer «which character moves first» with a rule you can
@@ -8936,6 +9037,48 @@ document.addEventListener("DOMContentLoaded", function () {
     .btn.z-stack:active{transform:none}
   }
 
+  /* ---- 116 in fill and outline -----------------------------------------
+     THE SHEETS ARE MADE OF WHATEVER THE TOP PLATE IS, which is the only way
+     this stays a stack. The geometry is not a version — 5/9/13 at −3 spread,
+     bands 2, 4 and 4px deep, an even pitch — and neither is the assembly. Only
+     the paper changes.
+
+     ON FILL the built alphas stop working, and the reason is the one the note
+     above gives for using alpha at all: the stack makes its tone by compositing
+     over the CARD, and the card does not move when the plate goes white. The
+     three bands measure #4a4a4a, #363636 and #292929 — a smudge beside a
+     #f2f2f2 face, under a plate that then reads as floating on nothing.
+     .42/.26/.14 takes them to #adadad, #727272 and #414141: the same paper,
+     three steps further off. Sampled down the centre line, on the card.
+
+     The plate is restated because .btn.z-stack's own background is (0,2,0) and
+     beats .btn--solid outright — without it the fill version was a grey plate
+     carrying a dark label, which is the collision cards 42 and 43 both record.
+
+     ON OUTLINE there is no paper either, only an edge, so the sheets are that
+     edge three times over — and the CEILING is what matters rather than the
+     floor. Benched at .28/.18/.09 they came back as ONE SLAB with a
+     bright lip — the top band close enough to the --ink hairline above it to
+     read as a doubled edge, with the pitch lost inside it. .20/.13/.07 puts
+     the bands at #717171, #4d4d4d and #323232: twice the built version's
+     tone, well under the edge they belong to, and three steps you can count.
+     They stay SOLID rather than becoming rings: at
+     2 and 4px the visible band is already an edge, and a ring at that size
+     costs two shadows per sheet and a fill colour that has to be kept in step
+     with whatever the card is doing. */
+  .btn.z-stack.btn--solid{
+    background:var(--ink); color:var(--ink-on-fill);
+    --z-sheet-1:rgba(var(--sheen),.42);
+    --z-sheet-2:rgba(var(--sheen),.26);
+    --z-sheet-3:rgba(var(--sheen),.14);
+  }
+  .btn.z-stack.btn--line{
+    background:none;
+    --z-sheet-1:rgba(var(--sheen),.20);
+    --z-sheet-2:rgba(var(--sheen),.13);
+    --z-sheet-3:rgba(var(--sheen),.07);
+  }
+
   /* 117 Fixed shadow — Gumroad's button, quoted rather than
      hard-coded. The plate slides up-left four pixels while its shadow grows
      down-right by the same four, on the same rung and the same curve, so the
@@ -9106,6 +9249,45 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-tide .c-tide-c:nth-child(7) .c-tide-i{transition-delay:156ms}
   .c-tide .c-tide-c:nth-child(8) .c-tide-i{transition-delay:182ms}
 
+  /* 121 in fill. The tide is --ink-hover rising, and on a plate that is
+     already --ink that is a white front crossing a white ground: the card
+     keeps its roll and loses the half of itself that gives the roll a reason.
+     So family B's rule applies here unchanged — the arriving surface becomes
+     --on-ink and the letter that arrives on it goes back to --ink. Not one
+     delay moves: the stagger is the FILL'S arrival time sampled per letter and
+     the fill still takes --t-5 to cross the box. Only what the front is made
+     of has changed.
+     var(--hover-set, …) and not --ink-hover, spelled the way 07, 08, 09, 75
+     and 78 spell it: --ink-hover always resolves, so it cannot report whether
+     a hover colour was actually picked, and the inversion has to be the
+     fallback rather than the answer — otherwise the Hover swatch works on this
+     card's outline version and does nothing on its fill.
+     No link version and no built one. A level needs a surface to rise against,
+     a 1.5px rule has no level; and with the border gone the card is invisible
+     until you point at it, which is not a control. */
+  .c-tide.btn--solid::before{background:var(--hover-set, var(--on-ink))}
+  /* THE HAIRLINE IS A LAYER OF ITS OWN, and 07 and 08 hang theirs on the plate.
+     The reason is the axis. Their front is the plate's own cap arriving
+     sideways, so a radius on it is right; this front is a WATERLINE, and a
+     radius scaled with it comes up as an arc — measured at half tide, the ends
+     drop away and the level reads as a bubble. The boundary therefore goes on
+     a layer that never moves, where the radius is the button's own and the
+     tide keeps a dead-flat top edge.
+     Why there is a boundary at all is family B's argument unchanged: at full
+     tide the button is --on-ink edge to edge, --on-ink on a --bg-1 panel
+     measures 1.06:1, and the plate stops reading as switched and starts
+     reading as gone. It costs no layout.
+     It is drawn at rest too and cannot be seen there — --line-ctl over --ink
+     composites to within one step of --ink in both themes — so there is
+     nothing to fade in and no second clock to keep. z-index:2 puts it over the
+     tide and over the label, which it never crosses: it is one inset pixel at
+     the edge of a plate whose label sits 28px in. */
+  .c-tide.btn--solid::after{
+    content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+  }
+  .c-tide.btn--solid .c-tide-i span:last-child{color:var(--on-hover-set, var(--ink))}
+
   /* 122 Leading edge — 07 x 11. One-way sweep x Arrow relay.
      The front is an ELLIPSE pinned to the left edge, not a scaled rectangle: a
      scaleX front is a flat vertical line, which is the one shape a wave never
@@ -9166,6 +9348,39 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--sheen-t) cubic-bezier(.2,.75,.55,1) var(--t-4),
                opacity 0s}
   .c-crest .lbl{position:relative; z-index:1}
+
+  /* 123 in fill, and the answer to «owns its surface outright», which is how
+     this card was filed and is wrong by half. Card 10 — the sheen half of the
+     pairing — IS a solid plate, and the note directly above already says the
+     gradient has to invert to --on-ink there. So the fill version is not a
+     treatment laid over 123's surface: it is 49 x 10 read on 10's plate
+     instead of 49's, and both halves keep doing their job.
+     THE STEP IS THE PART THAT HAS TO GIVE. Elevation here is lightness, and
+     --ink is the top of the ladder — there is no rung above it to step onto.
+     Card 10's own filled step is the direction that is left, the hover colour
+     ten per cent of the way to the canvas, and card 120 mixes it the same way,
+     so the plate still answers with a TONE rather than with a shadow. The 2px
+     rise is untouched and the streak still waits exactly --t-4 for it. The
+     card is the sequence, not the direction the tone went.
+     The border goes transparent rather than to zero, so the fill measures the
+     same 195.095 x 47.003 the built version does instead of the 2px less every
+     other outline-to-fill on this page costs — card 127 keeps its border for
+     the same reason.
+     Outline and link get nothing: a lift with no plate has nothing to raise,
+     and a streak has nothing to cross. */
+  .c-crest.btn--solid{background:var(--ink); color:var(--ink-on-fill);
+    border-color:transparent}
+  .c-crest.btn--solid:hover,
+  .c-crest.btn--solid:focus-visible{border-color:transparent;
+    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
+  .c-crest.btn--solid:active{background:color-mix(in srgb,var(--ink-hover) 80%,var(--bg))}
+  .c-crest.btn--solid::after{
+    background:linear-gradient(100deg,transparent 0%,
+      color-mix(in srgb,var(--on-ink) 8%,transparent) 26%,
+      color-mix(in srgb,var(--on-ink) 38%,transparent) 50%,
+      color-mix(in srgb,var(--on-ink) 8%,transparent) 74%,
+      transparent 100%);
+  }
 
   /* 124 Closing marks — 13 x a growing label. Crop marks against type opening up.
      The brackets close IN while the label grows. Marks out and label open is
@@ -9414,6 +9629,34 @@ document.addEventListener("DOMContentLoaded", function () {
   .j-turns.j-turns-in .j-turns-tile{ transform:translate(0%,0%) }
   .j-turns.j-turns-in .lbl{ color:var(--on-ink-hover); transition-delay:var(--d-1) }
 
+  /* ---- 129 in fill -------------------------------------------------------
+     The page's rule for a fill, and 75 is the study to read it off: THE
+     ARRIVING PLATE IS THE INVERSE. An --ink tile crossing an --ink plate is
+     four passes of nothing at all, so the tile becomes --on-ink and the label
+     it covers goes back to --ink. The cycle is not a version — the four edges,
+     the authored order, the exit by the opposite one are the study — and the
+     treatment only says what colour arrives.
+
+     THE BOUNDARY IS THE BUTTON'S OWN BORDER HERE, which is where this parts
+     company with 75. That card animates its plate's radius and had to draw a
+     separate ring; this tile is inset:0 inside a border box and overflow:hidden
+     clips it to the padding edge, so the border is never covered and one
+     declaration does the job. It has to be --line-ctl and not the built
+     --line: once the dark tile is fully in, --line measures 1.06:1 against the
+     card and the button reads as gone rather than as switched — the same
+     measurement the family's own note records. --line-ctl clears 3:1, and on
+     the white plate at rest it is a white at .36 laid on a white, which is
+     card 09's non-loss again.
+
+     The label needs both ends stated. Its rest colour is --ink-text, which is
+     the label on a CARD and is a white word on a white plate here; and the
+     arrived colour is --on-ink-hover, which is dark and would be a dark word
+     on the dark tile it is meant to sit on. Both flip. */
+  .btn.j-turns.btn--solid{ border-color:var(--line-ctl) }
+  .j-turns.btn--solid .j-turns-tile{ background:var(--hover-set, var(--on-ink)) }
+  .j-turns.btn--solid .lbl{ color:var(--ink-on-fill) }
+  .j-turns.btn--solid.j-turns-in .lbl{ color:var(--on-hover-set, var(--ink)) }
+
   /* 130 Loose label — 50 draws the whole button toward the pointer and lets
      the label parallax a little further than the plate. Turn it inside out:
      the plate is nailed down and only the word drifts, which stops the
@@ -9435,6 +9678,26 @@ document.addEventListener("DOMContentLoaded", function () {
     display:block; transform:translate(0px,0px); will-change:transform;
     transition:transform var(--t-5) var(--e-out);
   }
+  /* ---- 130 in fill -------------------------------------------------------
+     THE FRAME HAS TO BE ONE EDGE, and on a fill it already is. The built
+     version draws a --line hairline for it, and --line on an --ink plate is a
+     white at .08 laid on a white — a second edge inside the first, at 1.02:1,
+     which is not a boundary and not a decoration either. It goes transparent
+     rather than away: border:none would take two pixels off the box in one
+     direction and the label's travel is measured against that box. With the
+     colour swapped and the border kept, the two versions measure identical —
+     139.125 x 47 in both, at rest and under the pointer.
+
+     Nothing else moves, and that IS the port. The cap is five pixels across
+     and three down and it is stated in the SCRIPT, in pixels, against the
+     plate's own rect — so it neither knows nor cares what the plate is painted
+     with. What the fill buys is the reading: on the built version the word
+     drifts against a hairline barely off the card, and the travel is judged
+     against nothing; on a plate the same five pixels are judged against a hard
+     edge, and the cap is the point of the study. It also puts 130 on 50's own
+     surface, which is the pairing the card's prose asks for — the same
+     mechanism turned inside out, now on the same ground. */
+  .btn.i-loose.btn--solid{ border-color:transparent }
 
   /* 131 Two targets — the plate answers WHICH HALF of itself you are on, and
      it reads that from structure rather than from coordinates: :has() asks
@@ -9671,6 +9934,53 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-grow:focus-visible .h-grow-w{grid-template-columns:1fr}
   .h-grow:hover .h-grow-t,
   .h-grow:focus-visible .h-grow-t{padding-left:10px; opacity:1}
+
+  /* ---- 136 in fill and link ---------------------------------------------
+     A SILHOUETTE IS THE ONE THING EVERY TREATMENT STILL HAS. The plate, the
+     ring and the rule are three different ways to state an outline, and this
+     card only ever asked one of them to get wider.
+
+     ON FILL the plate does the stating, and it states it harder than the built
+     ring does: a --ink pill opening from 44 to 130 is the silhouette change
+     with nothing between it and the eye. The ring stays declared and stops
+     being visible — --line-ctl is a white at .36 and vanishes into the fill —
+     which is card 09's non-loss rather than a rule to remove: a filled button
+     does not need a boundary drawn on top of its own, and leaving it costs no
+     layout and keeps one rule for both.
+
+     ON LINK there is no plate to open, so the mechanism moves to the surface a
+     link does have — the page's own rule, and here it costs nothing to obey:
+     the ring is already the outline and only has to lose three of its four
+     sides. The rule is drawn on the box and the box is what this study
+     animates, so it follows the growth for free — 22px at rest to 104 hovered,
+     and the length IS the statement. A rule has nothing but length, which
+     makes this the version that shows the most of the mechanism rather than
+     the least.
+     It is an ::after and not the box-shadow collapsed to inset 0 −1.5px 0,
+     which is what this was first built as. An inset shadow follows
+     border-radius: even at .btn--text's 2px the rule came back visibly bowed
+     at both ends, and at rest — where the whole rule is 22px — the two curls
+     were most of it. A positioned bar is card 14's own spelling and is
+     straight by construction.
+
+     Three of .h-grow's own declarations have to come off and each is a real
+     one, not tidying. The 48px height is a PLATE's height and would hang the
+     rule seventeen pixels under the word; .btn--text's 8px/4px is the measure
+     every other link on this page keeps, so the rule sits where an underline
+     sits. The 15px padding is the plate's inset and would leave the mark
+     stranded in the middle of a rule twice its width. And --btn-r has to go:
+     at 999px on a 30px box the pill's own curve is wider than the rest state,
+     so overflow:hidden would eat the mark and the rule would arrive bent into
+     a lens. Each of the three is restated at .btn--text's value rather than
+     invented, because the link treatment already had an answer for all three. */
+  .btn--solid.h-grow{ background:var(--ink); color:var(--ink-on-fill) }
+  .btn--text.h-grow{
+    height:auto; padding:8px 4px; border-radius:2px; box-shadow:none;
+  }
+  .btn--text.h-grow::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1.5px;
+    background:var(--ink);
+  }
 
   /* ============ Windows High Contrast ============ */
   /* Measured 2026-08-31 with forced-colors emulated: sixteen studies stop
@@ -14016,10 +14326,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/DirectionalSweep-dlV5mD.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","86":"https://framer.com/m/HairlineOnly-0zuI7w.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","111":"https://framer.com/m/PressFill-lXFzHB.js","113":"https://framer.com/m/HonestProgress-yKMem2.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","125":"https://framer.com/m/RacingLine-WNSegH.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","16":"https://framer.com/m/SecondLine-qDloVf.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","27":"https://framer.com/m/DrawnOutline-cmxkyg.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","32":"https://framer.com/m/Backlight-68rjpP.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"6557f3fc58845813","05":"92835288eb066d30","07":"45f8254af65a3137","08":"f6ccbe7db1bc4709","09":"3833b1ba3d89a1f5","10":"86fec7beb60cf13c","100":"48f911eae162db6f","104":"85d41b21c927fd1b","109":"0508429876b33b92","11":"d51104b603d3a234","111":"02660119a98d3397","113":"4b35e66144c5f8de","116":"460f714e8fb19ea5","117":"a8d9c6531caf5339","119":"b4a23093bd6d1944","12":"56342ac2e5debc94","120":"7f5a3ded7ebf2712","121":"a1061c6f8daa1ee0","122":"328e192bb864423e","123":"36c93e689d419da3","124":"2839651a774f183c","13":"061685f49319a585","14":"2096b32de4bb6059","15":"1e085ab491a4323b","16":"118e9c6532ab6976","19":"6bd0e2988835451a","20":"2a68cad9550cbe63","21":"a5d4026332f1717c","23":"5a34cf316d50819f","24":"92f94d6f62782797","25":"08d2d9129eb0f983","26":"c6a4ad9cd645e001","27":"ae4c6208311c5ebd","28":"ceab1705f38ccd5d","30":"1b148d625275a5cc","31":"f01fe6b32535e598","32":"a8c023ef3a8d21e2","33":"e5e2abcc380054f3","34":"6229a37bc7500066","36":"35f391fab5986376","39":"c5a91fa4f218bdcb","41":"2c7a3e7ce6621c58","42":"c466bdc49f56abf6","43":"802b4e54c71386c2","44":"17ff86aec84afbd6","47":"601827472ad991de","49":"51e5fb39092348ba","50":"7e611e39e63ec33f","52":"bac7c10b47d861cf","54":"8205a8bbf937a5d0","55":"e1a645c77a000f49","57":"a3db62e2ba8b266c","59":"0725570a7a45e241","60":"3c24d30ebdb28c0e","61":"4ee1079913cab8cf","62":"1f3e32df5dc6e4f3","63":"f21626a3bd87e2e4","64":"1605896ebacafd2d","65":"94b080d6207e1c64","66":"ad0abf5e45fea0f8","67":"b3960ea97e2089fc","69":"f56184f43cec2309","72":"5fcabdc479d41fb5","73":"af6f3c2f181520b8","74":"cc3f041d6c6a7ec5","75":"49145a4a0f166ca7","78":"b5c62bbefcd8dc45","79":"501f83347780d89b","80":"3e50e62bd3ac4d5b","82":"7b8267e261117c13","83":"d39035103f61fcec","85":"198f7d027d29ebda","86":"f1a66bbacfe514ea","91":"64c036c22dbce7ef","92":"59ad80eff59fe1d1","93":"b222dd48d0935856","97":"95d63a8c61cdc1ee","98":"31bcfad54d512fa2"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"7310f29dc23057d0","05":"acd7d8ea86b2a19b","07":"0d03f882853a4d74","08":"1b88d34c370d334a","09":"baf7202a713aebc8","10":"e0fa474861ec89bf","100":"00bf85ff3ee6fbca","104":"be7bc2bae6db0245","109":"deae0fa15cde1d69","11":"d789557132feef14","111":"a9a33d1f7d915527","113":"6d0796c5c562476b","116":"b1334b38445f0123","117":"80003383f402e22b","119":"6a2fae216df3e841","12":"7becb9c48a06e793","120":"e356ca7055bc6a87","121":"20e7b6c6a10cc1ea","122":"12deb5ac4c8c5366","123":"f1ea95c074f74565","124":"31eeec43cc273fa3","125":"b4377518175f4566","126":"330d03a44875db02","127":"0c4e3da3e0d5ff6f","128":"0e86a669cef74476","129":"6f398fc69602c4ea","13":"df2bf03791f78049","130":"102221d7197813df","131":"090c871a8ef88864","132":"9bb5d0179133ba46","133":"27dfb76efeeadcfe","134":"49a2f29a342d485e","135":"7a85873851c12f89","136":"74ab893be4ea7973","14":"3f29b5d4cf8f2dfb","15":"178c5161000b3008","16":"17404dcd70ed7a7f","19":"2d2f12cab921ab16","20":"ab0dc155ad83c061","21":"5b18cfecbd0801aa","23":"8e0e89303ede1bf0","24":"281921d9a1988712","25":"6afc02d03311772e","26":"f73bf111397fcbd2","27":"b2d72e62c2ebef83","28":"beb1cdbcc9f0e05c","30":"cd167b13092206b8","31":"4a128aeb4b9296b0","32":"6680946093835806","33":"d88720a0d4a79dde","34":"3ed84c7a17508138","36":"681f115a1fc779a5","39":"62a60e76f2aa7b8c","41":"dd05d70c23533303","42":"4adda82991663545","43":"f7299e235546a344","44":"601e2172b1c5b3ba","47":"c4bc173344a7dbdb","49":"5d93f7e97b50820c","50":"2f52eceafc902563","52":"5b65e06bf5879e66","54":"a8be3c3f9048451d","55":"30e584832c7f1ad1","57":"051f789fdb5a5681","59":"c3afbd8d89c5b675","60":"3fe68a462a96283b","61":"0a436d5dac71528f","62":"156c6074920230de","63":"b8a14fa2db723777","64":"fe4ad33729c9153e","65":"f88ff4f135f2a036","66":"b0cfb82250271e5f","67":"f86b88d08dc4cff0","69":"51546e3da3580a40","72":"9ef76258315b932e","73":"d410a003e9125272","74":"0a0ad445e50cf2db","75":"7e6754a9009c16e7","78":"cba7b6f59b609aef","79":"9f015db2d8d75af8","80":"5554562438565bb4","82":"c2bcb7c5aac6e746","83":"1b07384d41a0af08","85":"82379a80ed642bf5","91":"e35d80621dbc24a2","92":"4c0e85e75a9965d7","93":"3595b09aca90b388","97":"819c0a325f8a0ad3","98":"4b2ecbc4bf0347d3"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 
