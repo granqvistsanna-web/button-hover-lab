@@ -147,7 +147,7 @@ const KIT = String.raw`(() => {
     if (!px.length) return null
     let bgK = 0; for (let k = 0; k <= 100; k++) if (cnt[k] > cnt[bgK]) bgK = k
     const bg = bins[bgK]/cnt[bgK]
-    const floor = Math.max(3, px.length * 0.01)
+    const floor = Math.max(3, px.length * 0.003)
     let txK = bgK, best = 0
     for (let k = 0; k <= 100; k++) {
       if (cnt[k] < floor) continue
@@ -181,13 +181,60 @@ const KIT = String.raw`(() => {
     })
   })
 
+  // The rect the GLYPHS occupy, not the rect a wrapper occupies. Half the
+  // studies have no .lbl at all and the rest wrap it in per-character spans, so
+  // both fallbacks measure a plate and the histogram then reads a plate: the
+  // ink is under a per-cent of the crop and gets thrown out with the
+  // antialiasing. A Range over each visible text node gives the real box.
+  A.textRect = b => {
+    const sx = window.scrollX, sy = window.scrollY
+    const w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, {
+      acceptNode (n) {
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT
+        // aria-hidden is a fact about the accessibility tree, not about paint.
+        // Thirteen studies show their label from per-character spans marked
+        // aria-hidden with an .sr copy alongside — the correct pattern — and
+        // excluding those here left thirteen labels unmeasured.
+        for (let e = n.parentElement; e && e !== b.parentElement; e = e.parentElement) {
+          const cs = getComputedStyle(e)
+          if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity === 0)
+            return NodeFilter.FILTER_REJECT
+          if (e.classList.contains('sr')) return NodeFilter.FILTER_REJECT
+        }
+        return NodeFilter.FILTER_ACCEPT
+      }
+    })
+    let box = null
+    for (let n = w.nextNode(); n; n = w.nextNode()) {
+      const r = document.createRange(); r.selectNodeContents(n)
+      for (const q of r.getClientRects()) {
+        if (q.width < 0.5 || q.height < 0.5) continue
+        box = box
+          ? { l: Math.min(box.l, q.left), t: Math.min(box.t, q.top),
+              r: Math.max(box.r, q.right), b: Math.max(box.b, q.bottom) }
+          : { l: q.left, t: q.top, r: q.right, b: q.bottom }
+      }
+    }
+    let noText = false
+    if (!box) { noText = true; const q = b.getBoundingClientRect()
+      box = { l: q.left, t: q.top, r: q.right, b: q.bottom } }
+    // A study whose label is painted by a pseudo-element has no text node to
+    // range over. The crop then falls back to the plate and the histogram is
+    // advisory, not a verdict — so say so rather than reporting a ratio of 1.
+    return { x: box.l+sx, y: box.t+sy, w: box.r-box.l, h: box.b-box.t, noText }
+  }
+
   A.rects = () => [...document.querySelectorAll('.spec')].flatMap(card =>
     [...card.querySelectorAll('.stage button.btn')].map(b => {
-      const lbl = b.querySelector('.lbl') || b
-      const br = b.getBoundingClientRect(), lr = lbl.getBoundingClientRect()
+      const br = b.getBoundingClientRect()
       const sx = window.scrollX, sy = window.scrollY
-      return { btn: { x: br.x+sx, y: br.y+sy, w: br.width, h: br.height },
-               lbl: { x: lr.x+sx, y: lr.y+sy, w: lr.width, h: lr.height } }
+      // The version control FILTERS: picking Fill hides every study that does
+      // not ship one, and a hidden card has no layout. Measuring those as
+      // zero-size crops reported 100 of 118 "under 4.5:1" on the first run —
+      // an artefact of the filter and not a contrast fault anywhere.
+      const shipped = b.offsetParent !== null && br.width > 0 && br.height > 0
+      return { shipped, btn: { x: br.x+sx, y: br.y+sy, w: br.width, h: br.height },
+               lbl: A.textRect(b) }
     }))
 
   A.nodes = () => [...document.querySelectorAll('.spec .stage button.btn')]
@@ -233,6 +280,14 @@ const KIT = String.raw`(() => {
              vsPlate: (o && plate && plate.a > 0.9)
                ? +A.ratio(L(o), L(plate)).toFixed(2) : null }
   })
+  // Twelve studies loop for ever and the rest are mid-transition for up to
+  // 900ms. Pausing every running animation for the length of one capture is the
+  // difference between a measurement and a coin toss: two runs of the same
+  // build disagreed on cards 43 and 82 before this.
+  A.freeze = () => { const a = document.getAnimations(); a.forEach(x => { try { x.pause() } catch (e) {} }); return a.length }
+  A.thaw   = () => { document.getAnimations().forEach(x => { try { x.play() } catch (e) {} }); return true }
+  A.into   = y => { window.scrollTo(0, Math.max(0, y - window.innerHeight/2)); return window.scrollY }
+
   A.fontOK = () => {
     const sheets = [...document.styleSheets].map(s => s.href).filter(Boolean)
     let faces = 0
@@ -275,6 +330,18 @@ await new Promise(r => setTimeout(r, 1200))
 await p.evalJs(`new Promise(r => document.fonts.ready.then(() => setTimeout(r, 600)))`)
 await p.evalJs(KIT)
 
+// Windows High Contrast, as the platform reports it to CSS. Every study here
+// states hover and press with background, box-shadow or a pseudo-element, and
+// forced-colors replaces all three with a system colour — so the question is
+// not whether the CSS is there, it is whether anything still CHANGES.
+if (process.env.A11Y_FORCED) {
+  await p.send('Emulation.setEmulatedMedia', { features: [
+    { name: 'forced-colors', value: 'active' },
+    { name: 'prefers-color-scheme', value: 'dark' }] })
+  await new Promise(r => setTimeout(r, 800))
+  console.error('[a11y] forced-colors: active')
+}
+
 const font = await p.evalJs('JSON.stringify(window.__a11y.fontOK())').then(JSON.parse)
 console.error('[a11y] stylesheets:', font.sheets.length, '| Geist:', font.geist,
   '| Geist Mono:', font.mono, '|', font.status)
@@ -286,6 +353,60 @@ if (!font.geist) {
 }
 
 const inv = await p.evalJs('JSON.stringify(window.__a11y.inventory())').then(JSON.parse)
+
+/* ---- motion mode ------------------------------------------------------- */
+// 2.2.2 asks that anything which starts moving on its own and runs past five
+// seconds can be stopped. An infinite CSS animation that is still `running`
+// under prefers-reduced-motion:reduce is exactly that, and it cannot be found
+// by grepping for the media query — a study can carry a reduce block that
+// misses one of its three loops. So: ask the animation timeline.
+if (process.env.A11Y_MODE === 'motion') {
+  const probe = async label => {
+    await new Promise(r => setTimeout(r, 1200))
+    const v = await p.evalJs(`(() => {
+      const rows = []
+      for (const a of document.getAnimations()) {
+        const t = a.effect && a.effect.getTiming ? a.effect.getTiming() : {}
+        const el = a.effect && a.effect.target
+        if (!el || !el.closest) continue
+        const card = el.closest('.spec')
+        if (!card) continue
+        const num = (card.querySelector('.num') || {}).textContent || '?'
+        const h3 = card.querySelector('h3')
+        rows.push({ num: +num,
+          title: h3 ? h3.textContent.replace(num, '').trim() : '?',
+          name: a.animationName || (a.transitionProperty ? 'transition:' + a.transitionProperty : a.constructor.name),
+          state: a.playState, inf: t.iterations === Infinity,
+          dur: Math.round(t.duration || 0) })
+      }
+      return JSON.stringify(rows)
+    })()`)
+    return { label, rows: JSON.parse(v) }
+  }
+  await p.send('Emulation.setEmulatedMedia',
+    { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] })
+  const free = await probe('no-preference')
+  await p.send('Emulation.setEmulatedMedia',
+    { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
+  const red = await probe('reduce')
+  await p.close()
+  const key = r => r.num + '|' + r.name
+  const survivors = red.rows.filter(r => r.inf && r.state === 'running')
+  console.log('animations running, no-preference:', free.rows.filter(r => r.state === 'running').length,
+    '(of which infinite:', free.rows.filter(r => r.inf).length + ')')
+  console.log('animations running, reduce:      ', red.rows.filter(r => r.state === 'running').length,
+    '(of which infinite:', red.rows.filter(r => r.inf).length + ')')
+  console.log('\nINFINITE and still running under reduce:')
+  const by = new Map()
+  for (const r of survivors) {
+    const k = r.num + ' ' + r.title
+    by.set(k, (by.get(k) || new Set()).add(r.name + ' ' + r.dur + 'ms'))
+  }
+  if (!by.size) console.log('  none')
+  for (const [k, v] of [...by].sort((a, b) => a[0].localeCompare(b[0])))
+    console.log('  ' + k + ' -> ' + [...v].join(', '))
+  process.exit(0)
+}
 console.error('[a11y] stage buttons:', inv.length, 'across',
   new Set(inv.map(b => b.num)).size, 'cards')
 
@@ -347,6 +468,7 @@ const rings   = []   // one row per theme
 async function shots (rects, kind) {
   const out = []
   for (const r of rects) {
+    if (!r.shipped) { out.push(null); continue }
     const box = kind === 'ring'
       ? { x: r.btn.x - 10, y: r.btn.y - 10, w: Math.round(r.btn.w) + 20, h: Math.round(r.btn.h) + 20 }
       : { x: r.lbl.x - 1,  y: r.lbl.y - 1,  w: Math.max(4, Math.round(r.lbl.w) + 2),
@@ -359,6 +481,27 @@ async function shots (rects, kind) {
     } catch { out.push(null) }
   }
   return out
+}
+// A crop that comes back perfectly uniform on a button that IS shipped and DOES
+// have a glyph box is not a finding, it is a failed capture — captureBeyondViewport
+// returns blank surface for clips a long way down a 40,000px page. Scroll to it
+// and ask again before believing it.
+async function repair (rects, b64s, vals, kind) {
+  let n = 0
+  for (let i = 0; i < rects.length; i++) {
+    const r = rects[i], v = vals[i]
+    if (!r.shipped || r.lbl.noText) continue
+    if (!(v && v.bgShare === 1 && v.sd === 0)) continue
+    await p.evalJs(`window.__a11y.into(${Math.round(r.lbl.y)})`)
+    await new Promise(t => setTimeout(t, 120))
+    await p.evalJs('window.__a11y.freeze()')
+    const one = await shots([r], kind)
+    await p.evalJs('window.__a11y.thaw()')
+    if (!one[0]) continue
+    const re = await read(one)
+    if (re[0] && !(re[0].bgShare === 1 && re[0].sd === 0)) { b64s[i] = one[0]; vals[i] = re[0]; n++ }
+  }
+  return n
 }
 async function read (b64s) {
   const out = []
@@ -389,26 +532,48 @@ for (const theme of THEMES) {
     await force(ids, []); await new Promise(r => setTimeout(r, 350))
     let rects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
     if (LIMIT) rects = rects.slice(0, LIMIT)
+    await p.evalJs('window.__a11y.freeze()')
     const restShots = await shots(rects, 'lbl')
+    await p.evalJs('window.__a11y.thaw()')
     const rest = await read(restShots)
+    const fixR = await repair(rects, restShots, rest, 'lbl')
     await force(ids, ['hover']); await new Promise(r => setTimeout(r, SETTLE))
     // Two hover crops, because half these studies MOVE the label. The rest-rect
     // crop answers "did this region change" — the diff. The hover-rect crop
     // answers "what is the contrast now". Reading the second question off the
     // first rect is how card 43 came back with no label at all: the keycap had
     // translated out of the box the rect was taken from.
+    await p.evalJs('window.__a11y.freeze()')
     const hovAtRest = await shots(rects, 'lbl')
     let hovRects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
     if (LIMIT) hovRects = hovRects.slice(0, LIMIT)
     const hovShots = await shots(hovRects, 'lbl')
+    await p.evalJs('window.__a11y.thaw()')
     const hover = await read(hovShots)
+    const fixH = await repair(hovRects, hovShots, hover, 'lbl')
     const moved = await diff(restShots, hovAtRest)
+    // The label box is too narrow to decide whether hover did anything: a study
+    // that lights its edge or walks its mark leaves the label untouched and
+    // would read as inert. The plate plus ten pixels of ground is the question.
+    await p.evalJs('window.__a11y.freeze()')
+    const plateRest = await shots(rects, 'ring')
+    await p.evalJs('window.__a11y.thaw()')
+    // plateRest was taken under forced hover above, so re-take rest after release
     await force(ids, [])
-    results.push({ theme, version, rects, hovRects, rest, hover, moved })
-    const u = a => a.filter(x => x && x.ratio < 4.5).length
+    await new Promise(r => setTimeout(r, SETTLE))
+    await p.evalJs('window.__a11y.freeze()')
+    const plateOff = await shots(rects, 'ring')
+    await p.evalJs('window.__a11y.thaw()')
+    const plateMoved = await diff(plateOff, plateRest)
+    results.push({ theme, version, rects, hovRects, rest, hover, moved, plateMoved })
+    const ship = rects.filter(r => r.shipped).length
+    const u = a => a.filter((x, i) => x && !rects[i].lbl.noText && x.ratio < 4.5).length
     const inert = moved.filter(m => m && m.moved < 0.005).length
-    console.error(`[a11y] ${theme}/${version || 'built'}: under 4.5:1 — rest ${u(rest)},`
-      + ` hover ${u(hover)} | css-hover inert on ${inert}/${moved.length}`)
+    console.error(`[a11y] ${theme}/${version || 'built'}: ${ship}/${rects.length} shipped`
+      + ` | under 4.5:1 — rest ${u(rest)}, hover ${u(hover)}`
+      + ` | css-hover inert ${plateMoved.filter(m => m && m.moved < 0.005).length}`
+      + `/${plateMoved.filter(Boolean).length} (plate), ${inert} (label)`
+      + ` | recaptured ${fixR}+${fixH}`)
   }
 }
 
@@ -421,12 +586,16 @@ for (const theme of THEMES) {
   let rects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
   if (LIMIT) rects = rects.slice(0, LIMIT)
   await force(ids, []); await new Promise(r => setTimeout(r, 350))
+  await p.evalJs('window.__a11y.freeze()')
   const off = await shots(rects, 'ring')
+  await p.evalJs('window.__a11y.thaw()')
   await force(ids, ['focus-visible']); await new Promise(r => setTimeout(r, 500))
   // The ring crop keeps the REST rect on purpose: 10px of ground either side is
   // enough to hold a plate that shifts, and the diff needs one frame of
   // reference. A moved plate is itself a visible focus change.
+  await p.evalJs('window.__a11y.freeze()')
   const on = await shots(rects, 'ring')
+  await p.evalJs('window.__a11y.thaw()')
   const declared = await p.evalJs('JSON.stringify(window.__a11y.ring())').then(JSON.parse)
   const changed = await diff(off, on)
   await force(ids, [])
