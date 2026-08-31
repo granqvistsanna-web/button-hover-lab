@@ -625,15 +625,32 @@
   }
 
   /* ---- The plate a material study is made of ---------------------------
-     🔑 SEVEN STUDIES SPELL THEIR SURFACE AS A NEUTRAL RUNG, AND A RUNG IS THE
-     ONE THING THE COLOUR CONTROLS DO NOT WRITE. 34 and 104 paint --bg-3 and
-     --bg-2; 36 paints --bg-2 on a pseudo-element; 44, 109 and 113 paint
-     --lift-bg. The toolbar writes --ink-text, --ink, --accent and --ink-hover,
-     so on those six the label took the colour, the flood took the colour, the
-     stair and the border took the colour — and the plate under all of it
-     stayed graphite. Reported as «some buttons have gray bg even when a colour
-     setting is set», and it is exactly that: not a bug in the map, a surface
-     the map was never asked about.
+     🔑 TWENTY-THREE STUDIES SPELL THEIR REST SURFACE AS A NEUTRAL RUNG, AND A
+     RUNG IS THE ONE THING THE COLOUR CONTROLS DO NOT WRITE. The toolbar writes
+     --ink-text, --ink, --accent and --ink-hover, so on those the label took the
+     colour, the flood took the colour, the stair and the border took the colour
+     — and the plate under all of it stayed graphite. Reported twice, the second
+     time with photographs: «some buttons have gray bg even when a colour
+     setting is set», and «grey is not set in any colour setting — where does it
+     come from». It is exactly that: not a bug in the map, a surface the map was
+     never asked about. --lift-bg → --on-card-hi → --bg-4 → #3a3a3a, the same
+     rung the rail and the toolbar are drawn from.
+
+     FIFTEEN OPT IN. Two bevels (34, 104) take the whole ladder; thirteen take
+     one face — 36, 42, 44, 98, 109, 111, 113, 132, 139, 140, 141, 142, 143.
+     EIGHT STAY OUT, and each has a reason rather than an omission:
+       · 32   a difference blend returns the pick's COMPLEMENT. Says so on its
+              own chip, and resets the accent inputs two hundred lines down.
+       · 43, 49, 116, 123  the plate MEANS a neutral surface: a keycap, an
+              elevation step, a stack of sheets, a crest. 49 and 123 are
+              three-rung ladders whose subject IS the ladder.
+       · 52, 72  already follow the pick — their grounds are
+              color-mix(--ink 86%, --bg-0), a darkening of the accent.
+       · 27   its plate ARRIVES rather than resting, and graphite is argued for
+              in the rule itself: a plate in the pick would take the pick's own
+              stroke with it and the study would end with nothing drawn on it.
+              The honest fix needs the label fitted against two grounds — the
+              card at rest and the plate on hover — and that is not this pass.
 
      ⚠️ AND IT CANNOT BE FIXED BY PUTTING THE LADDER TINT BACK. That tint came
      out on 2026-08-31 and the argument for taking it out still holds: it was a
@@ -666,10 +683,10 @@
      out of the arithmetic: Ash has no saturation to give, so its plates stay
      the graphite they already were, and nothing had to test for it.
 
-     SCOPED TO THE SIX AND NOT TO .btn. That is the whole difference from the
-     tint that came out: a study whose plate means «a neutral surface» — 43,
-     49, 116 — is not in this list and does not move. Opting in is a selector,
-     which is a thing a reader can see.
+     SCOPED TO THE FIFTEEN AND NOT TO .btn. That is the whole difference from
+     the tint that came out, and it is why widening the scope is safe: the eight
+     above are not in the list and do not move. Opting in is a selector, which
+     is a thing a reader can see.
 
      ⚠️ 113 IS IN THE LIST AND ITS REST LABEL IS STILL NOT THE PICK, which is
      the one place this hands back something it cannot make honest. That label
@@ -721,18 +738,39 @@
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
-  /* The four the colour ARRIVES on. One face between them: --lift-bg and
+  /* The thirteen the colour ARRIVES on. One face between them: --lift-bg and
      --bg-2 are one rung apart and no card here shows both, so a second value
-     would buy a difference nobody is positioned to see. */
-  .btn.s-sprite, .btn.l-knurl, .btn.y-lit, .btn.z-lurch{
+     would buy a difference nobody is positioned to see.
+     ⚠️ WIDENED FROM FOUR 2026-08-31, and the nine that came in are the nine
+     Sanna photographed: 42, 98, 111, 132, 139, 140, 141, 142, 143 — every one
+     an orange label on a graphite pill, because each spells its rest plate
+     --lift-bg and no role wrote it. 132 opts in on .k-lamp-i and not .k-lamp:
+     the study class sits on the ROW, and the plate is on the buttons inside it.
+     :is() and not thirteen written-out pairs, so the light rule states the list
+     once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
+  .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
+          .f-kant, .w-corner, .y-hold, .k-lamp-i, .c-wash,
+          .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
-  :root[data-theme="light"] .btn.s-sprite, :root[data-theme="light"] .btn.l-knurl,
-  :root[data-theme="light"] .btn.y-lit,    :root[data-theme="light"] .btn.z-lurch{
+  :root[data-theme="light"] .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
+          .f-kant, .w-corner, .y-hold, .k-lamp-i, .c-wash,
+          .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #e7e7e7);
     --bg-2:var(--m-face,    #e7e7e7);
   }
+  /* 139's FIRST wash panel, and it is the only secondary ink on the page that
+     is a fill rather than a de-emphasis. The study's whole argument is two
+     stages — «the wash announces it, the fill is the one that stays» — and with
+     a palette set the first stage was graphite and the second was the pick, so
+     the pair read as an accident rather than a sequence. --m-mid is the rung's
+     lightness in the pick's hue, held to 3:1 on the panel, which is a legible
+     mid tint in both themes. Unset it falls through to the literal, so the
+     default rendering does not move. Scoped to .c-wash: 55, 60, 80 and 133 read
+     the same rung to RECEDE, and receding is neutral by definition. */
+  .btn.c-wash{ --ink-mid:var(--m-mid, #b3b3b3) }
+  :root[data-theme="light"] .btn.c-wash{ --ink-mid:var(--m-mid, #4b4b4b) }
   /* The label on a plate that is no longer the card's own grey. --ink-text is
      fitted against the CARD, which was near enough while the plates were a rung
      off it; a projection keeps a rung's lightness and NOT its luminance — hsl L
@@ -751,7 +789,9 @@
      own colour and this is one class more specific, so no study rule changes
      shape. The two bevels reach theirs through their own colour declaration,
      which is further down the file and would otherwise win on source order. */
-  .btn.s-sprite, .btn.l-knurl, .btn.y-lit, .btn.z-lurch{
+  .btn:is(.s-sprite, .l-knurl, .y-lit, .z-lurch,
+          .f-kant, .w-corner, .y-hold, .k-lamp-i, .c-wash,
+          .p-face, .u-burst, .u-area, .p-tighten){
     color:var(--m-face-ink, var(--ink-text));
   }
   .btn:hover,
@@ -2810,11 +2850,11 @@
           <label class="set-lab">
             <span class="set-cap" data-cap="accent">Default</span>
             <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
-                   aria-label="Button fill and mark colour at rest"
+                   aria-label="Button colour at rest — the fill, the mark, and the plate on the fifteen studies that draw their own"
                    aria-describedby="set-contrast">
           </label>
           <button type="button" class="set-clear" data-clear="accent" hidden
-                  aria-label="Clear Button fill and mark colour at rest">&#10005;</button>
+                  aria-label="Clear Button colour at rest">&#10005;</button>
         </div>
         <div class="set-pair">
           <label class="set-lab">
@@ -12273,11 +12313,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // ---- The plate a material study is made of --------------------------
-      // Seven studies own their surface outright and spell it as a rung of the
-      // grey ladder, which is the one thing no role writes — so the label, the
-      // flood, the stair and the border all took the pick and the plate under
-      // them stayed graphite. The rule, and the argument for it, is at the
-      // remap in the stylesheet. Here is the arithmetic:
+      // Fifteen studies own their surface outright and spell it as a rung of
+      // the grey ladder, which is the one thing no role writes — so the label,
+      // the flood, the stair and the border all took the pick and the plate
+      // under them stayed graphite. The rule, and the argument for it, is at
+      // the remap in the stylesheet. Here is the arithmetic:
       //
       //   the rung's LIGHTNESS, the pick's HUE and SATURATION.
       //
@@ -12347,9 +12387,13 @@ document.addEventListener("DOMContentLoaded", function () {
           return far;
         };
         // Only --m-face is walked for an arrival, because only --m-face has one:
-        // 109 floods with --ink, 36, 44 and 113 with --ink-hover, and one face
-        // serves all four so it clears BOTH. The bevels are handed an empty list
-        // and their rungs come back at the lightness they went in at.
+        // 109 floods with --ink, 36, 44 and 113 with --ink-hover, 139 washes in
+        // both, and one face serves all thirteen so it clears BOTH. That walk
+        // is exactly what makes the wider scope safe — set Button and the plate
+        // steps aside in lightness until what lands on it clears M_STEP, rather
+        // than swallowing the effect in its own colour. The bevels are handed
+        // an empty list and their rungs come back at the lightness they went
+        // in at.
         var lands = [accentRgb, hoverRgb];
         var mv = {};
         M_RUNGS.forEach(function (n){
@@ -12482,8 +12526,9 @@ document.addEventListener("DOMContentLoaded", function () {
           // it, and the one that is made of nothing it can offer. Named on the
           // Button caption because the Button swatch is what they follow.
           if (r.key === 'accent' && onPlate){
-            why += ' Six material studies take it at their own lightness rather'
-                 + ' than as a fill; the label on those plates lands on '
+            why += ' Fifteen material studies take it at their own lightness rather'
+                 + ' than as a fill — the plate keeps the rung it was authored'
+                 + ' on and takes the pick\'s hue; the label on those plates lands on '
                  + onPlate.hex + ' — ' + onPlate.ratio.toFixed(1) + ':1 there.'
                  + ' Card 32 takes none of it: its light is a difference blend,'
                  + ' and inverting a tint returns that tint’s complement.';
