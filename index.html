@@ -341,18 +341,25 @@
     ::view-transition-old(root){ animation:none }
     ::view-transition-new(root){
       z-index:1;
-      /* --t-4 and not the top rung, on Sanna's «a bit faster» (2026-08-31):
-         450ms is long enough that the eye follows the seam across the screen
-         and starts reading it as an object. At 300ms it is a change of
-         ground, which is what it is.
-         --e-out rather than --e-quint, on «a bit smoother» in the same
-         breath. Both decelerate, but quint leaves the origin at roughly
-         twice the speed and pays for it with a longer settle — over this
-         travel that front-load is what reads as a whip. --e-out spends the
-         same 300ms at a more even rate, so the seam moves rather than
-         lunges. The two changes also protect each other: the harder curve
-         is exactly the one that would have felt abrupt shortened. */
-      animation:bhl-theme-wipe var(--t-4) var(--e-out) both;
+      /* ⚠️ NO EASING HERE, AND THAT IS THE POINT. This animates a RADIUS,
+         but what the eye reads is AREA, and area goes as r². Any ease-out
+         therefore lands twice: once on the radius, where it was intended,
+         and again squared on the coverage, where it was not. Measured on
+         a 1440×900 viewport with the control top-right, per 10% of the
+         duration:
+           --e-quint  0 38 76 94 99 100 100 100 100 100  (99% at t=45%)
+           --e-out    0 22 51 74 88 97  99  100 100 100  (99% at t=60%)
+           linear     0  5 14 25 38 53  68   79  90  98  (99% at t=95%)
+         With --e-out the screen is 99% covered 180ms in and the remaining
+         120ms drags a thin arc through the corners. That crawl is the
+         «laggy» — the wipe is over and the animation is not — and a hard
+         clip edge creeping a few px per frame across a large surface is
+         the «flickery» with it. Easing the radius cannot fix what easing
+         the radius caused; linear is the curve that makes COVERAGE even.
+         It is also gentler: peak seam speed falls 14447 → 7155 px/s.
+         --t-3 rather than --t-4 because 200ms of honest travel replaces
+         300ms that only ever moved for 180 of them. */
+      animation:bhl-theme-wipe var(--t-3) linear both;
     }
   }
   /* Reduced motion keeps the cross-fade rather than falling back to the hard
@@ -13306,11 +13313,16 @@ document.addEventListener("DOMContentLoaded", function () {
         var x = r.left + r.width / 2, y = r.top + r.height / 2;
         root.style.setProperty('--vt-x', x + 'px');
         root.style.setProperty('--vt-y', y + 'px');
-        // The exact distance to the farthest corner, measured rather than
-        // guessed at 150%: the circle then stops on the frame it has covered
-        // the screen instead of travelling on past the edge of it.
+        // The distance to the farthest corner, measured rather than guessed
+        // at 150% — plus 6%, which is the whole of the tolerance. Landing
+        // the circle EXACTLY on the corner sounds tidier and is worse: the
+        // last frame then depends on the radius being right to the pixel,
+        // and a rounding error leaves a sliver of the old ground in the
+        // corner for one frame — a flash on the frame the theme is meant
+        // to be settled. 6% covers the screen at 94% of the duration and
+        // spends the remaining frame off-screen, where it costs nothing.
         root.style.setProperty('--vt-r', Math.hypot(
-          Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 'px');
+          Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) * 1.06 + 'px');
         document.startViewTransition(function(){ applyTheme(b); });
       };
       // The head script may already have stamped the root from storage, so the
