@@ -1681,6 +1681,50 @@
       transition-delay:0ms !important; animation-delay:0ms !important}
   }
 
+  /* ============ prefers-contrast: more ============
+     The third preference signal, and the last one the page did not answer.
+     Reduced motion is the rule directly above; reduced transparency is
+     answered where the frost is authored, beside .tools[data-stuck].
+
+     Two things are wrong for someone who has asked for more contrast. The
+     page separates every surface by a RUNG OF LIGHTNESS — canvas, panel,
+     card, control, each about eleven points of grey apart — which is the
+     whole structural idea and is invisible to anyone who cannot resolve
+     eleven points of grey. And --ink-faint measures 3.00:1 on bg-0 in dark,
+     which is under AA and is what the 11px mono metadata is drawn in.
+
+     So: surfaces gain a drawn edge, the metadata grey climbs a rung, and the
+     frosted plate goes solid — a blurred plate is a low-contrast plate, which
+     is the same reason prefers-reduced-transparency turns it off.
+
+     ⚠️ --line-ctl is raised on the two PANELS and nowhere else. It carries 43
+     declarations and 27 of them are inside studies, and a specimen has to keep
+     the value its copied CSS actually carries — a card that draws itself at
+     .72 while handing over .36 is lying about its own snippet. --line belongs
+     to the studies outright (15 declarations, none in the chrome) and is not
+     touched at all. */
+  @media (prefers-contrast: more){
+    /* Listed both ways round on purpose: the light block further up is
+       :root[data-theme="light"] at (0,2,0) and would otherwise outrank a bare
+       :root here whatever the source order. Only --ink-faint moves — raising
+       --ink-low in the same block would resolve var(--ink-low) against its own
+       new value and collapse two rungs into one. */
+    :root,:root[data-theme="light"]{--ink-faint:var(--ink-low)}
+    :root{--edge-hc:rgba(255,255,255,.44)}
+    :root[data-theme="light"]{--edge-hc:rgba(0,0,0,.52)}
+    /* :root in front of each, and it is not decoration. The left panel is
+       authored a few hundred lines BELOW this block and declares border:0
+       twice — once at (0,1,0) and again as .rail:not([hidden]) at (0,2,0)
+       inside the 1360 query — so at equal specificity the later rule wins and
+       the wall keeps no edge. Measured 0px at both (0,1,0) and (0,2,0); the
+       :not([hidden]) here is carried for the weight, not for the match. */
+    :root .spec,:root .rail:not([hidden]),:root .tools{border:1px solid var(--edge-hc)}
+    /* The panels only. See the warning above. */
+    .rail,.tools{--line-ctl:var(--edge-hc)}
+    .tools[data-stuck]{background:var(--panel);
+      -webkit-backdrop-filter:none !important; backdrop-filter:none !important}
+  }
+
   /* ============ the left panel ============
      This many studies is past the point where a filter row can hold the
      navigation as well. So the toolbar keeps only what RESTYLES the page —
