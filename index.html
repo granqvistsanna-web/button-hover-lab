@@ -74,7 +74,20 @@
   :root{
     --bg:var(--bg-0);            /* canvas            */
     --stage:var(--bg-1);         /* card / panel      */
-    --lift-bg:var(--bg-2);       /* control at rest   */
+    /* ⚠️ A ROLE, NOT A RUNG — and it was a rung until 2026-08-31, which is
+       the whole bug. --card is var(--bg-2) in dark, so a plate «lifted» off
+       the card was painted THE EXACT COLOUR OF THE CARD: nine studies (32, 42,
+       43, 44, 109, 111, 113, 116, 132) measured contrast 1.000 in dark with no
+       palette set at all. Light never showed it, because there --card is
+       var(--bg-0) and the same rung lands a step above it at 1.237 — so the
+       fault survived every pass that looked at light, and the accent tint on
+       the ladder was the only thing that ever made those plates visible in
+       dark. Taking the tint off did not break them; it stopped hiding them.
+       Same failure as --well in the console pass: a token naming a RELATION,
+       pinned to a step. --on-card-hi is that relation, and it is already what
+       light resolves to today, so light does not move and dark goes
+       #222222 → #3a3a3a, 1.000 → 1.45. */
+    --lift-bg:var(--on-card-hi);  /* a control at rest ON A CARD */
     /* ---- The two roles a mirrored ladder cannot carry -------------------
        «Elevation is lightness» is a DARK-mode rule, and it survives the mirror
        everywhere except here. A card one step off the canvas mirrors fine — it
@@ -590,31 +603,25 @@
      from inside .btn it re-resolves in .btn's scope. Duplicated on purpose,
      stated here, and kept next to the ladder it copies. The --a-* values are
      written by paint() as concrete rgb, for the same cycle reason. */
+  /* Only the two boundary tokens are remapped now. The five ladder rungs that
+     used to sit here — --bg-2/3/4, --lift-bg, --ink-low, --muted, --ink-mid —
+     came out with the tint that fed them, and they had to: paint() stopped
+     writing --a-2/3/4/quiet/mid, so each of those lines had decayed into a
+     restatement of the literal it already fell back to. --lift-bg was worse
+     than dead. It re-pinned the token to #222222 INSIDE the button, which is
+     the card's own colour in dark and would have overridden the role fix at
+     :root without anything reporting a conflict. */
   .btn{
     --line-ctl:var(--a-edge,  rgba(255,255,255,.36));
     --hairline:var(--a-soft,  rgba(255,255,255,.08));
     --line:var(--a-soft,      rgba(255,255,255,.08));
     --line-soft:var(--a-soft, rgba(255,255,255,.08));
-    --bg-2:var(--a-2,         #222222);
-    --bg-3:var(--a-3,         #2e2e2e);
-    --bg-4:var(--a-4,         #3a3a3a);
-    --lift-bg:var(--a-2,      #222222);
-    --ink-low:var(--a-quiet,  #8a8a8a);
-    --muted:var(--a-quiet,    #8a8a8a);
-    --ink-mid:var(--a-mid,    #b3b3b3);
   }
   :root[data-theme="light"] .btn{
     --line-ctl:var(--a-edge,  rgba(0,0,0,.45));
     --hairline:var(--a-soft,  rgba(0,0,0,.10));
     --line:var(--a-soft,      rgba(0,0,0,.10));
     --line-soft:var(--a-soft, rgba(0,0,0,.10));
-    --bg-2:var(--a-2,         #e7e7e7);
-    --bg-3:var(--a-3,         #d6d6d6);
-    --bg-4:var(--a-4,         #c5c5c5);
-    --lift-bg:var(--a-2,      #e7e7e7);
-    --ink-low:var(--a-quiet,  #636363);
-    --muted:var(--a-quiet,    #636363);
-    --ink-mid:var(--a-mid,    #4b4b4b);
   }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
@@ -955,9 +962,9 @@
   }
 
   /* 07 in fill and link */
-  .sweep.btn--solid::before{background:var(--on-ink)}
+  .sweep.btn--solid::before{background:var(--hover-set, var(--on-ink))}
   .sweep.btn--solid:hover .lbl,
-  .sweep.btn--solid:focus-visible .lbl{color:var(--ink)}
+  .sweep.btn--solid:focus-visible .lbl{color:var(--on-hover-set, var(--ink))}
   /* inset:0 becomes a rule on the bottom edge. The transform-origin flip above
      is untouched, so it still enters left and leaves right. */
   .sweep.btn--text::before{top:auto; bottom:0; height:1.5px; background:var(--ink)}
@@ -965,16 +972,16 @@
   .sweep.btn--text:focus-visible .lbl{color:var(--ink); transition-delay:0s}
 
   /* 08 in fill */
-  .shutter.btn--solid::before{background:var(--on-ink)}
+  .shutter.btn--solid::before{background:var(--hover-set, var(--on-ink))}
   .shutter.btn--solid:hover .lbl,
-  .shutter.btn--solid:focus-visible .lbl{color:var(--ink)}
+  .shutter.btn--solid:focus-visible .lbl{color:var(--on-hover-set, var(--ink))}
 
   /* 09 in fill. The --line-ctl hairline it draws for itself is a white at .36
      and disappears against a white plate, which is correct rather than a loss:
      a filled button does not need a boundary drawn on top of its own. */
-  .inkfill.btn--solid::before{background:var(--on-ink)}
+  .inkfill.btn--solid::before{background:var(--hover-set, var(--on-ink))}
   .inkfill.btn--solid:hover .lbl,
-  .inkfill.btn--solid:focus-visible .lbl{color:var(--ink)}
+  .inkfill.btn--solid:focus-visible .lbl{color:var(--on-hover-set, var(--ink))}
 
   /* 10 in outline. The sheen is a light crossing a DARK surface, so on a
      transparent plate both halves invert: the streak is --ink rather than
@@ -3168,7 +3175,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="h-arc" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-29T20:08:33+02:00">
+    <article class="spec" data-key="h-arc" data-versions="fill link" data-added="2026-08-29T20:08:33+02:00" data-updated="2026-08-31T12:10:00+02:00">
       <div class="stage">
         <button type="button" class="btn h-arc">
           <span class="h-arc-mask">
@@ -5399,8 +5406,8 @@ document.addEventListener("DOMContentLoaded", function () {
      white fill — the same non-loss card 09 records: a filled button does not
      need a boundary drawn on top of its own. It earns its keep once the dark
      plate is in, which on --bg-1 measures 1.06:1 without it. */
-  .j-dir.btn--solid .j-dir-tile{background:var(--on-ink)}
-  .j-dir.btn--solid .j-dir-on{color:var(--ink)}
+  .j-dir.btn--solid .j-dir-tile{background:var(--hover-set, var(--on-ink))}
+  .j-dir.btn--solid .j-dir-on{color:var(--on-hover-set, var(--ink))}
   .j-dir.btn--solid::after{
     content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
     border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
@@ -5456,9 +5463,9 @@ document.addEventListener("DOMContentLoaded", function () {
      and needs the --line-ctl hairline, because --on-ink on a --bg-1 panel
      measures 1.07:1 and reads as gone rather than as switched. The outline
      version needs none of it — its own --ink border is the boundary. */
-  .j-out.btn--solid::before{background:var(--on-ink);
+  .j-out.btn--solid::before{background:var(--hover-set, var(--on-ink));
     box-shadow:inset 0 0 0 1px var(--line-ctl)}
-  .j-out.btn--solid:hover, .j-out.btn--solid:focus-visible{color:var(--ink)}
+  .j-out.btn--solid:hover, .j-out.btn--solid:focus-visible{color:var(--on-hover-set, var(--ink))}
   .j-out.btn--solid:hover .lbl,
   .j-out.btn--solid:focus-visible .lbl{color:var(--ink)}
 
@@ -6361,12 +6368,30 @@ document.addEventListener("DOMContentLoaded", function () {
      Sanna took it out of the library on 2026-08-29 rather than have it rebuilt;
      if it is ever wanted back, the fix is to transition border-color and nothing
      else, which would make the name true and keep it a single property. */
-  /* --muted and not --line at rest: the page's hairline token is 8% white,
+  /* --line-ctl and not --line at rest: the page's hairline token is 8% white,
      which on a control reads as disabled rather than as quiet, and leaves the
      only boundary of an interactive thing below 3:1. Quiet has to mean low
-     contrast, not no contrast. */
-  .o-quiet{border-color:var(--muted); background:transparent; transition:background-color var(--t-2) ease}
-  .o-quiet:hover,.o-quiet:focus-visible{background:var(--bg-3)}
+     contrast, not no contrast.
+     ⚠️ IT WAS --muted UNTIL 2026-08-31, AND THAT IS WHY THIS CARD STAYED GREY.
+     --muted is a neutral the button does not remap, so it was one of six
+     studies a chosen colour could not reach by any route: set anything and the
+     hairline and the ground both stayed grey while the cards either side of it
+     took the colour. --line-ctl makes the same argument the comment above
+     already makes — it exists precisely because a control boundary has to clear
+     3:1 — and .btn remaps it to the accent, so quiet still means quiet in
+     graphite and means the reader's colour once there is one.
+     The hover ground is a mix and not a rung for the same reason: a rung is a
+     grey the pick cannot reach, and tinting the rungs was tried and taken back
+     out (it was muddy in dark and did nothing in light). A transparent mix over
+     whatever the card is works on both grounds and stays quiet.
+     This also makes the card's NAME true, which the note above says was the
+     honest fix: border-color now moves, so «one property» is no longer a claim
+     about the one property that does not. */
+  .o-quiet{border-color:var(--line-ctl); background:transparent;
+    transition:border-color var(--t-2) ease, background-color var(--t-2) ease}
+  .o-quiet:hover,.o-quiet:focus-visible{
+    border-color:var(--ink);
+    background:color-mix(in srgb, var(--ink) 12%, transparent)}
 
   /* 87 Overrun — a second copy of the label sits just outside the
      right edge and the row slides far enough to prove it is there. Card 16
@@ -9251,7 +9276,14 @@ document.addEventListener("DOMContentLoaded", function () {
      does NOT darken on the way in: a darkening step was tried and it made
      the drawn-back ground match the card behind it, at which point the gap
      stopped reading as a gap and started reading as a rendering seam. */
-  .btn.h-arc{ border:1px solid var(--line) }
+  /* --line-ctl and not --line, for the argument card 86 makes a few thousand
+     lines up: --line is 8% white, which is a hairline between two surfaces and
+     not the boundary of an interactive thing — on a control it reads as
+     disabled. This is the card's only boundary in its outline version, so it
+     has to be the control token. It is also the token .btn remaps to the
+     accent, which is what «the ground draws back behind it while the border
+     stays where it is» needs in order to still be true once a colour is set. */
+  .btn.h-arc{ border:1px solid var(--line-ctl) }
   .h-arc::before{
     content:""; position:absolute; inset:0; z-index:0;
     border-radius:inherit;
@@ -9278,6 +9310,26 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-arc:focus-visible .h-arc-mask .lbl + .lbl{
     transform:translate(0%,0%) rotate(0deg); transition-delay:var(--d-1);
   }
+
+  /* 127 in fill and link. The pivot IS the mechanism — both copies turning
+     about a point ten line-heights below the baseline — so a version only says
+     what ground the pivot happens on, exactly as 07 and 08 do.
+
+     Fill inverts the inset ground. At rest the ground is --ink at 7% over the
+     card, which on a plate that is already --ink would be 7% of itself and
+     read as nothing at all, so the drawn-back edge would vanish and the card
+     would lose the half of its statement that is not the rotation. --on-ink at
+     14% is the same gesture against the plate instead of against the card.
+     The border goes: a filled button does not need a boundary drawn on its own
+     fill, which is the non-loss cards 09 and 75 already record.
+
+     Link keeps only the pivot. No ground and no border, because the whole
+     point of the text version is that there is no plate for the ground to draw
+     back from — inset would be animating an edge nobody can see. */
+  .h-arc.btn--solid{ border-color:transparent }
+  .h-arc.btn--solid::before{ background:color-mix(in srgb, var(--on-ink) 14%, transparent) }
+  .h-arc.btn--text{ border-color:transparent }
+  .h-arc.btn--text::before{ background:none }
 
   /* 128 Buds a mark — the silhouette changes. The recipe this comes from
      hangs the disc off the right edge, which leaves the button reading as
@@ -11230,6 +11282,31 @@ document.addEventListener("DOMContentLoaded", function () {
         ringable(fitted.accent.rgb).forEach(function (b){ b.setAttribute('data-ring', ''); });
       } else {
         root.removeProperty('--accent-ring');
+      }
+      // ---- «Hover was actually chosen» ----------------------------------
+      // 🔑 --ink-hover CANNOT ANSWER THIS. It aliases to --ink in the
+      // stylesheet, so it always resolves and a study has no way to ask whether
+      // the reader picked a hover colour or is looking at the fallback. Five
+      // studies need that question answered: on their FILL variant the arriving
+      // plate is --on-ink, because a filled button swapping to its own inverse
+      // is the effect — 07 sweep, 08 shutter, 09 inkfill, 75 j-dir, 78 j-out.
+      // The inversion is right and stays the default; what was wrong is that
+      // the Hover swatch then did nothing on those variants while it worked on
+      // the outline ones next to them, which is a control that lies about
+      // itself. Reported as «Corner exit shows a darker shade and not the hover
+      // colour», and it is the same fault buttons-sg closed on 2026-08-28 —
+      // Hover is the ARRIVING colour for every treatment, the inverse ink is
+      // only its fallback.
+      //
+      // A separate token rather than a change to --ink-hover, so those studies
+      // can spell exactly that: var(--hover-set, var(--on-ink)). Unset, the
+      // fallback stands and nothing on the page moves.
+      if (look.hover && fitted.hover){
+        root.setProperty('--hover-set', fitted.hover.hex);
+        root.setProperty('--on-hover-set', onHover.hex);
+      } else {
+        root.removeProperty('--hover-set');
+        root.removeProperty('--on-hover-set');
       }
       // The rest label, derived off the fill. After the loop, for the reason
       // given where inkText is computed.
