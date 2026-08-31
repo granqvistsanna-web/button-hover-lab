@@ -673,7 +673,14 @@
               ink clears 4.5:1 on a white card and a mid plate at once —
               measured, the best available was black at 3.61:1.
        · FACE  — 36, 42, 43, 98, 109, 111, 116, 132, 139, 140, 141, 142,
-              143. One face, WALKED until what lands on it clears M_STEP.
+              143, 146. One face, WALKED until what lands on it clears M_STEP.
+              146 was added after this pass and so was born grey: its mid and
+              its end-caps are ONE face, the caps being that face pixelated, so
+              a plate that does not take the pick makes the study unreadable —
+              the silhouette it withdraws to is drawn in the page's furniture
+              step. Measured before joining, with Navy set: label #578ad0 on
+              #e7e7e7 is 2.85:1 in light and 3.22:1 in dark, both below AA. It
+              takes --m-face-ink in the same edit for that reason.
        · 113   its own plate, and the walk is below in paint(): its rest label
               is not a colour, it is |plate − --ink-hover| under a difference
               blend, so the plate carries a second constraint no shared face
@@ -800,13 +807,13 @@
      once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
   .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten){
+          .p-face, .u-burst, .u-area, .p-tighten, .o-caps){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
   :root[data-theme="light"] .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten){
+          .p-face, .u-burst, .u-area, .p-tighten, .o-caps){
     --lift-bg:var(--m-face, #e7e7e7);
     --bg-2:var(--m-face,    #e7e7e7);
   }
@@ -902,7 +909,7 @@
      which is further down the file and would otherwise win on source order. */
   .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten){
+          .p-face, .u-burst, .u-area, .p-tighten, .o-caps){
     color:var(--m-face-ink, var(--ink-text));
   }
   .btn:hover,
@@ -3585,7 +3592,7 @@
         <button type="button" class="btn o-caps"><span class="o-caps-bg" aria-hidden="true"><span class="o-caps-end is-l"><i style="--d:2"></i><i style="--d:6"></i><i style="--d:0"></i><i style="--d:4"></i><i style="--d:1"></i><i style="--d:5"></i><i style="--d:3"></i><i style="--d:7"></i></span><span class="o-caps-mid"></span><span class="o-caps-end is-r"><i style="--d:2"></i><i style="--d:6"></i><i style="--d:0"></i><i style="--d:4"></i><i style="--d:1"></i><i style="--d:5"></i><i style="--d:3"></i><i style="--d:7"></i></span></span><span class="lbl">Publish</span></button>
       </div>
       <h3><span class="num">146</span>Only the ends are pixels</h3>
-      <p>137 rasterises the whole plate and moves the fill in, cell by cell. Here the raster is confined to the two end-caps, so what changes is the SILHOUETTE: the plate withdraws to its label 11px at a time while the label does not move and the box does not resize. The cells do not switch off &mdash; they drop to a ghost and recede, so the shape the button gave up is still readable behind the one it kept. Each is a one-millisecond step rather than a fade, and the delay is stated in both rules, outermost first on the way out and innermost first on the way back, so it does not rewind. 143 tightens by re-measuring its padding; this tightens with nothing moving at all.</p>
+      <p>137 rasterises the whole plate; here the raster is confined to the two end-caps, so what changes is the SILHOUETTE. The plate withdraws to its label 11px at a time, the box holding its size and the label its place, and the cells ghost rather than switch off, so the shape given up stays readable behind the one kept. 143 tightens by re-measuring its padding; this tightens with nothing moving at all.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
