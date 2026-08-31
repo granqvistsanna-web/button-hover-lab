@@ -93,7 +93,15 @@ export const VERSIONS = {
   // plate and a generic .btn--solid measure identical rather than a border
   // apart — which is why the fill is not offered twice and only the link is
   // declared. Its two label copies are plain text, so it keeps Long.
-  'h-arc':'link',
+  // Outline added 2026-08-31. The built version's ground cannot come with it —
+  // .btn--line means there is no plate for a 7% tint to be a tint OF — so the
+  // ::before stops being a ground and becomes the ring that draws in, and the
+  // button's own border steps aside so there is one edge rather than two. The
+  // fill is still not offered: 127 keeps a 1px border in every version and only
+  // recolours it, so its own plate and a generic .btn--solid measure identical
+  // rather than a border apart. Its two label copies are plain text, so it
+  // keeps Long.
+  'h-arc':'outline link',
   // — Two at once ————————————————————————————————————————————————
   // A compound is only as portable as its stricter half. 123 was filed as «a
   // lit plate» and that was wrong by half — card 10, the sheen it is half made
@@ -113,6 +121,35 @@ export const VERSIONS = {
   // border and radius, so a treatment on top of it is a third opinion. Only
   // the two pure roll-plus-transform cards survive all three.
   'c-crest':'', 'c-regis':'',
+  // — 137-143, the second treatment ————————————————————————————————
+  // Seven studies recreated from tiny-mighty-buttons on 2026-08-31 and shipped
+  // in one treatment each. Every one of them survives the other, and each for a
+  // reason the study itself supplies rather than a house default.
+  //
+  // 138's pair is one mechanism run twice with the sign turned over; the plate
+  // is only what it is read on, so an outline takes the plate away and moves
+  // what the plate was saying onto the edge.
+  // 139 GAINS from the removal — with no resting plate, the two-stage arrival
+  // and its reordered exit are the only things on the button.
+  // 140's front face turns; the frame turns with it, on the face rather than on
+  // the button.
+  // 141 and 142 never touch the plate at all: both are per-character, and both
+  // derive everything they do from where a character sits in the word.
+  // 143 is the clearest of them — the plate that closes onto the label becomes
+  // a ring that closes onto it, same inset, same radius, same clock.
+  //
+  // None of the six is offered a LINK. Five of them need a surface for the
+  // mechanism to happen on — a wash to sweep under, a face to turn, a plate to
+  // close — and 141's burst needs a box to be clipped by, or the characters
+  // fly loose over the card.
+  'c-against':'outline', 'c-wash':'outline', 'p-face':'outline',
+  'u-burst':'outline',   'u-area':'outline', 'p-tighten':'outline',
+  // 137 the other way round: it ships as an outline and takes the fill. The
+  // raster is unchanged; what moves is the pair of grounds its difference-
+  // blended label resolves against, so the fill version reads its own solved
+  // constant --m-pix-fill rather than --m-pix. No link — a 24-cell raster has
+  // nothing to happen in on a rule 1.5px tall.
+  'o-pix':'fill',
   'c-relay':'fill', 'c-tide':'fill',
   'c-swell':'outline link', 'c-mass':'outline link',
 };
