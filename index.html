@@ -9278,8 +9278,18 @@ document.addEventListener("DOMContentLoaded", function () {
      75's trap along with the technique. Setting the incoming edge and
      starting the travel in the same frame gets batched, and the tile then
      slides in from the PREVIOUS pass's edge, which looks like a bug in the
-     cycle rather than in the batching. The class that runs the travel goes
-     on only after a forced reflow has committed the new edge. */
+     cycle rather than in the batching.
+     🚨 AND A FORCED REFLOW IS NOT THE WHOLE ANSWER, which is what this note
+     used to claim. The tile is always transitioned, so committing the new edge
+     STARTS A TRAVEL towards it rather than jumping there — and the class added
+     in the same task then replaces that travel with one to 0,0 beginning from
+     wherever the tile already stood, which is the PREVIOUS pass's exit edge.
+     Measured on this page over six passes with real time between them: the
+     authored park matched the real entry 0 of 6 times, and the entry list was
+     the exit list read two places along. The card did take turns; the four
+     edges named above were the wrong four. The transition has to be suppressed
+     for the duration of the park, exactly as 75's place() does it — the script
+     carries the argument in full. */
   .btn.j-turns{ overflow:hidden; border:1px solid var(--line) }
   .j-turns .j-turns-tile{
     position:absolute; inset:0; pointer-events:none; z-index:0;
@@ -9552,6 +9562,48 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-grow:focus-visible .h-grow-w{grid-template-columns:1fr}
   .h-grow:hover .h-grow-t,
   .h-grow:focus-visible .h-grow-t{padding-left:10px; opacity:1}
+
+  /* ============ Windows High Contrast ============ */
+  /* Measured 2026-08-31 with forced-colors emulated: sixteen studies stop
+     reacting to hover ALTOGETHER — 4, 10, 11, 14, 19, 28, 32, 36, 39, 61, 65,
+     100, 109, 121, 133, 135. Pixel movement on the plate goes 0.5965 to 0.0000
+     on 11 Arrow relay, 0.5837 to 0.0000 on 32 Backlight, 0.0227 to 0.0000 on
+     14 Directional underline. Every one of them states hover in colour, shadow
+     or a gradient, and forced-colors replaces all three: a background becomes a
+     system colour, a box-shadow is not painted, a background-image is dropped.
+     The effect is not weakened there, it is gone.
+
+     Focus is FINE and needs nothing — the ring comes through as the system
+     Highlight at 14.37:1, measured. This is an affordance for pointing.
+
+     One baseline instead of sixteen bespoke rules, because the studies do not
+     differ in the way that matters here: a system colour and a border are the
+     only two paints a page still chooses under forced-colors, and
+     Highlight / HighlightText is the pair the platform itself uses for "this is
+     the thing you are on". Studies whose hover is geometry rather than colour —
+     a plate that lifts, a mark that walks, a word that rolls — keep working
+     exactly as they do now and gain the border on top. */
+  @media (forced-colors: active){
+    /* Border and text-decoration, NOT a Highlight fill. The fill was written
+       first and measured worse than doing nothing: twenty-four labels came back
+       black on black. Two thirds of these studies paint an inset:0 overlay for
+       their effect, forced-colors flattens that overlay to Canvas, and it
+       covers the plate — so the button's own background never shows, while
+       color:HighlightText obediently turned the label the same black as the
+       thing now behind it. A border is outside every inset:0 overlay and an
+       underline is painted with the glyphs, so both survive whatever a study
+       draws over its plate. */
+    .btn{ border:1px solid ButtonBorder }
+    .btn:hover, .btn:focus-visible{ border-color:Highlight }
+    .btn:hover .lbl, .btn:focus-visible .lbl{
+      text-decoration:underline; text-decoration-color:Highlight;
+      text-decoration-thickness:2px; text-underline-offset:3px;
+    }
+    /* 32 Backlight and 113 Honest progress compute their label out of the plate
+       with mix-blend-mode:difference. The plate is a system colour here, so the
+       result is a guess; both take the plain path. */
+    .btn .lbl{ mix-blend-mode:normal }
+  }
 </style>
 
 
@@ -9576,23 +9628,52 @@ document.addEventListener("DOMContentLoaded", function () {
       var tile = btn.querySelector('.j-turns-tile');
       if (!tile) return;
       var i = 0;
-      function set(e){
+      // 🚨 A FORCED REFLOW DOES NOT JUMP A TRANSITIONED ELEMENT — IT STARTS A
+      // TRAVEL, and that is the whole bug this used to have. The tile always
+      // carries transition:transform, so committing the new edge began a 450ms
+      // journey TOWARDS it; the class added in the same task then replaced that
+      // with a journey to 0,0 beginning from wherever the tile already stood —
+      // the previous pass's exit edge. So the authored park was dead code after
+      // the first pass and the visible cycle was the exit list, two places
+      // along. Measured over six passes: 0 of 6 entries came from the edge the
+      // counter had just named.
+      // Card 75 has had the answer all along and this inherited the technique
+      // without it: the transition goes OFF for the park, so the tile jumps
+      // there, and back ON before the travel is asked for. `animate` is false
+      // for the park and true for the exit, where the far edge and the class
+      // coming off belong in ONE batch and therefore one transition.
+      function set(e, animate){
+        if (!animate) tile.style.transition = 'none';
         tile.style.setProperty('--jt-x', e[0]);
         tile.style.setProperty('--jt-y', e[1]);
+        if (!animate){
+          void tile.offsetWidth;            // commit the JUMP, then re-arm
+          tile.style.transition = '';
+        }
       }
-      btn.addEventListener('pointerenter', function(){
-        set(EDGES[i]);
-        void tile.offsetWidth;              // commit the edge before travelling
+      function enter(){
+        set(EDGES[i], false);
         btn.classList.add('j-turns-in');
-      });
-      btn.addEventListener('pointerleave', function(){
+      }
+      function leave(){
         // The opposite edge is set in the SAME batch as the class coming off,
         // so the tile reads one transition from where it stands to the far
         // side instead of retracting the way it came.
-        set(EDGES[(i + 2) % 4]);
+        set(EDGES[(i + 2) % 4], true);
         btn.classList.remove('j-turns-in');
         i = (i + 1) % 4;                    // the pass is spent on the way out
-      });
+      }
+      btn.addEventListener('pointerenter', enter);
+      btn.addEventListener('pointerleave', leave);
+      // Keyboard, on the same pair. This card is entirely class-driven, so
+      // without these two lines it is the one study on the page with no state
+      // at all under Tab — no :focus-visible rule either, unlike 09, 26, 33 and
+      // 50, which each answer focus in CSS. And the rotation is the study, so
+      // the keyboard route has to spend a pass exactly as the pointer does:
+      // arriving by focus and leaving by blur advances `i` the same way, and a
+      // visitor tabbing through sees the same four edges in the same order.
+      btn.addEventListener('focus', enter);
+      btn.addEventListener('blur', leave);
     });
   })();
 
@@ -10531,8 +10612,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // wrong-footed by whichever variant happens to sort first, and computed
     // colour still comes back as rgb() whatever syntax the token was authored
     // in, which was the reason for measuring instead of naming.
+    // ⚠️ --ink-hi and NOT --ink. This is «the page's own default label», and
+    // --ink is exactly the token a palette overwrites — so remeasure() below,
+    // re-reading the same probe while a palette was live, cached the PALETTE as
+    // the default and kept it after the palette was cleared. Measured: set Ash,
+    // switch theme, clear back to Graphite, and the light readout said
+    // «2.6:1 · below AA» on a page actually painting 18.7:1, because #a0a0a0 was
+    // standing in for the default ink. --ink-hi is written by no palette, and at
+    // init the two are the same value anyway — --ink aliases --ink-hi while
+    // nothing is set, which is the only state this is ever read in.
     var probe = document.createElement('span');
-    probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink)';
+    probe.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink-hi)';
     document.body.appendChild(probe);
     var WHITE_RGB = rgbOf(probe, 'color');
     var WHITE     = toHex(WHITE_RGB);
@@ -10651,7 +10741,15 @@ document.addEventListener("DOMContentLoaded", function () {
         for (var i = 0; i < 100; i++){
           l += dir * .01;
           if (l < 0 || l > 1) break;
-          var rgb = fromHsl(hsl[0], hsl[1], l);
+          // ROUNDED before the test, because rounded is what gets painted.
+          // fromHsl hands back fractional channels; testing those and then
+          // letting toHex round put the PAINTED colour back under the floor the
+          // walk had just cleared — measured #003516 on #00aa46 at 4.4965:1 and
+          // #fffbf4 on #a86500 at 4.4974:1, against a target of 4.5. It also
+          // made the readout disagree with the page, reporting the fractional
+          // ratio (4.7) where the paint was 4.639. Same fix closes both: test
+          // the integer, report the integer.
+          var rgb = fromHsl(hsl[0], hsl[1], l).map(Math.round);
           if (ratio(rgb, bg) >= min){
             var d = Math.abs(l - hsl[2]);
             if (!best || d < best.d) best = {rgb: rgb, d: d};
@@ -10716,8 +10814,27 @@ document.addEventListener("DOMContentLoaded", function () {
       // nothing on screen saying so, over the 41% of cards that are filled at
       // rest and seven of the first nine a reader sees. The comment on fitOn
       // promises the fit is never silent; this is where that was untrue.
+      // ⚠️ THE PLATE A STUDY SHOWS IS NOT THE FLAT ACCENT. Six studies shade
+      // their own plate on hover and the fit never saw it: 126 Squash mixes
+      // `--accent 84%, --bg`, 11 Relay and i-mass mix `--ink 86%`, and
+      // .btn--solid.t-report does the same. Fitting the label against the whole
+      // accent therefore cleared 4.5:1 against a colour that is never on screen
+      // at that moment, and the shaded plate measured 3.05–3.88:1 with every
+      // palette on the page — against 12.0–13.5:1 in graphite.
+      //
+      // 84% is the strongest shading any study applies, so it is the worst case
+      // and the only one worth fitting: 16% of the card mixed in moves the plate
+      // TOWARD the card, which is away from the label in both themes (the label
+      // on a fill is dark on a light accent and light on a dark one). Fit the
+      // worst case and every lighter shade is covered.
+      var SHADE = .84;
+      function shaded(rgb){
+        return [0,1,2].map(function(i){ return Math.round(rgb[i] * SHADE + PANEL[i] * (1 - SHADE)); });
+      }
       function labelOn(rgb){
-        return fitted.text ? fitOn(look.text, 4.5, rgb) : {hex: onTop(rgb), moved: false, ratio: ratio(toRgb(onTop(rgb)), rgb)};
+        var worst = shaded(rgb);
+        return fitted.text ? fitOn(look.text, 4.5, worst)
+                           : {hex: onTop(worst), moved: false, ratio: ratio(toRgb(onTop(worst)), worst)};
       }
 
       // Pass two: write. Each token is written only while something it depends
@@ -10767,9 +10884,34 @@ document.addEventListener("DOMContentLoaded", function () {
         root.setProperty('--a-soft',  rgba(.30));
         // The rungs keep their own lightness and take a tint, so the ladder the
         // studies climb still steps the same distance it did in graphite.
-        root.setProperty('--a-2',     mix(rung('--bg-2'), .14));
-        root.setProperty('--a-3',     mix(rung('--bg-3'), .24));
-        root.setProperty('--a-4',     mix(rung('--bg-4'), .34));
+        //
+        // ⚠️ THE TINT IS CAPPED, and it has to be. Tinting a SURFACE toward the
+        // accent while the INK on it is already the accent walks the two
+        // together, and the gap closes with nothing watching: an accent label on
+        // --lift-bg (which is --a-2) measured 2.90–4.21:1 across the palettes,
+        // and card 31's hover overlay 3.82–4.48:1, against 10.9–14.7:1 in
+        // graphite. Nothing here tested it, so the page reported AA and painted
+        // less.
+        //
+        // Backing the TINT off is the fix rather than moving the accent: --ink
+        // and --accent are read by all ninety studies, and the rung is read by
+        // twelve. It always converges — at zero tint the rung IS the untinted
+        // ladder, and the accent was already fitted against the card, which is
+        // that rung in dark. So the walk terminates on a value that passes.
+        var capTint = function (name, want, floor){
+          var base = rung(name);
+          for (var t = want; t > 0; t -= .02){
+            var m = [0,1,2].map(function (i){ return Math.round(A[i] * t + base[i] * (1 - t)); });
+            if (ratio(A, m) >= floor) return 'rgb(' + m.join(',') + ')';
+          }
+          return 'rgb(' + base.join(',') + ')';
+        };
+        // 4.5 on the surfaces, because an accent LABEL lands on them (cards 31
+        // and 32 both do it). The two ink rungs are read against --a-2, which is
+        // the surface they sit on once both are tinted.
+        root.setProperty('--a-2',     capTint('--bg-2', .14, 4.5));
+        root.setProperty('--a-3',     capTint('--bg-3', .24, 4.5));
+        root.setProperty('--a-4',     capTint('--bg-4', .34, 4.5));
         root.setProperty('--a-quiet', mix(rung('--ink-low'), .55));
         root.setProperty('--a-mid',   mix(rung('--ink-mid'), .55));
       } else {
@@ -10855,6 +10997,17 @@ document.addEventListener("DOMContentLoaded", function () {
       if (textRatio === null){
         if (anyColour && onAccent){ textRatio = onAccent.ratio; subject = 'on a fill'; }
         else textRatio = ratio(WHITE_RGB, PANEL);
+      }
+      // ⚠️ REPORT THE FLOOR, NOT THE BEST CASE. This said «AA · pass» in all
+      // eight palette/theme combinations while four to six real studies per
+      // combination sat at 2.90–4.48:1, because it only ever looked at the
+      // label on the CARD — never at the label on a fill, which is the harder
+      // of the two and the one 41% of the studies are showing at rest. Both
+      // numbers are already computed; the honest one to print is the smaller,
+      // and it is named so the figure still has a noun.
+      if (anyColour && onAccent && onAccent.ratio < textRatio){
+        textRatio = onAccent.ratio;
+        subject = 'on a fill, which is the lower of the two';
       }
       // A ratio on its own is a number without a verdict — «4.6:1» only means
       // something to someone who already knows the thresholds, and the whole
@@ -11012,7 +11165,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function remeasure(){
       PANEL = rgbOf(cards[0], 'backgroundColor');
       var pr = document.createElement('span');
-      pr.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink)';
+      // --ink-hi, for the reason written at the init probe: --ink is the token a
+      // palette overwrites, and this function runs while one can be live.
+      pr.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;color:var(--ink-hi)';
       document.body.appendChild(pr);
       WHITE_RGB = rgbOf(pr, 'color');
       WHITE     = toHex(WHITE_RGB);
