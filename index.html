@@ -3205,9 +3205,9 @@
 
     <article class="spec" data-key="p-face" data-added="2026-08-31T18:40:00+02:00" data-updated="2026-08-31T18:40:00+02:00">
       <div class="stage">
-        <button type="button" class="btn p-face"><span class="p-face-in" aria-hidden="true"><span class="p-face-back" data-text="No card needed"><span class="p-face-arrow">&rarr;</span></span><span class="p-face-front"><span class="p-face-bg"></span><span class="lbl">Try it free</span></span></span><span class="sr">Try it free</span></button>
+        <button type="button" class="btn p-face"><span class="p-face-in" aria-hidden="true"><span class="p-face-back" data-text="No card"><span class="p-face-arrow">&rarr;</span></span><span class="p-face-front"><span class="p-face-bg"></span><span class="lbl">Start free</span></span></span><span class="sr">Start free</span></button>
       </div>
-      <h3><span class="num">140</span>The back face answers</h3>
+      <h3><span class="num">140</span>Answers back</h3>
       <p>Two faces on one hinge inside a single perspective: the front turns 85&deg; away and up out of it while the back comes from &minus;90&deg; to flat. 34 and 104 are called flips and neither moves &mdash; they swap a light source on press &mdash; so this is the only study here where the plate has a back at all. What is written on that back is the study: it does not repeat the front, it answers it, and the objection the label raises is gone by the time the turn finishes.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
@@ -3278,7 +3278,7 @@
       <div class="stage">
         <button type="button" class="btn p-tighten"><span class="p-tighten-body"><span class="p-tighten-plate" aria-hidden="true"></span><span class="lbl">Wrap it up</span></span></button>
       </div>
-      <h3><span class="num">143</span>Tightens to its word</h3>
+      <h3><span class="num">143</span>Tightens</h3>
       <p>136 grows a plate until it fits a word. This closes one down onto it: the surface turns a corner toward you, gives up its radius from a pill to 6px, and draws in symmetrically until it is the label plus one step &mdash; 20px of padding to 8px &mdash; so the close has a destination it can reach rather than a distance it was told to travel. The label rides the tilt, because it is printed on the surface, but it does not follow it home: it hops out through the top and back in from the bottom while the plate is still moving, and the two things are on different clocks on purpose.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
@@ -10549,42 +10549,67 @@ document.addEventListener("DOMContentLoaded", function () {
       opacity:1; transition-delay:var(--d-2)}
   }
 
-  /* ---- 140 The back face answers -----------------------------------
+  /* ---- 140 Answers back --------------------------------------------
      From Color-Flip. Note the two separate rules for the arrow: the source
      writes :is(.x::before, .y), and a pseudo-element inside :is() voids the
-     whole selector — on the live reference that arrow never rises at all. */
+     whole selector — on the live reference that arrow never rises at all.
+
+     THE TURN IS ONE MOVE ON ONE CURVE, and it was three. Filmed at 30fps on
+     2026-08-31 the elastic ran on both faces at once and the face you are
+     looking at rang four times: the back overshot flat by 11.87deg, then
+     −0.49, −1.18, −0.29, +0.06 before it settled — jelly, not a hinge —
+     and it settled at 766ms against .btn's own 300ms rung. Both faces were
+     also legible together at 66ms (front .37 opaque, back .83), so the swap
+     read as a double image. Now: --e-quint on both faces, one duration, and
+     the back waits out the front instead of racing it. The elastic stays
+     where its ring is worth having — the arrow, 1.4px of travel, and the
+     press. Z travel came down from 6rem to 3rem too: at perspective 500px,
+     96px of it scales the face to .84 and the turn reads as flight. */
   .p-face{
+    /* Kept for the arrow and the press, which are the two 2D channels here. */
     --elastic-out:linear(0,.5737 7.6%,.8382 11.87%,.9463 14.19%,1.0292 16.54%,1.0886 18.97%,
       1.1258 21.53%,1.137 22.97%,1.1424 24.48%,1.1423 26.1%,1.1366 27.86%,1.1165 31.01%,
       1.0507 38.62%,1.0219 42.57%,.9995 46.99%,.9872 51.63%,.9842 58.77%,1.0011 81.26%,1);
+    --turn:var(--t-panel);   /* 340ms, one duration for both faces */
+    --turn-lag:var(--d-2);   /* the arriving face waits out the leaving one */
     padding:0; overflow:visible;
     transition:transform var(--t-5) var(--elastic-out)}
-  .p-face:active{transform:scaleX(.955) scaleY(.954)}
+  .p-face:active{transform:scale(.955)}
   .p-face-in{pointer-events:none; perspective:500px; transform-style:preserve-3d; display:grid}
+  /* The rest side governs the EXIT, so the lag sits on the FRONT here and on
+     the back in the hover rule: whichever face is arriving is the one that
+     waits. Read either way round, one face is edge-on before the other moves. */
   .p-face-front{grid-area:1/1; display:grid;
-    transition:translate 850ms var(--elastic-out), rotate 750ms var(--elastic-out),
-               opacity 150ms ease-out}
+    transition:translate var(--turn) var(--e-quint) var(--turn-lag),
+               rotate var(--turn) var(--e-quint) var(--turn-lag),
+               opacity var(--t-2) linear var(--turn-lag)}
   .p-face-bg{grid-area:1/1; background:var(--lift-bg); border-radius:var(--btn-r)}
-  .p-face .lbl{grid-area:1/1; padding:15px 28px; z-index:1;
-    transition:translate 750ms var(--elastic-out)}
+  /* No translate of its own: the label is printed on a face that is already
+     turning, and moving it inside that face was the same distance twice. */
+  .p-face .lbl{grid-area:1/1; padding:15px 28px; z-index:1}
   .p-face-back{grid-area:1/1; display:flex; align-items:center; justify-content:center;
     gap:8px; place-self:center; width:calc(100% - 2px); height:calc(100% - 2px);
     background:var(--ink-hover); color:var(--ink-on-fill); border-radius:var(--btn-r);
-    white-space:nowrap; opacity:0; translate:0 2rem -6rem; rotate:1 0 0 -90deg;
-    transition:translate 850ms var(--elastic-out), rotate 750ms var(--elastic-out),
-               opacity 150ms ease-out}
+    white-space:nowrap; opacity:0; translate:0 1.25rem -3rem; rotate:1 0 0 -90deg;
+    transition:translate var(--turn) var(--e-quint), rotate var(--turn) var(--e-quint),
+               opacity var(--t-2) linear}
   .p-face-back::before{content:attr(data-text); display:contents}
   .p-face-arrow{--index:1; margin-top:-1px; translate:0 .75rem 0;
-    transition:translate 750ms var(--elastic-out)}
+    transition:translate var(--t-3) var(--e-quint)}
   @media (hover:hover) and (pointer:fine){
-    .p-face:is(:hover,:focus-visible) .p-face-front{translate:0 -2rem -6rem;
-      rotate:1 0 0 85deg; opacity:0}
-    .p-face:is(:hover,:focus-visible) .lbl{translate:0 -.75rem 0; transition-delay:0s}
+    .p-face:is(:hover,:focus-visible) .p-face-front{translate:0 -1.25rem -3rem;
+      rotate:1 0 0 85deg; opacity:0;
+      transition:translate var(--turn) var(--e-quint), rotate var(--turn) var(--e-quint),
+                 opacity var(--t-2) linear}
     .p-face:is(:hover,:focus-visible) .p-face-back{rotate:1 0 0 0deg; translate:0 0 0; opacity:1;
-      transition:translate 850ms var(--elastic-out), rotate 750ms var(--elastic-out),
-                 opacity 75ms ease-in}
+      transition:translate var(--turn) var(--e-quint) var(--turn-lag),
+                 rotate var(--turn) var(--e-quint) var(--turn-lag),
+                 opacity var(--t-2) linear var(--turn-lag)}
+    /* After the face has landed, not before it: the arrow used to travel while
+       the plate it sits on was still edge-on and invisible. */
     .p-face:is(:hover,:focus-visible) .p-face-arrow{translate:0 0 0;
-      transition-delay:calc(var(--index) * 12ms)}
+      transition:translate var(--t-4) var(--elastic-out);
+      transition-delay:calc(var(--turn-lag) + var(--index) * var(--t-1))}
   }
 
   /* ---- 141 Bursts from the middle ----------------------------------
@@ -10647,15 +10672,31 @@ document.addEventListener("DOMContentLoaded", function () {
     50%,100%{color:var(--ink-text)}
   }
 
-  /* ---- 143 Tightens to its word ------------------------------------
+  /* ---- 143 Tightens ------------------------------------------------
      From Is-Jellybelly, with both halves of its wonk closed. The source
      writes `inset:0` plus `width:calc(100% - .75rem)`, which pins the left
      edge and takes the whole amount off the RIGHT — measured 20.15px of
      plate one side of the label and 7.46px the other. And it tilts the
-     plate alone, leaving the text flat on a surface turning under it. */
-  .p-tighten{--bounce:cubic-bezier(.34,2.27,.64,1);
-    --radius-ease:cubic-bezier(.34,1.37,.64,1);
-    --text-ease:cubic-bezier(.34,1.52,.64,1);
+     plate alone, leaving the text flat on a surface turning under it.
+
+     THE CORNER HAS TO START FROM THE RADIUS IT IS ACTUALLY DRAWING. --btn-r
+     is 999px and a 45px plate clamps that to 22.5, so interpolating 999 → 6
+     spends 98% of the run above the clamp doing nothing: filmed at 30fps on
+     2026-08-31 the radius read 999, 522, 95 — three frames of unchanged
+     stadium — and then squared off inside 100ms. Naming the resolved pill is
+     what lets the corner move the whole way. Two more measured rings came out
+     with it: the plate closed to 81.6px and rebounded to 88.9, which is an
+     overshoot on a LAYOUT property, and the radius overshot to 0 on a second
+     curve, so the corner went square while the plate was still coming back.
+     Shape is one clock now — inset and radius, same duration, same ease-out
+     — and the one overshoot left is the tilt, where a single reversal reads
+     as give. Three ad-hoc curves became two house tokens. */
+  .p-tighten{
+    /* The pill this plate RESOLVES to: 30px of padding plus one line, halved.
+       Typed as a length so the corner has somewhere to travel from — see
+       above. Ships in fill only; a link treatment's shorter box would need
+       this re-derived rather than inherited. */
+    --plate-r:calc((30px + 1lh) / 2);
     padding:0; display:grid; align-items:stretch; justify-items:stretch;
     perspective:35rem}
   /* The padding lives HERE, not on .btn: the plate is absolute against this
@@ -10663,22 +10704,25 @@ document.addEventListener("DOMContentLoaded", function () {
      `inset:0 12px` would close it to nothing. It has to be the button box. */
   .p-tighten-body{position:relative; display:grid; place-items:center;
     padding:15px 20px; transform-style:preserve-3d;
-    transition:transform var(--t-5) var(--bounce)}
+    transition:transform var(--t-5) var(--e-back)}
   .p-tighten-plate{position:absolute; inset:0; z-index:0;
-    background:var(--lift-bg); border-radius:var(--btn-r);
-    transition:border-radius var(--t-5) var(--radius-ease), inset var(--t-5) var(--bounce)}
+    background:var(--lift-bg); border-radius:var(--plate-r);
+    transition:border-radius var(--t-5) var(--e-quint), inset var(--t-5) var(--e-quint)}
   .p-tighten .lbl{position:relative; z-index:1; display:inline-block}
   @media (hover:hover) and (pointer:fine){
     .p-tighten:is(:hover,:focus-visible) .p-tighten-body{transform:rotateX(11deg) rotateY(3deg)}
     .p-tighten:is(:hover,:focus-visible) .p-tighten-plate{
       border-radius:var(--r-xs); inset:0 12px}
     .p-tighten:is(:hover,:focus-visible) .lbl{
-      animation:p-tighten-hop var(--t-5) var(--text-ease) normal forwards}
+      animation:p-tighten-hop var(--t-5) var(--e-quint) normal forwards}
   }
+  /* Zero opacity ACROSS the swap, not through it: the old 49/50 pair left the
+     label .65 opaque while it was still 2.5px below its rest line, so the one
+     frame you were not meant to see was the landing. */
   @keyframes p-tighten-hop{
     0%{opacity:1}
-    49%{transform:translateY(-.5em); opacity:0}
-    50%{transform:translateY(.5em)}
+    45%{transform:translateY(-.5em); opacity:0}
+    55%{transform:translateY(.5em); opacity:0}
     100%{transform:translateY(0); opacity:1}
   }
 </style>

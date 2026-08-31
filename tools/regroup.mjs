@@ -123,7 +123,7 @@ const ORDER_OF = {
     'Riser',
     'Fixed shadow',
     'Slab tilt',
-    'The back face answers',
+    'Answers back',
     'Stack fan',
 
     // Mass: it has weight, and the pointer has to argue with it.
@@ -141,7 +141,7 @@ const ORDER_OF = {
     // hover, and no transform could have faked it — the one exception to the
     // repaint-never-re-measure rule, which card 128 opened and 136 inherits.
     'Grows its word',
-    'Tightens to its word',
+    'Tightens',
 
     // The reduction: almost nothing, on purpose.
     'Hairline only',
