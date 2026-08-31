@@ -2950,9 +2950,64 @@
              already covers. Removing Chalk took the only inverted case with it
              (a near-white plate has nowhere paler to arrive from, so its hover
              had to go deeper — a special case earning its keep for one swatch).
-             The row is now six hues plus one grey, and its closest pair is
-             Amber/Ember at ΔE76 41.0, which differ in hue AND chroma rather
-             than in lightness alone. Hues: 20° 36° 145° 215° 269° 331°. -->
+             ⚠️ EXTENDED 2026-08-31 (second run), and the arithmetic is the
+             reason the row is thirteen and not twenty-one. Fourteen colours were
+             offered; EIGHT are duplicates and are not here. The test is the one
+             the paragraph above already sets — no two palettes separated by
+             LIGHTNESS ALONE — read as ΔE76 against every chip already kept, with
+             Lab hue and chroma breaking the ties:
+               #ff9340  ΔE 18.6 from Amber, Lab hue 12° off BOTH Amber and Ember.
+                        It sits between them; there is no third reading.
+               #3d38c0  ΔE 24.0 from Azure at Δchroma 0, 9° off Violet. Between.
+               #91a3cf  ΔE 24.8 from Ash. A grey with a blue cast is the grey.
+               #ccd982  ΔE 16.3 from #f8df8d and 30.2 from #8fd8ab — between the
+                        two greens–yellows it was offered with. Dropping it keeps
+                        BOTH of them; dropping either of them keeps only it.
+               #991f5e  ΔE 32.1 from Rose at Lab hue 0° apart. A darker Rose:
+                        exactly the Chalk/Ash failure the paragraph above names.
+               #15381d  Lab hue 1° off Fern, and ΔE 18.6 from #265c4f. A darker
+                        Fern AND a duplicate of the other deep green offered.
+               #542657  ΔE 26.2 from #1a365d. Two near-blacks have no lightness
+                        left to separate them, so 47° of hue buys 26 of ΔE and
+                        no more. Navy kept: the row had no dark blue, and four
+                        palettes crowded into the purple arc is worse than two
+                        at one blue hue.
+               #302a1d  ΔE76 10.4 FROM THE CARD, 1.12:1 against it. Not a
+                        duplicate of a palette — a duplicate of #222222. The row's
+                        own floor against the card is Ash at 52.6. Graphite is
+                        already the name for this.
+
+             THE INVERTED CASE IS BACK, and this time it is not a special case
+             earning its keep for one swatch: Straw, Mint and Orchid are TINTS at
+             rest — HSL lightness 76%, 70%, 83% — and a tint has nowhere paler to
+             arrive from. Straw's pale is arithmetically impossible (0.253 of
+             luminance left to white against a 0.42 gap) and Mint's is pure
+             white. All three arrive DEEP, and their labels invert with them.
+             Coral is the near case and stays PALE on purpose: its deep arrival
+             measures 1.74:1 on the card, which is a button vanishing rather than
+             a button changing, and a hover that cannot be seen is worse than one
+             that resembles Amber's. It does resemble it — ΔE76 7.6 — and that is
+             the one thing this run costs. The row already tolerates it: Amber's
+             and Ash's own hovers are 11.7 apart, shipped.
+
+             Navy and Pine arrive PALE because near-black cannot go deeper, so
+             both are FORCED: Navy's arrival is 8.9 from Azure's and Pine's is
+             14.9 from Mint's REST. Both journeys still differ — dark→light
+             where Azure goes mid→light — and the rest colours, which are what a
+             palette IS, are 64.1 and 41.7 clear.
+
+             Two rest colours land under the 3:1 identification floor and the
+             page draws a ring instead of moving the fill, as it already does for
+             Violet: Navy 1.31:1, Pine 2.07:1. Orchid's ARRIVAL is 2.64:1 and
+             gets the same ring on hover; chroma 76 carries it by hue the way
+             Violet's 2.51:1 does at rest.
+
+             The row is now twelve hues plus one grey, and its closest pair is
+             Rose/Orchid at ΔE76 36.1 — down from Amber/Ember's 41.0, and kept
+             because Δchroma is 25 (47 against 72) and Lab hue 20°: a pale
+             orchid, not a pale Rose. Every pair under 41 differs in hue or in
+             chroma; none differs in lightness alone. Hues: 12° 20° 36° 46°
+             143° 145° 166° 215° 215° 269° 314° 331°. -->
         <button type="button" class="set-p" data-p="text:#ffa51e,textHover:#9a6412,accent:#ffa51e,hover:#fff3e1"
                 style="--sw:#ffa51e" aria-pressed="false" title="Amber">Amber</button>
         <button type="button" class="set-p" data-p="text:#ff5500,textHover:#ab3900,accent:#ff5500,hover:#ffd0b9"
@@ -2967,6 +3022,25 @@
                 title="Azure — below the card’s floor at rest, so the page lifts the label off it. The caption says so with an arrow.">Azure</button>
         <button type="button" class="set-p" data-p="text:#00aa46,textHover:#00702e,accent:#00aa46,hover:#b6e7ca"
                 style="--sw:#00aa46" aria-pressed="false" title="Fern">Fern</button>
+        <!-- Second run. Same four cells, same three measurements, and three of
+             them arrive DEEP because they rest as tints — see the note above. -->
+        <button type="button" class="set-p" data-p="text:#fea28b,textHover:#d72d02,accent:#fea28b,hover:#fff2ef"
+                style="--sw:#fea28b" aria-pressed="false" title="Coral">Coral</button>
+        <button type="button" class="set-p" data-p="text:#f8df8d,textHover:#3f3104,accent:#f8df8d,hover:#bf950c"
+                style="--sw:#f8df8d" aria-pressed="false"
+                title="Straw — a tint at rest, so it arrives DEEP rather than paler. There was nowhere paler to go.">Straw</button>
+        <button type="button" class="set-p" data-p="text:#ffa6ea,textHover:#ffd1f4,accent:#ffa6ea,hover:#ba008e"
+                style="--sw:#ffa6ea" aria-pressed="false"
+                title="Orchid — a tint at rest, so it arrives DEEP. That arrival is under the card’s fill floor, so the page rings the button on hover instead of moving the colour.">Orchid</button>
+        <button type="button" class="set-p" data-p="text:#578ad0,textHover:#1a365d,accent:#1a365d,hover:#98b7e2"
+                style="--sw:#1a365d" aria-pressed="false"
+                title="Navy — below the card’s floor at rest, so the page lifts the label off it and rings the button. The caption says so with an arrow.">Navy</button>
+        <button type="button" class="set-p" data-p="text:#3e9782,textHover:#235549,accent:#265c4f,hover:#80cbb9"
+                style="--sw:#265c4f" aria-pressed="false"
+                title="Pine — below the card’s floor at rest, so the page lifts the label off it and rings the button. The caption says so with an arrow.">Pine</button>
+        <button type="button" class="set-p" data-p="text:#8fd8ab,textHover:#e4f6eb,accent:#8fd8ab,hover:#2c7d4b"
+                style="--sw:#8fd8ab" aria-pressed="false"
+                title="Mint — a tint at rest, so it arrives DEEP rather than paler. Its label inverts with it.">Mint</button>
         <button type="button" class="set-p" data-p="text:#a0a0a0,textHover:#666666,accent:#a0a0a0,hover:#e4e4e4"
                 style="--sw:#a0a0a0" aria-pressed="false" title="Ash — the row's one grey, and the only palette the page could have derived for itself.">Ash</button>
       </div>
