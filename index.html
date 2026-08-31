@@ -10814,27 +10814,86 @@ document.addEventListener("DOMContentLoaded", function () {
       // nothing on screen saying so, over the 41% of cards that are filled at
       // rest and seven of the first nine a reader sees. The comment on fitOn
       // promises the fit is never silent; this is where that was untrue.
-      // ⚠️ THE PLATE A STUDY SHOWS IS NOT THE FLAT ACCENT. Six studies shade
-      // their own plate on hover and the fit never saw it: 126 Squash mixes
-      // `--accent 84%, --bg`, 11 Relay and i-mass mix `--ink 86%`, and
-      // .btn--solid.t-report does the same. Fitting the label against the whole
-      // accent therefore cleared 4.5:1 against a colour that is never on screen
-      // at that moment, and the shaded plate measured 3.05–3.88:1 with every
-      // palette on the page — against 12.0–13.5:1 in graphite.
+      // ⚠️ THE PLATE A STUDY SHOWS IS NOT THE FLAT ACCENT, AND IT IS NOT ONE
+      // PLATE. Six studies shade their own plate on hover — 126 Squash mixes
+      // `--accent 84%, --bg`, 11 Relay and i-mass mix `--ink 86%` — so the
+      // label has to clear its floor against the flat accent AND against
+      // whatever those mixes produce. Fitting it against the accent alone
+      // measured 3.05–3.88:1 with every palette, against 12.0–13.5:1 in
+      // graphite.
       //
-      // 84% is the strongest shading any study applies, so it is the worst case
-      // and the only one worth fitting: 16% of the card mixed in moves the plate
-      // TOWARD the card, which is away from the label in both themes (the label
-      // on a fill is dark on a light accent and light on a dark one). Fit the
-      // worst case and every lighter shade is covered.
-      var SHADE = .84;
-      function shaded(rgb){
-        return [0,1,2].map(function(i){ return Math.round(rgb[i] * SHADE + PANEL[i] * (1 - SHADE)); });
+      // 🚨 FITTING AGAINST THE SHADED PLATE ALONE IS WORSE, AND THIS IS THE
+      // TRAP. A first pass mixed 84% toward the CARD and called it the worst
+      // case. It is the worst case in dark and the EASIEST in light, because
+      // the geometry inverts: dark has a light accent under a dark label and a
+      // card darker than both, so mixing the card in moves the plate away from
+      // the label; light has a dark accent under a light label and a WHITE
+      // card, so the same mix moves the plate toward the label. The fit
+      // stopped early on the easy ground and left the flat accent — which is
+      // what every filled study shows at REST — failing: --on-ink flipped
+      // polarity in light, #fffbf4 to #321e00, and every filled study's rest
+      // state went 4.497 to 3.41–4.07. Measured, on seven palettes.
+      //
+      // So the label is fitted against ALL of them and the worst wins. The two
+      // mixed grounds are taken toward BLACK and toward WHITE rather than
+      // toward `--bg`, because `--bg` inside .btn is pure #000000 in dark and
+      // near-white in light — the extremes bracket whatever it resolves to, so
+      // this cannot be wrong-footed by the theme again. 86% because that is the
+      // strongest mix any study applies, and a stronger mix lands further from
+      // the label than a weaker one.
+      var SHADE = .86;
+      function grounds(rgb){
+        var toward = function (end){
+          return [0,1,2].map(function (i){
+            return Math.round(rgb[i] * SHADE + end * (1 - SHADE));
+          });
+        };
+        return [rgb, toward(0), toward(255)];
+      }
+      // Walks exactly as fitOn does, but a candidate only counts when it clears
+      // the floor on EVERY ground. Rounded before the test, for the reason at
+      // fitOn: rounded is what gets painted.
+      function fitOnAll(hex, min, gs){
+        var base = toRgb(hex);
+        var worst = function (c){
+          return gs.reduce(function (m, g){ return Math.min(m, ratio(c, g)); }, Infinity);
+        };
+        if (worst(base) >= min){
+          return {rgb: base, hex: toHex(base), moved: false, ratio: worst(base)};
+        }
+        var hsl = toHsl(base), best = null;
+        [1, -1].forEach(function(dir){
+          var l = hsl[2];
+          for (var i = 0; i < 100; i++){
+            l += dir * .01;
+            if (l < 0 || l > 1) break;
+            var rgb = fromHsl(hsl[0], hsl[1], l).map(Math.round);
+            if (worst(rgb) >= min){
+              var d = Math.abs(l - hsl[2]);
+              if (!best || d < best.d) best = {rgb: rgb, d: d};
+              break;
+            }
+          }
+        });
+        // No lightness of this hue clears every ground. Same argument as fitOn:
+        // take the extreme that gets closest rather than leave something
+        // illegible, and give the hue up honestly.
+        if (!best){
+          var w = [255,255,255], b = [0,0,0];
+          best = {rgb: worst(w) >= worst(b) ? w : b};
+        }
+        return {rgb: best.rgb, hex: toHex(best.rgb), moved: true, ratio: worst(best.rgb)};
       }
       function labelOn(rgb){
-        var worst = shaded(rgb);
-        return fitted.text ? fitOn(look.text, 4.5, worst)
-                           : {hex: onTop(worst), moved: false, ratio: ratio(toRgb(onTop(worst)), worst)};
+        var gs = grounds(rgb);
+        if (fitted.text) return fitOnAll(look.text, 4.5, gs);
+        // Unpicked, the label is computed black-or-white. Pick the one that
+        // survives the worst ground rather than the flat accent.
+        var w = [255,255,255], b = [0,0,0];
+        var scoreW = gs.reduce(function(m,g){ return Math.min(m, ratio(w,g)); }, Infinity);
+        var scoreB = gs.reduce(function(m,g){ return Math.min(m, ratio(b,g)); }, Infinity);
+        var pick = scoreB >= scoreW ? b : w;
+        return {hex: toHex(pick), moved: false, ratio: Math.max(scoreB, scoreW)};
       }
 
       // Pass two: write. Each token is written only while something it depends
@@ -10895,9 +10954,38 @@ document.addEventListener("DOMContentLoaded", function () {
         //
         // Backing the TINT off is the fix rather than moving the accent: --ink
         // and --accent are read by all ninety studies, and the rung is read by
-        // twelve. It always converges — at zero tint the rung IS the untinted
+        // twelve.
+        //
+        // 🚨 IT DOES NOT ALWAYS CONVERGE, and an earlier version of this note
+        // claimed it did. The claim was «at zero tint the rung is the untinted
         // ladder, and the accent was already fitted against the card, which is
-        // that rung in dark. So the walk terminates on a value that passes.
+        // that rung». That holds for --bg-2 and for nothing else: --bg-3 and
+        // --bg-4 are LIGHTER than the card, so an accent fitted against the
+        // card was never fitted against them. Measured: dark Violet falls all
+        // the way through to the plain #2e2e2e and #ae61ff on it is 3.850:1,
+        // and in light every rung falls through to the untinted ladder at
+        // 3.15–3.24:1 for all seven palettes. Five studies sit there — 49 lift,
+        // 86 o-quiet, 34 s-bevel, 123 c-crest, 104 x-bevel.
+        //
+        // So this closes --a-2, which is what --lift-bg reads and what card 32
+        // and card 31's rest state were failing on, and it honestly cannot
+        // close --a-3 or --a-4. Doing that needs the ACCENT fitted against the
+        // lightest rung an accent label ever lands on, which moves a chosen
+        // colour further from what was chosen — a trade Sanna has to price, not
+        // one to make in a helper. The walk still returns the best available
+        // value rather than the authored one, so the failures it cannot fix are
+        // smaller than they were.
+        // capTint tests the accent against the rung; capTintOn tests the RUNG
+        // against a ground it is read on. Two questions, two helpers, because
+        // an ink rung and a surface rung fail in opposite directions.
+        var capTintOn = function (name, want, floor, ground){
+          var base = rung(name);
+          for (var t = want; t > 0; t -= .02){
+            var m = [0,1,2].map(function (i){ return Math.round(A[i] * t + base[i] * (1 - t)); });
+            if (ratio(m, ground) >= floor) return 'rgb(' + m.join(',') + ')';
+          }
+          return 'rgb(' + base.join(',') + ')';
+        };
         var capTint = function (name, want, floor){
           var base = rung(name);
           for (var t = want; t > 0; t -= .02){
@@ -10912,8 +11000,11 @@ document.addEventListener("DOMContentLoaded", function () {
         root.setProperty('--a-2',     capTint('--bg-2', .14, 4.5));
         root.setProperty('--a-3',     capTint('--bg-3', .24, 4.5));
         root.setProperty('--a-4',     capTint('--bg-4', .34, 4.5));
-        root.setProperty('--a-quiet', mix(rung('--ink-low'), .55));
-        root.setProperty('--a-mid',   mix(rung('--ink-mid'), .55));
+        // The two INK rungs, capped against the card they are read on. They were
+        // written blind and measured 4.36–4.40 in dark, which is under the floor
+        // by less than the surfaces were but under it all the same.
+        root.setProperty('--a-quiet', capTintOn('--ink-low', .55, 4.5, PANEL));
+        root.setProperty('--a-mid',   capTintOn('--ink-mid', .55, 4.5, PANEL));
       } else {
         A_TOKENS.forEach(function (n){ root.removeProperty(n); });
       }
