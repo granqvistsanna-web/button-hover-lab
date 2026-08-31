@@ -1501,7 +1501,16 @@
   /* Feedback on the press, not on the release: everything on this page that
      can be pressed repeatedly says so the instant it goes down. */
   .fav-only:active,.vers-b:active,.set-p:active,.set-uses:active,
-  .rail-toggle:active,.tools-reset--inline:active{transform:scale(.96)}
+  .rail-toggle:active,.tools-reset:active,.set-clear:active,
+  .spec-more:active{transform:scale(.96)}
+  /* A ROW is not a chip. Scaling a 250px-wide row reads as a wobble, so the
+     press continues the ladder the row already climbs instead: rest is
+     transparent, hover is --ctl, the press is --ctl-hi. Measured, that is one
+     rung further FROM the panel on both grounds — dark 23 → 34 → 46, light
+     231 → 244 → 255 — so the mirror is already handled in the token layer and
+     this needs no theme fork of its own. */
+  .rail-list label:active,.rail-sects a:active,
+  .rail-sum:active,.tools-fold-sum:active{background:var(--ctl-hi)}
   .fav-only[aria-pressed="true"]{color:var(--ink-hi)}
   .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
@@ -1568,6 +1577,19 @@
   .fav:active{transform:scale(.88)}
   .fav svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor; stroke-width:1.6}
   .fav[aria-pressed="true"] svg{fill:currentColor}
+  /* Starring is a COMMIT, and a commit is the one case on this page where an
+     overshoot is honest — the press carried momentum into it. Damping ≈ .8,
+     response ≈ .3, written as a bezier because the page has no spring library
+     and should not gain one for two rules.
+     Driven by a class the click handler adds, NOT by [aria-pressed]: that
+     attribute is equally true for every star restored from storage at load,
+     and a screenful of stars popping on arrival is exactly the overshoot on
+     something-that-merely-appeared this page argues against everywhere else.
+     On set only. Undoing is not a celebration.
+     Reduced motion needs nothing here — .fav svg is reached by the
+     *,*::before,*::after rule below, so the fill lands and the pop does not. */
+  .fav-pop svg{animation:bhl-star-set var(--t-4) cubic-bezier(.34,1.4,.64,1)}
+  @keyframes bhl-star-set{ from{ transform:scale(.66) } to{ transform:scale(1) } }
   /* Copy to Framer — mirrors .fav at the other corner of the stage, so the two
      stage actions read as one small bar rather than two unrelated affordances. */
   /* ---- The two stage actions -----------------------------------------
@@ -1605,6 +1627,20 @@
   .copy:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .copy:active{transform:scale(.94)}
   .copy[data-done="1"]{color:var(--ink-hi)}
+  /* The check DRAWS. It arrives as markup — ic.innerHTML = DONE — which is
+     instant by construction, and an instant check reads as a STATE the button
+     is now in rather than as an EVENT that just happened. The confirmation was
+     already in the right place; this is the last part of it that was not saying
+     when. The path carries pathLength="24" so the dash is a fixed number rather
+     than a function of the geometry, and a fresh <path> arrives on every copy,
+     so the animation restarts itself without a reflow trick.
+     Reduced motion: the * rule below stops the clock and the check lands whole,
+     which is the correct gentler equivalent — the outcome, without the travel. */
+  .copy[data-done="1"] .copy-i path{
+    stroke-dasharray:24; stroke-dashoffset:24;
+    animation:bhl-tick var(--t-3) var(--e-out) forwards;
+  }
+  @keyframes bhl-tick{ to{ stroke-dashoffset:0 } }
   .copy-i{display:grid; place-items:center}
   .copy svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor;
     stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
@@ -9913,6 +9949,13 @@ document.addEventListener("DOMContentLoaded", function () {
       return out;
     })();
 
+    /* Motion, and on the two hardware that has it, a tap. Only the two
+       commits get one — starring and copying — because feedback on a REPEATED
+       action is what trains people to stop noticing all of it, and copying is
+       already the thing you do thirty times in a session. 8ms is a tick, not a
+       buzz. Silent everywhere it is unsupported, which is every desktop. */
+    var buzz = function(){ try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
+
     var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.85-4.25 4.15 1 5.9-5.25-2.75-5.25 2.75 1-5.9L3.5 9.75l5.9-.85z" stroke-linejoin="round"/></svg>';
 
     cards.forEach(function(card){
@@ -9934,6 +9977,14 @@ document.addEventListener("DOMContentLoaded", function () {
         var i = favs.indexOf(key);
         if (on && i > -1) favs.splice(i, 1);
         if (!on && i === -1) favs.push(key);
+        // Only the SET pops, and the reflow between remove and add is what
+        // makes it pop again on a star that has been set before. See .fav-pop.
+        if (!on){
+          b.classList.remove('fav-pop');
+          void b.offsetWidth;
+          b.classList.add('fav-pop');
+          buzz();
+        }
         save(favs);
         apply();
       });
@@ -11440,7 +11491,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var HOUSE_RE = /\.(btn--solid|btn--line|btn--text|btn|lbl|icon|sr|slot|track)(?![\w-])/g;
     var PREFIX = 'bhl-';
     var ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 6.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1.5"/></svg>';
-    var DONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+    var DONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="24" d="M4 12.5l5 5L20 6.5"/></svg>';
     var FRAMER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 7L5 12l4.5 5M14.5 7l4.5 5-4.5 5"/></svg>';
 
     var live = document.createElement('span');
@@ -12463,6 +12514,9 @@ document.addEventListener("DOMContentLoaded", function () {
             lb.textContent = 'Copied';
             b.setAttribute('data-done', '1');
             live.textContent = r.said;
+            // Same frame as the check that draws above it — a haptic that lags
+            // its own visual is worse than no haptic at all.
+            try { navigator.vibrate && navigator.vibrate(8); } catch (e) {}
             // On touch there is no hover, so a first tap can land while the
             // check is still in flight and be told the reassuring version. If
             // it comes back «behind» with that announcement still standing,
