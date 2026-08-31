@@ -449,7 +449,14 @@ async function setVersion (v) {
     }
     const b = seg.querySelector('.vers-b[data-v="${v}"]')
     if (!b) throw new Error('no version control for ${v}')
-    b.click(); return true })()`)
+    // Idempotent, because pickTreat() reads as a TOGGLE: clicking the pressed
+    // one sets vTreat back to '' rather than re-selecting it. Asking twice for
+    // the version already on would therefore measure the run as built and
+    // label the numbers with a treatment that was not applied. Latent in the
+    // current sweep, which never repeats a version back to back -- but the
+    // caller should not have to know that to be correct.
+    if (b.getAttribute('aria-pressed') !== 'true') b.click()
+    return true })()`)
   await new Promise(r => setTimeout(r, 700))
 }
 
