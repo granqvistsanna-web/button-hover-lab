@@ -1503,11 +1503,23 @@
   }
   .set-grade[data-pass="no"]{background:var(--ctl-hi); color:var(--ink-hi)}
   .set-grade[data-pass="part"]{color:var(--ink-hi)}
+  /* A row in the list of filters it now sits in, not a link above them. At
+     12.5px/500 with a 7px gap and no width it was the smallest interactive
+     text in the panel and the only one whose hover was a colour change rather
+     than a fill, so it read as an afterthought on top of the real controls.
+     Same font, same padding, same radius and the same row fill as the checkbox
+     rows underneath, and the star takes the checkbox's 13px gutter so the
+     three filter rows share one control column. */
   .fav-only{
-    display:inline-flex; align-items:center; gap:7px;
-    font:500 12.5px/1 var(--font-ui); color:var(--ink-low);
+    display:flex; align-items:center; gap:8px; width:100%;
+    /* 500, the same as the two summaries beside it. All three rows in this zone
+       are filters and they are peers; at 400 the star was the one row in the
+       set that read a step quieter than the others, which is the imbalance the
+       zone was built to remove. The checkbox options INSIDE the two
+       disclosures stay at 400, so the zone has two levels and not three. */
+    font:500 15px/1.3 var(--font-ui); color:var(--ink-mid);
     background:none; border:0; border-radius:var(--r-xs);
-    padding:5px 0; margin:0 0 4px 9px; cursor:pointer;
+    padding:7px 9px; margin:0; cursor:pointer; text-align:left;
     transition:color var(--t-fast) var(--ease);
   }
   /* The glyph is the same mark the per-card control uses, so the toggle and
@@ -1515,12 +1527,13 @@
   /* Hollow off, solid on — the same reading as the star on every card, and
      the state is carried by the GLYPH rather than by a fill, so the control
      can stay a link. */
-  .fav-only::before{content:"☆"; font-size:13px; line-height:1; color:inherit}
+  .fav-only::before{content:"☆"; font-size:13px; line-height:1; color:inherit;
+    width:13px; flex:none; text-align:center}
   .fav-only[aria-pressed="true"]::before{content:"★"}
   .fav-only:hover{color:var(--ink-hi)}
   /* Feedback on the press, not on the release: everything on this page that
      can be pressed repeatedly says so the instant it goes down. */
-  .fav-only:active,.vers-b:active,.set-p:active,.set-uses:active,
+  .vers-b:active,.set-p:active,.set-uses:active,
   .rail-toggle:active,.tools-reset:active,.set-clear:active,
   .spec-more:active{transform:scale(.96)}
   /* A ROW is not a chip. Scaling a 250px-wide row reads as a wobble, so the
@@ -1533,9 +1546,13 @@
   /* The two rows that carry a gradient deepen the gradient instead — a
      background-color under it would be covered by the fill it is meant to
      replace. Same rung either way. */
-  .rail-list label:active,.rail-sects a:active{--row-fill:var(--ctl-hi)}
+  .rail-list label:active,.rail-sects a:active,.fav-only:active{--row-fill:var(--ctl-hi)}
   .fav-only[aria-pressed="true"]{color:var(--ink-hi)}
-  .fav-only:focus-visible,.fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  /* Inset, like the two summaries beside it: at +2px a full-width row's ring
+     bulges past every other row in the zone. The per-card .fav is a small
+     glyph and keeps its outside ring. */
+  .fav-only:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
+  .fav:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .tools-reset{font:400 14px/1 var(--font-ui); color:var(--ink-low);
     background:none; border:0; padding:6px 2px; cursor:pointer}
   .tools-reset:hover{color:var(--ink-hi)}
@@ -1777,7 +1794,16 @@
      has filled it. */
   .rail-head{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
   .rail-fold, .rail-show{display:none}
-  .rail-lbl{display:block; margin:0 0 8px 9px;
+  /* ---- One rhythm --------------------------------------------------
+     The body was five blocks with four different gaps between them — 4px
+     under the star, 11px under Order, 12px between the two axes, 18px above
+     Sections — every one an ad-hoc margin on a different element. One flex
+     gap states it once, and the margins that used to fake it are gone. */
+  .rail-body{display:flex; flex-direction:column; gap:20px}
+  /* Inside a zone the rows sit on the same 2px the two lists already use, so a
+     zone reads as one block whichever kind of row it holds. */
+  .rail-grp{display:flex; flex-direction:column; gap:2px}
+  .rail-lbl{display:block; margin:0 0 6px 9px;
     font:600 11px/1 var(--font-ui); letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
   .rail-q{
@@ -1798,8 +1824,8 @@
   .rail-find{position:relative; display:flex; flex:1 1 190px; min-width:0;
     max-width:440px}
   .rail-q{background-image:var(--find-glyph); background-repeat:no-repeat;
-    background-position:11px 50%; background-size:15px 15px;
-    padding-left:32px; padding-right:41px}
+    background-position:9px 50%; background-size:15px 15px;
+    padding-left:30px; padding-right:41px}
   .rail-k{
     position:absolute; right:8px; top:50%; transform:translateY(-50%);
     pointer-events:none;
@@ -1839,11 +1865,11 @@
      no network. It is stroked in currentColor via a data URI, which cannot
      read a custom property, so the colour is written out once here — the one
      literal in the panel, and it is the token's own value. */
-  .rail-order{margin-bottom:12px}
+  .rail-order{margin:0}
   .rail-sort{
     appearance:none; -webkit-appearance:none;
     display:block; width:100%; cursor:pointer;
-    padding:10px 30px 10px 12px; border-radius:var(--r-sm);
+    padding:10px 30px 10px 9px; border-radius:var(--r-sm);
     border:0; background-color:var(--ctl);
     color:var(--ink-hi); font:400 14px/1.2 var(--font-ui);
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -1932,7 +1958,7 @@
      --ink-low and not --ink-faint: faint composites to 3.0:1 on this panel,
      which is under AA for body text, and the note on the counts settled that
      argument already. */
-  .rail-hint{margin:2px 9px 10px; font:400 13px/1.45 var(--font-ui); color:var(--ink-low)}
+  .rail-hint{margin:2px 9px 8px; font:400 13px/1.45 var(--font-ui); color:var(--ink-low)}
   @media (prefers-reduced-motion: no-preference){
     /* Fade and rise, no scale — the house rule for anything that appears.
        Height cannot be animated on a <details> without either a script or
@@ -1943,7 +1969,7 @@
   @keyframes rail-in{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
 
   .rail-list{list-style:none; display:flex; flex-direction:column; gap:2px;
-    margin-bottom:12px}
+    margin:0}
   .rail-list label{
     display:flex; align-items:center; gap:8px;
     padding:7px 9px; border-radius:var(--r-xs); cursor:pointer;
@@ -1966,7 +1992,7 @@
 
      Reduced motion needs nothing: background-size is a transition and the
      *,*::before,*::after rule stops it, so the row fills at once. */
-  .rail-list label,.rail-sects a{
+  .rail-list label,.rail-sects a,.fav-only{
     --row-fill:var(--ctl);
     background-image:linear-gradient(var(--row-fill),var(--row-fill));
     background-repeat:no-repeat;
@@ -1975,7 +2001,7 @@
     transition:background-size var(--t-2) var(--ease),
                color var(--t-fast) var(--ease);
   }
-  .rail-list label:hover,.rail-sects a:hover{background-size:100% 100%}
+  .rail-list label:hover,.rail-sects a:hover,.fav-only:hover{background-size:100% 100%}
   .rail-list label:hover{color:var(--ink-hi)}
   /* A ticked row reads as ticked without the pointer on it. The 13px box is
      the only other signal and it is 13px; on a list of ten rows scanned at a
@@ -2010,7 +2036,7 @@
      Not a dropdown, and that is deliberate. It is the navigation rather than a
      filter, the scroll spy marks the section you are in on it, and a marker
      inside a shut disclosure marks nothing. */
-  .rail-grp{margin-top:22px; padding-top:0}
+  .rail-grp{margin:0; padding:0}
   .rail-hint + .rail-list{margin-top:0}
   .rail-sects{list-style:none; display:flex; flex-direction:column; gap:2px}
   .rail-sects a{
@@ -2252,8 +2278,13 @@
     /* The handle rides with the field rather than above it: one row of
        chrome, and the panel's first line is still the thing it is for.
        The top inset clears the title fixed above it. */
+    /* 11px, matching .rail-body — not --pad-panel. On 20px the search field's
+       box started 9px right of the select's box and of every row fill below
+       it, which is the misalignment the whole panel was read through. Every
+       control box in the panel now starts on one line, and every piece of text
+       and every glyph on a second, 9px in from it. */
     .rail-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px;
-      padding:82px var(--pad-panel) 20px}
+      padding:82px 11px 20px}
     .rail-head .rail-find{max-width:none}
     /* ---- One handle, one place ----------------------------------------
        Close was at the far right of the header and re-open was a separate
@@ -2282,8 +2313,7 @@
        the panel and the status bar is pushed off the bottom of the screen. */
     .rail-body{flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
       padding:14px 11px 26px}
-    .rail-grp{margin-top:18px}
-    .rail-grp{padding:14px 0 0}
+    .rail-grp{margin:0; padding:0}
     .rail-foot{margin:0; padding:14px var(--pad-panel) 18px; background:var(--panel)}
     .rail-toggle{display:none}
 
@@ -2690,16 +2720,6 @@
     </div>
 
     <div class="rail-body">
-      <!-- A filter, so it sits with the filters rather than up in the header
-           beside the search — the header is «type to find», this narrows by an
-           attribute exactly as the two groups below it do. A link and not the
-           filled pill it was: at 124x36 with a background it read as the
-           panel's primary control, which it is not, and it was the only filled
-           thing above the fold. The star is the mark the per-card control
-           uses, hollow off and solid on, so the toggle and the thing it
-           filters on stay recognisably one pair. -->
-      <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
-
       <!-- Order. A <select> and not the segmented control the toolbar uses for
            versions: that one has four options that are each one word and all
            four earn being on screen at once, and this one has five whose names
@@ -2722,18 +2742,35 @@
         </select>
       </div>
 
-      <!-- The old headings said «What changes» and «Answers to», which read as
+      <!-- ---- Filter: one zone, three controls -------------------------
+           The star used to sit at the top of the body, ABOVE Order. That put a
+           filter, then a setting, then two more filters in one column, and
+           with 4px under it the star read as a caption on the ORDER label
+           rather than as a control of its own. It belongs with the two axes:
+           all three answer WHICH studies, and Order answers in what sequence.
+
+           So the body is three labelled zones now — ORDER, FILTER, SECTIONS —
+           one micro-label each, and the star leads the filters it belongs to.
+           It also takes the row shape of the checkbox rows under it, at the
+           same 13px control gutter, because it is the same kind of thing: a
+           toggle in a list of toggles. As a 12.5px link it was the smallest
+           interactive text in the panel and read as an afterthought.
+
+           The old headings said «What changes» and «Answers to», which read as
            the start of a sentence the labels underneath never finished — «it
            moves», «a press of its own». Both axes now name the thing rather
            than narrate it: a property on one side, a requirement on the other,
            one or two words each, so the two lists can be read as columns. -->
+      <div class="rail-grp">
+        <span class="rail-lbl">Filter</span>
+        <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
       <details class="rail-drop" data-facet="changes">
         <summary class="rail-sum">
           <span class="rail-sum-t">What changes</span>
           <span class="rail-sum-n" aria-hidden="true" hidden></span>
           <span class="sr rail-sum-sr"></span>
         </summary>
-        <p class="rail-hint">The properties a study animates. Two ticks ask for either.</p>
+        <p class="rail-hint">Two ticks ask for either.</p>
         <ul class="rail-list"></ul>
       </details>
 
@@ -2743,9 +2780,10 @@
           <span class="rail-sum-n" aria-hidden="true" hidden></span>
           <span class="sr rail-sum-sr"></span>
         </summary>
-        <p class="rail-hint">What has to happen before the effect plays.</p>
+        <p class="rail-hint">What has to happen first.</p>
         <ul class="rail-list"></ul>
       </details>
+      </div>
 
       <div class="rail-grp">
         <span class="rail-lbl">Sections</span>
