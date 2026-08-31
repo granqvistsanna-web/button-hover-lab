@@ -376,6 +376,18 @@
      digits swap. */
   .mast-sub{margin:0; font:400 12px/1 var(--mono); letter-spacing:.02em;
     color:var(--ink-low); font-variant-numeric:tabular-nums}
+  /* This line is the page's answer to every filter, and it changed silently:
+     89 became 33 became 4 with nothing to catch the eye, in the one place a
+     reader looks to find out whether the thing they just clicked did anything.
+     A dip and a 2px rise, once, on the change — deliberately not an odometer.
+     Rolling digits on a page whose argument is restraint would be a slot
+     machine, and the tabular figures above exist precisely so the line does
+     NOT twitch. Only the arrival is new; the number still lands in one frame.
+     apply() runs on every keystroke, so it is fired on a real change of text
+     and not on every call — which is also what stops the live region
+     re-announcing a count that has not moved. */
+  .mast-sub--tick{animation:bhl-count var(--t-3) var(--e-out)}
+  @keyframes bhl-count{ from{ opacity:.15; transform:translateY(2px) } }
 
   /* ============ sections & cards ============ */
   /* The break between sections is AIR, not a rule. Nine full-bleed hairlines
@@ -1746,6 +1758,20 @@
   .rail-q::placeholder{color:var(--ink-faint); font-size:13.5px}
   .rail-q:hover{background:var(--ctl-hi)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
+  /* ⌘K moves focus to a field that, on a wall, can be a long way from where
+     the reader is looking — they are at card 60 and the panel is fixed at the
+     top left. A focus ring is the correct feedback and it is also easy to
+     miss at that distance, so the shortcut says once, where it landed. This
+     is wayfinding, not decoration: it fires ONLY from the key, never from a
+     click, because a click already knows where it went.
+     A ring rather than a fill, so it reads as attention arriving at the field
+     rather than as the field changing state. Reduced motion drops it and the
+     outline carries the job alone, which is the honest fallback. */
+  .rail-q--hit{animation:bhl-hit var(--t-4) var(--e-out)}
+  @keyframes bhl-hit{
+    from{ box-shadow:0 0 0 0 color-mix(in srgb, var(--ink-hi) 34%, transparent) }
+    to  { box-shadow:0 0 0 7px color-mix(in srgb, var(--ink-hi) 0%, transparent) }
+  }
 
   /* ---- Order ----------------------------------------------------------
      The one control in this panel that reorders rather than removes. It is
@@ -10167,9 +10193,20 @@ document.addEventListener("DOMContentLoaded", function () {
       // One noun for one unit, everywhere on the page: a card is a STUDY.
       // «buttons» was the third word for it, after «studies» in the masthead
       // and «button» in the rail's row labels.
-      if (countEl) countEl.textContent = shown === cards.length
-        ? cards.length + ' studies'
-        : shown + ' of ' + cards.length + ' studies';
+      if (countEl){
+        var said = shown === cards.length
+          ? cards.length + ' studies'
+          : shown + ' of ' + cards.length + ' studies';
+        // Written only when it has actually moved. That is what makes the
+        // tick mean something, and it keeps the live region from announcing
+        // the same count again on every keystroke that changes nothing.
+        if (countEl.textContent !== said){
+          countEl.textContent = said;
+          countEl.classList.remove('mast-sub--tick');
+          void countEl.offsetWidth;
+          countEl.classList.add('mast-sub--tick');
+        }
+      }
       var filtered = state.fav || document.documentElement.dataset.vTreat
                   || state.q || state.changes.length || state.answers.length
                   || state.hoverInk
@@ -11224,14 +11261,24 @@ document.addEventListener("DOMContentLoaded", function () {
             tog.getAttribute('aria-expanded') !== 'true') tog.click();
         qEl.focus();
         qEl.select();
+        // See .rail-q--hit. The reflow between remove and add is what lets a
+        // second ⌘K ring again rather than sit on a finished animation.
+        qEl.classList.remove('rail-q--hit');
+        void qEl.offsetWidth;
+        qEl.classList.add('rail-q--hit');
       });
     }
     // ---- The left wall folds ------------------------------------------
     // Two handles, one state, and the state lives on <body> so the padding
     // that holds the column open and the transform that moves the panel are
-    // reading the same attribute. Remembered, because a reader who has put
-    // the panel away has said something about how they use the page and
+    // reading the same attribute. Remembered, because a reader who has moved
+    // the panel either way has said something about how they use the page and
     // being asked again every load is not listening.
+    // ⚠️ The DEFAULT is closed, and the test is `!== 'on'` rather than
+    // `=== 'off'`: a cleared store, a private window or a thrown getItem all
+    // have to land on the quiet page, not on a 288px wall. The same rule runs
+    // once more at the top of <body> so this one never repaints the fold —
+    // change one and change both.
     (function(){
       var fold = document.querySelector('.rail-fold');
       var show = document.querySelector('.rail-show');
