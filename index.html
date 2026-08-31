@@ -141,6 +141,16 @@
        --line clears 1.24:1 in dark and is not a boundary at all, --line-ctl
        clears 3.52 light and 3.16 dark. */
     --line-ctl:rgba(255,255,255,.36);
+    /* The palette dot's own ring, a rung stronger than --line-ctl on both
+       grounds. It is separate because it is doing a different job: --line-ctl
+       draws a boundary around a control the label already names, whereas the
+       dot IS the value — «the name is what you search for, the dot is what you
+       choose by», down at the chips. A dot cannot be walked to 3:1 the way a
+       fill can, because moving it would be showing the wrong colour, so the
+       ring is the only carrier identification has. Measured against the panel,
+       .36 left the deep swatches leaning on a hairline: Navy 4.35, Violet 4.88.
+       At .48 they read 6.00 and 6.29 and nothing else in the row moves. */
+    --sw-ring:rgba(255,255,255,.48);
     /* The inverse pair IS the accent — no hue anywhere on the page. */
     --accent:var(--inverse-bg); --on-accent:var(--inverse-ink);
     --on-ink:var(--inverse-ink);
@@ -165,7 +175,7 @@
        text colour against the fill and writes the result here, and when no
        text colour is chosen this stays the computed black-or-white it always
        was. Note --on-ink is NOT that label: it doubles as a plain dark fill in
-       cards 31 and 44's inverting pairs, which is why this needs its own name. */
+       card 31's inverting pair, which is why this needs its own name. */
     --ink-on-fill:var(--on-ink);
     --shadow-rgb:0,0,0;
     /* The channel a raised surface catches light in. On a dark ladder that is
@@ -300,6 +310,15 @@
        rgba(0,0,0,.36) against its background WITHOUT compositing and it reports
        19:1, and the token looks fine. */
     --line-ctl:rgba(0,0,0,.45);
+    /* Light is the weak ground for this and it is not close: NINE of the
+       thirteen dots sit under 3:1 against #e7e7e7 here, against three in dark,
+       because a light panel is a near neighbour of every tint the row ships.
+       Straw measures 1.07:1 — a pale yellow on pale grey, which is the colour
+       being honest rather than a fault to correct. So the ring carries it, and
+       at .45 the ring was the thinnest thing in the row: Straw 3.41, Mint 4.12,
+       Orchid 4.31, all inside a whisker of the 3:1 floor. .62 lifts the worst
+       of them to 6.02 and leaves the dot's own colour untouched. */
+    --sw-ring:rgba(0,0,0,.62);
     --sheen:0,0,0;
     /* Away from white is down, toward white is up — see the roles' own note.
        The sentence is the same in both themes even though the order is not:
@@ -644,8 +663,8 @@
      never asked about. --lift-bg → --on-card-hi → --bg-4 → #3a3a3a, the same
      rung the rail and the toolbar are drawn from.
 
-     TWENTY-TWO OPT IN, in four groups, and WHICH GROUP IS AN ARGUMENT about
-     what the plate MEANS:
+     THE STUDIES THAT OPT IN FALL IN FOUR GROUPS, and WHICH GROUP IS AN
+     ARGUMENT about what the plate MEANS:
        · LADDER — 34, 104, 49, 123, 27. Every rung projected, lightness kept,
               never walked. 49 and 123 are three-rung ladders (bg-2 → bg-3 →
               bg-4); what they mean is a STEP, and a step in the pick's hue is
@@ -653,7 +672,7 @@
               ARRIVES: the label has two grounds, and on a walked face no single
               ink clears 4.5:1 on a white card and a mid plate at once —
               measured, the best available was black at 3.61:1.
-       · FACE  — 36, 42, 43, 44, 98, 109, 111, 116, 132, 139, 140, 141, 142,
+       · FACE  — 36, 42, 43, 98, 109, 111, 116, 132, 139, 140, 141, 142,
               143. One face, WALKED until what lands on it clears M_STEP.
        · 113   its own plate, and the walk is below in paint(): its rest label
               is not a colour, it is |plate − --ink-hover| under a difference
@@ -689,10 +708,10 @@
          differently for. Lightness is what the ladder encodes, so every
          relationship the material is built out of survives by construction:
          the bevel's two facets stay the same two steps either side of its
-         face, the knurl's ridges stay .17 over their plate, the lamp stays
-         the same distance above the surface it lights.
+         face, and the lamp stays the same distance above the surface it
+         lights.
        ✦ WHERE SOMETHING ARRIVES ON THE PLATE, THE PLATE MOVES OUT OF ITS WAY.
-         109's flood is --ink and 36, 44 and 113's is --ink-hover; a plate you
+         109's flood is --ink and 36's is --ink-hover; a plate you
          cannot see the effect happen on is not a material, it is a fill. So
          --m-face — and only --m-face — is walked in lightness until what lands
          on it clears the step named at M_STEP. The two bevels have nothing
@@ -704,8 +723,8 @@
      out of the arithmetic: Ash has no saturation to give, so its plates stay
      the graphite they already were, and nothing had to test for it.
 
-     SCOPED TO THE FIFTEEN AND NOT TO .btn. That is the whole difference from
-     the tint that came out, and it is why widening the scope is safe: the eight
+     SCOPED TO THE LIST AND NOT TO .btn. That is the whole difference from
+     the tint that came out, and it is why widening the scope is safe: the ones
      above are not in the list and do not move. Opting in is a selector, which
      is a thing a reader can see.
 
@@ -769,7 +788,7 @@
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
-  /* The thirteen the colour ARRIVES on. One face between them: --lift-bg and
+  /* The twelve the colour ARRIVES on. One face between them: --lift-bg and
      --bg-2 are one rung apart and no card here shows both, so a second value
      would buy a difference nobody is positioned to see.
      ⚠️ WIDENED FROM FOUR 2026-08-31, and the nine that came in are the nine
@@ -777,15 +796,15 @@
      an orange label on a graphite pill, because each spells its rest plate
      --lift-bg and no role wrote it. 132 is not in this list — it opts in
      through its row, in the rule below, and the comment there says why.
-     :is() and not thirteen written-out pairs, so the light rule states the list
+     :is() and not twelve written-out pairs, so the light rule states the list
      once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
-  .btn:is(.s-sprite, .l-knurl, .y-lit,
+  .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
-  :root[data-theme="light"] .btn:is(.s-sprite, .l-knurl, .y-lit,
+  :root[data-theme="light"] .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten){
     --lift-bg:var(--m-face, #e7e7e7);
@@ -881,7 +900,7 @@
      own colour and this is one class more specific, so no study rule changes
      shape. The two bevels reach theirs through their own colour declaration,
      which is further down the file and would otherwise win on source order. */
-  .btn:is(.s-sprite, .l-knurl, .y-lit,
+  .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten){
     color:var(--m-face-ink, var(--ink-text));
@@ -891,6 +910,66 @@
   .btn--solid{background:var(--ink); color:var(--ink-on-fill)}
   .btn--line{border:1px solid var(--ink)}
   .btn--text{padding:8px 4px; border-radius:2px}
+
+  /* ---- …and the boundary on a plate that ARRIVES -----------------------
+     The block below is for a plate that is already there. Eight studies bring
+     one IN on hover — 07 sweep, 08 shutter, 09 inkfill, 75 j-dir, 78 j-out,
+     91 o-step, 121 c-tide, 129 j-turns — and each draws its own 1px boundary
+     on the arriving plate, for the same 1.4.11 reason and with the same
+     argument: with Hover unset the plate that lands is --on-ink, which
+     measures 1.75:1 against the card and reads as gone rather than as
+     switched.
+
+     ⚠️ ALL EIGHT DREW THAT BOUNDARY IN THE RESTING ACCENT. --line-ctl resolves
+     to --a-edge, which paint() writes as the rest pick whole, so the ring was
+     the OTHER swatch's colour laid on this one's plate. Reported as «some fill
+     buttons have a visible border on hover», and it was two faults wearing one
+     coat. Drawn where there is nothing to guarantee: Hover set to a blue that
+     measures 4.16:1 on the card arrived inside a bright yellow outline, and
+     4.16 identifies itself — ringable() would already have refused a REST
+     plate that number. And the wrong colour where there is something to
+     guarantee: unset, a #614400 plate at 1.75:1 landed inside a #ffd166 line,
+     which is a boundary that names the colour you are leaving.
+
+     One token answers both, and paint() writes it. --fill-ring-in is
+     `transparent` when the arriving plate clears 3:1 on the card, and
+     otherwise that plate walked to 3:1 — the same projection ringHex already
+     uses for a rest plate, so the line reads as the arriving plate's own edge
+     rather than as an import from the other swatch.
+
+     🔑 IT HAS TO BE TWO STATES AND NOT ONE FLAT VALUE. The ring is painted at
+     rest too — 09, 75, 91, 121 and 129 hang theirs on an ::after that never
+     moves — and it is invisible there because --line-ctl over --ink composites
+     to within one step of --ink in both themes. Write the walked colour flat
+     and that invisibility goes: a gold hairline appears around every resting
+     plate, which is a visible border added to fix a visible border. So the
+     rest value stays --line-ctl and only the arrival takes paint()'s number.
+
+     A reader who wants none of it sets --fill-ring:transparent. That is the
+     whole of the opt-out, and it survives being copied out of the page: the
+     study rules name the token with --line-ctl as their fallback, so a snippet
+     that lands somewhere without this block behaves exactly as it does here. */
+  .btn--solid{ --fill-ring:var(--line-ctl) }
+  .btn--solid:hover,
+  .btn--solid:focus-visible{ --fill-ring:var(--fill-ring-in, var(--line-ctl)) }
+  /* ⚠️ AND IT IS SPELLED WITHOUT A SINGLE STUDY'S NAME, WHICH IS NOT TIDINESS.
+     tag() derives a card's facets from any rule whose selector carries that
+     card's key, and it files one under «hover» on the sight of :hover plus one
+     declaration. A guard written as `.j-dir.btn--solid:hover{--fill-ring:…}`
+     is exactly that shape, so 75 and 129 came back as hover-answering studies
+     that change tone, and the rail would have re-filed them — a taxonomy edit
+     smuggled in under a border fix. .btn--solid carries no key of any card
+     (the version classes are written by the control at runtime, and .btn is a
+     HOUSE_KEY), so this pair is invisible to the derivation. Confirmed: the
+     drift alarm named j-dir and j-turns with the guards in and nothing at all
+     with them out.
+     🔑 THE COST IS ONE FRAME OF 129 AND IT IS THE RIGHT TRADE. Those two are
+     driven by their own scripts, not by the pointer, so between turns 129 sits
+     hovered with its plate OUT and takes the arrival's boundary over a resting
+     plate. It is only ever visible in the branch where the arriving plate
+     failed 3:1 — where paint() has written a colour rather than `transparent`
+     — and 75 cannot show it at all, because it only reaches idle once the
+     pointer has already left. */
 
   /* ---- The boundary a quiet fill gets instead of being moved ------------
      WCAG 1.4.11 asks 3:1 of whatever identifies a control. A filled button is
@@ -926,8 +1005,8 @@
      the others it can honestly hold in data-versions on its <article>. A
      version is offered only where the MECHANISM survives it: an effect that
      lights a plate has nothing to light as a link, and an effect that IS the
-     surface — knurling, deboss, frost — has no outline version at all. A study
-     that declares nothing renders no control, and that absence is the honest
+     surface — frost, a bevel, a sprite frame — has no outline version at all.
+     A study that declares nothing renders no control, and that absence is the honest
      signal that the study is surface-locked rather than an oversight. */
 
   /* The switch itself must not read as a hover. One frame with the transitions
@@ -1248,7 +1327,7 @@
      by their own blocks now. */
   .sweep.btn--solid::before,
   .shutter.btn--solid::before{
-    box-shadow:inset 0 0 0 1px var(--line-ctl);
+    box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl));
   }
 
   /* 07 in fill and link */
@@ -1306,7 +1385,7 @@
     border-color:transparent}
   .inkfill.btn--solid::after{content:""; position:absolute; inset:-1px;
     z-index:2; pointer-events:none; border-radius:inherit;
-    box-shadow:inset 0 0 0 1px var(--line-ctl)}
+    box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl))}
   .inkfill.btn--solid::before{background:var(--hover-set, var(--on-ink))}
   .inkfill.btn--solid:hover .lbl,
   .inkfill.btn--solid:focus-visible .lbl{color:var(--on-hover-set, var(--ink))}
@@ -1792,9 +1871,9 @@
      wall. Inset, so it never changes the dot's size. */
   .set-p::before{content:""; width:9px; height:9px; border-radius:50%;
     background:var(--sw); flex:none;
-    box-shadow:inset 0 0 0 1px var(--line-ctl)}
+    box-shadow:inset 0 0 0 1px var(--sw-ring)}
   .set-p--none::before{background:none;
-    box-shadow:inset 0 0 0 1.2px var(--line-ctl)}
+    box-shadow:inset 0 0 0 1.2px var(--sw-ring)}
   .set-p:hover{color:var(--ink-hi); background:var(--ctl)}
   .set-p[aria-pressed="true"]{color:var(--ink-hi); background:var(--ctl-hi)}
   .set-p:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
@@ -1861,22 +1940,22 @@
      12.5px/500 with a 7px gap and no width it was the smallest interactive
      text in the panel and the only one whose hover was a colour change rather
      than a fill, so it read as an afterthought on top of the real controls.
-     Same font, same padding, same radius and the same row fill as the two
-     summaries beside it.
+     Same font, same padding, same radius and the same row fill as the
+     summary beside it.
 
      IT USED TO CARRY A STAR, and the star was what stopped it being a peer.
      The glyph took the checkbox column's 13px gutter, which aligned this row
      with the ticks INSIDE the two disclosures — a level down — and set its
-     text 21px in from «What changes» and «How it runs», the two rows it
-     actually sits beside. One zone, three filters, three left edges. The
-     gutter went with the glyph, so the three now start on one line. */
+     text 21px in from «What changes», the row it actually sits beside. One
+     zone, two filters, two left edges. The gutter went with the glyph, so
+     the two now start on one line. */
   .fav-only{
     display:flex; align-items:center; width:100%;
-    /* 500, the same as the two summaries beside it. All three rows in this zone
-       are filters and they are peers; at 400 the star was the one row in the
-       set that read a step quieter than the others, which is the imbalance the
-       zone was built to remove. The checkbox options INSIDE the two
-       disclosures stay at 400, so the zone has two levels and not three. */
+    /* 500, the same as the summary beside it. Both rows in this zone are
+       filters and they are peers; at 400 the star was the one row in the set
+       that read a step quieter than the other, which is the imbalance the
+       zone was built to remove. The checkbox options INSIDE the disclosure
+       stay at 400, so the zone has two levels and not three. */
     font:500 15px/1.3 var(--font-ui); color:var(--ink-mid);
     background:none; border:0; border-radius:var(--r-xs);
     padding:7px 9px; margin:0; cursor:pointer; text-align:left;
@@ -2107,7 +2186,7 @@
        :not([hidden]) here is carried for the weight, not for the match. */
     :root .spec,:root .rail:not([hidden]),:root .tools{border:1px solid var(--edge-hc)}
     /* The panels only. See the warning above. */
-    .rail,.tools{--line-ctl:var(--edge-hc)}
+    .rail,.tools{--line-ctl:var(--edge-hc); --sw-ring:var(--edge-hc)}
     .tools[data-stuck]{background:var(--panel);
       -webkit-backdrop-filter:none !important; backdrop-filter:none !important}
   }
@@ -2347,8 +2426,8 @@
   /* display:inline-flex on the line above outranks the UA's [hidden] rule, so
      an empty group printed a literal 0 next to its name. */
   .rail-sum-n[hidden]{display:none}
-  /* One line saying what the group is asking, because «What changes» and
-     «How it runs» are only obvious once you already know the answer.
+  /* One line saying what the group is asking, because a one-word heading
+     is only obvious once you already know the answer.
      --ink-low and not --ink-faint: faint composites to 3.0:1 on this panel,
      which is under AA for body text, and the note on the counts settled that
      argument already. */
@@ -3223,12 +3302,13 @@
         </div>
       </div>
 
-      <!-- ---- Filter: one zone, three controls -------------------------
+      <!-- ---- Filter: one zone, two controls ---------------------------
            The star used to sit at the top of the body, ABOVE Order. That put a
            filter, then a setting, then two more filters in one column, and
            with 4px under it the star read as a caption on the ORDER label
-           rather than as a control of its own. It belongs with the two axes:
-           all three answer WHICH studies, and Order answers in what sequence.
+           rather than as a control of its own. It belongs with the axis
+           under it: both answer WHICH studies, and Order answers in what
+           sequence.
 
            So the body is three labelled zones now — ORDER, FILTER, SECTIONS —
            one micro-label each, and the star leads the filters it belongs to.
@@ -3237,31 +3317,28 @@
            toggle in a list of toggles. As a 12.5px link it was the smallest
            interactive text in the panel and read as an afterthought.
 
-           The old headings said «What changes» and «Answers to», which read as
-           the start of a sentence the labels underneath never finished — «it
-           moves», «a press of its own». Both axes now name the thing rather
-           than narrate it: a property on one side, a requirement on the other,
-           one or two words each, so the two lists can be read as columns. -->
+           The heading said «Answers to», then «What changes» — both of them
+           the start of a sentence the labels underneath never finished, «it
+           moves», «a press of its own». It names the thing now: Animation,
+           over a list of properties, one or two words each.
+
+           THE SECOND AXIS IS GONE. «How it runs» asked what triggers a study —
+           hover, press, loop, script — and hover is the page: every card here
+           answers one, so the group's largest tick returned nearly the whole
+           feed and the other three were a handful each. An axis that mostly
+           restates the page is a row to read past, not a way in. The
+           `data-answers` stamp stays on every card: tools/facet-manifest.mjs
+           reads it, and the derivation is the same work either way. -->
       <div class="rail-grp">
         <span class="rail-lbl">Filter</span>
         <button type="button" class="fav-only" aria-pressed="false">Starred only</button>
       <details class="rail-drop" data-facet="changes">
         <summary class="rail-sum">
-          <span class="rail-sum-t">What changes</span>
+          <span class="rail-sum-t">Animation</span>
           <span class="rail-sum-n" aria-hidden="true" hidden></span>
           <span class="sr rail-sum-sr"></span>
         </summary>
         <p class="rail-hint">Two ticks ask for either.</p>
-        <ul class="rail-list"></ul>
-      </details>
-
-      <details class="rail-drop" data-facet="answers">
-        <summary class="rail-sum">
-          <span class="rail-sum-t">How it runs</span>
-          <span class="rail-sum-n" aria-hidden="true" hidden></span>
-          <span class="sr rail-sum-sr"></span>
-        </summary>
-        <p class="rail-hint">What has to happen first.</p>
         <ul class="rail-list"></ul>
       </details>
       </div>
@@ -3624,7 +3701,7 @@
         <button type="button" class="btn btn--line o-pix"><span class="o-pix-raster" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span><span class="track"><span class="inner"><span class="lbl" data-label>Run the export</span><span data-label aria-hidden="true">Run the export</span></span></span></button>
       </div>
       <h3><span class="num">137</span>Pixel dissolve</h3>
-      <p>The plate is a raster and the fill arrives cell by cell rather than as a front: twenty-four cells, eight by three, each waiting its own turn. The order is authored, not random &mdash; cell <i>i</i> goes at rank (i &times; 7) mod 24, and because 7 is coprime with 24 no two neighbours hold neighbouring delays. That is card 25's argument moved from letters to a grid, and 91 is the nearest fill: it arrives in visible units too, but in six columns that still read as a front. The leave is the same order compressed to a fraction of its spread, so the plate dissolves out the way it came instead of clearing in one frame. The label rolls a third of that spread behind the raster, and it is blended rather than timed: 91 reveals a twin in the fill’s colour in the same six steps its fill arrives in, but a twin has to be clipped against a front and a raster has none, so at every moment the word covers cells on both sides of the flip. Difference resolves that per cell, the way 32 and 113 already do.</p>
+      <p>The plate is a raster and the fill arrives cell by cell rather than as a front: twenty-four cells, eight by three, each waiting its own turn. The order is authored, not random &mdash; cell <i>i</i> goes at rank (i &times; 7) mod 24, and because 7 is coprime with 24 no two neighbours hold neighbouring delays. That is card 25's argument moved from letters to a grid, and 91 is the nearest fill: it arrives in visible units too, but in six columns that still read as a front. The leave is the same order compressed to a fraction of its spread, so the plate dissolves out the way it came instead of clearing in one frame. The label rolls a third of that spread behind the raster, and it is blended rather than timed: 91 reveals a twin in the fill’s colour in the same six steps its fill arrives in, but a twin has to be clipped against a front and a raster has none, so at every moment the word covers cells on both sides of the flip. Difference resolves that per cell.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -4061,7 +4138,7 @@
         <button type="button" class="btn btn--line v-bloom"><span class="lbl">Go live</span></button>
       </div>
       <h3><span class="num">04</span>Bloom</h3>
-      <p>The first light on this page that leaves the plate. Cards 31, 32, 33 and 42 all work inside the boundary; this spends its light outward, the only way to say brighter on one grayscale.</p>
+      <p>The first light on this page that leaves the plate. Cards 31, 33 and 42 all work inside the boundary; this spends its light outward, the only way to say brighter on one grayscale.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -4128,15 +4205,6 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="l-knurl" data-native="fill" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <button type="button" class="btn l-knurl"><i class="l-knurl-grip" aria-hidden="true"></i><span class="lbl">Adjust the exposure</span></button>
-      </div>
-      <h3><span class="num">44</span>Knurling</h3>
-      <p>Fine grooves rise along the two ends of the plate — the grip you would actually hold, the way a lens ring or a camera dial is cut.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
     <article class="spec" data-key="x-bevel" data-native="fill" data-added="2026-08-27T12:52:33+02:00" data-updated="2026-08-29T12:30:33+02:00">
       <div class="stage">
         <button type="button" class="btn x-bevel"><span class="lbl">OK</span></button>
@@ -4144,18 +4212,6 @@
       <h3><span class="num">104</span>Bevel flip</h3>
       <p>Two light sources, four edges, and the pair swapping the instant you press. No hover state at all and no transition anywhere — and it still reports what it is doing faster than anything else on this page.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="l-plate-wrap" data-native="outline" data-versions="fill link" data-added="2026-08-26T20:25:40+02:00" data-updated="2026-08-29T12:30:33+02:00">
-      <div class="stage">
-        <span class="l-plate-wrap" data-copy-root>
-          <button type="button" class="btn btn--line l-plate" aria-keyshortcuts="Meta+K">Open the console</button>
-          <span class="l-plate-tag" aria-hidden="true">⌘K</span>
-        </span>
-      </div>
-      <h3><span class="num">47</span>Shortcut plate</h3>
-      <p>The shortcut sits on a small engraved plate the browser tethers to the button and flips below it when there is no room above.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
   </div>
@@ -5672,7 +5728,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .j-dir.btn--solid .j-dir-on{color:var(--on-hover-set, var(--ink))}
   .j-dir.btn--solid::after{
     content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
-    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl));
   }
 
   /* 78 Corner exit — 09 x 78. Ink fill x the turn out of the page.
@@ -5726,7 +5782,7 @@ document.addEventListener("DOMContentLoaded", function () {
      measures 1.07:1 and reads as gone rather than as switched. The outline
      version needs none of it — its own --ink border is the boundary. */
   .j-out.btn--solid::before{background:var(--hover-set, var(--on-ink));
-    box-shadow:inset 0 0 0 1px var(--line-ctl)}
+    box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl))}
   .j-out.btn--solid:hover, .j-out.btn--solid:focus-visible{color:var(--on-hover-set, var(--ink))}
   .j-out.btn--solid:hover .lbl,
   .j-out.btn--solid:focus-visible .lbl{color:var(--ink)}
@@ -6207,99 +6263,6 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 7%,transparent)}
   .k-div .k-div-i:is(:hover,:focus-visible)::before,
   .k-div .k-div-i:is(:hover,:focus-visible) + .k-div-i::before{opacity:0}
-</style>
-
-
-<style>
-  /* ============ Section J — Borrowed from objects ============
-     Three mechanisms whose reference is a physical thing rather than another
-     website: a camera's knurled dial, a machine's data plate, a milled
-     chassis. Each card names its object. Three more have been retired: a
-     mechanical end-stop, with the section already written; a letterpress
-     impression; and the printer's line gauge, cut 2026-08-29 for the reason
-     the bench made plain — ticks with no rule to hang from read as a barcode,
-     and the fix was four changes deep on a study nobody was reaching for.
-
-     One of them was not buildable when the other fifty-two were written.
-     Card 47 tethers its plate with CSS anchor positioning and moves it in and
-     out of `display:none` with @starting-style and allow-discrete, checked in
-     the browser rather than assumed: the anchored plate resolves position-area,
-     flip-block fallbacks and a discrete display transition.
-
-     THERE WERE TWO, and the second is gone. Card 48 Continuous corners animated
-     `corner-shape` to change a corner's curvature while its radius stayed put,
-     and it was cut 2026-08-30. The mechanism was never the problem — corner-shape
-     interpolates cleanly, round → superellipse(1.33) → (1.68) → (2.18) → (4).
-     What it could not solve is that a curvature change at a constant radius has
-     nothing to be measured against, so the card asks to be taken on trust. An
-     inset hairline holding the old curve was built to give it that reference and
-     did not earn the study back. The argument stays here because the browser
-     support note is still the useful part.
-
-     ONE THAT DID NOT MAKE IT. `interpolate-size: allow-keywords` finally lets
-     a transition run to `auto`, which is the honest answer to the 0fr → 1fr
-     trick on card 16 and the measured JavaScript on card 19. It is also the
-     one thing this page forbids: growing to an intrinsic size IS layout shift.
-     Noted rather than built.
-
-     PREFIX: l-, one past the section letter, same as the last three. Prefixes
-     track the order things were authored; the heading letter moves when the
-     page is restructured and a copied class name must not. */
-  /* 44 Knurling — a camera dial, or the grip ring on a lens. The grooves sit
-     at the ENDS, where a hand would actually hold it, not across the face
-     where they would fight the label. The mask is a token colour rather than a
-     literal because only its alpha matters — a mask has no colour of its own. */
-  .btn.l-knurl{
-    background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden;
-    transition:border-color var(--t-3) ease, transform var(--t-1) var(--e-out);
-  }
-  .l-knurl .l-knurl-grip{
-    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    color:var(--ink-hover); opacity:0;
-    background-image:repeating-linear-gradient(72deg, currentColor 0 1px, transparent 1px 6px);
-    -webkit-mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
-    mask-image:linear-gradient(90deg, currentColor 0 8%, transparent 21% 79%, currentColor 92% 100%);
-    transition:opacity var(--t-4) var(--e-out);
-  }
-  .l-knurl .lbl{position:relative}
-  .btn.l-knurl:hover, .btn.l-knurl:focus-visible{border-color:color-mix(in srgb,var(--ink-hover) 38%,var(--line-ctl))}
-  .l-knurl:hover .l-knurl-grip, .l-knurl:focus-visible .l-knurl-grip{opacity:.17}
-
-  /* 47 Shortcut plate — the small engraved plate on a machine, and the first
-     thing on this page the engine positions rather than the stylesheet. The
-     tag is display:none at rest, which is the point: opacity:0 leaves it in
-     the accessibility tree and in the hit test, and a shortcut hint that
-     screen readers announce at all times is worse than no hint. @starting-style
-     supplies the value to transition FROM, and allow-discrete holds display
-     open until the fade finishes. position-try-fallbacks flips it below the
-     button when there is no room above.
-     The tag is a SIBLING of the button, not a child: .btn:active carries a
-     scale, and a transformed ancestor becomes the containing block for a fixed
-     descendant, which would move the plate on every press. */
-  .btn.l-plate{anchor-name:--l-plate}
-  .l-plate-wrap{display:inline-block; position:relative}
-  .l-plate-tag{
-    position:fixed; position-anchor:--l-plate;
-    position-area:top center; margin-bottom:8px;
-    position-try-fallbacks:flip-block;
-    font:500 10px/1 var(--mono); letter-spacing:.1em;
-    color:var(--on-ink-hover); background:var(--ink-hover);
-    padding:5px 7px; border-radius:5px; pointer-events:none;
-    display:none; opacity:0;
-    transition:opacity var(--t-2) var(--e-out), display var(--t-2) allow-discrete;
-  }
-  .l-plate:hover + .l-plate-tag,
-  .l-plate:focus-visible + .l-plate-tag{display:block; opacity:1}
-  @starting-style{
-    .l-plate:hover + .l-plate-tag,
-    .l-plate:focus-visible + .l-plate-tag{opacity:0}
-  }
-  /* No anchor positioning, no plate. A fixed element with nothing to tether to
-     lands in the corner of the viewport, which is worse than absent. */
-  @supports not (position-area: top center){
-    .l-plate-tag{display:none !important}
-  }
-
 </style>
 
 
@@ -6818,7 +6781,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .o-step.btn--solid .o-step-on{color:var(--on-hover-set, var(--ink))}
   .o-step.btn--solid::after{
     content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
-    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl));
   }
   /* The house reduced-motion rule zeroes DURATIONS, not delays, so a staggered
      card would still arrive in sequence with nothing animating between the
@@ -7332,10 +7295,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
      Each card names the card it repeats or argues with. */
 
-  /* 82 Riser — the plate grows the geometry it stands on. Section J
-     borrows from objects, but always INTO the plate: card 44 mills grooves
-     into it, 47 sinks the type below it, 45 stands it on a hard bottom edge.
-     This is the one card that adds material OUTSIDE the plate's outline.
+  /* 82 Riser — the plate grows the geometry it stands on. The studies that
+     borrowed from a physical object all worked INTO the plate — grooves milled
+     in, type sunk below it, a hard bottom edge to stand on — and every one of
+     them has since been archived. This is the one card that adds material
+     OUTSIDE the plate's outline.
 
      It was a 7px tab on the top edge and the claim was right while the object
      was too small to make it. A stem that size on a 200px plate is a nick in
@@ -9442,7 +9406,7 @@ document.addEventListener("DOMContentLoaded", function () {
      the edge of a plate whose label sits 28px in. */
   .c-tide.btn--solid::after{
     content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
-    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--line-ctl);
+    border-radius:inherit; box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl));
   }
   .c-tide.btn--solid .c-tide-i span:last-child{color:var(--on-hover-set, var(--ink))}
 
@@ -9825,7 +9789,7 @@ document.addEventListener("DOMContentLoaded", function () {
     border-color:transparent }
   .j-turns.btn--solid::after{ content:""; position:absolute; inset:-1px;
     z-index:2; pointer-events:none; border-radius:inherit;
-    box-shadow:inset 0 0 0 1px var(--line-ctl) }
+    box-shadow:inset 0 0 0 1px var(--fill-ring, var(--line-ctl)) }
   .j-turns.btn--solid .j-turns-tile{ inset:-1px;
     background:var(--hover-set, var(--on-ink)) }
   .j-turns.btn--solid .lbl{ color:var(--ink-on-fill) }
@@ -10588,16 +10552,26 @@ document.addEventListener("DOMContentLoaded", function () {
      dark read as the word vanishing rather than swinging. At 16° the outgoing
      copy clears the plate's top edge by 7px, measured. */
   .btn.q-hinge .q-hinge-w{ display:inline-grid; justify-items:start; align-items:center }
+  /* One factor above the ladder's top rung, and EVERY channel takes it — the
+     two rotations, both fades and the beat between them. The choreography is
+     the one that was measured; only the clock is slower. It multiplies the rung
+     rather than restating it, so the enter/exit asymmetry the page is built on
+     survives: 630ms in against 420ms out, and the beat is 70ms. The swing is
+     the read here, and at 450 the far end of the word was through the arc
+     before the eye had followed it back to the pivot. */
+  .btn.q-hinge{ --q-hinge-slow:1.4 }
   .btn.q-hinge .q-hinge-a,
   .btn.q-hinge .q-hinge-b{
     grid-area:1/1; white-space:nowrap; transform-origin:0% 50%;
-    transition:transform var(--t-5) var(--e-quint), opacity var(--t-2) var(--e-out);
+    transition:transform calc(var(--t-5) * var(--q-hinge-slow)) var(--e-quint),
+               opacity calc(var(--t-2) * var(--q-hinge-slow)) var(--e-out);
   }
   /* The arriving word fades on the longer rung and a beat late, so the two are
      never both legible — the swing is the read, not the crossfade. */
   .btn.q-hinge .q-hinge-b{
     opacity:0; transform:rotate(16deg);
-    transition:transform var(--t-5) var(--e-quint), opacity var(--t-3) var(--e-out) var(--d-1);
+    transition:transform calc(var(--t-5) * var(--q-hinge-slow)) var(--e-quint),
+               opacity calc(var(--t-3) * var(--q-hinge-slow)) var(--e-out) calc(var(--d-1) * var(--q-hinge-slow));
   }
   .btn.q-hinge:hover .q-hinge-a{ opacity:0; transform:rotate(-16deg) }
   .btn.q-hinge:hover .q-hinge-b{ opacity:1; transform:none }
@@ -10996,7 +10970,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","l-knurl":"moves fades tone|hover","x-bevel":"moves tone|press","l-plate-wrap":"fades|hover","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
+<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -11005,7 +10979,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","l-knurl":"44","x-bevel":"104","l-plate-wrap":"47","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
+<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","x-bevel":"104","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -11140,7 +11114,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var countEl = document.querySelector('.mast-sub');
     var favBtn  = document.querySelector('.fav-only');
     var reset   = document.querySelector('.tools-reset');
-    var state   = {fav:false, q:'', changes:[], answers:[], hoverInk:false};
+    var state   = {fav:false, q:'', changes:[], hoverInk:false};
 
     function load(name){
       // `|| []` only catches null. Anything else valid JSON — an object, a
@@ -11502,7 +11476,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       var filtered = state.fav || document.documentElement.dataset.vTreat
-                  || state.q || state.changes.length || state.answers.length
+                  || state.q || state.changes.length
                   || state.hoverInk
                   || look.text || look.accent || look.hover || look.radius !== PILL
                   || sortNow !== 'grouped';
@@ -12391,6 +12365,35 @@ document.addEventListener("DOMContentLoaded", function () {
         root.removeProperty('--hover-set');
         root.removeProperty('--on-hover-set');
       }
+      // ---- The boundary on the plate those eight studies bring IN ---------
+      // Same question ringable() asks about a rest plate, asked about the one
+      // that arrives, and answered with the same arithmetic. See the rule pair
+      // in the stylesheet for why it is written as a token and why the rest
+      // value is left alone.
+      //
+      // 🔑 THE ARRIVING PLATE IS NOT --ink AND NOT --ink-hover. All eight spell
+      // it var(--hover-set, var(--on-ink)), so it is the picked hover colour
+      // when there is one and the label-on-fill when there is not — the same
+      // two values written just above, read here rather than re-derived so the
+      // ring can never disagree with the plate it is drawn on.
+      //
+      // ⚠️ COMPUTED OFF THE NUMBERS, NEVER OFF THE PAGE. ringable() reads its
+      // plates back out of the DOM and can, because it runs after the write
+      // and tests a width rather than a colour. There is no equivalent here:
+      // the arriving plate only exists while a pointer is on the button, so a
+      // read would either find the resting plate or find a colour mid-
+      // transition — the trap ringable's own comment records, one surface over.
+      //
+      // Nothing set at all leaves the property off, and --line-ctl stands. That
+      // is the right answer rather than a cautious one: unset, the plate that
+      // lands is the stylesheet's --on-ink → --inverse-ink, which is the near-
+      // black of the theme's opposite, and a white hairline at .36 is exactly
+      // what identifies it.
+      var arriving = fitted.hover ? fitted.hover.rgb
+                   : (anyColour && onAccent ? toRgb(onAccent.hex) : null);
+      if (!arriving)                          root.removeProperty('--fill-ring-in');
+      else if (ratio(arriving, PANEL) >= 3)   root.setProperty('--fill-ring-in', 'transparent');
+      else                                    root.setProperty('--fill-ring-in', fitOn(toHex(arriving), 3, PANEL).hex);
       // The rest label, derived off the fill. After the loop, for the reason
       // given where inkText is computed.
       if (inkText) root.setProperty('--ink-text', inkText.hex);
@@ -12613,7 +12616,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener('bhl:theme', function(){ remeasure(); paint(); });
 
     reset.addEventListener('click', function(){
-      state = {fav:false, q:'', changes:[], answers:[], hoverInk:false};
+      state = {fav:false, q:'', changes:[], hoverInk:false};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
       look  = {text:'', textHover:'', accent:'', hover:'', radius:PILL};
@@ -12666,11 +12669,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Which declaration means what. The order matters only for reading: a card
     // that transitions a transform AND a colour carries both tags.
-    // The labels name the thing; they do not describe it. «it moves» and «a
-    // press of its own» were a voice, and a voice in a filter list is one more
-    // sentence to parse per row — nine words across the two groups where two
-    // will do. The KEYS are untouched: #facet-manifest stamps those, and a
-    // renamed key would read as drift the next time the tripwire runs.
+    // The labels name the thing; they do not describe it. «it moves» was a
+    // voice, and a voice in a filter list is one more sentence to parse per
+    // row — two words where nine were. The KEYS are untouched: #facet-manifest
+    // stamps those, and a renamed key would read as drift the next time the
+    // tripwire runs. The `answers` half of the stamp is still derived below;
+    // it lost its filter, not its manifest.
     var CHANGES = [
       {k:'moves', label:'Movement',      re:/^(transform|translate|rotate|scale|offset-)/},
       {k:'fades', label:'Opacity',       re:/^opacity$/},
@@ -12678,12 +12682,6 @@ document.addEventListener("DOMContentLoaded", function () {
       {k:'type',  label:'Typography',    re:/^(letter-spacing|word-spacing|font-|text-decoration|text-emphasis)/},
       {k:'shape', label:'Size, shape',   re:/^(border-[a-z-]*radius|clip-path|mask|-webkit-mask|corner-|width|height|padding|gap|grid-template|stroke|d$)/},
       {k:'seq',   label:'Stagger',       re:/^(transition-delay|animation-delay)$/}
-    ];
-    var ANSWERS = [
-      {k:'hover', label:'Hover'},
-      {k:'press', label:'Press state'},
-      {k:'loop',  label:'Loop, unprompted'},
-      {k:'js',    label:'Needs JavaScript'}
     ];
 
     // One flat list of every authored rule, @media and @supports included, so a
@@ -12958,15 +12956,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (skip !== 'changes' && state.changes.length && !state.changes.some(function(k){
         return (' ' + card.dataset.changes + ' ').indexOf(' ' + k + ' ') > -1;
       })) return false;
-      if (skip !== 'answers' && state.answers.length && !state.answers.some(function(k){
-        return (' ' + card.dataset.answers + ' ').indexOf(' ' + k + ' ') > -1;
-      })) return false;
       return true;
     }
 
     function buildRail(){
       if (!rail) return;
-      [{key:'changes', defs:CHANGES}, {key:'answers', defs:ANSWERS}].forEach(function(grp){
+      [{key:'changes', defs:CHANGES}].forEach(function(grp){
         var ul = rail.querySelector('[data-facet="' + grp.key + '"] .rail-list');
         if (!ul) return;
         grp.defs.forEach(function(d){
@@ -13033,7 +13028,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // included would show 0 next to every box you had not ticked.
     function paintRail(){
       if (!rail) return;
-      [{key:'changes', defs:CHANGES}, {key:'answers', defs:ANSWERS}].forEach(function(grp){
+      [{key:'changes', defs:CHANGES}].forEach(function(grp){
         grp.defs.forEach(function(d){
           var lab = rail.querySelector('input[data-group="' + grp.key + '"][value="' + d.k + '"]');
           if (!lab) return;
@@ -13052,9 +13047,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // boxes ticked inside it — without it a filter set before the group was
       // collapsed is invisible, and «12 of 114» in the status bar names no
       // cause. aria-hidden on the badge and the words in the .sr twin, so the
-      // summary reads as «What changes, 2 filters on» rather than as a digit
+      // summary reads as «Animation, 2 filters on» rather than as a digit
       // glued to a heading.
-      [{key:'changes'}, {key:'answers'}].forEach(function(grp){
+      [{key:'changes'}].forEach(function(grp){
         var d = rail.querySelector('[data-facet="' + grp.key + '"]');
         if (!d) return;
         var n = state[grp.key].length;
@@ -15138,10 +15133,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-urls">{"10":"https://framer.com/m/Sheen-eN4I5o.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","44":"https://framer.com/m/Knurling-8R1JoN.js","47":"https://framer.com/m/ShortcutPlate-Mp5c1f.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","111":"https://framer.com/m/PressFill-lXFzHB.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js"}</script>
+<script type="application/json" id="bhl-framer-urls">{"10":"https://framer.com/m/Sheen-eN4I5o.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","111":"https://framer.com/m/PressFill-lXFzHB.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"7310f29dc23057d0","05":"acd7d8ea86b2a19b","07":"0d03f882853a4d74","08":"1b88d34c370d334a","09":"baf7202a713aebc8","10":"e0fa474861ec89bf","100":"00bf85ff3ee6fbca","104":"be7bc2bae6db0245","109":"deae0fa15cde1d69","11":"d789557132feef14","111":"a9a33d1f7d915527","113":"6d0796c5c562476b","116":"b1334b38445f0123","117":"80003383f402e22b","119":"6a2fae216df3e841","12":"7becb9c48a06e793","120":"e356ca7055bc6a87","121":"20e7b6c6a10cc1ea","122":"12deb5ac4c8c5366","123":"f1ea95c074f74565","124":"31eeec43cc273fa3","125":"b4377518175f4566","126":"330d03a44875db02","127":"0c4e3da3e0d5ff6f","128":"0e86a669cef74476","129":"6f398fc69602c4ea","13":"df2bf03791f78049","130":"102221d7197813df","131":"090c871a8ef88864","132":"9bb5d0179133ba46","133":"27dfb76efeeadcfe","134":"49a2f29a342d485e","135":"7a85873851c12f89","136":"74ab893be4ea7973","14":"3f29b5d4cf8f2dfb","15":"178c5161000b3008","16":"17404dcd70ed7a7f","19":"2d2f12cab921ab16","20":"ab0dc155ad83c061","21":"5b18cfecbd0801aa","23":"8e0e89303ede1bf0","24":"281921d9a1988712","25":"6afc02d03311772e","26":"f73bf111397fcbd2","27":"b2d72e62c2ebef83","28":"beb1cdbcc9f0e05c","30":"cd167b13092206b8","31":"4a128aeb4b9296b0","32":"6680946093835806","33":"d88720a0d4a79dde","34":"3ed84c7a17508138","36":"681f115a1fc779a5","39":"62a60e76f2aa7b8c","41":"dd05d70c23533303","42":"4adda82991663545","43":"f7299e235546a344","44":"601e2172b1c5b3ba","47":"c4bc173344a7dbdb","49":"5d93f7e97b50820c","50":"2f52eceafc902563","52":"5b65e06bf5879e66","54":"a8be3c3f9048451d","55":"30e584832c7f1ad1","57":"051f789fdb5a5681","59":"c3afbd8d89c5b675","60":"3fe68a462a96283b","61":"0a436d5dac71528f","62":"156c6074920230de","63":"b8a14fa2db723777","64":"fe4ad33729c9153e","65":"f88ff4f135f2a036","66":"b0cfb82250271e5f","67":"f86b88d08dc4cff0","69":"51546e3da3580a40","72":"9ef76258315b932e","73":"d410a003e9125272","74":"0a0ad445e50cf2db","75":"7e6754a9009c16e7","78":"cba7b6f59b609aef","79":"9f015db2d8d75af8","80":"5554562438565bb4","82":"c2bcb7c5aac6e746","83":"1b07384d41a0af08","85":"82379a80ed642bf5","91":"e35d80621dbc24a2","92":"4c0e85e75a9965d7","93":"3595b09aca90b388","97":"819c0a325f8a0ad3","98":"4b2ecbc4bf0347d3"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"7310f29dc23057d0","05":"acd7d8ea86b2a19b","07":"0d03f882853a4d74","08":"1b88d34c370d334a","09":"baf7202a713aebc8","10":"e0fa474861ec89bf","100":"00bf85ff3ee6fbca","104":"be7bc2bae6db0245","109":"deae0fa15cde1d69","11":"d789557132feef14","111":"a9a33d1f7d915527","113":"6d0796c5c562476b","116":"b1334b38445f0123","117":"80003383f402e22b","119":"6a2fae216df3e841","12":"7becb9c48a06e793","120":"e356ca7055bc6a87","121":"20e7b6c6a10cc1ea","122":"12deb5ac4c8c5366","123":"f1ea95c074f74565","124":"31eeec43cc273fa3","125":"b4377518175f4566","126":"330d03a44875db02","127":"0c4e3da3e0d5ff6f","128":"0e86a669cef74476","129":"6f398fc69602c4ea","13":"df2bf03791f78049","130":"102221d7197813df","131":"090c871a8ef88864","132":"9bb5d0179133ba46","133":"27dfb76efeeadcfe","134":"49a2f29a342d485e","135":"7a85873851c12f89","136":"74ab893be4ea7973","14":"3f29b5d4cf8f2dfb","15":"178c5161000b3008","16":"17404dcd70ed7a7f","19":"2d2f12cab921ab16","20":"ab0dc155ad83c061","21":"5b18cfecbd0801aa","23":"8e0e89303ede1bf0","24":"281921d9a1988712","25":"6afc02d03311772e","26":"f73bf111397fcbd2","27":"b2d72e62c2ebef83","28":"beb1cdbcc9f0e05c","30":"cd167b13092206b8","31":"4a128aeb4b9296b0","32":"6680946093835806","33":"d88720a0d4a79dde","34":"3ed84c7a17508138","36":"681f115a1fc779a5","39":"62a60e76f2aa7b8c","41":"dd05d70c23533303","42":"4adda82991663545","43":"f7299e235546a344","49":"5d93f7e97b50820c","50":"2f52eceafc902563","52":"5b65e06bf5879e66","54":"a8be3c3f9048451d","55":"30e584832c7f1ad1","57":"051f789fdb5a5681","59":"c3afbd8d89c5b675","60":"3fe68a462a96283b","61":"0a436d5dac71528f","62":"156c6074920230de","63":"b8a14fa2db723777","64":"fe4ad33729c9153e","65":"f88ff4f135f2a036","66":"b0cfb82250271e5f","67":"f86b88d08dc4cff0","69":"51546e3da3580a40","72":"9ef76258315b932e","73":"d410a003e9125272","74":"0a0ad445e50cf2db","75":"7e6754a9009c16e7","78":"cba7b6f59b609aef","79":"9f015db2d8d75af8","80":"5554562438565bb4","82":"c2bcb7c5aac6e746","83":"1b07384d41a0af08","85":"82379a80ed642bf5","91":"e35d80621dbc24a2","92":"4c0e85e75a9965d7","93":"3595b09aca90b388","97":"819c0a325f8a0ad3","98":"4b2ecbc4bf0347d3"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 

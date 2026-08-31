@@ -61,7 +61,7 @@ export const VERSIONS = {
   'h-grow':'fill link',
   // — Material and light ————————————————————————————————————————
   'f-glas':'', 'f-lykta':'',
-  's-bevel':'', 's-sprite':'', 'l-knurl':'', 'x-bevel':'',
+  's-bevel':'', 's-sprite':'', 'x-bevel':'',
   // — Icon ————————————————————————————————————————————————————
   // The mark is a child that moves, fades or redraws; the button's own surface
   // is not part of the mechanism, so all three treatments hold. The five with a
@@ -143,7 +143,7 @@ export const NATIVE = {
   'sheen':'fill', 'relay':'fill', 'roll':'fill',   'h-marq':'fill', 'u-lift':'fill', 'u-words':'fill', 'u-shuffle':'fill',
   'e-chamfer':'fill', 'e-count':'fill', 'f-lykta':'fill',
   's-bevel':'fill', 's-sprite':'fill', 'g-measure':'fill', 'f-kant':'fill',
-  'g-key':'fill', 'l-knurl':'fill', 'lift':'fill', 'magnet':'fill',
+  'g-key':'fill', 'lift':'fill', 'magnet':'fill',
   'i-mass':'fill', 'i-anti':'fill', 'i-throw':'fill', 'k-pair':'fill',
   'p-part':'fill', 'p-walk':'fill', 'p-cycle':'fill', 'q-riser':'fill',
   'n-join':'fill', 'w-grid':'fill', 'w-corner':'fill', 'x-bevel':'fill',
@@ -157,7 +157,7 @@ export const NATIVE = {
   'v-bloom':'outline', 'v-inner':'outline', 'sweep':'outline',
   'shutter':'outline', 'inkfill':'outline', 'dotm':'outline',
   'u-roll':'outline', 'u-centre':'outline', 'e-wave':'outline',
-  'f-glas':'outline', 'l-plate-wrap':'outline',
+  'f-glas':'outline',
   'i-rule':'outline', 'k-share':'outline',
   't-report':'outline', 't-mark':'outline', 't-hold':'outline',
   'j-dir':'outline', 'j-out':'outline', 'j-optic':'outline',
@@ -197,9 +197,9 @@ const KEYS = [...new Set([...Object.keys(NATIVE), ...Object.keys(VERSIONS)])];
 /* Resolved by the article's data-key and NOT by a class on the button, which
  * is what this used to do. The key IS the article's attribute — the identity
  * pass in the page says so — and a study whose key sits on a wrapper rather
- * than on the .btn was simply unreachable: l-plate-wrap is one, and the six
- * k-row studies are six more. Matching the class also matched prefixes of
- * other keys, which the \b only half protected against. */
+ * than on the .btn was simply unreachable: the six k-row studies are all
+ * spelled that way. Matching the class also matched prefixes of other keys,
+ * which the \b only half protected against. */
 const missing = [];
 for (const key of KEYS){
   const m = new RegExp('<article class="spec[^>]*data-key="' + key + '"').exec(s);

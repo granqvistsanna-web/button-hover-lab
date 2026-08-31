@@ -291,12 +291,10 @@ const ORDER_OF = {
     'Coarse dither',
     'CRT converge',
     'Sprite swap',
-    'Knurling',
 
     // Relief: the surface is cut or raised.
     'Deboss',
     'Bevel flip',
-    'Shortcut plate',
 
     // It never stops.
     'Idle breath',

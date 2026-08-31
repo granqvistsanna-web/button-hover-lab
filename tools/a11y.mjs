@@ -430,10 +430,25 @@ async function setTheme (t) {
     if (!b) throw new Error('no theme control for ${t}'); b.click(); return true })()`)
   await new Promise(r => setTimeout(r, 500))
 }
+// AS BUILT IS NOT A BUTTON. The treatment control is three independent toggles
+// whose answer can be none, and it clears by pressing the pressed one — so ''
+// means «press whatever is on», and nothing pressed is already as built rather
+// than a missing control. This asked for [data-v=""], which stopped existing
+// when the fourth button came out, and the throw landed AFTER the six label
+// passes had printed: the run looked like it had worked, the ring was never
+// measured, and OUT was never written. A harvest that reports and then dies is
+// worse than one that dies first, so the '' case cannot fail on absence.
 async function setVersion (v) {
-  await p.evalJs(`(() => { const s = '${v}' === '' ? '#v-treat .vers-b[data-v=""]'
-      : '#v-treat .vers-b[data-v="${v}"]'
-    const b = document.querySelector(s); if (!b) throw new Error('no version control for ${v}')
+  await p.evalJs(`(() => {
+    const seg = document.querySelector('#v-treat')
+    if (!seg) throw new Error('no treatment control on the page')
+    if ('${v}' === '') {
+      const on = seg.querySelector('.vers-b[aria-pressed="true"]')
+      if (on) on.click()
+      return true
+    }
+    const b = seg.querySelector('.vers-b[data-v="${v}"]')
+    if (!b) throw new Error('no version control for ${v}')
     b.click(); return true })()`)
   await new Promise(r => setTimeout(r, 700))
 }
