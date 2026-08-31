@@ -302,6 +302,60 @@
     --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23636363' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.4 10.4 14 14'/%3E%3C/svg%3E");
   }
 
+  /* ============ the swap between the two grounds ============
+     Both themes above are measured and both are correct. What was never
+     designed is the JOURNEY between them: setting data-theme repaints every
+     colour on the page in a single frame, and on a full screen that is an
+     abrupt whole-viewport luminance jump — the one thing the reduced-motion
+     guidance names about theme changes by itself.
+
+     A transition on background-color is the wrong tool three times over.
+     Ninety-odd studies' worth of elements is a large paint; it collides
+     mid-flight with the studies' OWN hover transitions, which already own
+     `background` at --t-2 through --t-5; and colours interpolating one at a
+     time smear rather than swap. A view transition cross-fades two snapshots
+     instead, so the cost is flat whatever the card count and nothing
+     per-element can desync.
+
+     The wipe is anchored at the button that caused it — a change should come
+     out of the control that asked for it, not replace the screen from
+     nowhere. --vt-x/--vt-y/--vt-r are written on :root by pickTheme() one
+     frame before the swap; the pseudo-elements sit outside the document tree
+     but still inherit from :root, so they read them.
+
+     ⚠️ Those pseudo-elements are ALSO outside the reach of the
+     `*,*::before,*::after` reduced-motion rule further down this sheet — a
+     universal selector does not match them. This block answers both motion
+     preferences for itself, and it is the only place that does. */
+  @keyframes bhl-theme-wipe{
+    from{ clip-path:circle(0            at var(--vt-x,50%) var(--vt-y,50%)) }
+    to  { clip-path:circle(var(--vt-r,150%) at var(--vt-x,50%) var(--vt-y,50%)) }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    /* plus-lighter is the UA default, and it is right for a cross-fade and
+       wrong for a wipe: where the growing circle overlaps the old ground the
+       two would ADD, and the travelling seam would read as a bright ring. */
+    ::view-transition-old(root),
+    ::view-transition-new(root){ mix-blend-mode:normal }
+    /* The old ground does not move. The new one grows over it. */
+    ::view-transition-old(root){ animation:none }
+    ::view-transition-new(root){
+      z-index:1;
+      /* The top rung of the ladder, because this is the largest surface the
+         page ever moves — and --e-quint rather than --e-out because a big
+         travel wants the harder decelerate at the end of it. */
+      animation:bhl-theme-wipe var(--t-5) var(--e-quint) both;
+    }
+  }
+  /* Reduced motion keeps the cross-fade rather than falling back to the hard
+     flip: the brightness jump IS the accessibility problem here, and a fade
+     has no travel to object to. Only the wipe is dropped. Pinned to --t-3
+     because the UA default is 250ms, which is not a number this page uses. */
+  @media (prefers-reduced-motion: reduce){
+    ::view-transition-old(root),
+    ::view-transition-new(root){ animation-duration:var(--t-3) }
+  }
+
   *{box-sizing:border-box; margin:0; padding:0}
   body{
     background:var(--canvas); color:var(--ink-mid);
@@ -3140,7 +3194,7 @@
         <button type="button" class="btn f-motljus">Read the annual report<i class="f-sol" aria-hidden="true"></i></button>
       </div>
       <h3><span class="num">32</span>Backlight</h3>
-        <p>A light rises behind the button and turns surface and label in the same movement — one layer handles both colour states.</p>
+        <p>A light rises behind the button and turns surface and label in the same movement — one layer handles both colour states. This is the one study the colour controls do not reach, and the mechanism is the reason rather than an omission: <code>difference</code> paints the gap between the layer and whatever sits under it, so inverting a tinted surface returns that tint&rsquo;s complement — a violet plate comes back green. Every part of this button is held neutral so the inversion is the only thing you see.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3874,7 +3928,60 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* 32 Backlight — a rising light turns surface AND label in a single layer (difference) */
-  .f-motljus{ background:var(--lift-bg); border:1px solid var(--line-ctl); overflow:hidden; isolation:isolate }
+  /* ⚠️ The light is WHITE and does not follow the colour controls, which is the
+     only value that makes this card work — and it is arithmetic, not taste.
+     mix-blend-mode:difference paints |backdrop − source| per channel, so what
+     you see is a function of what is UNDER it: white is the operator that
+     inverts, and any other source both weakens the flip and rewrites its hue.
+     Two faults came from reaching for var(--ink) here, and one line closes both.
+       1. --ink is near-white in dark and near-BLACK in light, and difference
+          with black is a no-op. Measured in light with nothing set: the label's
+          luminance swing was 0.006 — the effect was already all but dead there,
+          against 0.888 in dark.
+       2. With a palette set, difference against a LIGHT plate returns the
+          COMPLEMENT. Measured in light: Amber 36° painted 216°, Ember 20° → 200°,
+          Rose 331° → 151°, Violet 269° → 96°, Azure 215° → 29°, Fern 145° → 325°.
+          Sanna reported the violet case as «a dark green active hover», which is
+          exactly what 269° → 96° looks like.
+     No source colour can make a difference blend equal a chosen colour, because
+     the backdrop varies across the plate and the label. So this card opts OUT of
+     the colour controls rather than lying about them, and says so in its text. */
+  /* ⚠️ THE ONE CARD THAT OPTS OUT OF THE COLOUR CONTROLS, and the reason is
+     arithmetic rather than taste. mix-blend-mode:difference paints
+     |backdrop − source| per channel, so what you see is a function of what is
+     UNDER it — and inverting a TINTED surface returns that tint's complement.
+     Three things had to be neutral before this card could be honest, and only
+     the third is obvious:
+       1. the light itself — --f-lys was var(--ink);
+       2. the label — accent-coloured;
+       3. ⚠️ THE PLATE, and this is the trap. Every «neutral» rung is aliased to
+          an accent-tinted --a-* INSIDE .btn (see the .btn token block above:
+          --bg-2, --bg-3, --bg-4, --hairline, --line-ctl, --ink-low, --ink-mid,
+          --lift-bg). So background:var(--bg-2) is NOT grey on a button — it is
+          14% accent over grey. Reaching for a rung cannot get you out; the
+          --a-* inputs have to be reset, and then every var(--a-2, #222222)
+          falls back to the literal the .btn block already carries for each
+          theme, which is exactly the neutral wanted.
+     Measured before: in light, Amber 36° painted 216°, Ember 20° → 200°, Rose
+     331° → 151°, Violet 269° → 96°, Azure 215° → 29°, Fern 145° → 325° — the
+     complement every time. Sanna reported the Violet case as «a dark green
+     active hover», which is what 269° → 96° looks like. And with nothing set at
+     all the effect was already all but dead in light: the label's luminance
+     swing measured 0.006 there against 0.888 in dark, because --ink is
+     near-BLACK in light and difference with black is a no-op. White is the
+     value that inverts; it is the operator, not a colour choice. */
+  .f-motljus{
+    --a-edge:initial; --a-soft:initial; --a-quiet:initial; --a-mid:initial;
+    --a-2:initial; --a-3:initial; --a-4:initial;
+    --f-lys:#fff;
+    background:var(--lift-bg); color:var(--ink-hi);
+    border:1px solid var(--line-ctl);
+    overflow:hidden; isolation:isolate }
+  /* No :hover colour rule here. One was written and taken back out: it restated
+     the rest value, so it changed nothing on screen — but a `color` declaration
+     in a :hover block is how the facet derivation decides a study animates
+     TONE, and it made card 32 file itself under a property it does not touch.
+     The stamp was right and the CSS was wrong; the fix is the CSS. */
   .f-motljus .f-sol{
     position:absolute; left:50%; bottom:0; width:240%; height:240%;
     border-radius:50%; background:var(--f-lys); mix-blend-mode:difference;
@@ -12709,7 +12816,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var tTheme = document.getElementById('v-theme');
     if (tTheme){
       var th = [].slice.call(tTheme.querySelectorAll('.vers-b'));
-      var pickTheme = function(b){
+      var applyTheme = function(b){
         root.dataset.theme = b.dataset.theme;
         th.forEach(function(x){
           var on = x === b;
@@ -12722,6 +12829,29 @@ document.addEventListener("DOMContentLoaded", function () {
         // Announced, not called: the colour machinery measures the page it is
         // fitting against and lives in another IIFE.
         document.dispatchEvent(new CustomEvent('bhl:theme'));
+      };
+      // Everything above is the swap; this is the only thing wrapped around it.
+      // A view transition snapshots the page, runs the swap against the live
+      // DOM, snapshots it again and animates between the two images — so the
+      // 89 studies cross over together at a cost that does not grow with the
+      // card count, and none of their own transitions is disturbed doing it.
+      // The circle is centred on the control that was pressed, which is also
+      // true of the keyboard: arrows() hands pickTheme the same button.
+      // Where the API is missing this is a no-op and the page behaves exactly
+      // as it did before it. The reduced-motion answer is in CSS, not here:
+      // that preference wants a gentler transition, not the hard flip back.
+      var pickTheme = function(b){
+        if (!document.startViewTransition){ applyTheme(b); return; }
+        var r = b.getBoundingClientRect();
+        var x = r.left + r.width / 2, y = r.top + r.height / 2;
+        root.style.setProperty('--vt-x', x + 'px');
+        root.style.setProperty('--vt-y', y + 'px');
+        // The exact distance to the farthest corner, measured rather than
+        // guessed at 150%: the circle then stops on the frame it has covered
+        // the screen instead of travelling on past the edge of it.
+        root.style.setProperty('--vt-r', Math.hypot(
+          Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 'px');
+        document.startViewTransition(function(){ applyTheme(b); });
       };
       // The head script may already have stamped the root from storage, so the
       // control reads the page rather than assuming its own markup is right.
