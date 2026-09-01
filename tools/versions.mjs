@@ -75,7 +75,16 @@ export const VERSIONS = {
   // Two plates joined, not one button: a label plate and a 46px mark plate that
   // carries its own --ink fill and --on-ink label. A treatment on the outer
   // button is a THIRD surface arguing with the two inside it, so there is none.
-  'p-part':'', 'p-walk':'', 'p-cycle':'', 'n-join':'',
+  'p-part':'', 'p-walk':'', 'n-join':'',
+  // 69 is the exception to the line above, and its own card says why: gap:0
+  // and the facing corners squared, so it is ONE capsule with two windows cut
+  // in it rather than two objects passing something between them. A treatment
+  // replaces that single surface instead of arguing with two, and the clipping
+  // that makes the windows survives it untouched — the roles, the keyframes and
+  // the +230% wrap are all geometry. The link is the capsule's own bottom edge
+  // said in 1.5px, and it runs under BOTH windows: a rule under the label alone
+  // would be a link standing next to an arrow rather than one with an arrow in it.
+  'p-cycle':'outline link',
   // — Label ————————————————————————————————————————————————————
   // The word performs and the plate is only what it stands on, so these hold
   // whatever treatment the label can be drawn in. None of the three fills

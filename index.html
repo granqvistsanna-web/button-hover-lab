@@ -4096,9 +4096,9 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="p-cycle" data-native="fill" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-29T12:30:33+02:00">
+    <article class="spec" data-key="p-cycle" data-native="fill" data-added="2026-08-27T09:31:20+02:00" data-updated="2026-08-29T12:30:33+02:00" data-versions="outline link">
       <div class="stage">
-        <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate"><span class="p-cycle-lbl"><span>Take the tour</span><span aria-hidden="true">Take the tour</span></span></span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
+        <button type="button" class="btn p-cycle"><span class="p-cycle-row"><span class="p-cycle-plate"><span class="p-cycle-lbl"><span data-label>Take the tour</span><span data-label aria-hidden="true">Take the tour</span></span></span><span class="p-cycle-mark"><span class="p-cycle-cyc"><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg><svg class="icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span></span></span></button>
       </div>
       <h3><span class="num">69</span>Clipped relay</h3>
       <p>One capsule with two windows, and only their contents move: the arrow exits the right edge and the next enters from the left, while the label rolls up out of the top and its next copy arrives from below. Each window advances its content the way that content reads. Neither comes back &mdash; every pass advances the cycle, the one study with no exit.</p>
@@ -7266,6 +7266,61 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-cycle.p-cycle-run.p-cycle-b .p-cycle-lbl>span:last-child{animation-name:p-cycle-lbl-exit}
   .p-cycle.p-cycle-run.p-cycle-b .p-cycle-lbl>span:first-child{
     animation-name:p-cycle-lbl-enter; animation-delay:var(--d-1)}
+
+  /* ---- 69 in the other two treatments ----------------------------------
+     The three studies filed beside this one — 66, 67, 93 — are two objects
+     with a gap between them, and a treatment on the outer button would be a
+     THIRD surface arguing with the two inside it. That is why none of the four
+     offered one. 69 is the one that is not two objects: gap:0, the facing
+     corners squared, ONE capsule with two windows cut in it, which the card
+     above says in as many words. So a treatment here REPLACES that capsule's
+     surface rather than sitting under it, and the button still states its
+     ground once.
+
+     Neither version touches the mechanism. The roles, the two keyframe pairs,
+     the +230% wrap and the commit are all geometry, and the clipping that
+     makes the windows is a property of the boxes rather than of what they are
+     painted in — so the arrows and the label copies travel the same distances
+     in all three, and only the ground they travel over changes. Both windows
+     keep overflow:hidden for exactly that reason. */
+  /* The plate's --ink and the mark's --ink are one capsule, so one border
+     replaces both: the ring goes on the BUTTON, where .btn--line already puts
+     it, and the two children hand their fill back. --ink-text and not
+     --ink-on-fill — the label was fitted against a plate that is no longer
+     there, and the ink the page fits against the CARD is the one it now sits
+     on. .p-cycle zeroes the border for its own version, so the treatment has
+     to restate it; at 0-2-0 it outranks that. */
+  .btn--line.p-cycle{border:1px solid var(--ink)}
+  .btn--line.p-cycle .p-cycle-plate,
+  .btn--line.p-cycle .p-cycle-mark{background:none; color:var(--ink-text)}
+
+  /* On a link a fill becomes a LINE — 1.5px along the bottom edge, card 136's
+     spelling, an ::after rather than an inset shadow so it stays straight
+     instead of curling at the ends. It runs under BOTH windows because the
+     capsule was one surface; a rule under the label alone would be a link
+     standing next to an arrow rather than a link that has an arrow in it.
+
+     The padding is the one number that cannot simply be restated at
+     .btn--text's value, because here it is not an inset — it is the label's
+     CLEARANCE. The window is the plate's own edge and the roll travels one
+     label height plus that padding, so a padding of zero would clip the type
+     it is meant to clear and the roll would shear the descender off the long
+     label. 8px is .btn--text's own vertical measure, moved onto the plate
+     where the clip is: the rule still lands 8px under the word, the exit still
+     lands the outgoing copy exactly on the window's edge, and both are the
+     fill version's geometry at the link's size rather than a second set of
+     numbers. 28px of window for a 14px mark keeps the wrap outside it by
+     11.2px, where the fill's 46px keeps it outside by 2.2. */
+  .btn--text.p-cycle{
+    border:0; padding:0 4px; border-radius:2px; --p-cycle-pad:8px}
+  .btn--text.p-cycle .p-cycle-plate,
+  .btn--text.p-cycle .p-cycle-mark{background:none; color:var(--ink-text)}
+  .btn--text.p-cycle .p-cycle-plate{
+    padding:var(--p-cycle-pad) 0; border-radius:2px 0 0 2px}
+  .btn--text.p-cycle .p-cycle-mark{width:28px; border-radius:0 2px 2px 0}
+  .btn--text.p-cycle::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:1.5px;
+    background:var(--ink)}
 
 
 </style>
