@@ -304,7 +304,14 @@ const KIT = String.raw`(() => {
   // build disagreed on cards 43 and 82 before this.
   A.freeze = () => { const a = document.getAnimations(); a.forEach(x => { try { x.pause() } catch (e) {} }); return a.length }
   A.thaw   = () => { document.getAnimations().forEach(x => { try { x.play() } catch (e) {} }); return true }
-  A.into   = y => { window.scrollTo(0, Math.max(0, y - window.innerHeight/2)); return window.scrollY }
+  // behavior:'instant' is load-bearing. The page sets html{scroll-behavior:smooth}
+  // under prefers-reduced-motion:no-preference, so a plain scrollTo ANIMATES —
+  // and scrollY comes back as the target while the surface is still travelling.
+  // A capture clipped against that number lands somewhere the label is not, which
+  // reads as a flat crop and gets filed as «not measurable» for a label that is
+  // sitting there in plain sight.
+  A.into   = y => { window.scrollTo({ top: Math.max(0, y - window.innerHeight/2),
+                                      left: 0, behavior: 'instant' }); return window.scrollY }
 
   A.fontOK = () => {
     const sheets = [...document.styleSheets].map(s => s.href).filter(Boolean)
@@ -532,10 +539,6 @@ async function shots (rects, kind) {
   }
   return out
 }
-// A crop that comes back perfectly uniform on a button that IS shipped and DOES
-// have a glyph box is not a finding, it is a failed capture — captureBeyondViewport
-// returns blank surface for clips a long way down a 40,000px page. Scroll to it
-// and ask again before believing it.
 // A crop that comes back flat has no glyph in it, and two different things land
 // here. One is a fault the tool can fix: a capture that failed, which repair()
 // scrolls to and asks again. The other is a button that is genuinely NOT PAINTED
@@ -546,6 +549,19 @@ async function shots (rects, kind) {
 // counted and named separately rather than folded into the verdict.
 const blind = v => !!v && v.bgShare >= 0.999 && v.sd <= 0.002
 
+// ⚠️ AND THERE IS A THIRD KIND, STILL OPEN. captureBeyondViewport hands back
+// blank surface — which is WHITE — for part of a clip a long way down a
+// 40,000px page. The crop is then part real and part nothing, so it is not flat
+// and repair() never looks at it, and the histogram takes the plate as its
+// modal bin and the blank as the far one: plate-against-blank, reported as
+// label-against-plate. Measured 2026-09-01 with a picked colour in light: ten
+// studies whose labels are 6.11:1 came back as 3.07, which is exactly
+// #00aa46-against-white. It does not show on the default palette, where
+// plate-against-white is either far above the floor or caught by blind().
+// Re-shooting those in the viewport was tried and is NOT in here: scrolling to
+// the button and clipping in viewport coordinates turned nine of them into flat
+// crops instead, so it trades one artefact for another. The fix wants somebody
+// to work out what the surface is actually doing, not another guess.
 async function repair (rects, b64s, vals, kind) {
   let n = 0
   for (let i = 0; i < rects.length; i++) {
@@ -553,7 +569,10 @@ async function repair (rects, b64s, vals, kind) {
     if (!r.shipped || r.lbl.noText) continue
     if (!blind(v)) continue
     await p.evalJs(`window.__a11y.into(${Math.round(r.lbl.y)})`)
-    await new Promise(t => setTimeout(t, 120))
+    // Two frames, not one: this page is 940KB of interleaved CSS and the surface
+    // is still the old scroll position for longer than a 120ms guess allows.
+    await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
+    await new Promise(t => setTimeout(t, 260))
     await p.evalJs('window.__a11y.freeze()')
     const one = await shots([r], kind)
     await p.evalJs('window.__a11y.thaw()')
