@@ -807,13 +807,15 @@
      once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
   .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten, .o-caps){
+          .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
   :root[data-theme="light"] .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten, .o-caps){
+          .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn){
     --lift-bg:var(--m-face, #e7e7e7);
     --bg-2:var(--m-face,    #e7e7e7);
   }
@@ -909,7 +911,8 @@
      which is further down the file and would otherwise win on source order. */
   .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten, .o-caps){
+          .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn){
     color:var(--m-face-ink, var(--ink-text));
   }
   .btn:hover,
@@ -3523,6 +3526,42 @@
       <h3><span class="num">116</span>Stack fan</h3>
       <p>The plate lifts and three more fan out beneath it. They are plates and not shadow — three steps of the same grayscale, drawn by one property at the plate's own radius, so depth is still stated as lightness.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec" data-key="p-box" data-native="fill" data-added="2026-09-01T08:20:00+02:00" data-updated="2026-09-01T08:20:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn p-box"><span class="p-box-in" aria-hidden="true"><span class="p-box-f p-box-front">Get started</span><span class="p-box-f p-box-floor">Get started</span><span class="p-box-f p-box-back">Get started</span></span><span class="sr">Get started</span></button>
+      </div>
+      <h3><span class="num">147</span>Turns over</h3>
+      <p>A closed prism, not a flip: two faces 45px apart and a floor hinged at the bottom edge, turning a half circle. Every face carries the same word, so nothing is revealed &mdash; an object simply tumbles. It has no roof, which is the point: mid-turn you are looking down into an open container. Recreated from Item-Box on <a href="https://tiny-mighty-buttons.webflow.io/" rel="noopener">tiny-mighty-buttons.webflow.io</a>, whose geometry and easing this keeps.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="p-die" data-native="fill" data-added="2026-09-01T08:20:00+02:00" data-updated="2026-09-01T08:20:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn p-die"><span class="p-die-in" aria-hidden="true"><span class="p-die-f p-die-front">Delete</span><span class="p-die-f p-die-floor">Sure?</span><span class="p-die-f p-die-back">Confirm</span><span class="p-die-f p-die-roof">Deleted</span></span><span class="sr">Delete</span></button>
+      </div>
+      <h3><span class="num">148</span>Counts its turns</h3>
+      <p>147 always comes back. This one adds a roof, puts a different word on each of the four faces, and advances exactly a quarter turn per hover without returning &mdash; so the button holds its state in its geometry rather than in a class. The square profile is what makes it legal: at 45px deep against a 45px face, a quarter turn presents a face the same size as the one it replaced.</p>
+      <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="p-hold" data-native="fill" data-added="2026-09-01T08:20:00+02:00" data-updated="2026-09-01T08:20:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn p-hold"><span class="p-hold-in" aria-hidden="true"><span class="p-hold-f p-hold-front">Open</span><span class="p-hold-f p-hold-floor">Inside</span><span class="p-hold-f p-hold-back">Taken</span></span><span class="sr">Open</span></button>
+      </div>
+      <h3><span class="num">149</span>Stops halfway</h3>
+      <p>147 passes through 90&deg; in about 200ms and never lets you see it. This stops there: hover holds the box open with the floor face square to you, and press finishes the turn. One move split across two states, so hover and press stop competing for the same rotation &mdash; the same split 129 makes between a park and a landing.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
+    </article>
+
+    <article class="spec" data-key="p-turn" data-native="fill" data-added="2026-09-01T08:20:00+02:00" data-updated="2026-09-01T08:20:00+02:00">
+      <div class="stage">
+        <button type="button" class="btn p-turn"><span class="p-turn-in" aria-hidden="true"><span class="p-turn-in2"><span class="p-turn-f p-turn-front">Send it</span><span class="p-turn-f p-turn-floor">Send it</span><span class="p-turn-f p-turn-back">Send it</span></span></span><span class="sr">Send it</span></button>
+      </div>
+      <h3><span class="num">150</span>Rounds a corner</h3>
+      <p>Half a turn on X and half on Y, on nested elements finishing 90ms apart, so the box goes round a corner instead of spinning on a spit. The depth is in the asynchrony. Two axes means two elements &mdash; one element cannot carry two transforms on two clocks &mdash; and only X keeps the overshoot, because two bouncing axes read as a wobble.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec" data-key="magnet" data-native="fill" data-versions="outline link" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T12:30:33+02:00">
@@ -10763,6 +10802,98 @@ document.addEventListener("DOMContentLoaded", function () {
 </style>
 
 
+<style>
+  /* ---- 147-150 The box family --------------------------------------
+     From Item-Box on tiny-mighty-buttons.webflow.io, rebuilt from its own
+     embedded stylesheet rather than eyeballed, and credited on card 147.
+
+     WHAT IT IS, because «flip» is the wrong word and sends the next reader
+     to the wrong maths: a CLOSED PRISM. Two faces --bx-h apart in z and a
+     floor hinged at the bottom edge, all three carrying the SAME word, so
+     nothing is revealed — an object tumbles. 140 is the flip: two faces,
+     one hinge, the back answering the front. This has no back to answer
+     with, and no roof either, which is the detail that sells it. For a
+     moment mid-turn you are looking down into an open container.
+
+     🔑 THE SQUARE PROFILE IS LOAD-BEARING, NOT A STYLE CHOICE. --d is HALF
+     the depth and it is derived from the box height, never typed: at
+     --d = --bx-h/2 a quarter turn presents a face the SAME SIZE as the one
+     it replaced. Break the ratio and the button changes size mid-roll —
+     which is why 148 and 149, the two that stop on a quarter, cannot have
+     it retyped underneath them.
+
+     The floor is not a full-size face rotated. It is --d*2 tall, centred in
+     the grid cell, laid flat with rotateX(-90deg) and then pushed down its
+     own half-height — so its extent in z IS the depth, and changing --d
+     moves the floor and the two faces together. Same for 148's roof at +90.
+
+     Durations are the house tokens and not the source's 550ms, so all four
+     inherit the rest/hover rung — enter at --t-5 full, leave one rung down. */
+  .p-box, .p-die, .p-hold, .p-turn{
+    /* One line plus the base's 15px top and bottom. Typed the way 143 types
+       its resolved pill, and for the same reason: the geometry has to know
+       the number, and --btn-r is 999px, which is not one. */
+    --bx-h:calc(30px + 1lh);
+    --d:calc(var(--bx-h) / 2);
+    --plate-r:calc((30px + 1lh) / 2);
+    padding:0; perspective:40rem;
+  }
+  .p-box-in, .p-die-in, .p-hold-in, .p-turn-in{
+    display:grid; pointer-events:none; transform-style:preserve-3d;
+    transition:transform var(--t-5) var(--e-back);
+  }
+  .p-box-f, .p-die-f, .p-hold-f, .p-turn-f{
+    grid-area:1/1; align-self:center; justify-self:stretch; box-sizing:border-box;
+    display:grid; place-content:center; padding:15px 28px; white-space:nowrap;
+    background:var(--lift-bg); border-radius:var(--plate-r);
+    backface-visibility:hidden;
+  }
+  .p-box-front, .p-die-front, .p-hold-front, .p-turn-front{
+    transform:translateZ(var(--d))}
+  .p-box-back, .p-die-back, .p-hold-back, .p-turn-back{
+    transform:translateZ(calc(var(--d) * -1)) rotateX(180deg)}
+  .p-box-floor, .p-die-floor, .p-hold-floor, .p-turn-floor{
+    height:calc(var(--d) * 2); padding:0 28px;
+    transform:rotateX(-90deg) translateZ(calc(var(--bx-h) / 2))}
+  .p-die-roof{
+    height:calc(var(--d) * 2); padding:0 28px;
+    transform:rotateX(90deg) translateZ(calc(var(--bx-h) / 2))}
+
+  @media (hover:hover) and (pointer:fine){
+    .p-box:is(:hover,:focus-visible) .p-box-in{transform:rotateX(180deg)}
+    /* 149 holds the quarter turn instead of passing through it, and the press
+       finishes the rotation the hover started — one move, two states, so the
+       two inputs stop competing for the same rotation. */
+    .p-hold:is(:hover,:focus-visible) .p-hold-in{transform:rotateX(90deg)}
+    .p-hold:active .p-hold-in{transform:rotateX(180deg)}
+  }
+  /* 148 is driven by the step counter at the foot of this file, not by :hover,
+     because the whole study is that it does NOT come back. Four faces, four
+     words, +90deg per entry, and 4 lands it on the front again. */
+  .p-die-in{transform:rotateX(calc(var(--step, 0) * 90deg))}
+
+  /* 150 — two axes on two clocks. ⚠️ TWO ELEMENTS, because one element cannot
+     carry two transforms with two durations, and the nested pair is the only
+     way to state it. The 90ms is the whole effect: measured 2026-09-01, at
+     550/800ms it settled in 799ms and read as lag (it was never dropping
+     frames — max 9.4ms at 120Hz); the gap closed to 90ms settles in 475ms and
+     reads as one gesture turning a corner. Only X overshoots — two bouncing
+     axes read as a wobble, one reads as weight. */
+  .p-turn-in2{display:grid; grid-area:1/1; transform-style:preserve-3d;
+    transition:transform calc(var(--t-5) + 90ms) var(--e-quint)}
+  @media (hover:hover) and (pointer:fine){
+    .p-turn:is(:hover,:focus-visible) .p-turn-in{transform:rotateX(180deg)}
+    .p-turn:is(:hover,:focus-visible) .p-turn-in2{transform:rotateY(180deg)}
+  }
+
+  /* 147 is the one card that credits a source in its prose rather than in a
+     comment up here. The link takes the card's own ink; nothing else on a
+     card is a link, so this is scoped rather than general. */
+  .spec p a{color:var(--ink-text); text-decoration:underline;
+    text-underline-offset:2px; text-decoration-thickness:1px}
+</style>
+
+
 <script>
 // 141 and 142 split their label into per-character spans. Deferred for the
 // reason set out at the first of these blocks: a script above its own markup
@@ -11108,7 +11239,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Keyed by data-key — the effect class — and NOT by the display number,
      which moves whenever a study is retired and would re-file every card
      after it against another card's tags. -->
-<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
+<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","p-box":"moves|hover","p-die":"moves|js","p-hold":"moves|press hover","p-turn":"moves|hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -11117,7 +11248,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","x-bevel":"104","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
+<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","p-box":"147","p-die":"148","p-hold":"149","p-turn":"150","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","x-bevel":"104","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -15299,6 +15430,25 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+
+
+<script>
+// 148 counts its turns. Deferred to DOMContentLoaded for the reason set out at
+// the first of these blocks: a script above its own markup binds to nothing, in
+// silence — and regroup.mjs moves the markup.
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".p-die").forEach(function (btn) {
+    var step = 0;
+    // The class does the rotation; this only ever writes the count. Entry and
+    // click both advance, so a keyboard user and a pointer user get the same
+    // four faces in the same order.
+    function advance() { btn.style.setProperty("--step", ++step); }
+    btn.addEventListener("pointerenter", advance);
+    btn.addEventListener("focus", advance);
+    btn.addEventListener("click", advance);
+  });
+});
+</script>
 
 
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->

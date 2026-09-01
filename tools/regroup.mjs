@@ -126,6 +126,14 @@ const ORDER_OF = {
     'Answers back',
     'Stack fan',
 
+    // Boxes: the plate is a closed prism with a back and a floor, and it turns
+    // to show them. 147 is the family; the three after it each change one
+    // thing — where the turn stops, and which axes it uses.
+    'Turns over',
+    'Counts its turns',
+    'Stops halfway',
+    'Rounds a corner',
+
     // Mass: it has weight, and the pointer has to argue with it.
     'Magnetic',
     'Loose label',
