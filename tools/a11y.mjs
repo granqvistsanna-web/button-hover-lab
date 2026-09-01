@@ -321,7 +321,17 @@ const KIT = String.raw`(() => {
 const OUTDIR = path.dirname(OUT)
 const SETTLE = Number(process.env.A11Y_SETTLE || 950)   // longest --t-5 chain + slack
 const THEMES   = (process.env.A11Y_THEMES   ?? 'dark,light').split(',')
-const VERSIONS = (process.env.A11Y_VERSIONS ?? ',fill,outline,link').split(',')
+// THREE, NOT FOUR -- the same correction the toolbar already made. The leading
+// '' measured the page with no treatment pressed and printed it as «built»,
+// which reads as a fourth category beside fill/outline/link. It is not one:
+// the version axis has three, and «no treatment» is the absence of the
+// question rather than an answer to it. Every study is already measured in
+// the version it natively ships, because a study that offers nothing else
+// stays put when a treatment is applied. So the pass added a row and no
+// coverage. Overridable for a one-off (A11Y_VERSIONS=',fill' still works);
+// the ring pass below still clears the treatment, because that is a geometry
+// baseline and not a category anyone reports.
+const VERSIONS = (process.env.A11Y_VERSIONS ?? 'fill,outline,link').split(',')
 const LIMIT    = Number(process.env.A11Y_LIMIT || 0)     // first N buttons, for a smoke run
 
 const p = await open()
