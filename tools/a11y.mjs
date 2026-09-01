@@ -302,6 +302,23 @@ const KIT = String.raw`(() => {
   // 900ms. Pausing every running animation for the length of one capture is the
   // difference between a measurement and a coin toss: two runs of the same
   // build disagreed on cards 43 and 82 before this.
+  // A rect cut out of a WHOLE-VIEWPORT shot, in the page rather than by CDP.
+  // This is the other half of the surface answer: Page.captureScreenshot's own
+  // clip is what comes back blank, and captureBeyondViewport is only ever
+  // reached for because the clip cannot be trusted. An unclipped viewport
+  // capture is neither — it is the surface as it is actually painted — so the
+  // rectangle is taken from it here, in device pixels, against the live scroll.
+  A.cropRead = async (b64, page, dpr) => {
+    const x = page.x - scrollX, y = page.y - scrollY
+    if (y < 0 || y + page.h > innerHeight || x < 0 || x + page.w > innerWidth) return null
+    const bmp = await createImageBitmap(await (await fetch('data:image/png;base64,' + b64)).blob())
+    const w = Math.max(1, Math.round(page.w * dpr)), h = Math.max(1, Math.round(page.h * dpr))
+    const cv = new OffscreenCanvas(w, h)
+    const cx = cv.getContext('2d', { willReadFrequently: true })
+    cx.drawImage(bmp, Math.round(x * dpr), Math.round(y * dpr), w, h, 0, 0, w, h)
+    return A.textVsBg(cx.getImageData(0, 0, w, h))
+  }
+  A.dpr = () => devicePixelRatio
   A.freeze = () => { const a = document.getAnimations(); a.forEach(x => { try { x.pause() } catch (e) {} }); return a.length }
   A.thaw   = () => { document.getAnimations().forEach(x => { try { x.play() } catch (e) {} }); return true }
   // behavior:'instant' is load-bearing. The page sets html{scroll-behavior:smooth}
@@ -358,6 +375,7 @@ const THEMES   = (process.env.A11Y_THEMES   ?? 'dark,light').split(',')
 // baseline and not a category anyone reports.
 const VERSIONS = (process.env.A11Y_VERSIONS ?? 'fill,outline,link').split(',')
 const LIMIT    = Number(process.env.A11Y_LIMIT || 0)     // first N buttons, for a smoke run
+const PALETTE  = process.env.A11Y_PALETTE || ''          // '' = the page as it ships
 
 const p = await open()
 await p.send('Page.navigate', { url: `http://127.0.0.1:${p.port}/` })
@@ -460,6 +478,23 @@ async function force (ids, classes) {
     await p.send('CSS.forcePseudoState', { nodeId, forcedPseudoClasses: classes })
 }
 
+// A palette, for the runs that need one. The harvest measures the page as it
+// ships, and every number it has ever printed is Graphite — which is the one
+// palette where --ink-on-fill and --on-ink-hover resolve to the SAME colour, so
+// the whole class of «label fitted against the wrong plate» is invisible to it
+// by construction. Card 140 sat at 1.19:1 for a week behind exactly that.
+// Off by default: this changes what is being measured, not how.
+async function setPalette (name) {
+  if (!name) return
+  await p.evalJs(`(() => {
+    const b = [...document.querySelectorAll('.set-p')]
+      .find(x => x.textContent.trim().split(/\s|—/)[0] === ${JSON.stringify(name)})
+    if (!b) throw new Error('no palette ' + ${JSON.stringify(name)})
+    if (b.getAttribute('aria-pressed') !== 'true') b.click()
+    return true })()`)
+  await new Promise(r => setTimeout(r, 500))
+}
+
 async function setTheme (t) {
   await p.evalJs(`(() => { const b = document.querySelector('#v-theme .vers-b[data-theme="${t}"]');
     if (!b) throw new Error('no theme control for ${t}'); b.click(); return true })()`)
@@ -549,7 +584,8 @@ async function shots (rects, kind) {
 // counted and named separately rather than folded into the verdict.
 const blind = v => !!v && v.bgShare >= 0.999 && v.sd <= 0.002
 
-// ⚠️ AND THERE IS A THIRD KIND, STILL OPEN. captureBeyondViewport hands back
+// ✅ AND A THIRD KIND, CLOSED 2026-09-01 — the note it replaces is kept below
+// because the symptom is worth recognising again. captureBeyondViewport hands back
 // blank surface — which is WHITE — for part of a clip a long way down a
 // 40,000px page. The crop is then part real and part nothing, so it is not flat
 // and repair() never looks at it, and the histogram takes the plate as its
@@ -558,29 +594,64 @@ const blind = v => !!v && v.bgShare >= 0.999 && v.sd <= 0.002
 // studies whose labels are 6.11:1 came back as 3.07, which is exactly
 // #00aa46-against-white. It does not show on the default palette, where
 // plate-against-white is either far above the floor or caught by blind().
-// Re-shooting those in the viewport was tried and is NOT in here: scrolling to
-// the button and clipping in viewport coordinates turned nine of them into flat
-// crops instead, so it trades one artefact for another. The fix wants somebody
-// to work out what the surface is actually doing, not another guess.
+// 🔑 WHAT THE SURFACE IS ACTUALLY DOING: Page.captureScreenshot's own `clip` is
+// the broken part, not the scrolling. Clipped in viewport coordinates it returns
+// blank for anything below the fold in this headless build — which is why the
+// earlier attempt turned nine crops flat and read as trading one artefact for
+// another — and captureBeyondViewport is only ever reached for because the clip
+// cannot be trusted. An UNCLIPPED viewport capture is neither, and the rectangle
+// is cut out of it in the page (A.cropRead). Confirmed against this tool's own
+// numbers: 143 in dark/outline reads 14.21 rest / 14.19 hover either way.
+//
+// So the verdict is no longer only as good as its worst crop. Every reading
+// that would be reported as a FAILURE is re-taken through that second, wholly
+// independent path before it is believed — a real failure measures the same
+// twice, an artefact does not. Only failures are re-shot, so the run does not
+// get slower; an unclipped capture is too heavy to be the default for all 125.
 async function repair (rects, b64s, vals, kind) {
   let n = 0
   for (let i = 0; i < rects.length; i++) {
     const r = rects[i], v = vals[i]
     if (!r.shipped || r.lbl.noText) continue
-    if (!blind(v)) continue
-    await p.evalJs(`window.__a11y.into(${Math.round(r.lbl.y)})`)
-    // Two frames, not one: this page is 940KB of interleaved CSS and the surface
-    // is still the old scroll position for longer than a 120ms guess allows.
-    await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
-    await new Promise(t => setTimeout(t, 260))
-    await p.evalJs('window.__a11y.freeze()')
-    const one = await shots([r], kind)
-    await p.evalJs('window.__a11y.thaw()')
-    if (!one[0]) continue
-    const re = await read(one)
-    if (re[0] && !blind(re[0])) { b64s[i] = one[0]; vals[i] = re[0]; n++ }
+    // Two reasons to look again, and the second one is the point. A flat crop is
+    // a capture that failed. A crop that would be REPORTED — anything under the
+    // floor — is a claim the tool is about to make about the page, and it is
+    // worth one more capture down a path that fails differently.
+    if (!blind(v) && !(v && v.ratio < 4.5)) continue
+    const re = await viewportRead(r, kind)
+    if (!re) continue
+    // Believed only when it is a reading at all. Same number on a real failure;
+    // on the blank-surface artefact it is the number the label actually has.
+    if (!blind(re)) { vals[i] = re; b64s[i] = b64s[i]; n++ }
   }
   return n
+}
+
+// One rect, read off an UNCLIPPED viewport capture. Scroll it into view, hold
+// every animation for the length of the shot exactly as the main pass does, and
+// cut the rectangle out in the page against the live scroll.
+async function viewportRead (r, kind) {
+  const box = kind === 'ring'
+    ? { x: r.btn.x - 10, y: r.btn.y - 10, w: Math.round(r.btn.w) + 20, h: Math.round(r.btn.h) + 20 }
+    : { x: r.lbl.x - 1,  y: r.lbl.y - 1,  w: Math.max(4, Math.round(r.lbl.w) + 2),
+        h: Math.max(6, Math.round(r.lbl.h) + 2) }
+  await p.evalJs(`window.__a11y.into(${Math.round(box.y + box.h / 2)})`)
+  // Two frames, not one: this page is 940KB of interleaved CSS and the surface
+  // is still the old scroll position for longer than a 120ms guess allows.
+  await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
+  await new Promise(t => setTimeout(t, 260))
+  await p.evalJs('window.__a11y.freeze()')
+  let shot
+  try {
+    shot = await p.send('Page.captureScreenshot',
+      { format: 'png', fromSurface: true, optimizeForSpeed: true })
+  } catch (e) { await p.evalJs('window.__a11y.thaw()'); return null }
+  await p.evalJs('window.__a11y.thaw()')
+  const b64 = shot.result?.data
+  if (!b64) return null
+  const v = await p.evalJs(`(async () => JSON.stringify(await window.__a11y.cropRead(
+    ${JSON.stringify(b64)}, ${JSON.stringify(box)}, window.__a11y.dpr())))()`)
+  return v && v !== 'null' ? JSON.parse(v) : null
 }
 async function read (b64s) {
   const out = []
@@ -605,6 +676,7 @@ async function diff (a, b) {
 
 for (const theme of THEMES) {
   await setTheme(theme)
+  await setPalette(PALETTE)
   for (const version of VERSIONS) {
     await setVersion(version)
     const ids = await nodeIds()
@@ -668,6 +740,7 @@ for (const theme of THEMES) {
 await setVersion('')
 for (const theme of THEMES) {
   await setTheme(theme)
+  await setPalette(PALETTE)
   const ids = await nodeIds()
   let rects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
   if (LIMIT) rects = rects.slice(0, LIMIT)
