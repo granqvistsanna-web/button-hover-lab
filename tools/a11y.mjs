@@ -204,15 +204,48 @@ const KIT = String.raw`(() => {
         return NodeFilter.FILTER_ACCEPT
       }
     })
+    // 🚨 AND EVERY RECT IS CLIPPED BY ITS OWN ANCESTORS BEFORE IT JOINS THE
+    // UNION. Clamping the union to the button was half the answer and fixed the
+    // studies whose duplicate is drawn OUTSIDE it — 19's second run of the word,
+    // 106px to the right. It cannot touch the commoner case, where the duplicate
+    // is inside the button and outside a track: 137's label rect stayed 35px
+    // tall for a 15px line, because a roll parks its second copy one face below
+    // the first under overflow:hidden on a 1.25em .track. Those pixels are
+    // never on screen, and the crop that took them in read the study's own
+    // --card isolation ground as its text — luminance 1.000, pure white, against
+    // a #00aa46 plate, which is the 3.07:1 that survived the clamp on a label
+    // whose real number is 6.05.
+    // Per RECT and not per union, because two copies of one label sit in two
+    // different tracks and are clipped by different boxes. A rect clipped away
+    // to nothing is dropped rather than unioned: that is the outgoing copy of a
+    // swap, which is exactly what should not be measured once it has left.
+    // Bounded at the button, so nothing here has to reason about the feed —
+    // .sect and .grid are display:contents and have no box to intersect with,
+    // and the button clamp below is the outer bound anyway.
+    const clipped = (q, from) => {
+      let l = q.left, t = q.top, r = q.right, bo = q.bottom
+      for (let e = from; e && e !== b.parentElement; e = e.parentElement) {
+        const cs = getComputedStyle(e)
+        if (cs.display === 'contents') continue
+        if (cs.overflow === 'visible' && cs.overflowX === 'visible'
+            && cs.overflowY === 'visible') continue
+        const c = e.getBoundingClientRect()
+        l = Math.max(l, c.left);  t = Math.max(t, c.top)
+        r = Math.min(r, c.right); bo = Math.min(bo, c.bottom)
+      }
+      return { l, t, r, b: bo }
+    }
     let box = null
     for (let n = w.nextNode(); n; n = w.nextNode()) {
       const r = document.createRange(); r.selectNodeContents(n)
       for (const q of r.getClientRects()) {
         if (q.width < 0.5 || q.height < 0.5) continue
+        const c = clipped(q, n.parentElement)
+        if (c.r - c.l < 0.5 || c.b - c.t < 0.5) continue
         box = box
-          ? { l: Math.min(box.l, q.left), t: Math.min(box.t, q.top),
-              r: Math.max(box.r, q.right), b: Math.max(box.b, q.bottom) }
-          : { l: q.left, t: q.top, r: q.right, b: q.bottom }
+          ? { l: Math.min(box.l, c.l), t: Math.min(box.t, c.t),
+              r: Math.max(box.r, c.r), b: Math.max(box.b, c.b) }
+          : c
       }
     }
     let noText = false
