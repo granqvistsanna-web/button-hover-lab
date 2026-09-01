@@ -5196,6 +5196,10 @@ document.addEventListener("DOMContentLoaded", function () {
                inset 0 2px 3px rgba(var(--shadow-rgb),.2);
     background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
     border-color:color-mix(in srgb,var(--ink) 55%,var(--line));
+    /* 43 shades the same face to the same pair, so the pressed label takes the
+       same ink 111's hovered one does — 55% and 50% are both grounds in that
+       fit. .btn.g-key:active is 0-3-0 and clears the face group outright. */
+    color:var(--m-face-shade-ink, var(--m-face-ink, var(--ink-text)));
     /* The stroke is continuous; the commit is not. Both colours carry a 0ms
        duration and a delay of 60% of the stroke, so they land as a step while
        the cap is still travelling the last 40%. */
@@ -9081,6 +9085,14 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.y-hold:focus-visible{
     transform:scale(.99) rotate(0.001deg);
     background:color-mix(in srgb, var(--lift-bg) 50%, var(--stage));
+    /* The label moves with the ground. --m-face-ink is solved for the plate at
+       REST, and this rule is the plate leaving that position: in light the face
+       is a deep accent and the card is near-white, so shading half way to the
+       card walks the plate TOWARD the label fitted to it — measured 1.5–2.3:1
+       over four palettes. --m-face-shade-ink is the same fit taken against
+       where the plate actually arrives. Unset, both fall through to --ink-text
+       and the default rendering does not move. */
+    color:var(--m-face-shade-ink, var(--m-face-ink, var(--ink-text)));
   }
   /* The press belongs to the state, not to :active — during a capture :active
      stays true off-plate, which is exactly where the plate must let go. This
@@ -12758,8 +12770,58 @@ document.addEventListener("DOMContentLoaded", function () {
         // down a ladder they already span costs them nothing measurable.
         var onBevel = labelOnGrounds([mv['--bg-2'], mv['--bg-3'], mv['--bg-4']]);
         var onFace  = labelOnGrounds([mv['--lift-bg']]);
+        // ---- AND THE TWO FACES THAT MOVE UNDER THEIR OWN LABEL ------------
+        // 🔑 --m-face-ink IS SOLVED FOR A PLATE AT REST, and two studies do not
+        // leave their plate there. 111 hovers to color-mix(--lift-bg 50%,
+        // --stage) and 43 presses to 55% of the same pair: the ground the label
+        // is fitted to SHADES TOWARD THE CARD. Unpicked that is a grey stepping
+        // half an elevation and the label is --ink-text, so it has never
+        // mattered. With a pick it does, and in one direction only — in light
+        // the face is a deep accent and the card is near-white, so the plate
+        // travels TOWARD the label that was fitted to the deep version of it.
+        // Measured over four palettes: 111's hovered label reads 1.5–2.3:1 in
+        // light and 5.7–9.0 in dark, which is the asymmetry stated exactly.
+        //
+        // 🚨 AND IT IS A SECOND INK, NOT A WIDER FIT. One colour solved against
+        // the rest face AND both shades at once was tried first, on --m-seat's
+        // worse-of-its-grounds reasoning, and the arithmetic says no: in light
+        // the face is a deep accent and the shade is pale, so the plate
+        // traverses the label's whole range and nothing clears both ends.
+        // Measured over six palettes — 111's hover came right (1.5–2.3 → 7.6–9.7)
+        // and its REST went 15.15 → 2.58, the same failure moved one state
+        // along, with 43's dark rest dragged from 4.73 to 2.51 for company.
+        // So this is fitted to the SHADES only and the rest label keeps
+        // --m-face-ink. That is the shape --on-ink-hover already has for the
+        // same reason: what the label sits on has changed, so the fit has.
+        //
+        // The shades are computed here rather than read back off the button:
+        // color-mix(in srgb) is a per-channel lerp of the sRGB values, so it is
+        // reproducible, and reading it would mean measuring a plate mid-
+        // transition on a card that may not be on screen.
+        var faceShade = function (p){
+          var f = mv['--lift-bg'];
+          return [0, 1, 2].map(function (i){
+            return Math.round(f[i] * p + PANEL[i] * (1 - p));
+          });
+        };
+        var shadeGrounds = [faceShade(.50), faceShade(.55)];
+        var onFaceShade = labelOnGrounds(shadeGrounds);
+        // …and it only gets written when it EARNS the second colour. On a dark
+        // card the shades run darker than the face rather than paler, so the
+        // rest ink is often already the better answer there — measured dark
+        // Emerald, where fitting the shades on their own took 43's press from
+        // 4.46 to 3.65. A token that makes a state worse than the one it
+        // replaces is not a fix, so the two are scored on the grounds this one
+        // exists for and the loser stands down.
+        var worstOn = function (hex, gs){
+          var c = toRgb(hex);
+          return gs.reduce(function (m, g){ return Math.min(m, ratio(c, g)); }, Infinity);
+        };
+        if (worstOn(onFace.hex, shadeGrounds) >= worstOn(onFaceShade.hex, shadeGrounds))
+          onFaceShade = onFace;
         root.setProperty('--m-ink',      onBevel.hex);
         root.setProperty('--m-face-ink', onFace.hex);
+        root.setProperty('--m-face-shade-ink', onFaceShade.hex);
         onPlate = onBevel.ratio <= onFace.ratio ? onBevel : onFace;
         // One flag for the caption, and it has to answer for both: a fit that
         // moved on either group is a fit the reader was not told about.
@@ -12769,6 +12831,7 @@ document.addEventListener("DOMContentLoaded", function () {
         M_RUNGS.forEach(function (n){ root.removeProperty(M_SET[n]); });
         root.removeProperty('--m-ink');
         root.removeProperty('--m-face-ink');
+        root.removeProperty('--m-face-shade-ink');
         root.removeProperty('--m-seat');
         root.removeProperty('--m-sheen');
         root.removeProperty('--m-sheen-k');
