@@ -218,6 +218,24 @@ const KIT = String.raw`(() => {
     let noText = false
     if (!box) { noText = true; const q = b.getBoundingClientRect()
       box = { l: q.left, t: q.top, r: q.right, b: q.bottom } }
+    // 🚨 AND THE BOX IS CLIPPED TO THE BUTTON. Thirteen studies duplicate their
+    // label — a roll keeps a second copy below the plate, 19 keeps a whole
+    // second run of the word 106px to the right — and the range covers the
+    // duplicate too, because it is painted, it is not aria-hidden and it is not
+    // display:none. It is, however, CLIPPED: overflow:hidden on the plate means
+    // those pixels are never on screen. The crop then ran past the plate onto
+    // the card, and textVsBg did exactly what it is built to do — took the two
+    // extremes of what it was handed, which were the plate and the card, and
+    // reported plate-against-card as if it were label-against-plate. That is
+    // where «3.07:1» came from on ten studies whose labels measure 6.11.
+    // A label pixel is inside its button by definition, so intersect. If the
+    // intersection is empty the label really is drawn outside its own button
+    // and the histogram is advisory again, the same as a pseudo-element one.
+    const q = b.getBoundingClientRect()
+    const cl = { l: Math.max(box.l, q.left),  t: Math.max(box.t, q.top),
+                 r: Math.min(box.r, q.right), b: Math.min(box.b, q.bottom) }
+    if (cl.r - cl.l >= 0.5 && cl.b - cl.t >= 0.5) box = cl
+    else noText = true
     // A study whose label is painted by a pseudo-element has no text node to
     // range over. The crop then falls back to the plate and the histogram is
     // advisory, not a verdict — so say so rather than reporting a ratio of 1.
@@ -518,12 +536,22 @@ async function shots (rects, kind) {
 // have a glyph box is not a finding, it is a failed capture — captureBeyondViewport
 // returns blank surface for clips a long way down a 40,000px page. Scroll to it
 // and ask again before believing it.
+// A crop that comes back flat has no glyph in it, and two different things land
+// here. One is a fault the tool can fix: a capture that failed, which repair()
+// scrolls to and asks again. The other is a button that is genuinely NOT PAINTED
+// at that rect — masked, clipped or faded away, which card 133 does to five of
+// its chips on purpose and 65 does to the segment moving under the pointer.
+// Reporting the second as 1:1 is how 133's mask has been carried as twenty
+// contrast failures. Not measurable is not the same as unreadable, so it is
+// counted and named separately rather than folded into the verdict.
+const blind = v => !!v && v.bgShare >= 0.999 && v.sd <= 0.002
+
 async function repair (rects, b64s, vals, kind) {
   let n = 0
   for (let i = 0; i < rects.length; i++) {
     const r = rects[i], v = vals[i]
     if (!r.shipped || r.lbl.noText) continue
-    if (!(v && v.bgShare === 1 && v.sd === 0)) continue
+    if (!blind(v)) continue
     await p.evalJs(`window.__a11y.into(${Math.round(r.lbl.y)})`)
     await new Promise(t => setTimeout(t, 120))
     await p.evalJs('window.__a11y.freeze()')
@@ -531,7 +559,7 @@ async function repair (rects, b64s, vals, kind) {
     await p.evalJs('window.__a11y.thaw()')
     if (!one[0]) continue
     const re = await read(one)
-    if (re[0] && !(re[0].bgShare === 1 && re[0].sd === 0)) { b64s[i] = one[0]; vals[i] = re[0]; n++ }
+    if (re[0] && !blind(re[0])) { b64s[i] = one[0]; vals[i] = re[0]; n++ }
   }
   return n
 }
@@ -597,15 +625,22 @@ for (const theme of THEMES) {
     const plateOff = await shots(rects, 'ring')
     await p.evalJs('window.__a11y.thaw()')
     const plateMoved = await diff(plateOff, plateRest)
-    results.push({ theme, version, rects, hovRects, rest, hover, moved, plateMoved })
+    results.push({ theme, version, rects, hovRects, rest, hover, moved, plateMoved,
+      blind: { rest: rest.map(blind), hover: hover.map(blind) } })
     const ship = rects.filter(r => r.shipped).length
-    const u = a => a.filter((x, i) => x && !rects[i].lbl.noText && x.ratio < 4.5).length
+    const u = a => a.filter((x, i) =>
+      x && !rects[i].lbl.noText && !blind(x) && x.ratio < 4.5).length
+    const nb = a => a.filter((x, i) => x && !rects[i].lbl.noText && blind(x)).length
+    const blindR = nb(rest), blindH = nb(hover)
     const inert = moved.filter(m => m && m.moved < 0.005).length
     console.error(`[a11y] ${theme}/${version || 'built'}: ${ship}/${rects.length} shipped`
       + ` | under 4.5:1 — rest ${u(rest)}, hover ${u(hover)}`
       + ` | css-hover inert ${plateMoved.filter(m => m && m.moved < 0.005).length}`
       + `/${plateMoved.filter(Boolean).length} (plate), ${inert} (label)`
-      + ` | recaptured ${fixR}+${fixH}`)
+      + ` | recaptured ${fixR}+${fixH}`
+      + (blindR + blindH
+          ? ` | NOT MEASURABLE (no glyph in the crop) ${blindR}+${blindH}`
+          : ''))
   }
 }
 

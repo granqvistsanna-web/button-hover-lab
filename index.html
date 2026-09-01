@@ -497,6 +497,31 @@
      needs to align. */
   .stage{display:grid; grid-template-columns:minmax(0,1fr); place-items:center;
     height:216px; padding:54px 24px 34px; background:none; border:0; border-radius:0}
+  /* A ROW WIDER THAN A PHONE CARD, and until now nothing was holding it: at
+     390px card 132's row runs 35px past the panel on each side and 134's 12px,
+     so the end chips crossed the rounded corner and sat on the page ground with
+     their labels cut in half. 133 already answers this for itself — a 320px
+     window, a mask and its own paging — and the other rows fit, so the rule has
+     to leave a row that fits exactly where it is.
+
+     `safe center` is the whole fix. Plain centring resolves to overflow on BOTH
+     sides of a scroll port and the left half is then unreachable, which is worse
+     than the bleed; safe centring centres while it fits and falls back to start
+     the moment it does not. So 61, 63, 64, 65 and 133 do not move a pixel and
+     only the two that overflow change, to left-aligned and scrollable.
+
+     On the STAGE and not on .k-row: 133's own overflow:hidden lives on .k-fit
+     and an overflow-x here would have overridden it and taken its mask with it.
+     Keyed on .k-row, which is not any study's key — the Copy collector picks a
+     study's rules with /\.<key>(?![\w-])/, so a selector naming .k-lamp would
+     have shipped the demo page's furniture inside 132's snippet. */
+  @media (max-width: 760px){
+    .stage:has(> .k-row){
+      overflow-x:auto; overscroll-behavior-x:contain;
+      justify-items:safe center; scrollbar-width:none;
+    }
+    .stage:has(> .k-row)::-webkit-scrollbar{ display:none }
+  }
   /* The padding is deliberately top-heavy. place-items centres the demo in
      the CONTENT box, so a bigger top inset carries the button down the stage
      — and down is where it wanted to go: the stage is only the top half of
@@ -850,6 +875,20 @@
      the same rung to RECEDE, and receding is neutral by definition. */
   .btn.c-wash{ --ink-mid:var(--m-mid, #b3b3b3) }
   :root[data-theme="light"] .btn.c-wash{ --ink-mid:var(--m-mid, #4b4b4b) }
+  /* 🔑 117'S SEAT IS THE PLATE'S OWN FOOTPRINT, and that is its claim on the
+     pick: it is not a cast shadow, it is the rest position the plate slid off,
+     so a graphite seat under a coloured plate reads as two objects rather than
+     as one vacating the other. --m-seat and NOT --m-4: a ladder rung is
+     projected and stands still, and a seat has a ground on each side, so it
+     has to be walked against both. The arithmetic, the two measured failures
+     it fixes, and why the floor is M_STEP are at the fit in paint().
+     ⚠️ 116's fan CANNOT take this. Its three sheets are stacked alpha drawn on
+     the CARD, not a rung — .03 of a hue is not a hue — and the tone climb the
+     alpha produces is the study. Colour there needs a tinted --sheen, which is
+     a token this page does not emit, and a higher alpha, which moves the pitch
+     the card's own paragraph states. It stays grey and its card says so. */
+  .btn.z-gum{ --bg-4:var(--m-seat, #3a3a3a) }
+  :root[data-theme="light"] .btn.z-gum{ --bg-4:var(--m-seat, #c5c5c5) }
   /* 🔑 27 IS IN THE LADDER GROUP AND NOT THE FACE GROUP, AND THE REASON IS ITS
      LABEL. Its plate ARRIVES — clipped away at rest — so the label has two
      grounds, the card and then the plate, and one ink has to serve both.
@@ -1261,7 +1300,7 @@
      is the same fit taken against the colour that actually lands. The line
      variant keeps --ink: its hover plate is 8% ink on transparent, not a fill. */
   .sheen:hover,
-  .sheen:focus-visible{background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg));
+  .sheen:focus-visible{background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)));
     color:var(--on-ink-hover)}
   /* Wider and five-stop: a bright core with a broad dim shoulder reads as
      light, where the old 36% three-stop strip read as a bar. The travel
@@ -1404,7 +1443,13 @@
      transparent plate both halves invert: the streak is --ink rather than
      --on-ink, and the hover's surface shift becomes a tint arriving instead of
      a plate darkening. */
-  .sheen.btn--line{background:none; color:var(--ink)}
+  /* --ink-text and not --ink for the LABEL. --ink is the pick as picked — the
+     accent role is measured at 3:1 and never walked, because a fill only has to
+     be identifiable. A label has to be read, and on a transparent plate the
+     label's ground is the CARD, which is exactly what --ink-text is fitted
+     against at 4.5. Emerald measured 3.07:1 here in light. The streak keeps
+     --ink: it is a light crossing the surface, not something anyone reads. */
+  .sheen.btn--line{background:none; color:var(--ink-text)}
   .sheen.btn--line:hover,
   .sheen.btn--line:focus-visible{background:color-mix(in srgb,var(--ink) 8%,transparent)}
   .sheen.btn--line::after{
@@ -1434,7 +1479,7 @@
   .btn--solid.relay:hover::before,
   .btn--solid.relay:focus-visible::before{
     transform:scale(1.04) rotate(0.001deg);
-    background-color:color-mix(in srgb, var(--ink) 86%, var(--bg));
+    background-color:var(--hover-set, color-mix(in srgb, var(--ink) 86%, var(--bg)));
   }
   .btn--solid.relay:active::before{
     transform:scale(1.01) rotate(0.001deg);
@@ -1634,9 +1679,9 @@
      the stylesheet instead of a .5 buried inside a paint call. */
   .magnet .m-lbl{display:inline-block;
     translate:calc(var(--mx,0px) * .5) calc(var(--my,0px) * .5)}
-  .magnet:focus-visible{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
+  .magnet:focus-visible{background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 88%,var(--bg)))}
   @media (prefers-reduced-motion: reduce){
-    .magnet:hover{background:color-mix(in srgb,var(--ink-hover) 88%,var(--bg))}
+    .magnet:hover{background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 88%,var(--bg)))}
   }
 
   /* ============ footer ============ */
@@ -3506,7 +3551,7 @@
         <button type="button" class="btn btn--solid z-gum"><span class="lbl">I want this</span></button>
       </div>
       <h3><span class="num">117</span>Fixed shadow</h3>
-      <p>Gumroad's checkout button. The plate slides up-left four pixels while the shadow grows down-right by the same four, so the shadow never moves: it is the seat the plate left. Feed the Accent swatch #ff90e8 to reassemble the original.</p>
+      <p>Gumroad's checkout button. The plate slides up-left four pixels while the shadow grows down-right by the same four, so the shadow never moves: it is the seat the plate left. Feed the Accent swatch #ff90e8 to reassemble the shape &mdash; the seat arrives in that pink's own dark, because a seat is read against the card on one side and the plate on the other, and a grey one measured 1.17:1 against this plate.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -4782,7 +4827,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn--solid.f-kant:hover, .btn--solid.f-kant:focus-visible{ border-color:var(--ink) }
   .btn.btn--solid.f-kant:active{ border-color:var(--ink) }
-  .btn--line.f-kant{ background:none; border-color:var(--line-ctl) }
+  /* THE OUTLINE HAS TO RESTATE color. The face group is spelled .btn:is(…) at
+     0-2-0 and hands every one of its studies --m-face-ink — a label solved
+     against the FACE PLATE. Take the plate away and that label is still fitted
+     to a surface no longer under it: emerald resolved #7cffb2 on the white
+     card, 1.25:1. Spelled at 0-3-0 to beat the group outright, the way 139,
+     142 and 143 already spell theirs. */
+  .btn.f-kant.btn--line{ background:none; border-color:var(--line-ctl);
+    color:var(--ink-text) }
 
   .f-kant .f-kant-lamp{ display:none }
   @supports (offset-path: border-box){
@@ -5003,7 +5055,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .g-measure:hover .g-measure-plate,
   .g-measure:focus-visible .g-measure-plate{
     clip-path:inset(0px round var(--btn-r));
-    background:color-mix(in srgb,var(--ink-hover) 86%,var(--bg));
+    background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 86%,var(--bg)));
   }
   /* The trim holds until the plate reaches it, then hands over. Undelayed, the
      boundary was gone at 300ms while the plate did not land until 450 — 150ms
@@ -5136,8 +5188,10 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.btn--solid.g-key:active{
     background-color:color-mix(in srgb,var(--ink) 86%,var(--on-ink));
   }
-  .btn--line.g-key{
-    background:none; border-color:var(--ink);
+  /* color restated for the reason 42 states: no plate, so --m-face-ink is
+     fitted against a surface that is not there. 1.25:1 in light with a pick. */
+  .btn.g-key.btn--line{
+    background:none; border-color:var(--ink); color:var(--ink-text);
     --g-riser:color-mix(in srgb,var(--ink) 38%,transparent);
     --g-riser-hi:color-mix(in srgb,var(--ink) 62%,transparent);
   }
@@ -5313,7 +5367,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn--solid.i-mass:hover,
   .btn--solid.i-mass:focus-visible{
-    background-color:color-mix(in srgb, var(--ink) 86%, var(--bg-0));
+    background-color:var(--hover-set, color-mix(in srgb, var(--ink) 86%, var(--bg-0)));
   }
   /* 54 Anticipation — a wind-up, which is the half of a spring a plain CSS
      easing can actually express. The curve dips to -0.205 at 21% of the
@@ -6280,7 +6334,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
     color:var(--ink-text); border-color:var(--line-ctl);
   }
-  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
+  .k-pair .k-pair-a:is(:hover,:focus-visible){background-color:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)))}
   .k-pair:has(.k-pair-b:is(:hover,:focus-visible)) .k-pair-a{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
     color:var(--ink-text); border-color:var(--line-ctl);
@@ -7467,7 +7521,7 @@ document.addEventListener("DOMContentLoaded", function () {
     content:""; position:absolute; bottom:100%;
     width:14px; height:14px; border-radius:50%;
     background-color:var(--ink-hover);
-    background-image:radial-gradient(circle at 50% 50%, var(--ink-on-fill) 56%, #0000 60%);
+    background-image:radial-gradient(circle at 50% 50%, var(--on-ink-hover) 56%, #0000 60%);
     background-size:6.5px 6.5px; background-repeat:no-repeat;
     background-position:50% 86%;
     transform-origin:50% 100%;
@@ -9235,8 +9289,10 @@ document.addEventListener("DOMContentLoaded", function () {
     --z-sheet-2:rgba(var(--sheen),.26);
     --z-sheet-3:rgba(var(--sheen),.14);
   }
+  /* Same as 42 and 43: the face group's --m-face-ink has no plate to be fitted
+     against once this is a line, and it measured 1.25:1 on a light card. */
   .btn.z-stack.btn--line{
-    background:none;
+    background:none; color:var(--ink-text);
     --z-sheet-1:rgba(var(--sheen),.20);
     --z-sheet-2:rgba(var(--sheen),.13);
     --z-sheet-3:rgba(var(--sheen),.07);
@@ -9257,17 +9313,25 @@ document.addEventListener("DOMContentLoaded", function () {
      control point.
      The seat is not black. Gumroad draws its shadow in the page ink, and a
      #000 seat measures 1.17:1 on this stage — card 116's argument about
-     absences of light, holding here too. So the seat takes the ladder: --bg-4,
-     a step down from the face and a step up from the stage, which is the rule
-     the retired Slab tilt study kept for a surface that faces away. One
-     box-shadow, drawn at the
+     absences of light, holding here too. Nor is it the ladder any more: it was
+     --bg-4 until 2026-09-01, and a fixed rung is the one thing a seat cannot
+     be. THE SEAT HAS A GROUND ON EACH SIDE — the card outside it, the plate
+     inside it — and the plate is whatever the toolbar was last given, so a
+     value that stands still is only ever safe against one of them. Measured, it
+     was not: a grey seat under a light Rose plate came back at 1.17:1 and under
+     light Amber at 1.24:1, the vacated footprint gone on two palettes of seven
+     with nobody told. It takes --m-seat now, which is that same rung projected
+     into the pick and then walked until it clears BOTH grounds by M_STEP; the
+     fit is in paint() and the argument for the floor is with it. Unset, the
+     token is absent and the var() falls through to the literal rung, so the
+     default rendering is the one that shipped. One box-shadow, drawn at the
      plate's own radius, so the toolbar's radius slider never unseats it.
      The hue is the toolbar's job, not this card's: feed the Accent swatch
-     #ff90e8 and the original reassembles itself — pink plate, computed black
-     label — without this stylesheet naming a colour the page has never
-     allowed. The rest-side shadow is already there at offset zero, hidden
-     under the plate, so the enter interpolates offsets only and no colour ever
-     fades. */
+     #ff90e8 and the shape reassembles itself — pink plate, computed black
+     label, and a seat in that pink's own dark rather than Gumroad's ink —
+     without this stylesheet naming a colour the page has never allowed. The
+     rest-side shadow is already there at offset zero, hidden under the plate,
+     so the enter interpolates offsets only and no colour ever fades. */
   .btn.z-gum{
     border:1px solid var(--on-ink);
     transform:translate(0,0);
@@ -9380,7 +9444,7 @@ document.addEventListener("DOMContentLoaded", function () {
      colour is the slow channel here too, so it is still settling while the
      label has already landed, which is the study. */
   .c-mass:hover, .c-mass:focus-visible{transform:scale(.964) rotate(0.001deg);
-    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg));
+    background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)));
     color:var(--on-ink-hover)}
   .c-mass:hover .inner,
   .c-mass:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg)}
@@ -9540,7 +9604,7 @@ document.addEventListener("DOMContentLoaded", function () {
     border-color:transparent}
   .c-crest.btn--solid:hover,
   .c-crest.btn--solid:focus-visible{border-color:transparent;
-    background:color-mix(in srgb,var(--ink-hover) 90%,var(--bg))}
+    background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)))}
   .c-crest.btn--solid:active{background:color-mix(in srgb,var(--ink-hover) 80%,var(--bg))}
   .c-crest.btn--solid::after{
     background:linear-gradient(100deg,transparent 0%,
@@ -9631,7 +9695,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:background var(--t-4) var(--e-out);
   }
   .btn.squash:hover, .btn.squash:focus-visible{
-    background:color-mix(in srgb, var(--accent) 84%, var(--bg));
+    background:var(--hover-set, color-mix(in srgb, var(--accent) 84%, var(--bg)));
     animation:squash-mass 950ms both;
   }
   @keyframes squash-mass{
@@ -10404,7 +10468,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-wash-p.is-second{--index:1; background:var(--ink-hover)}
   .c-wash-in{grid-area:1/1; z-index:1; display:grid; overflow:clip; padding:15px 28px}
   .c-wash-in::after{content:attr(data-text); grid-area:1/1; display:block;
-    color:var(--ink-on-fill); translate:0 2em 0; rotate:1 1 .5 -30deg;
+    color:var(--on-ink-hover); translate:0 2em 0; rotate:1 1 .5 -30deg;
     transform-origin:top right; opacity:0;
     transition:translate 750ms var(--elastic-out), rotate var(--t-5) var(--e-panel),
                opacity var(--t-3) ease-out}
@@ -10460,11 +10524,23 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-face .lbl{grid-area:1/1; padding:15px 28px; z-index:1}
   .p-face-back{grid-area:1/1; display:flex; align-items:center; justify-content:center;
     gap:8px; place-self:center; width:calc(100% - 2px); height:calc(100% - 2px);
-    background:var(--ink-hover); color:var(--ink-on-fill); border-radius:var(--btn-r);
+    background:var(--ink-hover); color:var(--on-ink-hover); border-radius:var(--btn-r);
     white-space:nowrap; opacity:0; translate:0 1.25rem -3rem; rotate:1 0 0 -90deg;
     transition:translate var(--turn) var(--e-quint), rotate var(--turn) var(--e-quint),
                opacity var(--t-2) linear}
   .p-face-back::before{content:attr(data-text); display:contents}
+  /* 🚨 --on-ink-hover AND NOT --ink-on-fill, WHICH IS WHAT THIS SAID UNTIL
+     2026-09-01. The two are the same token until a hover swatch is set and
+     then they are opposites: --ink-on-fill is the label fitted against the
+     RESTING fill, --on-ink-hover against the colour that ARRIVES. Navy sets
+     both roles, #1a365d resting and #98b7e2 on hover, so the back face was
+     painting a label fitted for a dark plate onto a light one — #afc7e9 on
+     #98b7e2, measured 1.19:1 in BOTH themes, which is the word gone.
+     Card 138's own comment records this exact failure at 1.90:1 and fixes it
+     the same way; 139 and 86 were carrying it too, and the sweep that found
+     all three is `background:--ink-hover` in a rule whose colour is
+     --ink-on-fill. It is invisible on the default palette, where the two
+     tokens resolve to the same colour, which is why it survived. */
   .p-face-arrow{--index:1; margin-top:-1px; translate:0 .75rem 0;
     transition:translate var(--t-3) var(--e-quint)}
   @media (hover:hover) and (pointer:fine){
@@ -10541,6 +10617,31 @@ document.addEventListener("DOMContentLoaded", function () {
        repaints the rest colour around it. */
     25%,40%{color:var(--ink-mid)}
     50%,100%{color:var(--ink-text)}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    /* 142 was the one card on the page that went INERT under reduce, and it got
+       there honestly: the squash RETURNS to where it started, so the global
+       clamp above lands it on the 100% frame, which is rest. Every other study
+       keeps its end state and loses only the travel; this one had no end state
+       to keep. So the still frame is the claim itself — .72 of the height
+       bought with 1.389 of the width — held rather than travelled through.
+       The 10deg is not restated: a tilt frozen on every glyph is a picture of
+       motion, and the conservation is the part that says something. The tone
+       pulse goes too, for the same reason 75's delay does: a colour held at
+       its midpoint is a de-emphasis, not a paused animation.
+
+       AND NOT .72 x 1.389. A glyph scales about its own centre and the layout
+       does not move, so at the animation's apex the letters overlap — which
+       reads as squash while it is passing and as broken type once it is held.
+       The held frame states the same rule at an amount that survives being
+       looked at: .9 of the height costs 1.111 of the width, 0.9999. */
+    .u-area:hover .u-area-c,
+    .u-area:focus-visible .u-area-c{
+      animation:none !important;
+      transform:scale(1.111,.9);
+      transition:transform var(--t-3) var(--e-out);
+    }
   }
 
   /* ---- 143 Tightens ------------------------------------------------
@@ -12399,6 +12500,33 @@ document.addEventListener("DOMContentLoaded", function () {
           mv[n] = fitOn(toHex(mv[n]), 3, PANEL).rgb.map(Math.round);
         });
         M_RUNGS.forEach(function (n){ root.setProperty(M_SET[n], toHex(mv[n])); });
+        // ---- 117's SEAT, THE ONE FIT HERE WITH A GROUND ON EACH SIDE -------
+        // Every other colour on this page is read against one thing. The seat
+        // is a 4px band with the CARD outside it and the PLATE inside it, so it
+        // is read against two at once and the WORSE of the two is what a
+        // visitor sees — which is why a projection cannot serve it and fails at
+        // both ends. Lightness survives a projection, luminance does not: a
+        // dark pick lands the seat 1.03:1 from the card in dark (Indigo,
+        // Violet), and a pale pick lands it on the rung's own lightness, which
+        // is 1.03:1 from the PLATE in light — Rose #ff90e8, the swatch this
+        // card's caption tells you to feed it. Seven palettes, two themes.
+        // ⚠️ AND THE NEUTRAL RUNG IT REPLACES WAS NOT SAFE EITHER. Held at
+        // --bg-4 the seat measured 1.17:1 against a light Rose plate and 1.24:1
+        // against light Amber: a pale plate swallows a grey seat whole, and the
+        // vacated footprint — the entire effect — was gone on two of seven
+        // palettes before any of this. Following the hue is not decoration
+        // here, it is the only axis left to move on once lightness is spoken
+        // for by the card on the other side.
+        // So: the --bg-4 rung, projected into the pick and then WALKED against
+        // both grounds. That is project()'s own lands contract, the one
+        // --m-face uses for what arrives on it, handed a different pair. M_STEP
+        // and not 3, because this is a plate beside a plate — the shape that
+        // number was swept for — and a boundary's 3 would drive every seat to
+        // an extreme. Where no lightness clears both, project() falls back to
+        // the one that leaves the MOST, so the pathological palettes get the
+        // best seat available rather than a rung that has stopped being one.
+        root.setProperty('--m-seat',
+          toHex(project(RUNGS['--bg-4'], [PANEL, accentRgb])));
         // The label on those plates, and it is TWO fits rather than one. A
         // single fit has to clear its floor on every plate at once; in light the
         // bevels sit near the top of the ladder and the walked face near the
@@ -12422,6 +12550,7 @@ document.addEventListener("DOMContentLoaded", function () {
         M_RUNGS.forEach(function (n){ root.removeProperty(M_SET[n]); });
         root.removeProperty('--m-ink');
         root.removeProperty('--m-face-ink');
+        root.removeProperty('--m-seat');
       }
       // (guard: the walk needs a pick to walk toward)
       if (mSource){
@@ -12646,6 +12775,32 @@ document.addEventListener("DOMContentLoaded", function () {
       // A separate token rather than a change to --ink-hover, so those studies
       // can spell exactly that: var(--hover-set, var(--on-ink)). Unset, the
       // fallback stands and nothing on the page moves.
+      //
+      // 🔑 NINE MORE STUDIES SPELL IT THE SAME WAY, AND FOR THE SAME REPORT.
+      // 10 sheen, 41 g-measure, 50 magnet, 52 i-mass, 64 k-pair, 120 c-mass,
+      // 122 relay, 123 c-crest and 126 squash do not invert on hover — they
+      // take a TONE STEP, the plate cut with the canvas: half a rung down the
+      // ladder, argued out on 41 and reused by the rest to the byte. That step
+      // is right when nothing is picked and it is the wrong answer once
+      // something is, because ROLES calls hover a fill and this page makes one
+      // colour promise: a fill is painted EXACTLY AS PICKED. Cut 10-16% with
+      // the canvas it never was. The reader picks #ff52a5 and gets a plate
+      // NEAR it, under a label already fitted against the flat pick — the same
+      // mismatch as «Corner exit shows a darker shade and not the hover
+      // colour» one surface over. So each of the nine now reads
+      // var(--hover-set, <its own mix>): the pick when there is one, its own
+      // argued tone step when there is not, so the monochrome page does not
+      // move a pixel and the swatch finally paints what it says.
+      //
+      // Three of them could not have followed the pick at all — 122 and 52
+      // mixed --ink, 126 mixed --accent — so the Hover swatch moved every
+      // other part of those cards except the plate the card is named for.
+      //
+      // ⚠️ NOT THE PRESSES AND NOT THE STATES. 123 keeps its :active at a mix
+      // of 80% and 43 keeps its 86% toward --on-ink: a press is a step BELOW
+      // whatever hover just landed on, so it stays relative to it rather than
+      // becoming a second flat colour. 72 fill and its done state are not
+      // hover at all and are left alone.
       if (look.hover && fitted.hover){
         root.setProperty('--hover-set', fitted.hover.hex);
         root.setProperty('--on-hover-set', onHover.hex);
