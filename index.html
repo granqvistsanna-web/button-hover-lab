@@ -184,15 +184,25 @@
        Named here, the highlight flips to a shadow on a light ground — which is
        what depth actually looks like there — and the studies keep one spelling
        for both.
-       ⚠️ AND IT IS THE ONE COLOUR ON A BUTTON THE PICK DELIBERATELY DOES NOT
-       REACH. Cards 4, 5, 72 and 116 read it, and the reason is in its name: a
-       sheen is LIGHT, and light on a surface is the surface's own colour lifted
-       toward white rather than a hue of its own. Tinted, a highlight stops
-       reading as a highlight and starts reading as a second fill — which is
-       what the --a-2/3/4 tint did to every rung before it came out. Not an
-       omission from the colour map: an exclusion, and this is where it is
-       stated. */
-    --sheen:255,255,255;
+       🔑 IT FOLLOWS THE PICK AS OF 2026-09-01, AND IT USED TO BE THE ONE
+       COLOUR ON A BUTTON THAT DID NOT. The old note argued that a sheen is
+       LIGHT, that light is the surface lifted toward white, and that a tinted
+       highlight stops being a highlight and becomes a second fill. That is
+       right about a highlight and it was wrong about this token, because this
+       token is not only drawing highlights: 116's fan is three PLATES — its own
+       paragraph says «three steps of the same grayscale» — and a plate that
+       opts out of the pick under a plate that opts in is exactly the split the
+       FACE group exists to close. Measured on the built page, with a pick set:
+       18% of 116's effect and 65% of 05's did not move a single channel.
+       🔑 WHAT IS CONSERVED IS THE LUMINANCE OF WHAT IT DRAWS, not the alpha
+       and not the pick's own lightness — --m-sheen carries the hue at the
+       lightness that leaves the most chroma, and --m-sheen-k is the one gain
+       that puts the composite back where the neutral put it. The solve, the
+       measured wrong answer it replaces, and the alpha ceiling are at the
+       sheen block in paint(). Unset — no pick, or a hue with no lightness that
+       can reach the neutral's luminance — both tokens are absent and the
+       literal below is what paints, so the default page is unchanged. */
+    --sheen:var(--m-sheen, 255,255,255);
     /* The button radius, as one token the whole page reads. It is here in the
        alias block rather than inline on .btn so the toolbar has one property to
        write and the Copy buttons have one to resolve. */
@@ -319,7 +329,7 @@
        Orchid 4.31, all inside a whisker of the 3:1 floor. .62 lifts the worst
        of them to 6.02 and leaves the dot's own colour untouched. */
     --sw-ring:rgba(0,0,0,.62);
-    --sheen:0,0,0;
+    --sheen:var(--m-sheen, 0,0,0);
     /* Away from white is down, toward white is up — see the roles' own note.
        The sentence is the same in both themes even though the order is not:
        the walls step AWAY from the content and the cards step toward the
@@ -3515,7 +3525,7 @@
         </button>
       </div>
       <h3><span class="num">126</span>Squash and stretch</h3>
-        <p>The plate is a soft mass and the area it covers is conserved — six per cent of width costs 5.6 of height, so the two multiply back to within a thousandth of where they started, which is the whole difference between this and a scale. The settle overshoots through rest and squashes briefly the other way, the part a spring does and an ease-out cannot; 119 grows a plate under a label, and this is the only study here that deforms the plate itself.</p>
+        <p>The plate is a soft mass and the area it covers is conserved — six per cent of width costs 5.6 of height, so the two multiply back to within a thousandth of where they started, which is the whole difference between this and a scale. The word takes the exact inverse and holds its size, because a 999px radius leaves no corner to watch and the gap at the end caps is the only landmark a deformation has here — without something rigid inside it, a soft mass that grows with everything in it is just a scale again. The settle overshoots through rest and squashes briefly the other way, the part a spring does and an ease-out cannot; 119 grows a plate under a label, and this is the only study here that deforms the plate itself.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -3855,7 +3865,7 @@
 
     <article class="spec" data-versions="outline" data-key="f-kant" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-08-29T13:02:01+02:00">
       <div class="stage">
-        <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
+        <button type="button" class="btn f-kant"><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><i class="f-kant-lamp" aria-hidden="true"></i><span class="lbl">Download the report</span></button>
       </div>
       <h3><span class="num">42</span>Edge light</h3>
         <p>A streak of the primary circles the hairline for as long as the pointer stays, and holds its place when it goes. It travels the outline, not an angle: a conic gradient crosses the caps 11.6 times faster than the flanks.</p>
@@ -4712,33 +4722,51 @@ document.addEventListener("DOMContentLoaded", function () {
      offset-path travels the OUTLINE. The lamp is one small element on
      `offset-path:border-box` with offset-distance driven 0% -> 100% on a linear
      loop, which is constant arc speed by construction and a constant-length
-     head with it. offset-rotate:auto keeps it tangent, and offset-anchor puts
-     its bright end on the path so the comet trails rather than leads.
+     head with it. offset-rotate:auto keeps each segment tangent.
 
-     THE ANCHOR IS OFF-CENTRE BY HALF THE BORDER, and that correction is the one
+     THE ANCHOR IS CENTRED ON BOTH AXES, AND ONE OF THOSE IS A CORRECTION.
+     ACROSS the edge it sits half a border in, and that registration is the one
      this card owed its own name. `border-box` is the OUTER edge of the border
      box, so a 1.5px lamp centred on it spans -0.75 to +0.75 while the 1px
      hairline occupies 0 to +1. Half the light hangs off the plate, the two
      centrelines sit 0.5px apart, and at any devicePixelRatio above 1 you can
-     see the grey hairline running unbroken underneath a white bar. It was an
-     object riding the edge, which is the exact thing the paragraph below claims
-     1.5px was chosen to stop being. `offset-anchor:100% calc(50% - 0.5px)`
-     moves the element half a border inward and puts the two centrelines on one
-     line. The width was never the fault; the registration was.
+     see the grey hairline running unbroken underneath a white bar.
+     `calc(50% - 0.5px)` moves the element half a border inward and puts the two
+     centrelines on one line.
 
-     THE HEAD IS 10px, and it was 12. A straight chord on the 23.5px cap radius
-     stands off the curve by its sagitta: 0.54px at 10, 0.78px at 12, 2.73px at
-     22, where the streak visibly lifts off the corner. The length was always a
-     geometry budget rather than a taste, and two pixels of it were the cheapest
-     thing this card had left to give up — the figure this note has always
-     quoted, 0.54px, is finally the one the CSS draws.
+     ALONG the edge it used to be 100%, AND THAT IS WHAT LEAKED. offset-rotate
+     lays a segment down as a straight tangent, and a tangent leaves a convex
+     curve by sqrt(r² + d²) - r at distance d from the point it touches. With
+     the anchor at 100% the whole 10px trailed BEHIND that point, so on the
+     23.5px cap the far end stood 2.04px off the curve — 2.14px on the rendered
+     boxes — and the ten segments fanned out into the card at both ends of the
+     plate as separate tilted ticks. That is the leak, and it was in the
+     registration rather than in the light. The note quoted 0.54px and drew four
+     times it, because 0.54px is a CHORD's sagitta and only a centred segment is
+     anything like a chord. Centring makes it one: half the length in front of
+     the contact point and half behind, so the standoff is sqrt(r² + (L/2)²) - r
+     — 0.53px at the ends, zero at the middle, where the light is brightest.
+     Measured on the painted pixels rather than on the boxes, the furthest any
+     light now sits outside the plate is 0.85px against 2.30px, and 0.25px of
+     what is left is the deliberate half of a 1.5px bar overhanging a 1px
+     hairline. The width was never the fault; the registration was, on both
+     axes.
+
+     THE SEGMENT IS STILL 10px AND THERE ARE NOW TWENTY. The length was never
+     the fault, and it is set from the other end anyway: a segment has to span
+     twice the hop for the handover below to close, and the hop is not a
+     constant, because the radius control moves the outline underneath it.
+     Walked with a probe, the square plate is 499.5px against the pill's 459.9 —
+     8.6% more road on the same clock, so the same 24ms buys 4.995px there
+     against 4.599 here. The window is sized to the LONGEST of those, 9.99px,
+     and 10px is that rounded up. Twenty is then how many hops cover the 97.4px
+     of tail this card has always drawn.
 
      Quieter in the same pass, and in the gradient rather than in the opacity,
-     because opacity is the channel the hover uses: the head tops out at 76% of
-     the primary against 100%, the midpoint at 22% against 30%, and the bar is
-     1.5px rather than 2px. A 2px lamp on a 1px hairline is an object riding the
-     edge. At 1.5px, registered, it is the edge itself lighting up, which is the
-     thing the card is named for.
+     because opacity is the channel the hover uses: the light tops out at 76% of
+     the primary against 100%, and the bar is 1.5px rather than 2px. A 2px lamp
+     on a 1px hairline is an object riding the edge. At 1.5px, registered, it is
+     the edge itself lighting up, which is the thing the card is named for.
 
      THE LAP IS 2400ms, AND THE HONEST NUMBER IS 192px/s. The old lap ran the
      same 460px in 450ms — 1022px/s, a light you follow. This one is a light you
@@ -4839,63 +4867,89 @@ document.addEventListener("DOMContentLoaded", function () {
   .f-kant .f-kant-lamp{ display:none }
   @supports (offset-path: border-box){
     @keyframes f-kant-lap{ to{ offset-distance:100% } }
+    /* The three numbers the trail is made of, and the one relationship between
+       them. --f-kant-path is the pill's own outline, 2(w - h) + πh; --f-kant-hop
+       is the travel between consecutive segments; the step is that hop said as
+       time. --f-kant-seg is set separately and deliberately wider than twice the
+       hop, for the reason the note above gives. Re-fitting the whole trail to a
+       different plate is one edit here. */
+    .f-kant{
+      --f-kant-path:460px;
+      --f-kant-hop:4.6px;
+      --f-kant-seg:10px;
+      --f-kant-step:calc(-1 * var(--f-kant-lap, 2400ms) * var(--f-kant-hop) / var(--f-kant-path));
+    }
     .f-kant .f-kant-lamp{
-      display:block; position:absolute; width:10px; height:1.5px; border-radius:1px;
+      display:block; position:absolute;
+      width:var(--f-kant-seg); height:1.5px;
       pointer-events:none; opacity:0; z-index:3;
       /* --a scales the segment's brightness, and it is in the COLOUR rather
          than in opacity for the reason given above: opacity is the channel the
          hover uses, and a segment dimmed there would fight the fade.
 
-         FLAT, NOT A GRADIENT, and the screenshot is why. Each segment used to
-         carry the old single lamp's transparent-to-bright ramp, which put a
-         dark end on every one of them: six segments 8px apart, each fading out
-         across its own last five, read as a DASHED line rather than a tail. The
-         ramp is the ensemble's job now — six flat bars stepping 1 → .72 → .50 →
-         .34 → .22 → .12 — so each bar is uniform and the 2px overlap between
-         consecutive ones has no hole to leave. One gradient became six samples
-         of the same curve, which is what a segmented trail is. */
+         A SYMMETRIC WINDOW, AND THE HOP IS HALF OF IT. Flat bars were the
+         version before this, and they BEADED. Consecutive segments overlapped
+         by 0.8px, alpha over alpha is a1 + a2(1 - a1) rather than a sum, and
+         every join therefore painted brighter than either side of it: sampled
+         along the top edge the trail read 201 - 227 - 201, 221 - 242 - 221, one
+         pip per join, nine of them, which is the beading on the screenshot.
+         Butting the bars exactly only trades that pip for its opposite, because
+         two antialiased ends meeting on a fractional device pixel do not add up
+         to one — measured, the trail went dashed instead.
+
+         So each segment fades to transparent at BOTH ends and the next one
+         starts at its middle. A triangular window hopped by half its length is
+         a partition of unity: what one segment gives up, the next has already
+         taken. Compositing is not quite addition, so the total ripples rather
+         than lying flat, but it is CONTINUOUS, and continuous is the whole of
+         what a join has to be. Measured after: not one local maximum anywhere
+         along the trail, where the flat bars left nine. */
       --a:1;
-      background:color-mix(in srgb, var(--f-kant-ink, var(--accent)) calc(76% * var(--a)), transparent);
+      background:linear-gradient(90deg, transparent,
+        color-mix(in srgb, var(--f-kant-ink, var(--accent)) calc(76% * var(--a)), transparent) 50%,
+        transparent);
       offset-path:border-box; offset-rotate:auto;
-      /* half the border inward: the lamp's centreline and the hairline's are one */
-      offset-anchor:100% calc(50% - 0.5px);
+      /* centred along the edge, half a border inward across it — see above */
+      offset-anchor:50% calc(50% - 0.5px);
       offset-distance:0%;
       /* the lap is the lamp's own clock — paused at rest, so it costs nothing
          and keeps its place. The hover only opens the shutter. */
       animation:f-kant-lap var(--f-kant-lap, 2400ms) linear infinite paused;
       /* A NEGATIVE DELAY IS A POSITION, NOT A WAIT. Every segment runs the same
-         paused lap; starting one 42ms in parks it 8px further back along the
-         outline. So the tail is built out of the clock and costs no second
+         paused lap; starting one 24ms in parks it one hop further back along
+         the outline. So the tail is built out of the clock and costs no second
          animation, no second path, and nothing for the pause to keep in sync.
 
-         THE STEP IS MEASURED, NOT DERIVED, and it caught the note above out. If
-         the outline really were the 460px that note computes, 42ms of a 2400ms
-         lap would buy 8px and six 10px segments would overlap by two. Measured
-         on the rendered path they landed 14.1px apart with 3-4px of dark
-         between them, and the trail read as a dashed line: 1% of this path is
-         8.06px, so the outline Chrome actually walks is about 806px, and the
-         460px figure upstream is suspect wherever it is used to claim a speed.
+         THE STEP IS DERIVED NOW, AND THE MEASUREMENT THAT USED TO SIT HERE WAS
+         WRONG. This note reported the rendered path at about 806px, the
+         segments 14.1px apart, and 3-4px of dark between them. Walking a
+         zero-width probe along `offset-path:border-box` in 0.25% steps and
+         summing the chords gives 459.89px on this plate, against a geometric
+         2(w - h) + πh of 459.90 — they agree to a hundredth of a pixel. 1% of
+         the path is 4.599px, not 8.06, the segments were 9.2px apart and NOT
+         14.1, and there was never any dark between them: they overlapped. The
+         wrong length had this card hunting a gap and tuning the step against a
+         seam that could not exist, which is how the beading survived a sweep.
 
-         The step is then swept rather than solved, because the arithmetic has
-         already been wrong once here. Ten segments on this plate: -32ms and
-         below bunches them, -40ms spans 78.6px, -48ms spans 92.5px with the
-         worst gap still -0.82px, and -56ms opens a 1.18px seam. -48ms is the
-         longest tail this technique holds without breaking, so that is the
-         number, and the seam is what sets it rather than a preference.
+         With the length known the step stops being swept and starts being
+         solved: the lap times the hop over the outline, one hop of travel
+         expressed as time, 24ms here. It follows --f-kant-hop and
+         --f-kant-path, so the two cannot drift apart again.
 
          Measuring this needs care: a running CSS animation outranks an inline
          style, so writing el.style.offsetDistance to pose the segments does
          nothing and you are still reading the live lap. Pause it and read what
          is there rather than trying to place it.
 
-         IT HAD TO BE SEGMENTED RATHER THAN LONGER, and the note above is why: a
-         straight chord on the 23.5px cap radius stands off the curve by its
-         sagitta, 0.54px at 10 and 2.73px at 22, where the streak visibly lifts
-         off the corner. One long lamp would buy the tail back at the exact cost
-         this card already refused to pay. Six short ones each keep the 0.54px
-         budget and the ENSEMBLE bends, because every segment is tangent to the
-         outline at its own point. 50px of tail out of 10px parts. */
-      animation-delay:calc(var(--i, 0) * var(--f-kant-step, -48ms));
+         IT HAD TO BE SEGMENTED RATHER THAN LONGER, and the geometry above is
+         why: a segment centred on the 23.5px cap radius stands off it by
+         sqrt(r² + (L/2)²) - r, which is 0.53px at 10 and 2.7px at 22, where
+         the streak visibly lifts off the corner. One long lamp would buy the
+         tail back at the exact cost this card refuses to pay. Twenty short ones
+         each keep the 0.53px budget and the ENSEMBLE bends, because every
+         segment is tangent to the outline at its own point. 97.4px of tail out
+         of 10px parts. */
+      animation-delay:calc(var(--i, 0) * var(--f-kant-step));
       transition:opacity var(--t-2) var(--e-out);
     }
     /* The index is authored on nth-of-type and never as an inline style: the
@@ -4912,20 +4966,30 @@ document.addEventListener("DOMContentLoaded", function () {
     /* THE FALLOFF IS A CURVE, NOT A TASTE, and this is the one place on this
        card where easing belongs. The lap must stay linear — see below — but the
        BRIGHTNESS along the tail is free, and hand-picked values read as steps.
-       --a is (k/10)² for the kth segment from the back, a square falloff: the
+       --a is (k/20)² for the kth segment from the back, a square falloff: the
        front half of the tail holds most of the light and the back half gives
        it up quickly, which is what a trail looks like and what an even ramp
-       never does. Ten values, one expression, no number chosen by eye. */
-    .f-kant .f-kant-lamp:nth-of-type(1){  --i:0; --a:.01 }
-    .f-kant .f-kant-lamp:nth-of-type(2){  --i:1; --a:.04 }
-    .f-kant .f-kant-lamp:nth-of-type(3){  --i:2; --a:.09 }
-    .f-kant .f-kant-lamp:nth-of-type(4){  --i:3; --a:.16 }
-    .f-kant .f-kant-lamp:nth-of-type(5){  --i:4; --a:.25 }
-    .f-kant .f-kant-lamp:nth-of-type(6){  --i:5; --a:.36 }
-    .f-kant .f-kant-lamp:nth-of-type(7){  --i:6; --a:.49 }
-    .f-kant .f-kant-lamp:nth-of-type(8){  --i:7; --a:.64 }
-    .f-kant .f-kant-lamp:nth-of-type(9){  --i:8; --a:.81 }
-    .f-kant .f-kant-lamp:nth-of-type(10){ --i:9; --a:1 }
+       never does. Twenty values, one expression, no number chosen by eye. */
+    .f-kant .f-kant-lamp:nth-of-type(1){   --i:0;  --a:.0025 }
+    .f-kant .f-kant-lamp:nth-of-type(2){   --i:1;  --a:.01 }
+    .f-kant .f-kant-lamp:nth-of-type(3){   --i:2;  --a:.0225 }
+    .f-kant .f-kant-lamp:nth-of-type(4){   --i:3;  --a:.04 }
+    .f-kant .f-kant-lamp:nth-of-type(5){   --i:4;  --a:.0625 }
+    .f-kant .f-kant-lamp:nth-of-type(6){   --i:5;  --a:.09 }
+    .f-kant .f-kant-lamp:nth-of-type(7){   --i:6;  --a:.1225 }
+    .f-kant .f-kant-lamp:nth-of-type(8){   --i:7;  --a:.16 }
+    .f-kant .f-kant-lamp:nth-of-type(9){   --i:8;  --a:.2025 }
+    .f-kant .f-kant-lamp:nth-of-type(10){  --i:9;  --a:.25 }
+    .f-kant .f-kant-lamp:nth-of-type(11){  --i:10; --a:.3025 }
+    .f-kant .f-kant-lamp:nth-of-type(12){  --i:11; --a:.36 }
+    .f-kant .f-kant-lamp:nth-of-type(13){  --i:12; --a:.4225 }
+    .f-kant .f-kant-lamp:nth-of-type(14){  --i:13; --a:.49 }
+    .f-kant .f-kant-lamp:nth-of-type(15){  --i:14; --a:.5625 }
+    .f-kant .f-kant-lamp:nth-of-type(16){  --i:15; --a:.64 }
+    .f-kant .f-kant-lamp:nth-of-type(17){  --i:16; --a:.7225 }
+    .f-kant .f-kant-lamp:nth-of-type(18){  --i:17; --a:.81 }
+    .f-kant .f-kant-lamp:nth-of-type(19){  --i:18; --a:.9025 }
+    .f-kant .f-kant-lamp:nth-of-type(20){  --i:19; --a:1 }
     .f-kant:hover .f-kant-lamp, .f-kant:focus-visible .f-kant-lamp{
       opacity:1; animation-play-state:running;
       transition:opacity var(--t-1) var(--e-out);
@@ -7992,7 +8056,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.t-report .t-report-fill{
     position:absolute; left:0; top:0; bottom:0; width:0; z-index:0;
-    background:rgba(var(--sheen),.22);
+    background:rgba(var(--sheen),min(1,.22 * var(--m-sheen-k, 1)));
   }
   .btn--solid.t-report .t-report-fill{
     background:color-mix(in srgb, var(--ink) 86%, var(--bg-0));
@@ -8663,7 +8727,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.v-bloom:hover,
   .btn.v-bloom:focus-visible{
-    box-shadow:0 0 24px 2px rgba(var(--sheen),.18);
+    box-shadow:0 0 24px 2px rgba(var(--sheen),min(1,.18 * var(--m-sheen-k, 1)));
     border-color:var(--ink);
   }
 
@@ -8724,8 +8788,8 @@ document.addEventListener("DOMContentLoaded", function () {
      copy of the press. */
   .btn.v-inner.btn--line:hover,
   .btn.v-inner.btn--line:focus-visible{border-color:var(--ink-hover);
-    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),.24),
-               inset 0 0 7px 0 rgba(var(--sheen),.07)}
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),min(1,.24 * var(--m-sheen-k, 1))),
+               inset 0 0 7px 0 rgba(var(--sheen),min(1,.07 * var(--m-sheen-k, 1)))}
   /* And the fill version inverts, because a white plate cannot be lit brighter:
      --ink IS the plate, and an inset white glow on it measures four units. So
      the arm is the same statement — «the edge is live» — in the only ink the
@@ -8748,8 +8812,8 @@ document.addEventListener("DOMContentLoaded", function () {
     transition-duration:var(--t-1);
   }
   .btn.v-inner:active{
-    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),.06),
-               inset 0 0 18px 0 rgba(var(--sheen),.30);
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),min(1,.06 * var(--m-sheen-k, 1))),
+               inset 0 0 18px 0 rgba(var(--sheen),min(1,.30 * var(--m-sheen-k, 1)));
     transition-duration:var(--t-1);
   }
   /* ⚠️ AND THE OUTLINE VERSION NEEDS ITS OWN PRESS, for exactly the reason the
@@ -8762,8 +8826,8 @@ document.addEventListener("DOMContentLoaded", function () {
      own shadow, byte for byte. Equal specificity here, so it is source order
      that settles it, which is why this sits below the hover and not above. */
   .btn.v-inner.btn--line:active{
-    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),.06),
-               inset 0 0 18px 0 rgba(var(--sheen),.30);
+    box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),min(1,.06 * var(--m-sheen-k, 1))),
+               inset 0 0 18px 0 rgba(var(--sheen),min(1,.30 * var(--m-sheen-k, 1)));
     transition-duration:var(--t-1);
   }
 </style>
@@ -9218,9 +9282,9 @@ document.addEventListener("DOMContentLoaded", function () {
        literal worth repeating. Measured on the card the steps are 7, 13 and 22
        in 8-bit — the fan is even in GEOMETRY, at a 4px pitch; the tone climbs
        rather than steps, because that is what stacked alpha does. */
-    --z-sheet-1:rgba(var(--sheen),.10);
-    --z-sheet-2:rgba(var(--sheen),.06);
-    --z-sheet-3:rgba(var(--sheen),.03);
+    --z-sheet-1:rgba(var(--sheen),min(1,.10 * var(--m-sheen-k, 1)));
+    --z-sheet-2:rgba(var(--sheen),min(1,.06 * var(--m-sheen-k, 1)));
+    --z-sheet-3:rgba(var(--sheen),min(1,.03 * var(--m-sheen-k, 1)));
     background:var(--lift-bg);
     transform:translateY(0) scale(1) rotate(0.001deg);
     box-shadow:
@@ -9285,17 +9349,17 @@ document.addEventListener("DOMContentLoaded", function () {
      with whatever the card is doing. */
   .btn.z-stack.btn--solid{
     background:var(--ink); color:var(--ink-on-fill);
-    --z-sheet-1:rgba(var(--sheen),.42);
-    --z-sheet-2:rgba(var(--sheen),.26);
-    --z-sheet-3:rgba(var(--sheen),.14);
+    --z-sheet-1:rgba(var(--sheen),min(1,.42 * var(--m-sheen-k, 1)));
+    --z-sheet-2:rgba(var(--sheen),min(1,.26 * var(--m-sheen-k, 1)));
+    --z-sheet-3:rgba(var(--sheen),min(1,.14 * var(--m-sheen-k, 1)));
   }
   /* Same as 42 and 43: the face group's --m-face-ink has no plate to be fitted
      against once this is a line, and it measured 1.25:1 on a light card. */
   .btn.z-stack.btn--line{
     background:none; color:var(--ink-text);
-    --z-sheet-1:rgba(var(--sheen),.20);
-    --z-sheet-2:rgba(var(--sheen),.13);
-    --z-sheet-3:rgba(var(--sheen),.07);
+    --z-sheet-1:rgba(var(--sheen),min(1,.20 * var(--m-sheen-k, 1)));
+    --z-sheet-2:rgba(var(--sheen),min(1,.13 * var(--m-sheen-k, 1)));
+    --z-sheet-3:rgba(var(--sheen),min(1,.07 * var(--m-sheen-k, 1)));
   }
 
   /* 117 Fixed shadow — Gumroad's button, quoted rather than
@@ -9683,20 +9747,56 @@ document.addEventListener("DOMContentLoaded", function () {
      nothing to interrupt into a wrong state. 119 grows a plate UNDER a
      label; this is the only study on the page that deforms the plate.
 
-     The shade is derived from the accent rather than picked — 84% of it cut
+     🔑 THE WORD IS THE RULER. Without one there is nothing to read the
+     deformation AGAINST, and a 999px radius leaves the plate no corner to
+     watch: on a 157×45 stadium the whole six per cent is 9.4px of width and
+     2.5px of height, spread along two semicircular end caps. While the label
+     scaled WITH the plate, the gap between the word and the cap moved 3.85px
+     across the entire event — measured — and a shape that grows with
+     everything inside it is the definition of a scale, which is the one
+     thing this card exists to not be. That is what read as a wash: the
+     deformation was running the whole time and had no landmark, so the only
+     channel left carrying a visible amplitude was the shade.
+
+     The label now takes the EXACT inverse on the same stops, 1/1.06 against
+     1/0.944, so the glyphs hold their size to within 0.15px while the plate
+     breathes around them. Nothing about the plate changed — same six per
+     cent, same conservation, same numbers as the copy states. The padding
+     swing goes 3.85px → 10.72px, and it is 10.72 because there is finally
+     something rigid inside the soft thing.
+
+     The shade is derived from the accent rather than picked — 92% of it cut
      with the page ground — so a toolbar swatch carries it instead of
-     stranding a hex. It rides --t-4 and is settled long before the
-     deformation stops ringing: the colour states the press, the geometry
-     performs it. Under the global clamp the ring collapses to its own end
-     state, which is rest, and the shade is left doing the whole job — which
-     is the division this card already claims. */
+     stranding a hex. It rides --t-2 and is over before the plate reaches
+     peak: the colour states the press, the geometry performs it. It used to
+     say that while doing the opposite — 84% on --t-4 is a 15% drop in plate
+     lightness, held for as long as the pointer stays, against a deformation
+     finished in 200ms that returns to nothing. Under the global clamp the
+     ring collapses to its own end state, which is rest, and the shade is
+     left doing the whole job — which is the division this card already
+     claims. */
   .btn.squash{
     background:var(--accent); color:var(--on-accent);
-    transition:background var(--t-4) var(--e-out);
+    transition:background var(--t-2) var(--e-out);
   }
   .btn.squash:hover, .btn.squash:focus-visible{
-    background:var(--hover-set, color-mix(in srgb, var(--accent) 84%, var(--bg)));
+    background:var(--hover-set, color-mix(in srgb, var(--accent) 92%, var(--bg)));
     animation:squash-mass 950ms both;
+  }
+  /* .lbl is a flex item of an inline-flex .btn, so it is already blockified
+     and takes a transform without a display of its own. The two animations
+     share a clock, a duration and a stop list, so the product is 1 on every
+     frame the compositor draws, not just at the keyframes. */
+  .btn.squash:hover .lbl, .btn.squash:focus-visible .lbl{
+    animation:squash-hold 950ms both;
+  }
+  @keyframes squash-hold{
+    0%  { transform:scale(1,1); animation-timing-function:cubic-bezier(.3,0,.55,1) }
+    11% { transform:scale(.9434,1.0593);
+          animation-timing-function:linear(0, .55 7.5%, .85 12%, .95 14%, 1.03 16.5%,
+            1.09 20%, 1.14 23%, 1.15 25%, 1.13 28%, 1.11 31%, 1.05 39%, 1.02 43%,
+            .99 47%, .98 52%, .97 59%, 1.002 81%, 1) }
+    100%{ transform:scale(1,1) }
   }
   @keyframes squash-mass{
     0%  { transform:scale(1,1); animation-timing-function:cubic-bezier(.3,0,.55,1) }
@@ -10392,10 +10492,29 @@ document.addEventListener("DOMContentLoaded", function () {
      is caused by the fill rather than merely simultaneous, and no delay at all
      on the way out, so the label leaves first. */
   .o-pix .track{display:block; overflow:hidden; height:1.25em; position:relative; z-index:1;
-    mix-blend-mode:difference; color:var(--m-pix, #fff)}
+    mix-blend-mode:difference; color:var(--m-pix, #fff);
+    transition:color calc(var(--t-pix) * 23 * 0.45 + var(--t-2)) linear}
   .o-pix .inner{display:block; transform:translateY(0) rotate(0.001deg);
     transition:transform var(--t-3) var(--e-quint)}
-  .o-pix .inner span{display:block; line-height:1.25; color:var(--m-pix, #fff)}
+  .o-pix .inner span{display:block; line-height:1.25; color:var(--m-pix, #fff);
+    transition:color calc(var(--t-pix) * 23 * 0.45 + var(--t-2)) linear}
+  /* 🔑 THE WORD CHANGES CONSTANT, AND THAT IS WHY IT DOES NOT CHANGE COLOUR.
+     Under difference the word is |ground − constant|, so ONE constant across
+     the whole hover is a compromise between the card and the plate — and the
+     compromise rendered as a hue nobody picked, navy on amber. The endpoints
+     do not need one: an empty raster is the card alone and a full raster is
+     the plate alone, so each gets the constant that resolves to the label the
+     page already puts on that ground, and the transition carries it across.
+     LINEAR, and the raster's own spread and not the roll's: the constant has
+     to track how much of each ground is on screen, and cells land at an even
+     rate. Both durations are the raster's — 23 ranks of --t-pix plus a cell's
+     own --t-2 — and the exit keeps the 0.45 compression the cells keep, so the
+     colour and the plate finish together in both directions. */
+  .o-pix:hover .track,
+  .o-pix:focus-visible .track,
+  .o-pix:hover .inner span,
+  .o-pix:focus-visible .inner span{color:var(--m-pix-hi, #fff);
+    transition-duration:calc(var(--t-pix) * 23 + var(--t-2))}
   .o-pix:hover .inner,
   .o-pix:focus-visible .inner{transform:translateY(-50%) rotate(0.001deg);
     transition-delay:calc(var(--t-pix) * 23 * 0.35)}
@@ -10778,18 +10897,23 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.p-tighten.btn--line .p-tighten-plate{background:none;
     border:1px solid var(--ink)}
 
-  /* 137 in fill, and the difference blend is why this one needed a token
-     rather than a rule. The label is a single colour resolved per pixel
-     against whatever is under it, and in the built version that is two grounds
-     — the card, and a cell in --accent — which is exactly the pair paint()
-     solves --m-pix against. A fill moves BOTH: the ground becomes the plate,
-     and the arriving cell has to be that plate's inverse or it lands in the
-     colour it is landing on. So the fill version carries its own solved
-     constant, --m-pix-fill, scored over --ink and --on-ink by the same search
-     and the same worse-ground-wins rule.
-     TWO TOKENS AND NOT ONE WIDENED ONE. Adding a third ground to --m-pix would
-     have paid for this version out of the built version's numbers, and those
-     are already at the ceiling paint()'s own comment states.
+  /* 137 in fill, and the difference blend is why this one needed tokens rather
+     than a rule. The label is a single colour resolved per pixel against
+     whatever is under it, and a fill moves BOTH of the grounds it resolves
+     against: the ground becomes the plate, and the arriving cell has to be
+     that plate's inverse or it lands in the colour it is landing on. So this
+     version carries its own pair of solved constants — --m-pix-fill at rest
+     over --ink, --m-pix-fill-hi at full hover over --on-ink — solved by the
+     same pixFor() the built version uses, against its own two grounds.
+     FOUR TOKENS AND NOT TWO WIDENED ONES. A constant covering a version's two
+     grounds AT ONCE is exactly what this pass removed: it optimised contrast
+     and nothing else, and the word came out navy on amber. Each endpoint has
+     one ground, so each gets its own answer and the transition covers the
+     middle. paint()'s comment carries the arithmetic.
+     🔑 --m-pix-fill IS --m-pix-hi. The built version's plate at full hover and
+     this version's plate at rest are the same colour with the same label on
+     it, so the same solve is written under both names — the stylesheet has to
+     be able to say which endpoint it means, but there is only one number.
      The isolation ground follows the plate for the reason it exists at all:
      difference against a transparent backdrop is |0 - #fff|, and the word goes
      white on white. --ink and not --card here, because on a fill the plate IS
@@ -10813,6 +10937,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .btn.o-pix.btn--solid .track{color:var(--m-pix-fill, #fff)}
   .btn.o-pix.btn--solid .inner span{color:var(--m-pix-fill, #fff)}
+  /* The fill version's second endpoint. Its two grounds are the plate and the
+     plate's inverse, so its rest constant is the SAME one the built version
+     lands on at full hover — --on-ink on the accent, solved once — and only
+     the arrival differs: --on-ink is a dark chromatic ground and a difference
+     over one of those cannot reach white, so this is the pair that resolves to
+     the brightest grey the ground can make rather than to a fitted label.
+     Written at four classes plus the state, because the rest rule above is
+     already at three and the built version's hover rule at two. */
+  .btn.o-pix.btn--solid:hover .track,
+  .btn.o-pix.btn--solid:focus-visible .track,
+  .btn.o-pix.btn--solid:hover .inner span,
+  .btn.o-pix.btn--solid:focus-visible .inner span{color:var(--m-pix-fill-hi, #fff)}
 </style>
 
 <style>
@@ -10936,17 +11072,27 @@ document.addEventListener("DOMContentLoaded", function () {
        the number, and --btn-r is 999px, which is not one. */
     --bx-h:calc(30px + 1lh);
     --d:calc(var(--bx-h) / 2);
-    --plate-r:calc((30px + 1lh) / 2);
     padding:0; perspective:40rem;
   }
   .p-box-in, .p-die-in, .p-hold-in, .p-turn-in{
     display:grid; pointer-events:none; transform-style:preserve-3d;
     transition:transform var(--t-5) var(--e-back);
   }
+  /* THE CORNER IS THE TOOLBAR'S, NOT THIS CARD'S. The faces used to carry the
+     resolved pill as a typed length, borrowed from 143 along with the depth
+     above — but 143 types its radius because it ANIMATES one, and a corner
+     interpolating from 999px spends 98% of the run above the clamp doing
+     nothing. No corner moves here, so there is nothing to travel from: naming
+     --btn-r lets the browser's own clamp to h/2 draw the same pill at the
+     default setting, and the slider reaches the box family the way it reaches
+     every other plate. Typed, all four faces sat at 22.5px whatever the knob
+     said — an opt-out none of these cards claims, and the three that do have
+     it (28, 98, 104) say so in their own note. One value covers the prism:
+     floor and roof are --bx-h tall, the same box the two faces are. */
   .p-box-f, .p-die-f, .p-hold-f, .p-turn-f{
     grid-area:1/1; align-self:center; justify-self:stretch; box-sizing:border-box;
     display:grid; place-content:center; padding:15px 28px; white-space:nowrap;
-    background:var(--lift-bg); border-radius:var(--plate-r);
+    background:var(--lift-bg); border-radius:var(--btn-r);
     backface-visibility:hidden;
   }
   .p-box-front, .p-die-front, .p-hold-front, .p-turn-front{
@@ -12527,6 +12673,79 @@ document.addEventListener("DOMContentLoaded", function () {
         // best seat available rather than a rung that has stopped being one.
         root.setProperty('--m-seat',
           toHex(project(RUNGS['--bg-4'], [PANEL, accentRgb])));
+        // ---- THE SHEEN, AND THE EXCLUSION THAT CAME OFF -------------------
+        // 🔑 --sheen USED TO BE THE ONE COLOUR ON A BUTTON THE PICK COULD NOT
+        // REACH, and the argument for that was sound about highlights and wrong
+        // about this page: a sheen is light, light is the surface lifted toward
+        // white, so tinting it makes it a second fill. True — of a highlight at
+        // the alpha a highlight is drawn at. But 116's fan is not a highlight.
+        // Its own paragraph says so: three PLATES, «three steps of the same
+        // grayscale», drawn with box-shadow because that is the cheapest way to
+        // draw three copies of a box. A plate that opts out of the pick while
+        // the plate above it opts in is the split the FACE group exists to
+        // close. Measured on the built page: with a pick set, 18% of 116's
+        // effect and 65% of 05's did not move a channel.
+        //
+        // 🔑 SO IT FOLLOWS THE PICK, AND WHAT IS CONSERVED IS THE LUMINANCE OF
+        // WHAT IT DRAWS — not its alpha, and not its own colour. Those are
+        // different fixes and only one of them holds. Handing the sheen the
+        // pick's RGB at the built alphas was tried first and it is the obvious
+        // wrong answer: white lifts a #222 card 40 points at .18 because white
+        // is 221 points away from it, and Rose is 48 points away in green. The
+        // fan went to #4a2b39 — rose, and four fifths as dark as the card. The
+        // stack stopped being a stack.
+        //
+        // So TWO numbers are solved together, because one cannot do it:
+        //   --m-sheen    the pick's hue and saturation, at the lightness that
+        //                leaves the most CHROMA in the composite;
+        //   --m-sheen-k  the one gain on every alpha that puts that composite
+        //                back on the luminance the neutral sheen produced.
+        // The reference is 116's deepest band — 1-(1-.03)(1-.06)(1-.10), the
+        // three sheets accumulated — because it is the deepest sheen the page
+        // draws and every lighter one scales with it. Alpha is capped at K_MAX
+        // in the gain and again by min() at each call site, so a press that is
+        // already at .30 cannot be driven opaque.
+        //
+        // A GREY PICK NEEDS NO BRANCH: saturation 0 gives chroma 0 at every
+        // lightness, the first feasible lightness wins, and it is the neutral
+        // sheen back again. Ash gets the sheen it always had.
+        var SH_GROUND = PANEL;
+        var SH_NEUTRAL = lum(SH_GROUND) > .5 ? [0, 0, 0] : [255, 255, 255];
+        var SH_REF = 1 - (1 - .03) * (1 - .06) * (1 - .10);
+        var SH_KMAX = 3;
+        var shMix = function (S, a){
+          return [0, 1, 2].map(function (i){ return SH_GROUND[i] + a * (S[i] - SH_GROUND[i]); });
+        };
+        var shWant = lum(shMix(SH_NEUTRAL, SH_REF));
+        // The composite runs in a straight line from the ground to S, and
+        // luminance is monotonic along it, so the alpha that lands on shWant is
+        // found by bisection rather than by a sweep — and where the line never
+        // reaches shWant at all (a hue too dark to lift a dark card, or too
+        // pale to shade a white one) there is no alpha and the lightness is
+        // simply not a candidate.
+        var shBest = null;
+        for (var shL = 0; shL <= 100; shL++){
+          var S = fromHsl(mh[0], mh[1], shL / 100).map(Math.round);
+          if ((lum(shMix(S, 1)) - shWant) * (lum(shMix(S, 0)) - shWant) > 0) continue;
+          var lo = 0, hi = 1;
+          for (var bi = 0; bi < 30; bi++){
+            var mid = (lo + hi) / 2;
+            if ((lum(shMix(S, mid)) - shWant) * (lum(shMix(S, lo)) - shWant) <= 0) hi = mid;
+            else lo = mid;
+          }
+          var a = (lo + hi) / 2, k = a / SH_REF;
+          if (k > SH_KMAX) continue;
+          var band = shMix(S, a);
+          var chroma = Math.max(band[0], band[1], band[2]) - Math.min(band[0], band[1], band[2]);
+          if (!shBest || chroma > shBest.chroma) shBest = { S: S, k: k, chroma: chroma };
+        }
+        if (shBest){
+          root.setProperty('--m-sheen', shBest.S.join(','));
+          root.setProperty('--m-sheen-k', shBest.k.toFixed(3));
+        } else {
+          root.removeProperty('--m-sheen');
+          root.removeProperty('--m-sheen-k');
+        }
         // The label on those plates, and it is TWO fits rather than one. A
         // single fit has to clear its floor on every plate at once; in light the
         // bevels sit near the top of the ladder and the walked face near the
@@ -12551,75 +12770,143 @@ document.addEventListener("DOMContentLoaded", function () {
         root.removeProperty('--m-ink');
         root.removeProperty('--m-face-ink');
         root.removeProperty('--m-seat');
+        root.removeProperty('--m-sheen');
+        root.removeProperty('--m-sheen-k');
       }
-      // (guard: the walk needs a pick to walk toward)
+      // (guard: the solve needs a pick to solve against)
       if (mSource){
-        var absdiff = function (a, b){
-            return [0,1,2].map(function (i){ return Math.abs(a[i] - b[i]); });
-          };
-        // ---- 137's LABEL is the difference, and it has two grounds ---------
-        // 🔑 Same family as 113, solved from the other end. 137's word is one
-        // colour under difference over TWO grounds — the card where no cell has
-        // arrived, the accent where one has — and neither ground can move: the
-        // card is the page and the cell IS the pick. So the free variable is the
-        // label, and #fff was the wrong constant for it: |accent − #fff| is the
-        // accent's COMPLEMENT, which for a saturated mid-luminance pick sits at
-        // the accent's own luminance. Measured over eight palettes: 1.02:1 on
-        // Rose, 1.06 on Fern, 1.25 on Ember. Reported as «on active has wrong
-        // text color», and it is not a wrong colour so much as no colour — the
-        // complement of the thing it is written on.
+        // ---- 137's LABEL IS AN OUTCOME, NOT A COMPROMISE -------------------
+        // 🔑 The word is one colour under difference, and the pass before this
+        // one treated that as a two-ground OPTIMISATION: one constant scored
+        // against the card AND against the arriving cell, worse ground wins,
+        // the whole cube searched. It maximised contrast and it maximised
+        // nothing else, so the RENDER came out a hue nobody picked — Amber's
+        // word measured a clean 7.6:1 as a NAVY on amber, and light Fern's as
+        // magenta on white. Reported as «wrong text color on hover outline,
+        // and fill has wrong text color on default», and the two states named
+        // are the two ENDPOINTS.
         //
-        // ⚠️ NO GREY SOLVES IT EITHER — swept all 256, best was 2.41–3.02:1 on
-        // the four saturated picks — so the search is the whole cube, coarse
-        // then refined. Both grounds are scored and the worse one wins, which is
-        // the same rule the readout uses everywhere else.
+        // 🔑 AND AN ENDPOINT HAS ONE GROUND. Twenty-four cells at scale(0) is
+        // the card alone; twenty-four at scale(1) is the plate alone. Two
+        // grounds exist only in between, which is where a compromise belongs
+        // and the only moment the study is being read as a raster at all. So
+        // at the endpoints the constant is not searched for, it is SOLVED:
+        // |G − C| is invertible for a known G, so name what the word should BE
+        // and read C off it, per channel, C = g − t or g + t, whichever lands
+        // in gamut.
         //
-        // ⚠️ AND IT HAS A CEILING. A difference against a saturated mid-
-        // luminance ground cannot be pushed far in luminance from it: dark Azure
-        // tops out at 3.51:1 and Ember at 4.38, and no label colour does better
-        // because none exists. Stated rather than hidden — the alternative is
-        // giving up the per-cell resolution the study is built on, and that is
-        // the study.
+        // The targets are the page's own answers rather than new ones: on the
+        // card it is --ink-text, on a plate it is that plate's fitted label. So
+        // 137's word is the same colour every other button's word is — arrived
+        // at through a blend instead of through a declaration, which is the
+        // study.
         //
-        // 🔑 TWO GROUNDS IS THE SHAPE OF THE PROBLEM, NOT THE NUMBER TWO. The
-        // fill version of 137 is the same study on a different pair — the
-        // plate, and a cell arriving in that plate's inverse — so the search
-        // is written once and run per pair. It is NOT widened to three
-        // grounds: a single constant covering card, accent and inverse would
-        // pay for the fill version out of the built version's numbers, and
-        // those are already at the ceiling stated above.
-        var pixSolve = function (G1, G2){
-          var score = function (C){
-            return Math.min(ratio(absdiff(G1, C), G1),
-                            ratio(absdiff(G2, C), G2));
-          };
-          var best = null;
-          for (var pr = 0; pr < 256; pr += 16)
-            for (var pg = 0; pg < 256; pg += 16)
-              for (var pb = 0; pb < 256; pb += 16){
-                var Cc = [pr, pg, pb], sc0 = score(Cc);
-                if (!best || sc0 > best.s) best = {s: sc0, c: Cc};
-              }
-          var pc = best.c;
-          for (var qr = Math.max(0, pc[0]-14); qr <= Math.min(255, pc[0]+14); qr += 3)
-            for (var qg = Math.max(0, pc[1]-14); qg <= Math.min(255, pc[1]+14); qg += 3)
-              for (var qb = Math.max(0, pc[2]-14); qb <= Math.min(255, pc[2]+14); qb += 3){
-                var Cq = [qr, qg, qb], sc1 = score(Cq);
-                if (sc1 > best.s) best = {s: sc1, c: Cq};
-              }
-          return toHex(best.c);
+        // ⚠️ NOT EVERY TARGET IS REACHABLE, AND THE CLAMP IS WHERE A HUE CAN
+        // STILL GET IN. A difference over a dark saturated ground cannot be
+        // pushed far from it: on Amber's --on-ink #4c2e00 a white label wants
+        // channels at 331 and 301 and only 255 exists, so a channel that falls
+        // short takes the brightest that channel CAN make. Against a chromatic
+        // target that keeps the hue and only drops the lightness — Amber's fill
+        // at full hover lands #b3a51e on #4c2e00, 4.90:1, still amber. Against
+        // an ACHROMATIC one it would not: three channels clamping by different
+        // amounts is exactly how a white target renders blue, so there the
+        // ground is asked for the brightest grey it can make instead, equal
+        // channels by construction. That branch is for a reader who picks a
+        // Button colour and no Text colour — the preset row always sets both,
+        // so labelOnGrounds hands back a tinted near-white rather than #fff.
+        //
+        // ⚠️ AND THE CEILING THE OLD SEARCH HIT IS STILL THERE, on exactly the
+        // plates the palette row already rings: Violet's word arrives #82e6ff
+        // at 4.44:1 and Pine's #d9a3b0 at 3.60:1, which IS each ground's
+        // measured maximum under difference — brightest-reachable per channel,
+        // so no constant does better and no search would have found one. A
+        // plate that cannot carry a fitted label cannot carry a solved one
+        // either. The three are Violet, Navy and Pine, and the row's own titles
+        // already say they sit below the card's floor.
+        //
+        // The move between the two constants is a transition on `color` in the
+        // stylesheet, timed to the raster and not to the roll. That is the fix
+        // for the endpoints, and it is also the honest home for the compromise:
+        // half a raster IS half of each ground.
+        var pixFor = function (G, T, min){
+          // What a channel can REACH: |g − c| for c in 0..255 tops out at
+          // max(g, 255 − g), so a target channel is reachable exactly when it
+          // is under that — and the render is componentwise min(T, reach).
+          var reach = [0,1,2].map(function (i){ return Math.max(G[i], 255 - G[i]); });
+          var short = false;
+          var R = [0,1,2].map(function (i){
+            if (T[i] > reach[i]){ short = true; return reach[i]; }
+            return T[i];
+          });
+          // An ACHROMATIC target that falls short comes back as a hue: three
+          // channels capped by three different amounts is exactly how a white
+          // label renders blue. Ask the ground for the brightest grey it can
+          // make instead — equal channels by construction.
+          if (short && Math.max(T[0], T[1], T[2]) - Math.min(T[0], T[1], T[2]) < 8){
+            var n = Math.min(reach[0], reach[1], reach[2]);
+            R = [n, n, n];
+          }
+          // ⚠️ A CAPPED CHANNEL COSTS LIGHTNESS, AND LIGHTNESS IS THE CONTRAST.
+          // Ember's rest word capped its red at 221 and landed 4.07:1 on a card
+          // its own --ink-text clears at 4.85. So what is left walks toward
+          // whichever reachable extreme is further from the ground — black, or
+          // the brightest the ground can make — until the floor the target was
+          // fitted at is back. The hue survives because only the capped
+          // channels have room left to move: Ember lands #dd702c, still Ember.
+          // Where the ground has no more to give it stops at that extreme,
+          // which is the ceiling and not a failure to search.
+          if (min && ratio(R, G) < min){
+            var far  = ratio([0,0,0], G) >= ratio(reach, G) ? [0,0,0] : reach;
+            var from = R.slice();
+            for (var s = 1; s <= 20; s++){
+              var k = s / 20;
+              R = [0,1,2].map(function (i){
+                return Math.round(from[i] + (far[i] - from[i]) * k);
+              });
+              if (ratio(R, G) >= min) break;
+            }
+          }
+          // C from the render, not the other way round. R is inside the box by
+          // construction, so exactly one of the two branches is in gamut.
+          return toHex([0,1,2].map(function (i){
+            return G[i] >= R[i] ? G[i] - R[i] : G[i] + R[i];
+          }));
         };
-        root.setProperty('--m-pix', pixSolve(PANEL, accentRgb));
-        // The fill version's pair. --on-ink is the label fitted onto the
-        // accent, which is what a cell landing on that plate has to be drawn
-        // in; unset there is no pick, so there is no fill version to solve for
-        // and the stylesheet's #fff fallback is already right against the
-        // theme's own two extremes.
-        if (onAccent) root.setProperty('--m-pix-fill', pixSolve(accentRgb, toRgb(onAccent.hex)));
-        else          root.removeProperty('--m-pix-fill');
+        // The card, and the label the page already puts on it. The same fit
+        // --ink-text gets below — named again here rather than shared, because
+        // that one is computed after the ROLES loop for a reason of its own and
+        // moving it would change what that loop wipes.
+        var pixRestInk = fitted.text   ? fitted.text.rgb
+                       : fitted.accent ? toRgb(fit(fitted.accent.hex, 4.5).hex)
+                       : toRgb(labelOn(PANEL).hex);
+        root.setProperty('--m-pix', pixFor(PANEL, pixRestInk, 4.5));
+        // ONE CONSTANT, TWO ENDPOINTS. --on-ink is the label fitted onto the
+        // accent, so it is both what the outline version's word becomes once
+        // the cells have landed and what the fill version's word is at rest:
+        // same ground, same target, so the same solve, written under two names
+        // because the stylesheet has to say which endpoint it means.
+        //
+        // Only with an ACCENT pick. A hover-only pick leaves --accent at the
+        // theme default while accentRgb falls back to the theme's white, and a
+        // constant solved against the wrong ground is the bug this replaces.
+        // Unset, the stylesheet's #fff is already right against both defaults:
+        // it renders #000 on the light plate and #efefef on the dark one.
+        if (fitted.accent && onAccent){
+          var onInk    = toRgb(onAccent.hex);
+          var onPlateC = pixFor(accentRgb, onInk, 4.5);
+          root.setProperty('--m-pix-hi',   onPlateC);
+          root.setProperty('--m-pix-fill', onPlateC);
+          // The fill version at full hover, and the unreachable pair above: the
+          // plate is --on-ink and the word has to ride it.
+          root.setProperty('--m-pix-fill-hi',
+                           pixFor(onInk, toRgb(labelOnGrounds([onInk]).hex), 4.5));
+        } else {
+          ['--m-pix-hi', '--m-pix-fill', '--m-pix-fill-hi']
+            .forEach(function (p){ root.removeProperty(p); });
+        }
       } else {
-        root.removeProperty('--m-pix');
-        root.removeProperty('--m-pix-fill');
+        ['--m-pix', '--m-pix-hi', '--m-pix-fill', '--m-pix-fill-hi']
+          .forEach(function (p){ root.removeProperty(p); });
       }
       // The hover label, at last a choice. Picked, it is fitted against the
       // fill it will actually sit on rather than against the card — that fill
