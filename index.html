@@ -4295,7 +4295,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="h-marq" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="h-marq" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-09-02T10:59:53+02:00" data-versions="outline link">
       <div class="stage">
         <button type="button" class="btn btn--solid h-marq">
           <span class="h-marq-clip"><span class="h-marq-txt">Sign up for the breakfast seminar in Gothenburg</span></span>
@@ -4306,7 +4306,7 @@
       <div class="chips"><span class="chip chip--kod">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="e-count" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="e-count" data-native="fill" data-added="2026-08-26T13:26:39+02:00" data-updated="2026-09-02T10:59:53+02:00" data-versions="outline link">
       <div class="stage">
         <button type="button" class="btn btn--solid e-count">See open roles
           <span class="e-count-n" aria-hidden="true"></span>
@@ -4327,7 +4327,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
-    <article class="spec" data-key="u-words" data-native="fill" data-versions="link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="u-words" data-native="fill" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-09-02T10:59:53+02:00" data-versions="outline link">
       <div class="stage">
         <button type="button" class="btn btn--solid u-words"><span class="lbl"><span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>Start</span><span>Start</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>your</span><span>your</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>free</span><span>free</span></span></span> <span class="u-words-c" aria-hidden="true"><span class="u-words-i"><span>trial</span><span>trial</span></span></span></span><span class="sr">Start your free trial</span></button>
       </div>
@@ -4336,7 +4336,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="u-lift" data-native="fill" data-versions="link" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="u-lift" data-native="fill" data-added="2026-08-27T10:43:58+02:00" data-updated="2026-09-02T10:59:53+02:00" data-versions="outline link">
       <div class="stage">
         <button type="button" class="btn btn--solid u-lift"><span class="lbl"><span class="u-lift-c" aria-hidden="true">S</span><span class="u-lift-c" aria-hidden="true">e</span><span class="u-lift-c" aria-hidden="true">e</span> <span class="u-lift-c" aria-hidden="true">a</span><span class="u-lift-c" aria-hidden="true">l</span><span class="u-lift-c" aria-hidden="true">l</span> <span class="u-lift-c" aria-hidden="true">w</span><span class="u-lift-c" aria-hidden="true">o</span><span class="u-lift-c" aria-hidden="true">r</span><span class="u-lift-c" aria-hidden="true">k</span></span><span class="sr">See all work</span></button>
       </div>
@@ -5103,6 +5103,28 @@
   .e-count:hover .e-count-n,
   .e-count:focus-visible .e-count-n{--e-n:3; opacity:1}
 
+  /* 30 in outline and in link, and it is one line because only one thing in
+     this card knows what it is standing on. The counter is a @property integer
+     and an opacity — neither has a ground — but the chip it sits in is drawn
+     with a hairline of --on-ink at 35%, and --on-ink is the ink fitted against
+     the PLATE. Measured with the treatment on: the border stays
+     color(srgb 0.0627 0.0627 0.0627 / 0.35), which is #101010 — darker than the
+     #222222 card it is now drawn on, so the chip loses its boundary entirely
+     rather than merely dimming.
+     --ink-text is the same statement one ground over: the ink fitted against
+     the card. The 35% is kept, because the chip is meant to read as a quiet
+     annexe of the label and not as a second button.
+     The digits themselves need nothing — they inherit, so they follow .btn's
+     --ink-text the moment .btn--solid stops answering.
+     ⚠️ And they are invisible to tools/version-sweep.mjs: ::after content has
+     no text node to range over, so the sweep measures the main label and says
+     nothing about this chip. Composited by hand instead — #f2f2f2 at .6 over
+     #222222 is #9f9f9f, 5.90:1, and the fill version it leaves alone is
+     #101010 at .6 over #f2f2f2, 4.90:1. */
+  .e-count.btn--line .e-count-n,
+  .e-count.btn--text .e-count-n{
+    border-color:color-mix(in srgb,var(--ink-text) 35%,transparent)}
+
 </style>
 
 
@@ -5832,6 +5854,32 @@ document.addEventListener("DOMContentLoaded", function () {
   .h-marq.h-is-clipped:focus-visible .h-marq-clip::after{opacity:0; transition-delay:var(--t-4)}
   .h-marq.h-is-clipped:hover .h-marq-clip::before,
   .h-marq.h-is-clipped:focus-visible .h-marq-clip::before{opacity:1; transition-delay:var(--t-2)}
+
+  /* 19 in outline and in link. The marquee itself asks nothing of the ground —
+     it is a clip, a nowrap and a translate, and it only runs when the label is
+     actually too long. THE FADES ARE THE WHOLE OF THE VERSION. They are not
+     decoration: each is 24px of the GROUND painted over the label's own end, so
+     the word runs out rather than stopping, and a gradient that ends in the
+     wrong colour does not soften an edge, it draws a new one.
+     In fill the ground is the plate and the plate is --ink, which is what the
+     two rules above say. Take the plate away and --ink is the brightest colour
+     on the page: measured in dark, a 24px smear of #f2f2f2 down the right-hand
+     end of a label sitting on a #222222 card.
+     var(--card) is the token for the ground a button stands on, and it is safe
+     to reach for inside .btn even though .btn repoints the grey ladder: --card
+     is declared at :root as var(--bg-2), so the substitution happens THERE and
+     what a descendant inherits is the card's real colour rather than the
+     accent-tinted rung .btn would resolve. Card 137 already reaches for it the
+     same way, for the same reason.
+     Written as an override rather than by editing the two rules above, so the
+     shipped version's source is untouched and the reason stays next to the
+     versions it belongs to. */
+  .h-marq.btn--line .h-marq-clip::after,
+  .h-marq.btn--text .h-marq-clip::after{
+    background:linear-gradient(90deg,transparent,var(--card))}
+  .h-marq.btn--line .h-marq-clip::before,
+  .h-marq.btn--text .h-marq-clip::before{
+    background:linear-gradient(270deg,transparent,var(--card))}
 
     /* Reduced motion — the overflow label holds its place */
   @media (prefers-reduced-motion: reduce){

@@ -203,8 +203,17 @@ export const VERSIONS = {
   //
   // None of the six is offered a LINK. Five of them need a surface for the
   // mechanism to happen on — a wash to sweep under, a face to turn, a plate to
-  // close — and 141's burst needs a box to be clipped by, or the characters
-  // fly loose over the card.
+  // close — and 141's burst needs a box to be clipped by.
+  // ⚠️ 141's half of that sentence used to end «or the characters fly loose
+  // over the card», and measurement on 2026-09-02 turned it the other way up.
+  // They do not fly loose: .btn--text sets no background and removes no
+  // overflow, so .u-burst keeps its own `overflow:clip` and the box merely gets
+  // SMALLER. The arriving character drops 75% of its own height — 11.25px on a
+  // 15px character — and .btn--text's 8px of vertical padding leaves 8px of
+  // slack. Fill and outline both leave 15 and 16. So the burst is cut by three
+  // and a quarter pixels rather than let loose, and the verdict is the same for
+  // the opposite reason. A link would also have to restate `background:none`,
+  // which the outline version already does and which is the smaller half.
   'c-against':'outline', 'c-wash':'outline', 'p-face':'outline',
   'u-burst':'outline',   'u-area':'outline', 'p-tighten':'outline',
   // 137 the other way round: it ships as an outline and takes the fill. The
@@ -215,6 +224,52 @@ export const VERSIONS = {
   'o-pix':'fill',
   'c-relay':'fill', 'c-tide':'fill',
   'c-swell':'outline link', 'c-mass':'outline link',
+  // — The word, on any surface —————————————————————————————————
+  // Batch 2 of the vault plan «2026-09-02 PLAN version-coverage», first slice.
+  // The argument is the one the manifest already ran in the other direction for
+  // 20, 24 and 85 — «a mask, a duplicate, a translate and a tilt ask nothing of
+  // the ground» — read backwards: a study whose facets are only moves, fades,
+  // seq or type has nothing invested in the surface, so it survives every
+  // treatment and the CSS is zero to one colour restatement.
+  //
+  // It held for four of the six asked, and the two it did not hold for are the
+  // interesting half: the facet screen cannot see a study whose MOVING PARTS
+  // ARE THE SURFACE. 146 is filed «moves fades seq» because its end caps recede
+  // — and the end caps are the plate.
+  //
+  // 21 and 23 cost nothing at all: per-character transforms, and the label
+  // colour follows .btn the moment .btn--solid stops answering. Their `link`
+  // was already on the article and is adopted here rather than left
+  // hand-placed.
+  'u-lift':'outline link', 'u-words':'outline link',
+  // 19 costs one restatement and it is the whole version. The marquee is a
+  // clip, a nowrap and a translate, but its two 24px edge fades are the GROUND
+  // painted over the label's ends so the word runs out rather than stopping.
+  // In fill the ground is --ink; take the plate away and --ink is the brightest
+  // colour on the page, so a fade that is not restated draws a white smear down
+  // a #222222 card instead of softening an edge. var(--card) is the token for
+  // it, and it is safe inside .btn because it substitutes at :root.
+  'h-marq':'outline link',
+  // 30 costs one line, and only one thing in the card knows what it stands on:
+  // the counter chip's hairline is --on-ink at 35%, the ink fitted against the
+  // PLATE. Measured with the treatment applied it stays #101010, darker than
+  // the card it is now drawn on, so the chip loses its boundary rather than
+  // dimming. --ink-text is the same sentence one ground over. The digits need
+  // nothing; they inherit.
+  'e-count':'outline link',
+  // 146 answers NO twice, and both answers are about the mechanism.
+  // No OUTLINE: the card is a three-column plate whose end caps quantise, so
+  // the SILHOUETTE is the study. .btn--line draws a fixed rectangle around it,
+  // and the pixels then recede inside a box that does not — the shape that is
+  // supposed to come apart is sealed. Seen on a screenshot rather than argued:
+  // at full hover the caps have shrunk to .26 opacity and .58 scale inside an
+  // unbroken 1px --ink rectangle.
+  // No LINK, and it is the inert kind, like 41's: `.btn.o-caps` is two classes
+  // and `.btn--text` is one, so the study's own `--btn-r:0; padding:15px 34px`
+  // wins outright and the treatment changes nothing at all. Measured with the
+  // class on and off — same box, same plate, same caps. An absence claiming to
+  // be an answer.
+  'o-caps':'',
   // — Buttons in a row ——————————————————————————————————————————
   // The hardest corner of the axis, because a ROW shares ONE version: there is
   // no per-item answer, and the treatment has to make sense of every sibling

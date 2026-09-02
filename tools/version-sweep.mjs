@@ -577,17 +577,41 @@ for (const m of meta) {
   // would ask every link version on the page to keep a plate it does not have,
   // which is the opposite of what the version means. Its rect is printed,
   // because a link that measures the same as the plate has not dropped it.
+  // 🔑 AND THE 2px IS THE PAGE'S NORM, NOT A FAULT. Measured 2026-09-02 across
+  // the page's own population: of the 53 studies that render in BOTH fill and
+  // outline, 44 are exactly 2.000 apart in each dimension and only 9 are
+  // identical. .btn--solid sets no border and .btn--line sets a real 1px one,
+  // so a native-fill study grows by exactly that when the treatment lands.
+  // Only a study that keeps a border and turns it transparent — 123, 49 and
+  // seven others — measures the same in both.
+  // So this fails ARBITRARY drift and reports the structural 2px. Failing the
+  // 2px instead would have blocked every honest declaration in Batch 2, and
+  // fixing it per study would mean changing what a shipped card measures.
   const PLATE = ['fill', 'outline']
+  const BORDER = 2   // .btn--line's 1px, twice, in each dimension
   const g = VERSIONS.map(v => [v, geom.get(`${m.key}|${v}`)]).filter(([, x]) => x)
   const gp = g.filter(([v]) => PLATE.includes(v))
   if (g.length) {
     let note = '   '
     if (gp.length > 1) {
       const [, first] = gp[0]
-      const drift = gp.filter(([, x]) => Math.abs(x.w - first.w) > 0.5 || Math.abs(x.h - first.h) > 0.5)
-      note = drift.length ? '   !! DRIFT across the plate versions — border set to zero rather than transparent?'
-                          : '   ✓ identical across the plate versions'
-      if (drift.length) fails++
+      // PER DIMENSION, and that is not a loosening. A study with a max-width
+      // absorbs the border on the capped axis instead of growing: card 19 is
+      // 264x45 in fill and 264x47 in outline, because max-width:264px is
+      // already reached and the border eats into the content box. Requiring
+      // both axes to move by 2 called that «the study's own box moves», which
+      // is the one thing it is not.
+      // Each delta must be 0 or exactly +2, measured against the fill. A
+      // NEGATIVE delta is a real finding — a border cannot make a box smaller —
+      // and so is any other number.
+      const off = gp.map(([v, x]) => ({ v, dw: x.w - first.w, dh: x.h - first.h }))
+      const ok = d => Math.abs(d) < 0.5 || Math.abs(d - BORDER) < 0.5
+      const structural = off.every(o => ok(o.dw) && ok(o.dh))
+      const identical = off.every(o => Math.abs(o.dw) < 0.5 && Math.abs(o.dh) < 0.5)
+      note = identical    ? '   ✓ identical across the plate versions'
+           : structural   ? "   ~ 2px apart — .btn--line's border, which 44 of the page's 53 already are"
+                          : '   !! DRIFT that is not the border — the study\'s own box moves between versions'
+      if (!structural) fails++
     }
     console.log('  geometry     ' + g.map(([v, x]) => `${v} ${x.w}x${x.h}`).join('  ·  ') + note)
   }
