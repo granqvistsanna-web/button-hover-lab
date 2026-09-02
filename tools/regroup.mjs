@@ -343,16 +343,21 @@ const ORDER_OF = {
     'Fan',
     'Stiff beam',
 
-    // 159 is 61's direct descendant and belongs immediately before it, so the
-    // rule and the plate can be read against each other.
-    'One plate for the row',
-    'Shared caret',
-
     // The row is a different shape afterwards. 161 sits with 62 as its
     // counter-example: it is the one growth on the page that is NOT conserved,
     // and it says so.
     'Icon to label',
     'Fanned deck',
+
+    // 159 is 61's direct descendant and belongs immediately before it, so the
+    // rule and the plate can be read against each other -- and 160 travels one
+    // shared object too, so the pair LEADS the run below rather than sitting
+    // above two rearrangements and interrupting it. 159's own comment has
+    // claimed «immediately before 61» since it landed; until now the page had
+    // 160, 161 and 162 in between, and the comment was the only thing that
+    // said so.
+    'One plate for the row',
+    'Shared caret',
 
     // Something shared between them moves or yields.
     'Travelling rule',

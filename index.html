@@ -868,39 +868,66 @@
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
-  /* ⚠️ THE STUDIES WHOSE PLATE TAKES THE PICK — which is NOT the same set as
-     the studies the pick arrives ON. This said «the twelve the colour ARRIVES
-     on» and was wrong twice: the list is seventeen keys now (eighteen studies,
-     with 132 opting in through its row below), and only NINE of them have
-     anything from the pick landing on top — 36, 42, 43, 109, 111, 116, 132,
-     139, 140, measured off every rule of each study and of its -suffixed
-     children. The other nine step their plate aside for a colour that never
-     comes. See the vault plan «2026-09-02 PLAN button-colour-model».
+  /* ⚠️ THE STUDIES WHOSE PLATE TAKES THE PICK, AND THEY ARE NOW TWO LISTS,
+     because «takes the pick» was one promise covering two different things.
+     The split is the measurement: a study needs its plate stepped aside only if
+     something from the pick LANDS on that plate — one of its own rules, or a
+     rule on a .<key>-* child, or one of its @keyframes, painting background,
+     background-image or box-shadow from var(--ink), var(--ink-hover) or
+     var(--ink-on-fill). Derived three times, twice off the live CSSOM and once
+     against the source with a rule-level parser, and the eighteen FACE studies
+     come out exactly half and half.
+
+       ✦ --m-face   THE PICK'S HUE AT A LIGHTNESS HELD CLEAR of what arrives.
+         The list below plus 132 through its row. Every one of these floods,
+         sweeps or lights its own plate, so a plate in the arriving colour is a
+         plate you cannot see the effect happen on — which is a fill, not a
+         material. The walk is at M_STEP in paint().
+       ✦ --m-plate  THE PICK, VERBATIM. Nothing lands on these, so there is
+         nothing to step aside from, and the step was buying them a colour the
+         reader never chose: Coral #fea28b came back #fd4112, and the page's own
+         rule is that a plate is painted as picked. Verbatim also closes the one
+         failure the walk could not — its DIRECTION was decided by whether the
+         hover swatch happened to be filled, so the same pick stepped lighter
+         with Button alone and darker with a preset, and neither was wrong.
+
+     Two tokens and not one shared worst case: --m-face has to clear BOTH fills
+     because 109 floods with --ink and 36 with --ink-hover, and until this split
+     the nine below paid that bill for arrivals they never receive.
      No count is written in prose here again: this comment has now carried
-     «four», «twelve» and «thirteen», and the list is the only truth.
-     One face between them: --lift-bg and
-     --bg-2 are one rung apart and no card here shows both, so a second value
-     would buy a difference nobody is positioned to see.
-     ⚠️ WIDENED FROM FOUR 2026-08-31, and the nine that came in are the nine
-     Sanna photographed: 42, 98, 111, 132, 139, 140, 141, 142, 143 — every one
-     an orange label on a graphite pill, because each spells its rest plate
-     --lift-bg and no role wrote it. 132 is not in this list — it opts in
-     through its row, in the rule below, and the comment there says why.
-     :is() and not one written-out pair per key, so the light rule states the
-     list once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
+     «four», «twelve» and «thirteen», and the lists are the only truth.
+     One face per list: --lift-bg and --bg-2 are one rung apart and no card here
+     shows both, so a second value would buy a difference nobody is positioned
+     to see — but they are split IN PARALLEL anyway, because a future member
+     that does show both would otherwise take one plate from each group with
+     nothing reporting it.
+     ⚠️ 132 IS IN NEITHER LIST — it opts in through its row, in the rule below,
+     and the comment there says why. It keeps the step.
+     :is() and not one written-out pair per key, so the light rule states each
+     list once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as
+     .btn.x, and the two lists are the same specificity as the one they replace.
+     See the vault plan «2026-09-02 PLAN button-colour-model», step 2. */
   .btn:is(.s-sprite, .y-lit,
-          .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
-          .p-box, .p-die, .p-hold, .p-turn){
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
+          .p-face){
     --lift-bg:var(--m-face, #3a3a3a);
     --bg-2:var(--m-face,    #222222);
   }
-  :root[data-theme="light"] .btn:is(.s-sprite, .y-lit,
-          .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
+  .btn:is(.w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
           .p-box, .p-die, .p-hold, .p-turn){
+    --lift-bg:var(--m-plate, #3a3a3a);
+    --bg-2:var(--m-plate,    #222222);
+  }
+  :root[data-theme="light"] .btn:is(.s-sprite, .y-lit,
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
+          .p-face){
     --lift-bg:var(--m-face, #e7e7e7);
     --bg-2:var(--m-face,    #e7e7e7);
+  }
+  :root[data-theme="light"] .btn:is(.w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn){
+    --lift-bg:var(--m-plate, #e7e7e7);
+    --bg-2:var(--m-plate,    #e7e7e7);
   }
   /* 🔑 132 OPTS IN THROUGH ITS ROW, and it is the only one that can't join the
      list. Its study class sits on .k-lamp — a k-row wrapper — while the plates
@@ -1006,11 +1033,21 @@
      own colour and this is one class more specific, so no study rule changes
      shape. The two bevels reach theirs through their own colour declaration,
      which is further down the file and would otherwise win on source order. */
+  /* ⚠️ AND THE INK SPLITS WITH THE PLATE, which is the half a plate split on
+     its own gets wrong. --m-face-ink is solved against the WALKED face; hand it
+     to a study whose plate is now the pick verbatim and the label is being
+     measured against a background it no longer sits on — the same failure 49,
+     123 and 27 measured at 3.26–3.73:1 when their plates first stopped being
+     grey. So each list takes the ink solved for its own plate, and the two
+     rules are the same specificity as the one they replace. */
   .btn:is(.s-sprite, .y-lit,
-          .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
-          .p-box, .p-die, .p-hold, .p-turn){
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
+          .p-face){
     color:var(--m-face-ink, var(--ink-text));
+  }
+  .btn:is(.w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn){
+    color:var(--m-plate-ink, var(--ink-text));
   }
   .btn:hover,
   .btn:focus-visible{ --t-2:133ms; --t-3:200ms; --t-4:300ms; --t-5:450ms }
@@ -4667,7 +4704,7 @@
     <article class="spec" data-key="k-wght" data-native="outline" data-versions="link" data-added="2026-09-02T10:40:07+02:00" data-updated="2026-09-02T10:59:53+02:00">
       <div class="stage">
         <div class="k-row k-wght" data-copy-root>
-          <button type="button" class="btn btn--line k-wght-i">Latest</button>
+          <button type="button" class="btn btn--line k-wght-i">New</button>
           <button type="button" class="btn btn--line k-wght-i">Top</button>
           <button type="button" class="btn btn--line k-wght-i">Open</button>
           <button type="button" class="btn btn--line k-wght-i">Mine</button>
@@ -4698,7 +4735,7 @@
           <button type="button" class="btn btn--line k-gap-i">All</button>
           <button type="button" class="btn btn--line k-gap-i">Draft</button>
           <button type="button" class="btn btn--line k-gap-i">Live</button>
-          <button type="button" class="btn btn--line k-gap-i">Archive</button>
+          <button type="button" class="btn btn--line k-gap-i">Done</button>
         </div>
       </div>
       <h3><span class="num">153</span>Gap budget</h3>
@@ -4720,7 +4757,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="k-trade" data-native="fill" data-added="2026-09-02T10:40:07+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec spec--wide" data-key="k-trade" data-native="fill" data-added="2026-09-02T10:40:07+02:00" data-updated="2026-09-02T10:59:53+02:00">
       <div class="stage">
         <div class="k-row k-trade" data-copy-root>
           <button type="button" class="btn k-trade-i">Board</button>
@@ -4740,7 +4777,7 @@
           <button type="button" class="btn btn--line k-focus-i">Near</button>
           <button type="button" class="btn btn--line k-focus-i">Mid</button>
           <button type="button" class="btn btn--line k-focus-i">Far</button>
-          <button type="button" class="btn btn--line k-focus-i">Furthest</button>
+          <button type="button" class="btn btn--line k-focus-i">Deep</button>
         </div>
       </div>
       <h3><span class="num">156</span>Depth of field</h3>
@@ -4748,7 +4785,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="k-fan" data-native="outline" data-versions="link" data-added="2026-09-02T10:47:30+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec spec--wide" data-key="k-fan" data-native="outline" data-versions="link" data-added="2026-09-02T10:47:30+02:00" data-updated="2026-09-02T10:59:53+02:00">
       <div class="stage">
         <div class="k-row k-fan" data-copy-root>
           <button type="button" class="btn btn--line k-fan-i">Hearts</button>
@@ -4766,14 +4803,42 @@
       <div class="stage">
         <div class="k-row k-beam" data-copy-root>
           <button type="button" class="btn btn--line k-beam-i">Start</button>
-          <button type="button" class="btn btn--line k-beam-i">Middle</button>
-          <button type="button" class="btn btn--line k-beam-i">Also mid</button>
+          <button type="button" class="btn btn--line k-beam-i">Span</button>
+          <button type="button" class="btn btn--line k-beam-i">Mid</button>
           <button type="button" class="btn btn--line k-beam-i">End</button>
         </div>
       </div>
       <h3><span class="num">158</span>Stiff beam</h3>
       <p>The inverse of every other falloff here: the row is clamped at both ends, so each button&rsquo;s deflection is its own compliance times its proximity to you. Point at the middle and the row gives; point at an end and almost nothing happens, because that end is held.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec spec--wide" data-key="k-icon" data-native="outline" data-added="2026-09-02T10:52:50+02:00" data-updated="2026-09-02T10:59:53+02:00">
+      <div class="stage">
+        <div class="k-row k-icon" data-copy-root>
+          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#43;</span><span class="k-icon-wd">Create</span></button>
+          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#8599;</span><span class="k-icon-wd">Share</span></button>
+          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#9634;</span><span class="k-icon-wd">Archive</span></button>
+          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#9675;</span><span class="k-icon-wd">More</span></button>
+        </div>
+      </div>
+      <h3><span class="num">161</span>Icon to label</h3>
+      <p>Four squares at rest, and the one you point at grows to say what it is. The growth is paid for out of the row&rsquo;s trailing space rather than out of its neighbours, which is the honest version &mdash; a real toolbar has that space, and pretending the neighbours shrink would be card 62 wearing a different hat.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
+    </article>
+
+    <article class="spec spec--wide" data-key="k-deck" data-native="fill" data-added="2026-09-02T10:52:50+02:00" data-updated="2026-09-02T10:59:53+02:00">
+      <div class="stage">
+        <div class="k-row k-deck" data-copy-root>
+          <button type="button" class="btn k-deck-i">Ace</button>
+          <button type="button" class="btn k-deck-i">King</button>
+          <button type="button" class="btn k-deck-i">Queen</button>
+          <button type="button" class="btn k-deck-i">Jack</button>
+        </div>
+      </div>
+      <h3><span class="num">162</span>Fanned deck</h3>
+      <p>At rest the buttons overlap by twenty pixels &mdash; as far as the plate&rsquo;s own padding allows before a label slides under its neighbour &mdash; stacked front-to-back, so the row reads as a held deck and only the first label is fully clear. Entering the row anywhere spreads the whole deck; only then does the one you are on come forward.</p>
+      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec spec--wide" data-key="k-plate" data-native="outline" data-versions="link" data-added="2026-09-02T10:52:50+02:00" data-updated="2026-09-02T10:59:53+02:00">
@@ -4804,34 +4869,6 @@
       <h3><span class="num">160</span>Shared caret</h3>
       <p>One caret above the row slides to whatever you point at, and it leans back the way it came &mdash; travelling right it tips left for the length of the journey, then rights itself on arrival. So the row says not only where you are but which direction you got there from.</p>
       <div class="chips"><span class="chip">CSS + JS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="k-icon" data-native="outline" data-added="2026-09-02T10:52:50+02:00" data-updated="2026-09-02T10:59:53+02:00">
-      <div class="stage">
-        <div class="k-row k-icon" data-copy-root>
-          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#43;</span><span class="k-icon-wd">Create</span></button>
-          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#8599;</span><span class="k-icon-wd">Share</span></button>
-          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#9634;</span><span class="k-icon-wd">Archive</span></button>
-          <button type="button" class="btn btn--line k-icon-i"><span class="k-icon-gl" aria-hidden="true">&#9675;</span><span class="k-icon-wd">More</span></button>
-        </div>
-      </div>
-      <h3><span class="num">161</span>Icon to label</h3>
-      <p>Four squares at rest, and the one you point at grows to say what it is. The growth is paid for out of the row&rsquo;s trailing space rather than out of its neighbours, which is the honest version &mdash; a real toolbar has that space, and pretending the neighbours shrink would be card 62 wearing a different hat.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
-    </article>
-
-    <article class="spec" data-key="k-deck" data-native="fill" data-added="2026-09-02T10:52:50+02:00" data-updated="2026-09-02T10:59:53+02:00">
-      <div class="stage">
-        <div class="k-row k-deck" data-copy-root>
-          <button type="button" class="btn k-deck-i">Ace</button>
-          <button type="button" class="btn k-deck-i">King</button>
-          <button type="button" class="btn k-deck-i">Queen</button>
-          <button type="button" class="btn k-deck-i">Jack</button>
-        </div>
-      </div>
-      <h3><span class="num">162</span>Fanned deck</h3>
-      <p>At rest the buttons overlap by twenty pixels &mdash; as far as the plate&rsquo;s own padding allows before a label slides under its neighbour &mdash; stacked front-to-back, so the row reads as a held deck and only the first label is fully clear. Entering the row anywhere spreads the whole deck; only then does the one you are on come forward.</p>
-      <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
     <article class="spec spec--wide" data-key="k-ind" data-native="link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-09-02T10:59:53+02:00">
@@ -6880,7 +6917,14 @@ document.addEventListener("DOMContentLoaded", function () {
      flex:none on a computed quarter -- because with fluid cells the
      conservation is true in ink and a lie in layout, and the lie is the half
      you can see. Longest label is measured at 650 against the CELL rather than
-     against the resting text, which is why the house 28px padding is cut to 12. */
+     against the resting text, which is why the house 28px padding is cut to 12.
+     AND IT WAS STILL 4px SHORT. The cap only binds above 1236px of viewport; at
+     1200 the stage is 276 and the cells are 64.5, where «Latest» measured 66.5
+     at 400 and 68.5 at 650 -- so the longest label was clipped by its own
+     overflow:hidden at rest and by 4px more on the way up, silently, because a
+     clipped cell reports no error and the row's total width was exactly right.
+     «New» is 34px at 650, which is the first label in this row that clears the
+     shrunk cell rather than the resting one. */
   .k-wght{gap:6px; width:min(100%,300px)}
   .k-wght .k-wght-i{
     flex:none; justify-content:center; white-space:nowrap; overflow:hidden;
@@ -6908,8 +6952,30 @@ document.addEventListener("DOMContentLoaded", function () {
      is why the pill rung is 23.5 and not 24: the button measures 47px tall in
      this row, so h/2 is 23.5, and a round number here would be a claim about a
      true pill that the render does not keep. */
-  .k-rad{gap:10px}
+  /* FIT: TIGHTENED, NOT WIDENED, and the choice is the study's. A radius is
+     read at the corner and not across the row, so this stays on a normal card
+     and pays for the fit in padding -- 62's bargain exactly: width capped at
+     min(100%,320px) so the cap binds only above 1268px, and the house 28px cut
+     to 12. At 1200 the row is the stage's own 276 and the four cells are 64.5.
+     Longest label against the SHRUNK cell and not the resting one, and this is
+     the study that made the point, twice. «Month» renders 45.5px at 500, and
+     12px of padding leaves a 40.5px budget in a 64.5px cell -- so the first
+     pass clipped it by 3, invisibly, because the row's total width was exactly
+     right and a clipped cell reports nothing. 10px left 1px still clipped,
+     because the 43.5 that number was picked against was an estimate and not a
+     measurement. 8px is the answer and it is not a new number: k-gap already
+     pads 8, and it leaves a 48.5px budget with 3px of real slack. 152 has the
+     longest label of the four tightened rows here and it is the only one that
+     needed anything under 12.
+     THE HEIGHT MUST NOT MOVE, because --k-rad-hi below is h/2. .btn pads 15px
+     vertically on a 15px/1 label and .btn--line adds two 1px borders, which is
+     the 47 the pill rung was measured on -- so only the horizontal padding is
+     touched and 23.5 stays a true pill. */
+  .k-rad{gap:6px; width:min(100%,320px)}
   .k-rad .k-rad-i{
+    flex:none; justify-content:center; white-space:nowrap; overflow:hidden;
+    padding:15px 8px;
+    width:calc((100% - 18px) / 4);        /* four items, three 6px gaps */
     --k-rad-0:12px;                       /* the rest rung          */
     --k-rad-hi:23.5px;                    /* h/2, measured on 47px  */
     --k-rad-lo:calc((var(--k-rad-0) * 4 - var(--k-rad-hi)) / 3);
@@ -6929,7 +6995,12 @@ document.addEventListener("DOMContentLoaded", function () {
      other three drop to 4 each, and 28 + 12 is still 40. Every item is
      flex:1 1 0 inside a fixed-width row, so the outer edges cannot move to
      accommodate any of it -- the conservation is structural rather than
-     arithmetic, and it survives a label length nobody planned for. */
+     arithmetic, and it survives a label length nobody planned for.
+     WHAT IT DOES NOT SURVIVE IS THE LABEL ITSELF. flex:1 1 0 keeps the CELLS
+     equal whatever the margins do -- (276 - 40) / 4 is 59 at 1200 in every
+     state -- and «Archive» needs 68, so the fourth label was clipped by 6px
+     from the day it landed. The conservation was never wrong; the word was.
+     «Done» is 37 and clears the cell with 6px to spare. */
   .k-gap{gap:0; width:min(100%,320px)}
   .k-gap .k-gap-i{
     flex:1 1 0; min-width:0; justify-content:center; overflow:hidden;
@@ -6951,9 +7022,31 @@ document.addEventListener("DOMContentLoaded", function () {
      because of where it SITS rather than because you pointed at it. Four
      positions, four rules: :has() with :nth-child() is cheaper than arithmetic
      and it keeps the study CSS-only, which is the section's whole claim. */
+  /* FIT: TIGHTENED. A lever reads by its ENDS travelling, which wants a long
+     enough plank rather than a wider card, so it keeps the normal card and
+     takes 62's bargain -- min(100%,300px) with the house 28px cut to 12, four
+     64.5px cells at 1200, and «Wed» needs 31.
+     THE ROW IS WIDER THAN ITS OWN BOX WHILE IT IS TURNED. An axis-aligned box
+     around a rotated rectangle measures w*cos(a) + h*sin(a), so 276 x 47 at
+     2.4deg is 277.7 -- 1.7px the row does not own. The cap hands that back with
+     calc(100% - 6px) instead of letting it land in the stage's padding, because
+     that padding is the card's margin of safety and not spare width. It is also
+     the only cap on this page that has to account for the transform, and the
+     reason is that this is the only study where the whole row turns.
+     ONE RUNG SLOWER THAN THE REST OF THE BATCH, and the rule is MASS. Every
+     other conserved quantity here moves one item's own property; this swings
+     the entire row as a single rigid body, the largest moving object in the
+     section. It was --t-4, the same rung as 152's corner, so a plank and a
+     corner read as the same weight -- and they are two cards apart. */
   .k-lever{
-    gap:10px; transform-origin:50% 50%; transform:rotate(0deg);
-    transition:transform var(--t-4) var(--e-quint);
+    gap:6px; width:min(calc(100% - 6px),300px);
+    transform-origin:50% 50%; transform:rotate(0deg);
+    transition:transform var(--t-5) var(--e-quint);
+  }
+  .k-lever .k-lever-i{
+    flex:none; justify-content:center; white-space:nowrap; overflow:hidden;
+    padding:15px 12px;
+    width:calc((100% - 18px) / 4);        /* four items, three 6px gaps */
   }
   .k-lever:has(.k-lever-i:nth-child(1):is(:hover,:focus-visible)){transform:rotate(-2.4deg)}
   .k-lever:has(.k-lever-i:nth-child(2):is(:hover,:focus-visible)){transform:rotate(-0.8deg)}
@@ -6970,7 +7063,15 @@ document.addEventListener("DOMContentLoaded", function () {
      NO LINK VERSION, and that is a rule rather than an omission: on a link a
      fill becomes a 1.5px line along the bottom edge, and depth has no line
      equivalent. A drop shadow under bare text would be a fake, not a
-     translation, so this study declares fill and stops there. */
+     translation, so this study declares fill and stops there.
+     FIT: WIDE CARD, and no squeeze at all. A raise needs air around it or the
+     shadow has nothing to fall on, and the dent needs the plate at full size
+     or there is nothing to press into -- cut the padding to 12 and this becomes
+     four chips changing colour. So it takes the wide card the five older rows
+     in this section take, and keeps the house 28px: 428 wide at rest, inside
+     the 616px wide stage at 1200 and the 496 it collapses to at 600 with 34px
+     to spare each side. «Timeline» stays «Timeline», which is the point --
+     nothing about this study is a width. */
   .k-trade{gap:10px}
   .k-trade .k-trade-i{
     background-color:var(--bg-2); border:1px solid var(--line-ctl);
@@ -7003,8 +7104,28 @@ document.addEventListener("DOMContentLoaded", function () {
      accumulated. Nothing here touches opacity -- dimming would buy the same
      recession by taking contrast, which 60 Others recede already does
      honestly, and doing both would be paying twice for one effect. */
-  .k-focus{gap:10px}
-  .k-focus .k-focus-i{position:relative; border-color:transparent}
+  /* FIT: TIGHTENED, and the ladder shortened to pay for it. A focal plane is
+     about the EDGES going soft, so the row does not need width -- it needs four
+     equal cells close enough together that three blur steps read as one
+     photograph. min(100%,300px) with the house 28px cut to 12 gives 64.5px
+     cells at 1200, and «Furthest» was 61px against a 40.5px label budget: it
+     was clipped, and before the cap it ran the row 41px past the card edge on
+     each side. «Deep» is 36 and keeps the ladder a ladder -- Near, Mid, Far,
+     Deep is four rungs of distance in one syllable each.
+     NO overflow:hidden ON THE ITEM, and that is the one place this study parts
+     from the other three tightened rows. The ring is a ::after that takes the
+     blur, and a blur is paint rather than layout: clipped at the button's own
+     edge it would stop being a soft edge and start being a hard one with fog
+     inside it. So the ring is left free to spread, and what it spreads into is
+     the stage's 24px of padding -- 3.2px of blur reaches about 10, which is
+     inside the card and outside the row's own box, exactly as a blur should
+     be. */
+  .k-focus{gap:6px; width:min(100%,300px)}
+  .k-focus .k-focus-i{
+    flex:none; justify-content:center; white-space:nowrap;
+    padding:15px 12px;
+    width:calc((100% - 18px) / 4);        /* four items, three 6px gaps */
+    position:relative; border-color:transparent}
   /* THE BLUR IS ON THE RING AND NOT ON THE BUTTON, and that is a correction the
      contrast gate forced. Blurring the button blurs its LABEL, and a blurred
      glyph spreads its own histogram: a11y.mjs measured 4.32:1 at 0.9px and
@@ -7038,8 +7159,27 @@ document.addEventListener("DOMContentLoaded", function () {
      one button's parts; this is the row's, and the shared origin is the whole
      difference -- give each button its own origin and you get four independent
      tilts, which reads as four objects rather than one hand. */
+  /* FIT: WIDE CARD AND A TRIM, because on this card the ROTATION is the width.
+     A shared origin 1100% below the row is 493px from a button's own centre, so
+     4.5deg throws the outermost button 493*sin(4.5) = 38.7px sideways -- the
+     hand does not splay in place, it splays outwards, and the resting extent is
+     the smaller half of the problem. Measured before the fix: 474 at rest and
+     514.6 hovered, against a 276px stage, which is 115px past the card edge on
+     one side and the worst fit in the section.
+     Both halves are paid, because either alone leaves it over. THE CARD GOES
+     WIDE -- a fan needs room to open and squeezing it is the one thing that
+     cannot be done to this study -- and the horizontal padding comes down from
+     28 to 18, which takes 80px out of the row and none out of the splay: 394 at
+     rest, 433 at full splay, inside the 616px wide stage at 1200 and the 496 it
+     collapses to at 600 with 31px each side.
+     THE ANGLE AND THE ORIGIN ARE BOTH LEFT ALONE, and that is the choice. Either
+     one would have fitted it too, and both would have made it a smaller fan --
+     the whole claim here is that a shared origin turns 4.5deg into 40px, so
+     trimming the 4.5 to fit is trimming the finding. Padding is furniture; the
+     angle is the study. */
   .k-fan{gap:10px}
   .k-fan .k-fan-i{
+    padding:15px 18px;
     transform-origin:50% 1100%; transform:rotate(0deg);
     transition:transform var(--t-4) var(--e-quint);
   }
@@ -7060,9 +7200,29 @@ document.addEventListener("DOMContentLoaded", function () {
      by :nth-child, proximity is a function of DISTANCE and is set by the mirror
      pair. They are different custom properties, so neither cascade fights the
      other and the transform simply multiplies them. Compliance is 1-(o/2)^2 for
-     an offset o from the row's centre: 0.44 at the clamped ends, 0.94 inboard. */
-  .k-beam{gap:10px}
+     an offset o from the row's centre: 0.44 at the clamped ends, 0.94 inboard.
+     FIT: TIGHTENED. A beam is read by the SHAPE the four deflections make, and
+     four equal cells say that better than four cells sized by their words, so
+     this takes 62's bargain like 152 and 154: min(100%,300px), the house 28px
+     cut to 12, 64.5px cells at 1200.
+     AND ONE OF ITS LABELS WAS ON TWO LINES. «Also mid» was picked to avoid two
+     buttons reading «Mid», and at 1200 the row is clamped to the stage while
+     the items keep flex-shrink:1 -- so the third button shrank below its own
+     max-content, wrapped, and stood 62px tall in a row of 47s. Nothing in the
+     CSS says «wrap» and the deflection maths was untouched by it; it showed up
+     as one button 15px taller than its neighbours. white-space:nowrap forbids
+     it structurally, and the ladder is now Start / Span / Mid / End -- four
+     distinct words, longest 38px against a 40.5px budget.
+     VERTICAL IS NOT A PROBLEM AND WAS NEVER ONE. Full deflection is
+     0.94 * 1 * -15px = -14.1, and the button sits 40.5px below the stage's
+     content top with another 54px of stage padding above that -- so the worst
+     case leaves 72.9px between the row and the card's own edge. Measured, not
+     eyeballed. */
+  .k-beam{gap:6px; width:min(100%,300px)}
   .k-beam .k-beam-i{
+    flex:none; justify-content:center; white-space:nowrap; overflow:hidden;
+    padding:15px 12px;
+    width:calc((100% - 18px) / 4);        /* four items, three 6px gaps */
     --k-beam-c:1;                         /* compliance, by position */
     --k-beam-p:0;                         /* proximity, by distance  */
     transform:translateY(calc(var(--k-beam-c) * var(--k-beam-p) * -15px));
@@ -7198,14 +7358,47 @@ document.addEventListener("DOMContentLoaded", function () {
      its counter-example rather than as another conservation.
      The widths are per-position rules and not an inline custom property, so the
      whole study is in one place for the Copy collector to hand over. Each one is
-     48px of glyph cell plus the measured label plus 18px of trailing padding. */
-  .k-icon{gap:10px}
+     48px of glyph cell plus the measured label plus 18px of trailing padding.
+     FIT: WIDE CARD AND A RESERVED GUTTER, because the trailing space this study
+     is built on has to be OWNED and it was not. The row was left to hug its
+     content, so its box was 222 at rest and 294 hovered -- and a grid item
+     centred by the stage re-centres every time it changes size, which means the
+     buttons ahead of the one you point at slid 36px LEFT to fund the growth.
+     That is precisely the claim the card denies. Nothing looked wrong: the
+     resting row measured dead centre, and the movement is only visible while it
+     is happening.
+     So the width is fixed and the reserve is declared: four cells plus three
+     gaps is a 222px block, --k-icon-grow is the widest single growth (120 - 48
+     on «Archive»), and the row is block + 2*grow with grow of padding on the
+     LEFT. Border-box, so the content box is block + grow: the block sits
+     centred inside the row's box by construction -- 73 to 295 in a 368 box --
+     and the growth eats the trailing 73 and stops exactly at the box edge. The
+     neighbours cannot move, because there is nothing left for them to move
+     into.
+     368 needs the wide card: at 1200 a normal stage is 276 and there is no
+     version of this study that fits it -- keeping the block centred while
+     paying growth out of trailing space costs (stage - block)/2 per side, and
+     no glyph cell small enough to make that work leaves room for the word. On
+     the wide stage it is 368 in 616, and 368 in the 496 it collapses to at 600.
+     ⚠️ The clip the harness reports at rest is the STUDY: the label spans are
+     laid out at full width behind overflow:hidden and revealed by the growth,
+     so scrollWidth exceeds clientWidth by the whole word until you point at it.
+     Only a clip on the item you ARE pointing at is a defect. */
+  .k-icon{
+    gap:10px;
+    --k-icon-cell:48px;                   /* the glyph cell           */
+    --k-icon-grow:73px;                   /* the widest single growth */
+    width:calc(4 * var(--k-icon-cell) + 30px + 2 * var(--k-icon-grow));
+    padding-left:var(--k-icon-grow);
+  }
   .k-icon .k-icon-i{
-    width:48px; padding:0; overflow:hidden; justify-content:flex-start; gap:0;
+    flex:none;
+    width:var(--k-icon-cell); padding:0; overflow:hidden;
+    justify-content:flex-start; gap:0;
     transition:width var(--t-5) var(--e-quint);
   }
   .k-icon .k-icon-gl{
-    flex:none; width:48px; text-align:center;
+    flex:none; width:var(--k-icon-cell); text-align:center;
     font-family:var(--font-mono); font-size:15px;
   }
   .k-icon .k-icon-wd{
@@ -7213,9 +7406,17 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:opacity var(--t-3) ease;
   }
   .k-icon .k-icon-i:is(:hover,:focus-visible) .k-icon-wd{opacity:1; transition-delay:var(--t-2)}
-  .k-icon .k-icon-i:nth-child(1):is(:hover,:focus-visible){width:114px}
-  .k-icon .k-icon-i:nth-child(2):is(:hover,:focus-visible){width:108px}
-  .k-icon .k-icon-i:nth-child(3):is(:hover,:focus-visible){width:120px}
+  /* ONE PIXEL SHORT, ALL FOUR. Measured against the rendered word rather than
+     against the number that was typed: scrollWidth - clientWidth on the resting
+     item is the label plus its trailing padding exactly, and it came back 67,
+     61, 73, 56 against declared growths of 66, 60, 72, 56. So «Create»,
+     «Share» and «Archive» each stayed 1px clipped at the END of their own
+     reveal, which is the one state where a clip here is a defect rather than
+     the study. 48 + that measurement, and --k-icon-grow is the largest of the
+     four so the reserve still ends exactly where the widest growth does. */
+  .k-icon .k-icon-i:nth-child(1):is(:hover,:focus-visible){width:115px}
+  .k-icon .k-icon-i:nth-child(2):is(:hover,:focus-visible){width:109px}
+  .k-icon .k-icon-i:nth-child(3):is(:hover,:focus-visible){width:121px}
   .k-icon .k-icon-i:nth-child(4):is(:hover,:focus-visible){width:104px}
 
   /* 162 Fanned deck -- at rest the buttons overlap by thirty pixels, stacked
@@ -7238,7 +7439,16 @@ document.addEventListener("DOMContentLoaded", function () {
      the height the text sits at -- the worst line to cross. Nothing in the CSS
      looks wrong, no ratio moves, and it shows up only on a screenshot. 20px
      leaves 8px of clearance and still reads as a held deck. The rule to carry
-     over: tuck no further than the padding, less a margin. */
+     over: tuck no further than the padding, less a margin.
+     FIT: WIDE CARD, AND THE CEILING IS WHY. The overlap is bounded above by the
+     plate's own padding, and the padding is bounded below by the overlap being
+     visible at all -- cut the house 28px to 12 to fit a 276px stage and the tuck
+     has to come down to 8, which is not a held deck, it is four buttons standing
+     slightly close. The two constraints meet nowhere on a normal card, so this
+     is one of the four in the batch that takes the wide card: 316 stacked, 406
+     spread, inside the 616px wide stage at 1200 and the 496 it collapses to at
+     600. Nothing else changes -- the 20px tuck and the 28px padding are both
+     already at their limit and both are the study. */
   .k-deck{gap:0; padding-left:4px}
   .k-deck .k-deck-i{
     margin-left:-20px;
@@ -7265,6 +7475,15 @@ document.addEventListener("DOMContentLoaded", function () {
      tips left for the length of the journey, then rights itself on arrival, so
      the row says not only where you are but which direction you got there from
      -- out of a single eleven-pixel triangle.
+     A RUNG LIGHTER THAN 159, AND THE RULE IS MASS. Both cards travel one
+     shared object and they sit next to each other, so on the same rung they
+     read as one gesture done twice. 159 moves a PLATE that also resizes and
+     re-radiuses to its target, which is the heaviest thing in the section and
+     keeps --t-5; this moves an 11px triangle, which is the lightest, and takes
+     --t-4. The lean follows it down a rung to --t-3, because the lean has to
+     finish inside the journey: state it at the same duration as the travel and
+     the caret arrives still tipped and stands up afterwards, which reads as a
+     second gesture rather than as one lean.
      THE TRAVEL IS CSS AND ONLY THE LEAN IS SCRIPTED, which is the whole reason
      this is cheap. Position comes from 61's architecture, so nothing is
      measured and the pill-rect maths that bit 09/110/111/125 never enters:
@@ -7286,13 +7505,13 @@ document.addEventListener("DOMContentLoaded", function () {
     position:absolute; top:2px; left:0; width:25%;
     display:grid; place-items:center; pointer-events:none;
     transform:translateX(calc(var(--k-caret-n) * 100%));
-    transition:transform var(--t-5) var(--e-quint);
+    transition:transform var(--t-4) var(--e-quint);
   }
   .k-caret .k-caret-c::before{
     content:""; display:block; width:11px; height:11px;
     background:var(--ink); clip-path:polygon(50% 100%, 0 0, 100% 0);
     transform:rotate(calc(var(--k-caret-d) * -20deg));
-    transition:transform var(--t-4) var(--e-quint);
+    transition:transform var(--t-3) var(--e-quint);
   }
   .k-caret:has(.k-caret-i:nth-child(1):is(:hover,:focus-visible)){--k-caret-n:0}
   .k-caret:has(.k-caret-i:nth-child(2):is(:hover,:focus-visible)){--k-caret-n:1}
@@ -7311,7 +7530,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .k-caret .k-caret-c{
       width:auto; transform:none;
       left:anchor(--k-caret-1 left); right:anchor(--k-caret-1 right);
-      transition:left var(--t-5) var(--e-quint), right var(--t-5) var(--e-quint);
+      transition:left var(--t-4) var(--e-quint), right var(--t-4) var(--e-quint);
     }
     .k-caret:has(.k-caret-i:nth-child(2):is(:hover,:focus-visible)) .k-caret-c{
       left:anchor(--k-caret-2 left); right:anchor(--k-caret-2 right)}
@@ -11741,14 +11960,36 @@ document.addEventListener("DOMContentLoaded", function () {
     20%{transform:scale(1.389,.72) rotate(10deg); animation-timing-function:var(--elastic-out)}
     100%{transform:scale(1,1) rotate(0)}
   }
+  /* ⚠️ A KEYFRAME THAT SETS color BYPASSES THE PLATE'S OWN INK RULE, and this
+     one did. Both ends of the pulse named --ink-text — the label fitted to the
+     CARD — which was near enough while 142's plate was the card's grey and
+     wrong the moment the plate became the pick: on a dark card a pale pick
+     leaves --ink-text pale, and a pale label on a pale plate is 1:1. The
+     shared rule cannot reach in here, because an animation's own declaration
+     outranks it for the whole 700ms the animation is running — which on this
+     card is every hover. So the rest ends name the plate's ink explicitly.
+     --ink-mid, not --ink-hover: that alias resolves to --ink until the
+     toolbar sets a hover swatch, so the pulse would be invisible on the
+     page as shipped.
+     ⚠️ AND THE MIDDLE FRAME IS A DE-EMPHASIS, WHICH IS A RELATION AND NOT A
+     COLOUR. A flat grey is one only against a grey plate: #b3b3b3 on Straw is
+     1.5:1, so the pulse stopped being a step down and became a hole. Stated as
+     the label's own ink walked toward the ground it sits on, which is what a
+     de-emphasis IS, and 68% is the fraction that lands the monochrome page
+     where --ink-mid already had it: measured #b7b7b7 against the #b3b3b3 it
+     replaces in dark, 5.68:1 against 5.65:1. Light lands 11 units of grey
+     deeper — #565656 against #4b4b4b, 5.92:1 against 7.03:1 — because the two
+     themes mirror the ladder and one fraction cannot hit both; a second token
+     to buy that back would be a token for a difference nobody can see.
+     With a pick it holds the same relation rather than a number: 2.61–3.15:1
+     across thirteen palettes, the range --ink-mid's own 3:1 fit was chosen
+     for. Below AA on purpose, for the 105ms it is up — the same status it has
+     always had, and the reason the reduced-motion rule drops it entirely. */
   @keyframes u-area-tone{
-    0%,15%{color:var(--ink-text)}
-    /* --ink-mid, not --ink-hover: that alias resolves to --ink until the
-       toolbar sets a hover swatch, so the pulse would be invisible on the
-       page as shipped. A grey step is always visible and the toolbar still
-       repaints the rest colour around it. */
-    25%,40%{color:var(--ink-mid)}
-    50%,100%{color:var(--ink-text)}
+    0%,15%{color:var(--m-plate-ink, var(--ink-text))}
+    25%,40%{color:color-mix(in srgb, var(--m-plate-ink, var(--ink-text)) 68%,
+                                     var(--m-plate, var(--lift-bg)))}
+    50%,100%{color:var(--m-plate-ink, var(--ink-text))}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -11836,11 +12077,11 @@ document.addEventListener("DOMContentLoaded", function () {
      happen on — and nothing else moves: no timing, no distance, no order.
 
      ⚠️ EVERY OUTLINE RESTATES `color`, and that is not defensive tidiness. The
-     face group is spelled `.btn:is(.c-wash, .p-face, .u-burst, .u-area,
-     .p-tighten, ...)` at 0-2-0, which beats .btn--line outright — so without
-     the restatement an outline version keeps --m-face-ink, the label fitted
-     against a plate that is no longer under it. That is the collision cards 42
-     and 43 record, one axis over.
+     plate groups are spelled `.btn:is(…)` at 0-2-0, which beats .btn--line
+     outright — so without the restatement an outline version keeps the plate's
+     ink, --m-face-ink or --m-plate-ink depending on which list the study is in,
+     fitted against a plate that is no longer under it. That is the collision
+     cards 42 and 43 record, one axis over.
 
      🔑 AND WHERE A STUDY'S OWN PLATE TRAVELS, THE FRAME TRAVELS WITH IT. Three
      of these scale, turn or close their plate; a border left on the button is
@@ -12085,6 +12326,13 @@ document.addEventListener("DOMContentLoaded", function () {
        the number, and --btn-r is 999px, which is not one. */
     --bx-h:calc(30px + 1lh);
     --d:calc(var(--bx-h) / 2);
+    /* THE ONE PLACE THIS NUMBER IS WRITTEN. Every face but the front is the
+       plate under a flat wash of this much black — see the shading rule at the
+       foot of this block for what it buys and what it costs — and paint() reads
+       it off .p-box to solve --m-plate-shade-ink against the same colour the
+       browser is going to paint. A literal in each place would be two numbers
+       that only look like one. */
+    --bx-shade:.22;
     padding:0; perspective:40rem;
   }
   .p-box-in, .p-die-in, .p-hold-in, .p-turn-in{
@@ -12118,6 +12366,43 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-die-roof{
     height:calc(var(--d) * 2); padding:0 28px;
     transform:rotateX(90deg) translateZ(calc(var(--bx-h) / 2))}
+
+  /* 🔑 A ONE-COLOUR PRISM STILL HAS TO READ AS A PRISM, and until the plate was
+     taken verbatim it never had to: the walked face was one colour too, but the
+     depth was carried by the turn alone and nobody looked for it at rest. 150
+     already answers this — its two side caps are washed with a flat
+     rgba(0,0,0,.22), and its note says why: a face turned away from the light is
+     the cue the flat faces cannot give. 147, 148 and 149 have no sides to wash;
+     they are front, floor, back and 148's roof, all four the same colour, so the
+     tumble reads as a card flip of one pill. Same idiom, extended one step: THE
+     FRONT FACE IS THE LIT ONE AND EVERY OTHER FACE IS ONE SHADE DOWN. A uniform
+     darkening and not a hue shift, so there is no pick it behaves differently
+     for — the same argument the ladder's projection makes.
+
+     ⚠️ AND THESE FACES CARRY THE LABEL, which is the half 150 did not have to
+     pay for: its caps are blank, so shading them cost no contrast at all. A
+     single ink cannot serve both tones, and that is arithmetic rather than
+     taste — a plate at luminance .18 reads 4.58:1 against the best ink that
+     exists, so ANY darkening of its face puts a shared label under AA. So the
+     shaded faces take their own solved ink, which is the shape
+     --m-face-shade-ink already has for 111's hover and 43's press. Unset, both
+     fall through to --ink-text and the monochrome page is exactly as it was.
+
+     ⚠️ NOT 150, and that is deliberate. Its depth is already stated by two real
+     faces; washing its back and floor to the same value would leave the caps
+     with nothing to be darker THAN, which is the whole of its card. It keeps
+     the caps and they now read the token instead of restating it.
+
+     AFTER the face rule and not merged into it: .p-box-f sets `background`, the
+     shorthand, which resets background-image to none — so this has to come
+     later or the wash is thrown away with nothing reporting it. */
+  .p-box-back,  .p-box-floor,
+  .p-die-back,  .p-die-floor, .p-die-roof,
+  .p-hold-back, .p-hold-floor{
+    background-image:linear-gradient(rgba(0,0,0,var(--bx-shade)),
+                                     rgba(0,0,0,var(--bx-shade)));
+    color:var(--m-plate-shade-ink, var(--m-plate-ink, var(--ink-text)));
+  }
 
   @media (hover:hover) and (pointer:fine){
     .p-box:is(:hover,:focus-visible) .p-box-in{transform:rotateX(180deg)}
@@ -12175,7 +12460,8 @@ document.addEventListener("DOMContentLoaded", function () {
   .p-turn-side{
     width:calc(var(--d) * 2); height:calc(var(--d) * 2); padding:0;
     border-radius:0;
-    background-image:linear-gradient(rgba(0,0,0,.22), rgba(0,0,0,.22));
+    background-image:linear-gradient(rgba(0,0,0,var(--bx-shade)),
+                                     rgba(0,0,0,var(--bx-shade)));
   }
   .p-turn-left{justify-self:start;
     transform:translateX(calc(var(--d) * -1)) rotateY(-90deg)}
@@ -12557,11 +12843,16 @@ document.addEventListener("DOMContentLoaded", function () {
         // The lean is about TRAVELLING, so it expires with the journey rather
         // than on leave — hold still on an item and the caret stands back up
         // while you are still on it, which is the honest reading of "back the
-        // way it came". 460ms is --t-5 at the root ladder plus a frame; the row
+        // way it came". 310ms is --t-4 at the root ladder plus a frame; the row
         // is a plain div, not a .btn, so it reads the root rung.
+        // ⚠️ THIS NUMBER IS THE TRAVEL DURATION AND NOTHING ELSE. It followed
+        // the travel down from 460 when the caret moved off --t-5 to stop
+        // reading as 159's plate; move the travel again and move this with it,
+        // or the lean expires in the middle of the journey and the caret stands
+        // up while it is still sliding.
         timer = setTimeout(function () {
           row.style.setProperty("--k-caret-d", 0);
-        }, 460);
+        }, 310);
       }
       last = i;
     }
@@ -12579,7 +12870,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","p-box":"moves|hover","p-die":"moves|js","p-hold":"moves|press hover","p-turn":"moves|hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop hover","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-wght":"tone type|hover","k-rad":"tone shape|hover","k-gap":"tone|hover","k-lever":"moves|hover","k-trade":"moves tone|hover","k-focus":"tone|hover","k-fan":"moves|hover","k-beam":"moves|hover","k-plate":"moves tone shape|hover","k-caret":"moves|js hover","k-icon":"fades shape seq|hover","k-deck":"moves tone|hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
+<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","p-box":"moves|hover","p-die":"moves|js","p-hold":"moves|press hover","p-turn":"moves|hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves fades tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop hover","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-wght":"tone type|hover","k-rad":"tone shape|hover","k-gap":"tone|hover","k-lever":"moves|hover","k-trade":"moves tone|hover","k-focus":"tone|hover","k-fan":"moves|hover","k-beam":"moves|hover","k-icon":"fades shape seq|hover","k-deck":"moves tone|hover","k-plate":"moves tone shape|hover","k-caret":"moves|js hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
@@ -12588,7 +12879,7 @@ document.addEventListener("DOMContentLoaded", function () {
      thing that does not move, the effect class in data-key, and the tripwire
      below shouts the moment a key's number is not the one recorded here.
      Restamp in the same run as the facets: node tools/facet-manifest.mjs -->
-<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","p-box":"147","p-die":"148","p-hold":"149","p-turn":"150","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","x-bevel":"104","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-wght":"151","k-rad":"152","k-gap":"153","k-lever":"154","k-trade":"155","k-focus":"156","k-fan":"157","k-beam":"158","k-plate":"159","k-caret":"160","k-icon":"161","k-deck":"162","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
+<script type="application/json" id="number-map">{"c-swell":"119","c-crest":"123","c-tide":"121","c-against":"138","c-mass":"120","c-relay":"122","c-regis":"124","g-measure":"41","squash":"126","g-key":"43","lift":"49","q-riser":"82","z-gum":"117","p-face":"140","z-stack":"116","p-box":"147","p-die":"148","p-hold":"149","p-turn":"150","magnet":"50","i-loose":"130","i-mass":"52","g-two":"131","h-grow":"136","p-tighten":"143","o-caps":"146","o-quiet":"86","sweep":"07","j-dir":"75","j-turns":"129","shutter":"08","inkfill":"09","y-hold":"111","j-plus":"135","o-step":"91","c-wash":"139","o-pix":"137","uline":"14","s-mid":"39","i-rule":"57","i-beam":"55","corners":"13","f-kant":"42","e-chamfer":"28","w-corner":"98","roll":"15","h-arc":"127","h-marq":"19","e-count":"30","u-roll":"20","u-words":"23","u-lift":"21","u-centre":"24","u-burst":"141","u-shuffle":"25","e-wave":"26","q-jitter":"85","u-area":"142","q-hinge":"144","j-resolve":"80","relay":"11","dotm":"12","p-index":"145","p-cycle":"69","i-throw":"59","j-out":"78","n-cross":"92","p-walk":"67","p-bud":"128","w-redraw":"100","n-join":"93","p-part":"66","w-grid":"97","i-anti":"54","j-optic":"79","v-bloom":"04","v-inner":"05","f-lykta":"33","s-bevel":"34","y-lit":"109","sheen":"10","f-glas":"31","s-sprite":"36","x-bevel":"104","t-report":"72","t-mark":"73","t-hold":"74","q-spin":"83","k-recede":"60","k-share":"62","k-rep":"63","k-wght":"151","k-rad":"152","k-gap":"153","k-lever":"154","k-trade":"155","k-focus":"156","k-fan":"157","k-beam":"158","k-icon":"161","k-deck":"162","k-plate":"159","k-caret":"160","k-ind":"61","k-div":"65","k-pair":"64","k-lamp":"132","k-hand":"134","k-fit":"133"}</script>
 
 <script>
 // Deferred for the reason set out at the first of these blocks: a script above
@@ -13199,6 +13490,21 @@ document.addEventListener("DOMContentLoaded", function () {
       return m ? [+m[0], +m[1], +m[2]] : [20, 20, 20];
     }
     var PANEL = rgbOf(cards[0], 'backgroundColor');
+    // 🔑 THE PRISM'S SHADED FACES, READ OFF THE CARD RATHER THAN RETYPED. The
+    // box family darkens every face but the front by a flat black wash so a
+    // one-colour prism still reads as a solid, and the label on those faces has
+    // to be solved against the darkened colour — which means this number lives
+    // in two places at once, the stylesheet that paints it and the fit that
+    // measures it. So it is declared ONCE, in the box family's own rule beside
+    // --bx-h, and read here. Read at init and not per paint: it is a constant,
+    // not a theme fact, and the four cards that carry it never leave the page.
+    // The literal is the same value the rule states, for the case where those
+    // cards are ever culled and the token goes with them.
+    var BX_SHADE = (function (){
+      var bx = document.querySelector('.p-box');
+      var v = bx ? parseFloat(getComputedStyle(bx).getPropertyValue('--bx-shade')) : NaN;
+      return isFinite(v) ? v : .22;
+    })();
     // White is the default for all three, and it is graphite's white rather
     // than #ffffff — the system ships --ink-hi at a shade under pure, because
     // pure white on near-black glares. Still measured rather than named, so it
@@ -13845,6 +14151,14 @@ document.addEventListener("DOMContentLoaded", function () {
           mv[n] = fitOn(toHex(mv[n]), 3, PANEL).rgb.map(Math.round);
         });
         M_RUNGS.forEach(function (n){ root.setProperty(M_SET[n], toHex(mv[n])); });
+        // ---- …AND THE NINE WITH NOTHING ARRIVING TAKE IT WHOLE ------------
+        // 🔑 mSource AND NOT «the Button colour». With only Button-on-hover set
+        // there is no Button pick, and this is the same fallback project() walks
+        // from — so «= Button» would be undefined in exactly the state --m-face
+        // still has an answer for. It is also why --on-accent cannot stand in
+        // for the ink below: accentRgb falls back to the theme's white there, so
+        // that token is the label on a WHITE fill, not on this plate.
+        root.setProperty('--m-plate', toHex(mSource));
         // ---- 117's SEAT, THE ONE FIT HERE WITH A GROUND ON EACH SIDE -------
         // Every other colour on this page is read against one thing. The seat
         // is a 4px band with the CARD outside it and the PLATE inside it, so it
@@ -14018,16 +14332,47 @@ document.addEventListener("DOMContentLoaded", function () {
         root.setProperty('--m-ink',      onBevel.hex);
         root.setProperty('--m-face-ink', onFace.hex);
         root.setProperty('--m-face-shade-ink', onFaceShade.hex);
+        // ---- THE LABEL ON THE VERBATIM PLATE, AND IT IS ITS OWN SOLVE ------
+        // 🔑 A PLATE SPLIT WITHOUT ITS INK IS THE WORSE HALF OF THIS CHANGE.
+        // --m-face-ink is solved against the walked face, and the walk is
+        // exactly what these nine no longer do — in light the two land at
+        // opposite ends of the ladder, so reusing it would put a deep-plate ink
+        // on a pale plate for all nine at once. Same function, own ground.
+        var onPlateV = labelOnGrounds([mSource]);
+        // …and one step down for the prism. The box family's non-front faces
+        // are the plate under a flat black wash, so the ground is the plate
+        // composited with BX_SHADE — computed and not read back, for the reason
+        // faceShade states: a colour-mix in sRGB is reproducible arithmetic and
+        // reading it would mean measuring a face mid-turn on a card that may not
+        // be on screen. TWO INKS AND NOT A WIDER FIT, the same answer
+        // --m-face-shade-ink reached: a plate at luminance .18 clears only
+        // 4.58:1 against the best ink there is, so any darkening of its face
+        // puts a single shared ink under AA by arithmetic rather than by taste.
+        var plateShade = mSource.map(function (c){
+          return Math.round(c * (1 - BX_SHADE));
+        });
+        var onPlateShade = labelOnGrounds([plateShade]);
+        root.setProperty('--m-plate-ink',       onPlateV.hex);
+        root.setProperty('--m-plate-shade-ink', onPlateShade.hex);
         onPlate = onBevel.ratio <= onFace.ratio ? onBevel : onFace;
-        // One flag for the caption, and it has to answer for both: a fit that
-        // moved on either group is a fit the reader was not told about.
+        // …and the verbatim plate is a THIRD ground now, so the number the
+        // caption and the readout quote has to include it. It was two, and a
+        // floor reported off two of three grounds is only as good as the two it
+        // happened to look at — the same argument the readout already makes for
+        // the label on the card.
+        if (onPlateV.ratio < onPlate.ratio) onPlate = onPlateV;
+        // One flag for the caption, and it has to answer for all three: a fit
+        // that moved on any group is a fit the reader was not told about.
         onPlate = {hex: onPlate.hex, ratio: onPlate.ratio,
-                   moved: onBevel.moved || onFace.moved};
+                   moved: onBevel.moved || onFace.moved || onPlateV.moved};
       } else {
         M_RUNGS.forEach(function (n){ root.removeProperty(M_SET[n]); });
         root.removeProperty('--m-ink');
         root.removeProperty('--m-face-ink');
         root.removeProperty('--m-face-shade-ink');
+        root.removeProperty('--m-plate');
+        root.removeProperty('--m-plate-ink');
+        root.removeProperty('--m-plate-shade-ink');
         root.removeProperty('--m-seat');
         root.removeProperty('--m-sheen');
         root.removeProperty('--m-sheen-k');
@@ -14265,13 +14610,19 @@ document.addEventListener("DOMContentLoaded", function () {
             // authored on» — which stopped being true at 3c9f023, when the face
             // began stepping from the pick's own lightness instead. This is the
             // one sentence a reader who is surprised by a plate colour actually
-            // gets shown, so it has to describe what the code does now: the
-            // plate is the pick's hue, at a lightness held clear of whatever
-            // arrives on it.
+            // gets shown, so it has to describe what the code does now — and
+            // what it does now is TWO things, which is the whole of the token
+            // split: most material plates are this colour exactly, and the ones
+            // with something landing on them hold their lightness clear of it.
+            // The reader who was surprised had a verbatim study in front of her,
+            // so the verbatim half goes first. The «Auto plate» chip beside this
+            // swatch names the other half and counts it.
             why += ' The material studies take it as a plate rather than as a'
-                 + ' fill — the plate keeps the pick\'s hue and steps its'
-                 + ' lightness clear of whatever arrives on top, so the effect'
-                 + ' stays visible; the label on those plates lands on '
+                 + ' fill, and most of them take it exactly as picked. Where'
+                 + ' something lands on the plate during hover it holds its'
+                 + ' lightness clear of that colour instead, so the effect stays'
+                 + ' visible — the chip beside this swatch names those and shows'
+                 + ' which. The label on a plate lands on '
                  + onPlate.hex + ' — ' + onPlate.ratio.toFixed(1) + ':1 there.';
           }
           if (alsoOnFill){
