@@ -1754,6 +1754,88 @@
   .lift .lift-roll-c:nth-child(7){--i:6}
   .lift .lift-roll-c:nth-child(8){--i:7}
 
+  /* 49 in fill, and the answer to «owns its surface outright» — which is how
+     this card was filed and which measurement has now disproved, exactly as it
+     disproved it for 123 one section over. Measured 2026-09-02 with
+     tools/version-sweep.mjs and a plate-against-card probe: --card is --bg-2 in
+     dark and .lift paints --bg-2, so at rest the plate and the card are the
+     same #222222 and the ratio is 1.000. Only the 1px --line-ctl draws the
+     button. In light it is the same reading from the other side — --card is
+     --bg-0 there, so the rest rung sits BELOW the card rather than above it,
+     and elevation at rest is zero in both themes. That is what an edge and no
+     plate means, so NATIVE says outline for this card now and the plate is
+     what hover BUYS, which is the study.
+     Card 49 and card 123 measure IDENTICALLY here — 1.000 in dark, 1.237 in
+     light, 1.041 and 1.150 on the two picked palettes probed — because 123 is
+     this lift with card 10's sheen laid over it. So these two blocks are 123's
+     two blocks with the sheen taken out, and nothing else needed changing.
+     THE STEP IS THE PART THAT HAS TO GIVE. Elevation here is lightness, and
+     --ink is the top of the ladder — there is no rung above it to step onto.
+     The direction that is left is the one toward the canvas, which is what 10
+     and 120 already mix, so the plate answers with a TONE rather than with a
+     shadow and the ladder still has three rungs.
+     🔑 THE SEQUENCE IS UNTOUCHED, AND IT IS THE WHOLE CARD. The transition list
+     stays on .lift: the plate's colour goes at 0s and the transform waits
+     --d-1 on the way in, and the two swap on the way out. Every character of
+     the roll is a transform on a span and asks nothing of the ground, so the
+     last column still lands on the frame the plate lands on. A version that
+     recolours the rungs does not know what order they were climbed in.
+     ⚠️ THE LABEL IS THE ONE THING THAT HAS TO BE REWRITTEN TWICE. .btn:is(.lift,
+     .c-crest) hands this card --m-ink, fitted against the three grey rungs it
+     paints natively, and a plate of --ink is not one of them. So rest takes
+     --ink-on-fill and hover takes --on-ink-hover — NOT --ink-on-fill again,
+     which is the same colour until a hover swatch is picked and a different one
+     the instant it is: 123's fill measured 1.48:1 on Violet for exactly that,
+     a pale lilac label on the pale lilac plate its own hover walks to.
+     The border goes transparent rather than to zero, so the fill measures the
+     same 129.923 x 50.752 the built version does instead of the 2px less every
+     other outline-to-fill on this page costs. */
+  .lift.btn--solid{background-color:var(--ink); color:var(--ink-on-fill);
+    border-color:transparent}
+  .lift.btn--solid:hover,
+  .lift.btn--solid:focus-visible{border-color:transparent;
+    color:var(--on-ink-hover);
+    background-color:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)))}
+  .lift.btn--solid:active{
+    background-color:color-mix(in srgb,var(--ink-hover) 80%,var(--bg))}
+
+  /* 49 in link, and the rise is the half that needs no restatement at all.
+     THE RULE CARRIES THE LADDER. Elevation on this card is lightness and never
+     a shadow, so the step that was --bg-2 to --bg-3 across 130px is --line-ctl
+     to --ink across 1.5px — the same three rungs, on the same clock, over a
+     seventieth of the area. The press keeps the fill's answer one version over:
+     --ink is the top and the step that is left is the one toward the canvas.
+     🔑 AND THE RULE KEEPS THE DELAY, WHICH IS THE ONLY WAY THE CARD SURVIVES
+     THE MOVE. The whole study is that the plate lights first and the button
+     rises a beat later, so the rung has to arrive at 0s and leave after --d-1,
+     which is what .lift's own colour channel does. Stated on the ::before
+     because that is where the rung lives now; the 2px rise is a transform on
+     the BUTTON, so the rule and the eight rolling columns rise together without
+     one word about it. That is the one thing this card does that a link can do
+     unaltered, and it is why the link is honest rather than merely possible.
+     ⚠️ THE LABEL HAS TO BE REWRITTEN AND IT IS THE WHOLE RISK IN THIS BLOCK.
+     --m-ink is fitted against three rungs of a plate this version does not
+     have; leave it and the label is measured against a background it no longer
+     sits on, which is what put 42, 43 and 116 at 1.25:1. --ink-text is the
+     token fitted against the CARD, and the card is what a link's label sits on.
+     background:none has to be restated on hover as well. .lift:hover carries
+     one class and one pseudo-class and .btn--text.lift carries two classes, so
+     the two are level on specificity and only source order separates them —
+     which holds at rest and would hand --bg-3 straight back on hover. */
+  .btn--text.lift{background:none; border-color:transparent;
+    color:var(--ink-text)}
+  .btn--text.lift:hover,
+  .btn--text.lift:focus-visible{background:none; border-color:transparent}
+  .btn--text.lift:active{background:none}
+  .btn--text.lift::before{content:""; position:absolute;
+    left:0; right:0; bottom:0; height:1.5px; background-color:var(--line-ctl);
+    transition:background-color var(--t-2) var(--e-quint) var(--d-1)}
+  .btn--text.lift:hover::before,
+  .btn--text.lift:focus-visible::before{background-color:var(--ink);
+    transition-delay:0s}
+  .btn--text.lift:active::before{
+    background-color:color-mix(in srgb,var(--ink) 82%,var(--bg))}
+
   /* 50 Magnetisk */
   /* The pull is driven by pointer POSITION, so a keyboard has nothing to aim
      at and reduced motion has no business moving the plate at all. Both fall
@@ -3830,7 +3912,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="lift" data-native="fill" data-nolong data-added="2026-08-26T13:26:39+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="lift" data-nolong data-added="2026-08-26T13:26:39+02:00" data-updated="2026-09-02T10:59:53+02:00" data-native="outline" data-versions="fill link">
       <div class="stage">
         <button type="button" class="btn lift"><span class="lbl"><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>D</span><span>D</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>o</span><span>o</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>w</span><span>w</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>n</span><span>n</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>l</span><span>l</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>o</span><span>o</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>a</span><span>a</span></span></span><span class="lift-roll-c" aria-hidden="true"><span class="lift-roll-i"><span>d</span><span>d</span></span></span></span><span class="sr">Download</span></button>
       </div>

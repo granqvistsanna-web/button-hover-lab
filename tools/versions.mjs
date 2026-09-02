@@ -33,8 +33,42 @@ export const VERSIONS = {
   // what the cap is made of; 116's sheets do the same one card down. Neither
   // is a link: a wall and a stack both need a plate to stand under.
   'g-key':'outline', 'z-stack':'outline',
-  // owns its surface outright
-  'g-measure':'', 'lift':'',
+  // ⚠️ «OWNS ITS SURFACE OUTRIGHT» WAS ONE PHRASE COVERING TWO DIFFERENT
+  // FACTS, and it is the phrase 123 was filed under before measurement moved
+  // it. Both halves are measured now, 2026-09-02, plate against card at rest in
+  // both themes and across the palettes.
+  //
+  // 41 keeps it, and the number says why: the plate is --ink inside a 4px
+  // reserve, 14.2:1 against the card in dark and 18.8:1 in light. It owns a
+  // surface and the surface is the study.
+  // No OUTLINE, and the measured reason is not the one that suggests itself.
+  // The obvious guess is that an --ink ring vanishes into an --ink plate at
+  // full cover; it does not, because the plate DARKENS 86% toward --bg as it
+  // arrives, so ring against plate is 1.35:1 and the ring is still there. That
+  // is the fault rather than the acquittal. The trim's whole job is to hand
+  // over — it goes transparent at the moment the plate reaches it, and that
+  // handover IS the card — and a .btn--line ring does not hand over. So at
+  // full cover the reserve is being stated by an edge that has not moved, and
+  // at rest there are three edges (ring, trim, plate) for a card named after
+  // one reserved measure.
+  // ⚠️ It also costs the box, which on its own would be fixable and is worth
+  // recording: .g-measure declares no border at all, so .btn--line draws a
+  // real one and 192.695 x 49.000 becomes 194.695 x 51.000.
+  // No LINK, and here the treatment cannot even reach the study. .btn--text
+  // sets padding:8px 4px and .g-measure sets padding:17px 34px; both are one
+  // class, and .g-measure is some four thousand lines later in the sheet, so
+  // source order settles it and the class changes nothing. Measured with the
+  // class on and off: 192.695 x 49.000 both times, and the plate still fills
+  // 192.7 x 49.0 of it. A version that renders identically to the one it is
+  // not is worse than an absence — it is an absence claiming to be an answer,
+  // which is the whole thing this manifest exists to prevent. The mechanism
+  // would refuse anyway: an inset needs an interior, and a 1.5px rule has
+  // none. Card 08's absence, one axis over.
+  'g-measure':'',
+  // 49 loses it, and the two blocks it gains are 123's with the sheen taken
+  // out. NATIVE says outline below; the reasoning is there rather than
+  // repeated here, because it is the same measurement.
+  'lift':'fill link',
   // — Fill ————————————————————————————————————————————————————
   'sweep':'fill link', 'shutter':'fill',
   'inkfill':'fill',      'sheen':'outline',
@@ -238,7 +272,7 @@ export const NATIVE = {
   'sheen':'fill', 'relay':'fill', 'roll':'fill',   'h-marq':'fill', 'u-lift':'fill', 'u-words':'fill', 'u-shuffle':'fill',
   'e-chamfer':'fill', 'e-count':'fill', 'f-lykta':'fill',
   's-bevel':'fill', 's-sprite':'fill', 'g-measure':'fill', 'f-kant':'fill',
-  'g-key':'fill', 'lift':'fill', 'magnet':'fill',
+  'g-key':'fill', 'magnet':'fill',
   'i-mass':'fill', 'i-anti':'fill', 'i-throw':'fill', 'k-pair':'fill',
   'p-part':'fill', 'p-walk':'fill', 'p-cycle':'fill', 'q-riser':'fill',
   'n-join':'fill', 'w-grid':'fill', 'w-corner':'fill', 'x-bevel':'fill',
@@ -264,6 +298,21 @@ export const NATIVE = {
   // the rest rung sits BELOW the card rather than above it. Elevation at rest
   // is zero in both themes, which is the point of the card.
   'c-crest':'outline',
+  // 49 moves with it, on the same measurement and on the same day, because 123
+  // IS this lift with card 10's sheen laid over it. Probed rest plate against
+  // card: 1.000 in dark on Graphite — .lift paints --bg-2 and --card is --bg-2,
+  // the same #222222 — 1.237 in light, 1.041 on Navy and 1.150 on Violet. The
+  // two cards measure identically in every cell, which is the strongest form
+  // the argument comes in: whatever is true of 123's rest rung is true of this
+  // one, and 123's rung was measured to be the ground. So there is a 1px
+  // --line-ctl at rest and nothing else, and the plate is what hover buys.
+  // ⚠️ The move is what makes the fill REACHABLE, and that is not a
+  // convenience either. Filed native fill, set[nat] swallows the declaration
+  // and apply() restores the shipped markup whenever eff === nat — which for a
+  // surface-locked study is no treatment class at all. 123's --ink plate did
+  // not render for four days behind exactly that, and passed every check on
+  // this page while it did not.
+  'lift':'outline',
   'i-rule':'outline', 'k-share':'outline',
   // Row batch two: four outlines, because an outline is the treatment that
   // shows plate GEOMETRY without shouting, and 152 is about the corner.
