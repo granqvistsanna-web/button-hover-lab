@@ -336,6 +336,13 @@ const ORDER_OF = {
     'Lever',
     'Elevation trade',
 
+    // Three falloffs, all on 63's mirror-image trick. 158 is the odd one and
+    // belongs last: it is the only falloff on the page where an item's answer
+    // depends on where it SITS as much as on how far it is from you.
+    'Depth of field',
+    'Fan',
+    'Stiff beam',
+
     // Something shared between them moves or yields.
     'Travelling rule',
     'Divider yields',

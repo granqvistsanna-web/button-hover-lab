@@ -175,6 +175,10 @@ export const VERSIONS = {
   // spend and no depth to trade. 156-162 land in the next pass.
   'k-share':'link',
   'k-wght':'link', 'k-gap':'link', 'k-lever':'link',
+  // 157 survives it because a shared far origin does not care what it is
+  // rotating. 156 and 158 were not asked for and are not offered: blur and
+  // deflection both read on a link, but neither has been measured there.
+  'k-fan':'link',
 };
 
 /* The version each study SHIPS in — one of the three, for every study on the
@@ -225,6 +229,7 @@ export const NATIVE = {
   // Row batch two: four outlines, because an outline is the treatment that
   // shows plate GEOMETRY without shouting, and 152 is about the corner.
   'k-wght':'outline', 'k-rad':'outline', 'k-gap':'outline', 'k-lever':'outline',
+  'k-focus':'outline', 'k-fan':'outline', 'k-beam':'outline',
   't-report':'outline', 't-mark':'outline', 't-hold':'outline',
   'j-dir':'outline', 'j-out':'outline', 'j-optic':'outline',
   'j-resolve':'outline', 'q-spin':'outline', 'q-jitter':'outline',
