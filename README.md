@@ -1,6 +1,6 @@
 # Button Lab
 
-Ninety button hover animations, actually built. Hover, tab and press all of them.
+Button hover animations, actually built. Hover, tab and press all of them.
 
 **→ [Open the lab](https://granqvistsanna-web.github.io/button-hover-lab/)**
 
@@ -16,7 +16,7 @@ script — and **`</>`** hands you the same effect as a Framer code component.
 
 ## House rules
 
-Every one of the ninety obeys all five:
+Every study obeys all five:
 
 | | |
 |---|---|
@@ -24,7 +24,7 @@ Every one of the ninety obeys all five:
 | **Interruptible** | Hover out halfway and the animation turns smoothly from wherever it is — no waiting for it to finish. |
 | **In one way, out another** | The exit takes its own path — and its own clock, one rung down the ladder. |
 | **Reduced motion** | Everything falls back to plain colour and opacity changes. |
-| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs the ninety effects; the toolbar chrome runs on the design system's own `--t-fast`. |
+| **Five durations, no more** | 83 / 133 / 200 / 300 / 450 ms — frame-quantised at 60 fps, declared as tokens, never improvised. The ladder governs every effect; the toolbar chrome runs on the design system's own `--t-fast`. |
 
 And, without exception: no layout shift — every button's own box stays identical to three
 decimals, and in the group cards the row does too, the one deliberate exception being
@@ -33,7 +33,7 @@ transition longer than 450 ms, a visible focus state, every string at AA contras
 and a clean accessible name even where the label is split into per-character spans. Three
 cards run a *loop* rather than a transition, and those are listed as exceptions below.
 
-## The eight groups
+## The nine groups
 
 Each group names the part of the button that performs, because that is what you already know
 before you arrive: a text link has no fill to move, a button with no icon cannot relay an
@@ -71,7 +71,7 @@ cannot quietly lose a study the next time it runs.
 Search, the derived facets and the starred shortlist do the rest of the narrowing — and the
 shortlist persists in your browser.
 
-The **Restyle** panel on the right carries the global settings, and they restyle all ninety
+The **Restyle** panel on the right carries the global settings, and they restyle every study
 at once. Colour is a 2x2 — **text** and **button**, each at rest and on hover — plus a row of
 palettes that set all four together; then a **button radius**, a **version**, and the page
 **theme**. All are written as custom properties on the root element, which is also where the
@@ -96,7 +96,7 @@ has always been. The fit walks lightness in **either** direction for exactly thi
 label on a near-white accent has to go down, and the one-way walk the single-primary toolbar
 used would have sent it to white on white.
 
-**Hover reaches about twenty of the ninety, and that is the page's own thesis
+**Hover reaches about a fifth of the studies, and that is the page's own thesis
 showing through rather than a gap.** These effects are geometric: most of them paint their
 arriving layer at rest and animate `transform`, `clip-path` or `height`, so the colour that
 arrives is the same declaration as the fill. Which ones count was settled by reading every

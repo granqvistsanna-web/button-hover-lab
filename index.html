@@ -39,9 +39,23 @@
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
 <meta name="twitter:card" content="summary_large_image">
+<!-- Stated rather than left to the og fallback, because the fallback is a
+     courtesy and this card is the one that carries the work. -->
+<meta name="twitter:image" content="https://granqvistsanna-web.github.io/button-hover-lab/og.png">
 <meta property="og:type" content="website">
+<!-- Structured data, count-free like everything else in this head. The author
+     is here and not only in the footer: the page is a specimen of Sanna's own
+     work, and a crawler reading 990KB of buttons has nowhere else to learn
+     whose they are. -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"Button Lab","url":"https://granqvistsanna-web.github.io/button-hover-lab/","description":"Button hover animations, actually built. Hover, tab and press all of them.","inLanguage":"en","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"Sanna Granqvist","url":"https://sannagranqvist.com"}}
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><style>circle{fill:%23111111}@media(prefers-color-scheme:dark){circle{fill:%23ffffff}}</style><circle cx=%2216%22 cy=%2216%22 r=%2210%22/></svg>">
-<title>Button Lab</title>
+<link rel="canonical" href="https://granqvistsanna-web.github.io/button-hover-lab/">
+<!-- Count-free for the same reason the description is, and long enough to say
+     what the page IS. «Button Lab» alone is ten characters: a tab label, not
+     something anyone can pick out of a list of ten results. -->
+<title>Button Lab — button hover animations, actually built</title>
 <!-- Graphite Console tokens, inlined as a fallback FIRST so the page still
      renders if the linked sheet does not arrive; the link follows and wins
      whenever it does. Keep the two in step. -->
@@ -125,6 +139,10 @@
        data URI cannot read currentColor, so the stroke is written per theme
        and the two are kept in step here. */
     --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.4 10.4 14 14'/%3E%3C/svg%3E");
+    /* The clear cross, as a MASK and not a fill, so one declaration serves both
+       themes — see the rule on ::-webkit-search-cancel-button. Same 1.5 stroke
+       and round cap as the magnifier above, so the two read as one family. */
+    --x-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M4 4 12 12M12 4 4 12'/%3E%3C/svg%3E");
     --ink:var(--ink-hi);
     --ink-soft:var(--ink-mid);
     --muted:var(--ink-low);
@@ -190,7 +208,7 @@
        highlight stops being a highlight and becomes a second fill. That is
        right about a highlight and it was wrong about this token, because this
        token is not only drawing highlights: 116's fan is three PLATES — its own
-       paragraph says «three steps of the same grayscale» — and a plate that
+       paragraph has always called them plates, «not shadow» — and a plate that
        opts out of the pick under a plate that opts in is exactly the split the
        FACE group exists to close. Measured on the built page, with a pick set:
        18% of 116's effect and 65% of 05's did not move a single channel.
@@ -477,6 +495,14 @@
      were near enough to read as the same gap, and the grid had no edge. */
   .feed{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
     gap:16px; margin-top:32px}
+  /* AN OPEN CARD MUST NOT DRAG ITS ROW-MATES. Stretch is right at rest — every
+     card in the feed measures 298 or 300 — but the moment one opens, the row
+     equalises to it: measured 298 -> 413 on both neighbours of card 119, 115px
+     of empty card each, which reads as three cards with a rendering fault
+     rather than one card with its prose out. So start alignment, but only while
+     something is open: the rest state keeps its flat bottom edge, and the 96
+     closed cards are never asked to look ragged for the one that is not. */
+  .feed:has(.spec[data-open]){align-items:start}
   .sect, .sect>.grid{display:contents}
   /* One panel per study: stage on top, spec below a hairline. Elevation is
      lightness — the card is bg-1 on bg-0 and carries no border and no shadow. */
@@ -599,16 +625,28 @@
      control — «More» sat in the same size, colour and typeface as the chip
      beside it and was only distinguishable by being last. The chevron is the
      smallest mark that says «this opens», and it turns when it has. */
-  .spec-more{margin-left:auto; display:inline-flex; align-items:center; gap:6px;
+  .spec-more{margin-left:auto; position:relative;
+    display:inline-flex; align-items:center; gap:6px;
     padding:0; border:0; background:none;
     font:500 12px/1.35 var(--font-ui); color:var(--ink-low); cursor:pointer;
     transition:color var(--t-fast) var(--ease)}
+  /* THE TARGET IS BIGGER THAN THE WORD. «More» paints 42x16, and it is on all
+     ninety-seven cards — the page's most repeated hit box and also its
+     smallest, under the 24px floor of WCAG 2.5.8 on the axis that decides it,
+     with the word sitting at the far corner of the card a thumb reaches last.
+     An overlay and not padding: padding would have grown the chip row and
+     pushed every card ten pixels taller to say nothing new. Nothing is
+     painted, the reach is 54x26, and the 6px it takes sideways is inside the
+     row's own 14px gap, so it can never cross the chip beside it.
+     ::before, because ::after is already the chevron. */
+  .spec-more::before{content:""; position:absolute; inset:-5px -6px}
   .spec-more::after{content:""; width:6px; height:6px; margin-top:-3px;
     border-right:1.2px solid currentColor; border-bottom:1.2px solid currentColor;
     transform:rotate(45deg); transition:transform var(--t-3) var(--e-out)}
   .spec[data-open] .spec-more::after{transform:rotate(-135deg); margin-top:1px}
   .spec-more:hover{color:var(--ink-hi)}
   .spec-more:focus-visible{outline:1px solid var(--ink-low); outline-offset:3px}
+
 
   /* ============ button base ============ */
   .btn{
@@ -1101,15 +1139,33 @@
      the type note at --well. Sentence case also buys the width that lets the
      four sit on ONE row in the 276px wall. */
   .vers-b{
+    position:relative;
     font:500 11px/1 var(--font-ui); letter-spacing:0;
-    color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
+    color:var(--seg-ink, var(--ink-low)); background:none; border:0;
+    border-radius:var(--r-xs);
     padding:5px 7px; cursor:pointer;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
   }
+  /* THE ONE TEXT PAIR IN THE PANELS THAT MISSES AA, and only in light: an
+     inactive segment is --ink-low on the group's own --bg-3 track — #636363 on
+     #d6d6d6, 4.13:1. --ink-mid puts it at 6.0:1 and still leaves a clear step
+     below the checked segment's --ink-hi, so the hierarchy survives the
+     correction. Declared as a token at :root and read through a fallback, NOT
+     as a `:root[data-theme="light"] .vers-b` rule: that selector is (0,3,0)
+     and would outrank both :hover and [aria-checked], taking the two states
+     with it. Dark needs nothing — the same label measures 5.55:1 there. */
+  :root[data-theme="light"]{--seg-ink:var(--ink-mid)}
   .vers-b:hover{color:var(--ink-hi); background:var(--on-card)}
   .vers-b{transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease),
                      transform var(--t-fast) var(--e-out)}
   .vers-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  /* The same 24px floor as .spec-more, and an overlay for the same reason plus
+     one of its own: this bar is absolutely positioned ten pixels off the foot
+     of the stage, so a taller box would walk the words up into the demo rather
+     than down into the padding. 172 of them across the feed, painting 39x21.
+     Vertical only — every one of them already clears 24 on width, and the 2px
+     between them in a segment is all there is sideways. */
+  .vers-b::after{content:""; position:absolute; inset:-3px 0}
   /* --ink-hi on bg-3 rather than the toolbar's inverse pill: a white chip at the
      foot of the stage would be a second bright plate arguing with the button. */
   .vers-b[aria-checked="true"],
@@ -2023,7 +2079,13 @@
        stay at 400, so the zone has two levels and not three. */
     font:500 15px/1.3 var(--font-ui); color:var(--ink-mid);
     background:none; border:0; border-radius:var(--r-xs);
-    padding:7px 9px; margin:0; cursor:pointer; text-align:left;
+    /* 8px and not 7, which is the summary's own padding. «Same padding» is
+       what the note above claims and 7 is what it said: measured, this row
+       was 33.5px against the summary's 35.5 — two peers in one zone two
+       pixels apart, which is the same near-miss the three chevrons were
+       carrying before they were drawn once. 7px belongs to the checkbox rows
+       INSIDE the disclosure, a level down, and this row is not one of those. */
+    padding:8px 9px; margin:0; cursor:pointer; text-align:left;
     transition:color var(--t-fast) var(--ease);
   }
   .fav-only:hover{color:var(--ink-hi)}
@@ -2066,8 +2128,34 @@
   .tools-reset--inline:hover{background:var(--ctl-hi)}
   .tools-reset:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
 
+  /* ---- 24px, on the pointers that need it --------------------------------
+     WCAG 2.5.8 floors a target at 24x24 and five controls in the chrome miss it
+     at 390px, measured: More at 41.7x16.2 on every one of the 97 cards, the
+     version segments at 21 tall on 177 of them, the swatch at 22, the range at
+     20 and the «reacts» readout at 20.5. The studies themselves are exempt —
+     a specimen's box IS the specimen — and the footer's inline links fall under
+     the standard's own inline exception.
+     The four that carry text grow by PADDING and the two inputs by height, so
+     a mouse sees nothing change. More is the exception: its box sets the card's
+     last row, and four more pixels there would push 97 cards down for a hit
+     area nobody can see — so it grows a ::before instead. ::after is spoken
+     for; it draws the chevron. */
+  @media (pointer: coarse){
+    .spec-more{position:relative}
+    .spec-more::before{content:""; position:absolute; inset:-6px -10px}
+    .vers-b{padding-block:7px}
+    /* Stated twice on purpose: .tools .vers-b sets its own padding at (0,2,0)
+       and a media query adds no specificity, so the panel's own segments keep
+       their 21px unless the override matches the same way. */
+    .tools .vers-b{padding-block:7px}
+    .set-uses{padding-block:7px}
+    .set-swatch{width:26px; height:26px}
+    .set-range{height:26px}
+  }
+
   /* Deterministic instead of a cyclic percentage: minmax(min(320px,100%),1fr)
      resolved stale and pinned a 303px floor, overflowing below ~356px. */
+
   @media (max-width: 420px){ .feed{grid-template-columns:1fr} }
 
   @media (max-width: 520px){
@@ -2103,7 +2191,7 @@
      for part of the study underneath it. */
   .spec .stage{position:relative}
   .fav{
-    position:absolute; top:9px; right:9px; z-index:2;
+    position:absolute; top:13.5px; right:13.5px; z-index:2;
     width:36px; height:36px; display:grid; place-items:center;
     background:none; border:0; border-radius:10px; cursor:pointer;
     /* Same measurement as .copy above. */
@@ -2146,7 +2234,16 @@
      The label box is min-width'd to its own longest word, so swapping the
      text cannot move the button beside it. A page that argues against
      animating layout should not wobble its own furniture to say «Copied». */
-  .copy-pair{position:absolute; top:9px; left:9px; z-index:2; display:flex; gap:4px}
+  /* THE CORNER LAYER JOINS THE CARD'S ONE GUTTER. Everything else in the
+     card starts its ink at 24 — the stage's padding, the title, the chips —
+     and these two were placed as BOXES rather than as ink, so the copy icon
+     landed at 20 and the star at 19.5. Four pixels is the size of misalignment
+     that reads as softness rather than as a mistake, which is the kind that
+     survives; the note against the stage's own 24 says the same thing about
+     the same two pixels. The offsets are the gutter LESS whatever stands
+     between the box edge and the mark: 24 − 11 for the copy pair's padding,
+     24 − 10.5 for a 15px star centred in a 36px box. */
+  .copy-pair{position:absolute; top:13.5px; left:13px; z-index:2; display:flex; gap:4px}
   .copy{
     display:flex; align-items:center; gap:7px; height:36px; padding:0 11px;
     background:none; border:0; border-radius:10px; cursor:pointer;
@@ -2306,6 +2403,15 @@
   /* Inside a zone the rows sit on the same 2px the two lists already use, so a
      zone reads as one block whichever kind of row it holds. */
   .rail-grp{display:flex; flex-direction:column; gap:2px}
+  /* ⚠️ THE LINE ABOVE IS WHY `hidden` ON A ZONE DID NOTHING. A bare class
+     rule that sets display outranks the UA's [hidden]{display:none}, so the
+     group paintRail() marks as gone stayed on screen at its full height while
+     being taken OUT of the accessibility tree — visible and operable to the
+     eye, absent to a screen reader. Every other thing this panel hides by
+     attribute already carries its own guard (.rail-sects a, .rail-sum-n,
+     .spec-when); this one did not, so a class that sets display gets one from
+     now on. */
+  .rail-grp[hidden]{display:none}
   .rail-lbl{display:block; margin:0 0 6px 9px;
     font:600 11px/1 var(--font-ui); letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
@@ -2316,9 +2422,16 @@
        never bites. */
     flex:1 1 auto; min-width:0; width:100%;
     padding:10px 12px; border-radius:var(--r-sm);
-    border:0; background:var(--ctl);
+    border:0; background-color:var(--ctl);
     color:var(--ink-hi); font:400 15px/1.2 var(--font-ui);
-    transition:background var(--t-fast) var(--ease);
+    /* background-COLOR, here and on the hover rule below, and the transition
+       with them. `background` is a shorthand: it resets background-image to
+       none, and the magnifier two rules down IS a background image. Written as
+       the shorthand, the hover state wiped the glyph the moment the pointer
+       arrived and put it back when it left — measured NONE under :hover and
+       :hover:active, glyph at rest and on :focus. Nothing errors, the icon just
+       leaves. Any state rule added to this field has to keep using longhands. */
+    transition:background-color var(--t-fast) var(--ease);
   }
   /* The magnifier is a background image and not a pseudo-element, because an
      <input> has no ::before to give one to. Inline SVG as a data URI: two
@@ -2329,18 +2442,53 @@
   .rail-q{background-image:var(--find-glyph); background-repeat:no-repeat;
     background-position:9px 50%; background-size:15px 15px;
     padding-left:30px; padding-right:41px}
+  /* THE ONE CHROMATIC PIXEL ON THE PAGE, and it was the browser's: with text in
+     the field WebKit draws its own clear button, and it draws it #3e76ba in
+     BOTH themes — measured, 2,069 saturated pixels in a 266x38 crop of a page
+     whose whole argument is that these effects be judged without colour.
+     Not removed. With a filter on, clearing the field is the fastest way back,
+     and the native control is already where a touch and a keyboard expect it.
+     Redrawn: appearance:none takes the UA glyph away and leaves an empty box,
+     so the cross returns as a MASK over --ink-low. A mask carries the shape and
+     the token carries the colour, which is why this one needs no per-theme twin
+     the way --find-glyph above does — the same reason its stroke is written out
+     twice and this glyph is written once. It lifts to --ink-hi under the
+     pointer like every other control in the panel.
+     Sized 13 against the chip's 14 and offset 6 from it, so with a value in the
+     field and focus elsewhere the two sit side by side rather than on top of
+     each other: the cross lands at 215-228 of the 266px field, the ⌘K chip at
+     231-258. */
+  .rail-q::-webkit-search-cancel-button{
+    -webkit-appearance:none; appearance:none;
+    width:13px; height:13px; margin-left:6px; cursor:pointer;
+    background-color:var(--ink-low);
+    -webkit-mask:var(--x-glyph) center/11px 11px no-repeat;
+            mask:var(--x-glyph) center/11px 11px no-repeat;
+    transition:background-color var(--t-fast) var(--ease);
+  }
+  .rail-q::-webkit-search-cancel-button:hover{background-color:var(--ink-hi)}
   .rail-k{
     position:absolute; right:8px; top:50%; transform:translateY(-50%);
     pointer-events:none;
-    font:500 10.5px/1 var(--font-ui); color:var(--ink-faint);
+    /* Same fork as the placeholder: faint on --ctl-hi was 2.13:1 in the dark
+       theme against 5.17 in the light one. The chip is aria-hidden and read by
+       eye alone, so 3:1 is the floor it has to clear rather than 4.5 — low
+       takes it to 3.93 dark, 6.01 light, and a promise nobody can read is the
+       same as a shortcut that was never bound. */
+    font:500 10.5px/1 var(--font-ui); color:var(--ink-low);
     background:var(--ctl-hi); border-radius:5px; padding:4px 5px;
   }
   .rail-q:focus + .rail-k{opacity:0}
   /* The hint is a size down from the value. In the 288px wall the field is
      208px and the glyph and the ⌘K chip take 73 of it, so the placeholder at
      15px ran 6px under the chip; the typed value keeps its own size. */
-  .rail-q::placeholder{color:var(--ink-faint); font-size:13.5px}
-  .rail-q:hover{background:var(--ctl-hi)}
+  /* --ink-low, and this is the last of the argument the counts and the hints
+     have already had twice in this panel. --ink-faint measures 4.70:1 in the
+     light theme and 2.49:1 in the DARK one, which is the default: the same
+     token, one side of it under AA, on the only line in the panel that says
+     what the field is for. Low reads 4.61 dark and 5.46 light. */
+  .rail-q::placeholder{color:var(--ink-low); font-size:13.5px}
+  .rail-q:hover{background-color:var(--ctl-hi)}
   .rail-q:focus-visible{outline:2px solid var(--ink-low); outline-offset:1px}
   /* ⌘K moves focus to a field that, on a wall, can be a long way from where
      the reader is looking — they are at card 60 and the panel is fixed at the
@@ -2591,14 +2739,19 @@
   /* Filled by the same machinery rather than by its own background, so the
      current row and a hovered row are one mechanism and cannot disagree. */
   .rail-sects a[aria-current="true"]{color:var(--ink-hi); background-size:100% 100%}
-  /* White is the page's only accent and this is the only place in the panel
-     that earns it: one thing is true at a time, and it is where you are. The
-     bar is on the row's own left edge rather than the panel's, so it reads as
-     belonging to the row and not as a second wall beside the first. */
-  .rail-sects a[aria-current="true"]::before{
-    content:""; position:absolute; left:0; top:50%; width:2px; height:15px;
-    margin-top:-7.5px; border-radius:1px; background:var(--accent);
-  }
+  /* ---- Where you are, and NO BAR SAYS IT ------------------------------
+     There is no accent mark on the current row. There was one — a 2px bar on
+     the row's own left edge — and it is gone at Sanna's ask, so the row is
+     marked the way every other on-state in this panel is marked: the ink goes
+     to --ink-hi, the row fill sits at 100%, and the chevron comes up a rung.
+     Three channels, all of them the panel's own, none of them a second
+     vertical line beside the wall the panel already is.
+     ⚠️ Do not put it back as a ::before either: both of this row's
+     pseudo-elements are spoken for — ::after is the chevron — and accent in
+     this panel is now spent nowhere, which is a decision and not an omission.
+     aria-current carries the fact for a screen reader, and the fill and the
+     ink are the same mechanism a hovered row uses, so the two cannot
+     disagree about what «on» looks like. */
   /* The two facet rows draw a disclosure caret and these drew nothing, so one
      panel had two list idioms and the one that NAVIGATES was the one with no
      affordance. It points right and never turns: these go somewhere, they do
@@ -2634,6 +2787,18 @@
   /* A jump has to clear the sticky toolbar, and the browser's own idea of the
      top of a section is the top of its box. */
   .spec{scroll-margin-top:120px}
+  /* ---- The card the search handed you ---------------------------------
+     Enter in the panel's field focuses the first matching CARD (see «Enter
+     hands over the result»), which makes the card a :focus-visible target —
+     and Chrome's own ring for one is a hardcoded #005fcc, the only saturated
+     blue anywhere near this page. It gets the ring every other focusable
+     thing here gets instead.
+     INSET, at -2px: the card carries overflow:hidden and a 14px radius, and a
+     ring hung outside a 450px plate in a 24px gutter is a ring in the gutter.
+     Inside, it follows the radius and reads as the card being held.
+     :focus-visible and not :focus, so a pointer landing on a card — which
+     happens through .fav and .copy inside it — draws nothing. */
+  .spec:focus-visible{outline:2px solid var(--ink-low); outline-offset:-2px}
 
   /* 1360px, and the number is what the two columns need rather than a round
      figure: 268 of panel plus the 1060 the grid was drawn against, plus its
@@ -2853,6 +3018,35 @@
        the panel and the status bar is pushed off the bottom of the screen. */
     .rail-body{flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
       padding:14px 11px 26px}
+    /* ---- The body says when it is cut --------------------------------
+       Shut, the three zones clear the panel by 231px and there is nothing to
+       say. Open the one facet group and the ninth section link lands 9px UNDER
+       the viewport — measured at 1440×900 — and a scroll container with no cue
+       is a list that appears to end where the screen does. So the body fades
+       its own last 28px while there is more below it, and its first 28px while
+       there is anything above.
+
+       A mask and not an overlay gradient: an overlay would have to be told the
+       panel's colour in both themes, and it would sit over the rows as a
+       silent hit target. The attributes are written by the scroll handler, so a
+       body that fits carries neither of them and nothing is drawn at all —
+       which matters, because a mask on a scroll container is a paint layer.
+       Both directions at once has to come LAST: same specificity as the two
+       single-sided rules, so order is what decides it. */
+    .rail-body[data-more~="top"]{
+      -webkit-mask-image:linear-gradient(transparent, #000 28px);
+      mask-image:linear-gradient(transparent, #000 28px);
+    }
+    .rail-body[data-more~="bot"]{
+      -webkit-mask-image:linear-gradient(#000 calc(100% - 28px), transparent);
+      mask-image:linear-gradient(#000 calc(100% - 28px), transparent);
+    }
+    .rail-body[data-more="top bot"]{
+      -webkit-mask-image:linear-gradient(transparent, #000 28px,
+                                         #000 calc(100% - 28px), transparent);
+      mask-image:linear-gradient(transparent, #000 28px,
+                                 #000 calc(100% - 28px), transparent);
+    }
     .rail-grp{margin:0; padding:0}
     .rail-foot{margin:0; padding:14px var(--pad-panel) 18px; background:var(--panel)}
     .rail-toggle{display:none}
@@ -3408,7 +3602,10 @@
       </details>
       </div>
 
-      <div class="rail-grp">
+      <!-- data-zone, because paintRail() has to be able to name THIS group.
+           It used to reach for it with querySelector('.rail-grp'), which is
+           the FILTER zone — the first one in the panel. -->
+      <div class="rail-grp" data-zone="sections">
         <span class="rail-lbl">Sections</span>
         <ul class="rail-sects"></ul>
       </div>
@@ -3422,8 +3619,15 @@
     </div>
   </nav>
 
-    <div id="studies" tabindex="-1"></div>
-    <div class="feed">
+    <!-- THE FEED IS THE MAIN LANDMARK, and the skip link's target with it.
+         The page had nine <section>s, a <header>, a <nav> and a <footer> around
+         a hole: no <main> anywhere, and «Skip to the studies» landed on an empty
+         <div tabindex="-1"> that announces nothing when it takes focus. The id
+         and the tabindex move onto the element the visitor is actually skipping
+         TO, so the landmark, the scroll target and the focus target are one
+         thing. .feed is still the class every rule and every tool keys on, and
+         regroup.mjs rebuilds the <section>s inside this element, never it. -->
+    <main class="feed" id="studies" tabindex="-1">
     <section class="sect">
   <h2>Compound</h2>
   <p class="sect-intro">Two mechanisms from the sections below, running on one curve — a fill and a label, an edge and a mark. The pairing is the study: read the parts on their own first.</p>
@@ -3579,7 +3783,7 @@
         <button type="button" class="btn z-stack"><span class="lbl">Duplicate the layout</span></button>
       </div>
       <h3><span class="num">116</span>Stack fan</h3>
-      <p>The plate lifts and three more fan out beneath it. They are plates and not shadow — three steps of the same grayscale, drawn by one property at the plate's own radius, so depth is still stated as lightness.</p>
+      <p>The plate lifts and three more fan out beneath it. They are plates and not shadow &mdash; three steps of one tone, drawn by one property at the plate's own radius, so depth is still stated as lightness. The tone follows the picked colour and lands where the grey did.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
@@ -3612,7 +3816,7 @@
 
     <article class="spec" data-key="p-turn" data-native="fill" data-added="2026-09-01T08:20:00+02:00" data-updated="2026-09-01T08:20:00+02:00">
       <div class="stage">
-        <button type="button" class="btn p-turn"><span class="p-turn-in" aria-hidden="true"><span class="p-turn-in2"><span class="p-turn-f p-turn-front">Send it</span><span class="p-turn-f p-turn-floor">Send it</span><span class="p-turn-f p-turn-back">Send it</span></span></span><span class="sr">Send it</span></button>
+        <button type="button" class="btn p-turn"><span class="p-turn-in" aria-hidden="true"><span class="p-turn-in2"><span class="p-turn-f p-turn-front">Send it</span><span class="p-turn-f p-turn-floor">Send it</span><span class="p-turn-f p-turn-back">Send it</span><span class="p-turn-f p-turn-side p-turn-left"></span><span class="p-turn-f p-turn-side p-turn-right"></span></span></span><span class="sr">Send it</span></button>
       </div>
       <h3><span class="num">150</span>Rounds a corner</h3>
       <p>Half a turn on X and half on Y, on nested elements finishing 90ms apart, so the box goes round a corner instead of spinning on a spit. The depth is in the asynchrony. Two axes means two elements &mdash; one element cannot carry two transforms on two clocks &mdash; and only X keeps the overshoot, because two bouncing axes read as a wobble.</p>
@@ -4502,7 +4706,7 @@
 
   </div>
 </section>
-    </div>
+    </main>
 <style>
   /* ============ Section F — The challengers ============ */
 
@@ -9326,7 +9530,7 @@ document.addEventListener("DOMContentLoaded", function () {
      it, fanned. They are not shadows and this card is not an exception to
      section L: a shadow is an absence of light and would be invisible on a
      near-black stage, which is exactly why the rule exists. These are PLATES —
-     three steps of the same grayscale, each one lighter than the stage it sits
+     three steps of one tone, each one lighter than the stage it sits
      on — so they read as lightness, which is the only way this page has ever
      stated depth. box-shadow is just the cheapest way to draw them: three
      copies of the plate's own box, at its own radius, laid out by one property,
@@ -11200,6 +11404,42 @@ document.addEventListener("DOMContentLoaded", function () {
     .p-turn:is(:hover,:focus-visible) .p-turn-in2{transform:rotateY(180deg)}
   }
 
+  /* A SHORTER CAMERA AND TWO REAL SIDES — both 150's alone; 147, 148 and 149
+     keep the family's 40rem and their three faces.
+
+     The perspective was 40rem against a 45px box: 14:1, near enough
+     orthographic that the arriving face was 3.6% larger than the leaving one
+     and the turn read as a slide. At six times the depth the same pair sits at
+     1.091 and 0.923 — an 18% differential — so a face now grows as it comes
+     round. It is written against --bx-h rather than typed, because the depth
+     and the camera are the same fact and must not drift apart.
+
+     And the prism had no left or right face: front, back and floor only. That
+     is legal for 147, which turns on ONE axis and never presents a side — but
+     150's whole claim is the SECOND axis, and rotateY on a body with no
+     thickness in x is a card flip, thinning to a line at 90deg. The caps carry
+     no label, so shading them costs no contrast: a side turned away from the
+     light is the cue the flat faces cannot give.
+
+     Each cap's width IS the depth, so it rotates about its own centre and is
+     then pushed half a depth out to the edge — which needs no knowledge of the
+     button's width, the same reason 143 and the box family type their height
+     instead of measuring it. Square, not pilled: seen along x, a pill's round
+     end sweeps a full rectangle, and --btn-r here would draw a disc that opens
+     gaps at the corners. Only ever one is visible, and backface-visibility
+     does the swap — the left through the first half of the X turn, the right
+     through the second. */
+  .p-turn{perspective:calc(var(--bx-h) * 6)}
+  .p-turn-side{
+    width:calc(var(--d) * 2); height:calc(var(--d) * 2); padding:0;
+    border-radius:0;
+    background-image:linear-gradient(rgba(0,0,0,.22), rgba(0,0,0,.22));
+  }
+  .p-turn-left{justify-self:start;
+    transform:translateX(calc(var(--d) * -1)) rotateY(-90deg)}
+  .p-turn-right{justify-self:end;
+    transform:translateX(var(--d)) rotateY(90deg)}
+
   /* 147 is the one card that credits a source in its prose rather than in a
      comment up here. The link takes the card's own ink; nothing else on a
      card is a link, so this is scoped rather than general. */
@@ -11786,7 +12026,15 @@ document.addEventListener("DOMContentLoaded", function () {
         save(favs);
         apply();
       });
-      stage.appendChild(b);
+      // AHEAD OF THE DEMO, because that is the order the eye meets them in:
+      // the corner layer is drawn at the top of the stage and the button sits
+      // ninety pixels below it, so appending sent the tab from the middle of
+      // the card back up to the far left corner. After the copy pair when that
+      // has already run, first in the stage when it has not — the pair's own
+      // insert resolves the other order, so the two converge on left-to-right
+      // whichever of the blocks lands first.
+      var cpair = stage.querySelector('.copy-pair');
+      if (cpair) cpair.after(b); else stage.prepend(b);
     });
 
     /* ---- Order ---------------------------------------------------------
@@ -12774,8 +13022,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // already at .30 cannot be driven opaque.
         //
         // A GREY PICK NEEDS NO BRANCH: saturation 0 gives chroma 0 at every
-        // lightness, the first feasible lightness wins, and it is the neutral
-        // sheen back again. Ash gets the sheen it always had.
+        // lightness, so every candidate ties and the tie-break below takes the
+        // smallest gain — which is the neutral sheen at k1. Ash gets the sheen
+        // it always had, in both themes.
         var SH_GROUND = PANEL;
         var SH_NEUTRAL = lum(SH_GROUND) > .5 ? [0, 0, 0] : [255, 255, 255];
         var SH_REF = 1 - (1 - .03) * (1 - .06) * (1 - .10);
@@ -12804,7 +13053,15 @@ document.addEventListener("DOMContentLoaded", function () {
           if (k > SH_KMAX) continue;
           var band = shMix(S, a);
           var chroma = Math.max(band[0], band[1], band[2]) - Math.min(band[0], band[1], band[2]);
-          if (!shBest || chroma > shBest.chroma) shBest = { S: S, k: k, chroma: chroma };
+          // Most chroma wins, and a TIE GOES TO THE SMALLEST GAIN — which is
+          // what puts a grey pick back on the neutral sheen instead of leaving
+          // it on the first mid-grey that happened to clear. Ash has chroma 0
+          // at every lightness, so without the tie-break the lowest feasible
+          // lightness won it: dark Ash came back #6e6e6e at k2.91 rather than
+          // white at k1. Measured, and the two are not the same paint.
+          if (!shBest || chroma > shBest.chroma + 1e-9 ||
+              (chroma > shBest.chroma - 1e-9 && k < shBest.k))
+            shBest = { S: S, k: k, chroma: chroma };
         }
         if (shBest){
           root.setProperty('--m-sheen', shBest.S.join(','));
@@ -13868,7 +14125,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         li.appendChild(a); ul.appendChild(li);
       });
+      // The body's own cue. The two disclosures change its height without
+      // scrolling it, so a toggle counts as much as a scroll does.
+      var bodyEl = rail.querySelector('.rail-body');
+      if (bodyEl){
+        bodyEl.addEventListener('scroll', markCut, {passive: true});
+        addEventListener('resize', markCut);
+        rail.querySelectorAll('.rail-drop').forEach(function(d){
+          d.addEventListener('toggle', function(){
+            requestAnimationFrame(markCut);
+          });
+        });
+      }
       rail.hidden = false;
+    }
+
+    // ---- Does the body have more in it than it can show ------------------
+    // Written here and not in CSS: scroll position is not a media query, and
+    // animation-timeline:scroll() is Chromium-only. See «the body says when it
+    // is cut» in the stylesheet for what the two values draw.
+    function markCut(){
+      if (!rail) return;
+      var b = rail.querySelector('.rail-body');
+      if (!b) return;
+      var more = b.scrollHeight - b.clientHeight;
+      var s = [];
+      // 1px of slack: a fractional scrollHeight on a fractional row height
+      // otherwise reports a permanent 0.4px of «more below».
+      if (more > 1 && b.scrollTop > 1) s.push('top');
+      if (more > 1 && b.scrollTop < more - 1) s.push('bot');
+      if (s.length) b.setAttribute('data-more', s.join(' '));
+      else b.removeAttribute('data-more');
     }
 
     // Facet counts answer «and how many if I tick this», so each group's own
@@ -13923,8 +14210,19 @@ document.addEventListener("DOMContentLoaded", function () {
       // section headings themselves had before apply() started hiding an empty
       // one. A filter that happens to match nothing anywhere takes it too,
       // which is right: there is nowhere to jump to either way.
-      var grp = rail.querySelector('.rail-grp');
+      // ⚠️ data-zone and NOT querySelector('.rail-grp'): the FILTER zone is the
+      // first .rail-grp in this panel, so this line hid the two filters
+      // whenever the SECTION list emptied. The wrong zone, and the one that
+      // still had something to say — and it took them out of the
+      // accessibility tree while leaving them on screen, because .rail-grp
+      // sets display and beat the UA's [hidden]. Both halves are fixed: the
+      // selector here, and the [hidden] guard in the stylesheet.
+      var grp = rail.querySelector('[data-zone="sections"]');
       if (grp) grp.hidden = live === 0;
+      // Rows have just appeared or gone, so the body is a different height.
+      // One frame later: scrollHeight is a layout read and apply() has already
+      // written to every card on the page by the time it gets here.
+      requestAnimationFrame(markCut);
     }
 
     if (qEl){
@@ -13936,6 +14234,32 @@ document.addEventListener("DOMContentLoaded", function () {
       // every other search box on the web does.
       qEl.addEventListener('keydown', function(e){
         if (e.key === 'Escape' && qEl.value){ qEl.value = ''; state.q = ''; apply(); }
+      });
+      // ---- Enter hands over the result ---------------------------------
+      // Typing narrows 97 studies to one and the keyboard then had the whole
+      // panel between the field and the card it had just found — the order
+      // select, the two filters and nine section links, thirteen stops to
+      // reach the single thing you asked for. The search could NAME a study
+      // and not get you to it.
+      // Focus goes to the CARD and not to its button: a .btn takes
+      // :focus-visible and a good half of these studies animate on it, so
+      // landing there would fire the study before the reader asked for it.
+      // The article is the landmark, the next Tab is inside it, and
+      // preventScroll keeps the jump ours — .spec's own scroll-margin is
+      // what puts the card under the top of the column rather than against it.
+      // Nothing at all on an empty field or a miss: the feed already carries
+      // «Nothing matches this filter», and a keypress that silently jumps to
+      // the top of an unfiltered page is worse than one that does nothing.
+      qEl.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter' || !qEl.value.trim()) return;
+        var card = [].filter.call(document.querySelectorAll('.spec'), function(c){
+          return !c.hidden && c.offsetParent !== null;
+        })[0];
+        if (!card) return;
+        e.preventDefault();
+        card.setAttribute('tabindex', '-1');
+        card.focus({preventScroll: true});
+        card.scrollIntoView({block: 'start'});
       });
       // ⌘K / Ctrl-K. The hint chip beside the field promises this, so it has
       // to exist — a shortcut drawn and not bound is worse than no shortcut.
@@ -15365,11 +15689,14 @@ document.addEventListener("DOMContentLoaded", function () {
         pair.appendChild(b);
       });
 
-      // Ahead of the favourite star, which an earlier block already appended
-      // at the other corner: appending after it would make the tab order jump
-      // right, then back to the far left. DOM order is now left to right.
-      var star = stage.querySelector('.fav');
-      if (star) stage.insertBefore(pair, star); else stage.appendChild(pair);
+      // FIRST IN THE STAGE, which puts the pair ahead of both the star at the
+      // other corner and the demo below it: left to right, then down. The two
+      // were only ordered against each other before, and the whole corner
+      // layer still came after the button, so a tab ran middle → bottom → back
+      // up to the top-left. prepend is enough on its own here: the star's own
+      // insert reads this pair when it is already there, so neither block has
+      // to know which of them ran first.
+      stage.prepend(pair);
 
       // Building the payload costs a few milliseconds per card, so the answer
       // is worked out for the card you are actually looking at rather than for
