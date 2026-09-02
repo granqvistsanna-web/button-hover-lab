@@ -343,6 +343,16 @@ const ORDER_OF = {
     'Fan',
     'Stiff beam',
 
+    // 159 is 61's direct descendant and belongs immediately before it, so the
+    // rule and the plate can be read against each other.
+    'One plate for the row',
+
+    // The row is a different shape afterwards. 161 sits with 62 as its
+    // counter-example: it is the one growth on the page that is NOT conserved,
+    // and it says so.
+    'Icon to label',
+    'Fanned deck',
+
     // Something shared between them moves or yields.
     'Travelling rule',
     'Divider yields',

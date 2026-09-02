@@ -179,6 +179,13 @@ export const VERSIONS = {
   // rotating. 156 and 158 were not asked for and are not offered: blur and
   // deflection both read on a link, but neither has been measured there.
   'k-fan':'link',
+  // 159 is the ONE deliberate departure from the line rule on this page, on
+  // Sanna's ask: its link version keeps the plate and goes to a pill instead
+  // of collapsing to a 1.5px bottom rule. A nav whose active item is a pill
+  // is the thing being studied, and a rule under bare text is already 61.
+  // 161 and 162 are absent for the usual reason: a square that opens into a
+  // label and a deck that overlaps both need a plate to be the thing moving.
+  'k-plate':'link',
 };
 
 /* The version each study SHIPS in — one of the three, for every study on the
@@ -230,6 +237,9 @@ export const NATIVE = {
   // shows plate GEOMETRY without shouting, and 152 is about the corner.
   'k-wght':'outline', 'k-rad':'outline', 'k-gap':'outline', 'k-lever':'outline',
   'k-focus':'outline', 'k-fan':'outline', 'k-beam':'outline',
+  'k-plate':'outline', 'k-icon':'outline',
+  // 162 paints its own plates and carries no treatment class, like 132 and 155.
+  'k-deck':'fill',
   't-report':'outline', 't-mark':'outline', 't-hold':'outline',
   'j-dir':'outline', 'j-out':'outline', 'j-optic':'outline',
   'j-resolve':'outline', 'q-spin':'outline', 'q-jitter':'outline',
