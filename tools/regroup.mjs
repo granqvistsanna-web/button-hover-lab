@@ -346,6 +346,7 @@ const ORDER_OF = {
     // 159 is 61's direct descendant and belongs immediately before it, so the
     // rule and the plate can be read against each other.
     'One plate for the row',
+    'Shared caret',
 
     // The row is a different shape afterwards. 161 sits with 62 as its
     // counter-example: it is the one growth on the page that is NOT conserved,

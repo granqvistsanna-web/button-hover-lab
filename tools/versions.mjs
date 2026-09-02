@@ -186,6 +186,10 @@ export const VERSIONS = {
   // 161 and 162 are absent for the usual reason: a square that opens into a
   // label and a deck that overlaps both need a plate to be the thing moving.
   'k-plate':'link',
+  // 160 survives the link for the same reason 157 does: a mark above the row
+  // does not care what it is pointing at, and the lean is a rotation on a
+  // triangle rather than anything the treatment owns.
+  'k-caret':'link',
 };
 
 /* The version each study SHIPS in — one of the three, for every study on the
@@ -238,6 +242,7 @@ export const NATIVE = {
   'k-wght':'outline', 'k-rad':'outline', 'k-gap':'outline', 'k-lever':'outline',
   'k-focus':'outline', 'k-fan':'outline', 'k-beam':'outline',
   'k-plate':'outline', 'k-icon':'outline',
+  'k-caret':'outline',
   // 162 paints its own plates and carries no treatment class, like 132 and 155.
   'k-deck':'fill',
   't-report':'outline', 't-mark':'outline', 't-hold':'outline',
