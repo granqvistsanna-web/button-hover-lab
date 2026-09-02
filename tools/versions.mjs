@@ -114,10 +114,30 @@ export const VERSIONS = {
   // — Two at once ————————————————————————————————————————————————
   // A compound is only as portable as its stricter half. 123 was filed as «a
   // lit plate» and that was wrong by half — card 10, the sheen it is half made
-  // of,
-  // ships filled already and inverts its streak to --on-ink there, so 123 in
-  // fill is 49 x 10 read on 10's plate. It stops at fill: outline and link
-  // have no plate to raise and nothing for the light to cross.
+  // of, ships filled already and inverts its streak to --on-ink there, so 123
+  // in fill is 49 x 10 read on 10's plate.
+  // ⚠️ AND THEN THAT FILL WENT DARK. It was declared «built fill» under the
+  // four-position control, and when «As built» retired both words collapsed
+  // into the single word the three-position model has for a surface: 123 was
+  // filed native fill, set[nat] swallowed the declaration, and apply() restores
+  // the SHIPPED markup whenever eff === nat — which for 123 is no treatment
+  // class at all. The --ink plate authored in 783c365 has not rendered since
+  // 08619c8 and nothing said so, because a version that is merely unreachable
+  // still passes every check on this page.
+  // It is reachable again because NATIVE says outline below, and that is a
+  // correction rather than a convenience: --card is --bg-2 in dark and
+  // .c-crest paints --bg-2, so at rest the plate and the card are the same
+  // #222222 and only the 1px --line-ctl draws the button. The bottom rung of
+  // an elevation ladder is the ground it is standing on. The plate is what
+  // hover BUYS, which is the study.
+  // The LINK is new, and it answers the sentence this paragraph used to end
+  // on — «nothing for the light to cross». A link has one surface and it is
+  // the rule, so the rule carries the ladder: --line-ctl at rest, --ink
+  // hovered, the same three rungs said on 1.5px instead of on 195. The light
+  // crosses what card 10's own outline version crosses, the card, at its 7/34%
+  // rather than the plate's 8/38 — and it still waits exactly --t-4, because
+  // the sequence is the study and does not care which surface it happens on.
+  'c-crest':'fill link',
   // 121 was absent on purpose and the purpose has expired. The argument was
   // that its label is per-letter spans inside .lbl and the Long toggle writes
   // textContent back over them — true then, and answered since in the switch
@@ -129,7 +149,7 @@ export const VERSIONS = {
   // 122's ellipse needs a surface, and a link has none. 124 sets its own
   // border and radius, so a treatment on top of it is a third opinion. Only
   // the two pure roll-plus-transform cards survive all three.
-  'c-crest':'', 'c-regis':'',
+  'c-regis':'',
   // — 137-143, the second treatment ————————————————————————————————
   // Seven studies recreated from tiny-mighty-buttons on 2026-08-31 and shipped
   // in one treatment each. Every one of them survives the other, and each for a
@@ -223,7 +243,7 @@ export const NATIVE = {
   'p-part':'fill', 'p-walk':'fill', 'p-cycle':'fill', 'q-riser':'fill',
   'n-join':'fill', 'w-grid':'fill', 'w-corner':'fill', 'x-bevel':'fill',
   'y-lit':'fill', 'y-hold':'fill', 'z-stack':'fill',
-  'z-gum':'fill', 'c-swell':'fill', 'c-mass':'fill', 'c-crest':'fill',
+  'z-gum':'fill', 'c-swell':'fill', 'c-mass':'fill',
   'squash':'fill', 'h-arc':'fill', 'p-bud':'fill', 'k-lamp':'fill',
   // 155 paints its own plate, so it carries no treatment class and the
   // attribute is the only thing that answers for it -- same as 132.
@@ -236,6 +256,14 @@ export const NATIVE = {
   'shutter':'outline', 'inkfill':'outline', 'dotm':'outline',
   'u-roll':'outline', 'u-centre':'outline', 'e-wave':'outline',
   'f-glas':'outline',
+  // 123 was in the fill list above until 2026-09-02 and the move is measured,
+  // not preferred. Its rest rung IS the card — --card is --bg-2 in dark and
+  // .c-crest paints --bg-2, the same #222222 — so at rest there is a 1px
+  // --line-ctl and nothing else, which is what an edge and no plate means.
+  // Light is the same reading from the other side: --card is --bg-0 there, so
+  // the rest rung sits BELOW the card rather than above it. Elevation at rest
+  // is zero in both themes, which is the point of the card.
+  'c-crest':'outline',
   'i-rule':'outline', 'k-share':'outline',
   // Row batch two: four outlines, because an outline is the treatment that
   // shows plate GEOMETRY without shouting, and 152 is about the corner.
