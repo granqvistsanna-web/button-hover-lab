@@ -12899,8 +12899,36 @@ document.addEventListener("DOMContentLoaded", function () {
       var onPlate = null;
       if (mSource){
         var mh = toHsl(mSource);
-        var project = function (rgb, lands){
-          var l0 = toHsl(rgb)[2];
+        // fromPick: WHERE THE WALK STARTS, and it is the whole difference
+        // between a plate that is the picked colour and a plate that is the
+        // page's own furniture wearing the picked hue.
+        //
+        // It started on the RUNG — toHsl(rgb)[2], the lightness --lift-bg was
+        // authored at — and stepped from there only if what lands on it came
+        // within M_STEP. In the light theme that walks 20 to 67 points and the
+        // plate ends up reading as the pick. In DARK it never walked at all,
+        // which the sweep at M_STEP states as a feature: every material keeps
+        // the exact rung it was authored on. Measured, that is what a reader
+        // sees — Coral's plate came back #731801 against a #fea28b pick, 5.78:1
+        // away from the colour that was chosen, sitting 1.41:1 off the card. In
+        // one grid, an ordinary fill arrived coral and a FACE study arrived
+        // maroon, and the page's own rule is that the FILL IS WHAT YOU PICKED.
+        //
+        // So the face now starts on the PICK's lightness and steps aside from
+        // THERE — nearest feasible, same as before, so it moves exactly as far
+        // as M_STEP demands and no further. The pick's own lightness never
+        // survives the test (a colour is 1:1 against itself), so this always
+        // takes at least one step; what it cannot do any more is take fifty.
+        // Hue and saturation were already the pick's. Only the starting
+        // lightness changes.
+        //
+        // ⚠️ SCOPED, and it has to be. project() also draws the two bevel
+        // rungs, which are handed an empty lands list precisely so they come
+        // back at the lightness they went in at, and --m-seat, whose whole
+        // argument is a 4px band read against the CARD on one side and the
+        // PLATE on the other. Both keep the rung. Only --lift-bg opts in.
+        var project = function (rgb, lands, fromPick){
+          var l0 = fromPick ? mh[2] : toHsl(rgb)[2];
           var mk = function (L){ return fromHsl(mh[0], mh[1], L).map(Math.round); };
           // ROUNDED before the test, for the reason at fitOn: rounded is what
           // gets painted, and a walk that clears its floor on fractional
@@ -12945,7 +12973,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var lands = [accentRgb, hoverRgb];
         var mv = {};
         M_RUNGS.forEach(function (n){
-          mv[n] = project(RUNGS[n], n === '--lift-bg' ? lands : []);
+          var isFace = n === '--lift-bg';
+          mv[n] = project(RUNGS[n], isFace ? lands : [], isFace);
         });
         // …and the two rungs that draw the bevel's lit edge are CONTROL
         // BOUNDARIES, which have one number and it is 3:1 against the card —
