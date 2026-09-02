@@ -326,6 +326,16 @@ const ORDER_OF = {
     'Conserved compression',
     'Repulsion',
 
+    // Five more fixed quantities, redistributed. Conserved compression is the
+    // ancestor of all five and they sit next to it on purpose; what changes
+    // between them is only what the row refuses to spend more of -- ink,
+    // corner, space, angle, depth.
+    'Weight budget',
+    'Radius budget',
+    'Gap budget',
+    'Lever',
+    'Elevation trade',
+
     // Something shared between them moves or yields.
     'Travelling rule',
     'Divider yields',

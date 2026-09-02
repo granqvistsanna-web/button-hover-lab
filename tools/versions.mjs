@@ -161,6 +161,20 @@ export const VERSIONS = {
   'o-pix':'fill',
   'c-relay':'fill', 'c-tide':'fill',
   'c-swell':'outline link', 'c-mass':'outline link',
+  // — Buttons in a row ——————————————————————————————————————————
+  // The hardest corner of the axis, because a ROW shares ONE version: there is
+  // no per-item answer, and the treatment has to make sense of every sibling
+  // relation at once. 62's link was the first, and these three are the second
+  // pass. All three survive it for the same reason — none of them is about the
+  // plate. Weight is ink, so it is the same study with no surface at all; the
+  // gap budget redistributes MARGIN, which a row of links has exactly as much
+  // of; and the lever rotates the row rather than anything in it, so what it
+  // tips is whatever the row happens to contain.
+  // 152 Radius budget and 155 Elevation trade are absent on purpose and the
+  // rule is the same one: a 1.5px line along the bottom edge has no corners to
+  // spend and no depth to trade. 156-162 land in the next pass.
+  'k-share':'link',
+  'k-wght':'link', 'k-gap':'link', 'k-lever':'link',
 };
 
 /* The version each study SHIPS in — one of the three, for every study on the
@@ -196,6 +210,9 @@ export const NATIVE = {
   'y-lit':'fill', 'y-hold':'fill', 'z-stack':'fill',
   'z-gum':'fill', 'c-swell':'fill', 'c-mass':'fill', 'c-crest':'fill',
   'squash':'fill', 'h-arc':'fill', 'p-bud':'fill', 'k-lamp':'fill',
+  // 155 paints its own plate, so it carries no treatment class and the
+  // attribute is the only thing that answers for it -- same as 132.
+  'k-trade':'fill',
   'c-against':'fill', 'c-wash':'fill', 'p-face':'fill', 'u-burst':'fill',
   'u-area':'fill', 'p-tighten':'fill',
   // — Outline: an edge and no plate ——————————————————————————————
@@ -205,6 +222,9 @@ export const NATIVE = {
   'u-roll':'outline', 'u-centre':'outline', 'e-wave':'outline',
   'f-glas':'outline',
   'i-rule':'outline', 'k-share':'outline',
+  // Row batch two: four outlines, because an outline is the treatment that
+  // shows plate GEOMETRY without shouting, and 152 is about the corner.
+  'k-wght':'outline', 'k-rad':'outline', 'k-gap':'outline', 'k-lever':'outline',
   't-report':'outline', 't-mark':'outline', 't-hold':'outline',
   'j-dir':'outline', 'j-out':'outline', 'j-optic':'outline',
   'j-resolve':'outline', 'q-spin':'outline', 'q-jitter':'outline',
