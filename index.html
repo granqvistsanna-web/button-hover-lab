@@ -868,7 +868,17 @@
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
-  /* The twelve the colour ARRIVES on. One face between them: --lift-bg and
+  /* ⚠️ THE STUDIES WHOSE PLATE TAKES THE PICK — which is NOT the same set as
+     the studies the pick arrives ON. This said «the twelve the colour ARRIVES
+     on» and was wrong twice: the list is seventeen keys now (eighteen studies,
+     with 132 opting in through its row below), and only NINE of them have
+     anything from the pick landing on top — 36, 42, 43, 109, 111, 116, 132,
+     139, 140, measured off every rule of each study and of its -suffixed
+     children. The other nine step their plate aside for a colour that never
+     comes. See the vault plan «2026-09-02 PLAN button-colour-model».
+     No count is written in prose here again: this comment has now carried
+     «four», «twelve» and «thirteen», and the list is the only truth.
+     One face between them: --lift-bg and
      --bg-2 are one rung apart and no card here shows both, so a second value
      would buy a difference nobody is positioned to see.
      ⚠️ WIDENED FROM FOUR 2026-08-31, and the nine that came in are the nine
@@ -876,8 +886,8 @@
      an orange label on a graphite pill, because each spells its rest plate
      --lift-bg and no role wrote it. 132 is not in this list — it opts in
      through its row, in the rule below, and the comment there says why.
-     :is() and not twelve written-out pairs, so the light rule states the list
-     once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
+     :is() and not one written-out pair per key, so the light rule states the
+     list once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as .btn.x. */
   .btn:is(.s-sprite, .y-lit,
           .f-kant, .w-corner, .y-hold, .c-wash, .g-key, .z-stack,
           .p-face, .u-burst, .u-area, .p-tighten, .o-caps,
@@ -1948,6 +1958,35 @@
   .set-uses:hover{color:var(--ink-hi); background:var(--ctl)}
   .set-uses[aria-pressed="true"]{color:var(--ink-hi); background:var(--ctl-hi)}
   .set-uses:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  /* ---- «Auto plate» — the derived colour, named ------------------------
+     THE ONE DERIVED COLOUR A READER CAN SEE ON THE GRID, and until now the
+     only way to discover it was to pick a colour and be surprised by a plate.
+     A reader who is surprised looks at the card first and at HER OWN SWATCHES
+     second — that is exactly how the reported confusion went, a derived
+     #fd4112 read as the Text-on-hover swatch #d72d02 sitting two rows above
+     it. So the panel has to name it, beside the swatch it is derived from.
+
+     It is a .set-uses in every respect but the dot: same pill, same press,
+     same filter. That is not laziness — it answers the same SHAPE of question
+     as «N of M react», «which studies is this happening to», and a second
+     idiom for the same shape is a second thing to learn.
+
+     DIFFER-ONLY. Hidden while the plate IS the pick, because a control that
+     reports «nothing changed» on every visit teaches a reader to stop reading
+     it — and after the token split lands (vault plan «2026-09-02 PLAN
+     button-colour-model», Step 2) that will be the common case. */
+  /* normal, not the .set-uses nowrap: this one carries a hex AND a count, so
+     if a narrower panel ever cannot hold both it wraps instead of hiding the
+     half that matters. */
+  .set-plate{display:inline-flex; align-items:center; gap:6px; white-space:normal;
+    text-align:left}
+  .set-plate::before{
+    content:""; width:9px; height:9px; flex:none; border-radius:50%;
+    background:var(--sw, transparent);
+    /* The same inset ring every preset dot carries, so a pale derived plate
+       still has an edge on a pale panel. */
+    box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ink-hi) 22%, transparent);
+  }
   .set-pair{display:inline-flex; align-items:center; gap:2px}
   .set-lab{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
   .set-cap{font-size:11px; font-weight:600; letter-spacing:0;
@@ -2929,6 +2968,9 @@
     .tools-fold-body .tools-row:has(.set-swatch){flex-direction:row; flex-wrap:wrap; gap:14px}
     .tools-fold-body .tools-row:has(.set-swatch) .set-grp{flex:1 1 0}
     .tools-fold-body .set-read{flex-basis:100%; margin-top:2px}
+    /* Its own line, same as the readout under it — see the markup note. */
+    .tools-fold-body .set-plate{flex-basis:100%; margin-top:4px; margin-left:0;
+      justify-content:flex-start}
     .set-pair{justify-content:space-between; min-width:0}
     .set-pair .set-lab{min-width:0; gap:6px}
     .set-cap{overflow:hidden; text-overflow:ellipsis}
@@ -3287,7 +3329,7 @@
           <label class="set-lab">
             <span class="set-cap" data-cap="accent">Default</span>
             <input class="set-swatch" type="color" data-set="accent" value="#ffffff"
-                   aria-label="Button colour at rest — the fill, the mark, and the plate on the fifteen studies that draw their own"
+                   aria-label="Button colour at rest — the fill, the mark, and the plate on the material studies that draw their own"
                    aria-describedby="set-contrast">
           </label>
           <button type="button" class="set-clear" data-clear="accent" hidden
@@ -3308,6 +3350,15 @@
              colour apply», and pressing it shows exactly those. -->
         <button type="button" class="set-uses" aria-pressed="false" hidden></button>
       </div>
+      <!-- Written by the page as well, and hidden unless the plate the page
+           DERIVED differs from the colour that was picked. Its dot is that
+           plate. See «Auto plate» in the stylesheet for why it exists.
+           ⚠️ OUTSIDE the Button group on purpose, next to the contrast readout:
+           inside it, the wall gives the group half of a 236px row and the hex
+           was clipped mid-digit — measured, «Auto plate #fd41» with the rest
+           off the panel. It is about the whole colour row anyway, the way the
+           readout beside it is. -->
+      <button type="button" class="set-uses set-plate" aria-pressed="false" hidden></button>
       <span class="set-read" id="set-contrast" data-read="colour" aria-live="polite"></span>
     </div>
     <!-- Presets. Three swatches that all start white mean three trips through
@@ -3642,7 +3693,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="c-crest" data-native="fill" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="c-crest" data-added="2026-08-28T14:09:59+02:00" data-updated="2026-09-02T10:59:53+02:00" data-native="outline" data-versions="fill link">
       <div class="stage">
         <button type="button" class="btn c-crest"><span class="lbl">Download the pack</span></button>
       </div>
@@ -10567,12 +10618,24 @@ document.addEventListener("DOMContentLoaded", function () {
      same 195.095 x 47.003 the built version does instead of the 2px less every
      other outline-to-fill on this page costs — card 127 keeps its border for
      the same reason.
-     Outline and link get nothing: a lift with no plate has nothing to raise,
-     and a streak has nothing to cross. */
+     Outline is not a version here, it is what 123 SHIPS as — the rest rung of
+     an elevation ladder is the ground it stands on, and --card is --bg-2 in
+     dark exactly as .c-crest is. The link is below, and it answers the line
+     this comment used to end on. */
   .c-crest.btn--solid{background:var(--ink); color:var(--ink-on-fill);
     border-color:transparent}
+  /* 🚨 --ink-on-fill IS NOT THE LABEL ON THE PLATE THAT ARRIVES, and this
+     version shipped without the second colour for four days because it shipped
+     unreachable — a version that never renders passes every check on the page.
+     Measured the moment it did render: Violet at 1.48:1, a pale lilac label
+     (242,230,255) on the pale lilac plate its own hover walks to (216,179,255).
+     --ink-on-fill is fitted against --ink, and --ink-hover is a different
+     colour the instant a hover swatch is picked. --on-ink-hover is the token
+     with that job — «the label once that colour is under it» — and 07, 08, 09
+     and 122 all state it the same way. */
   .c-crest.btn--solid:hover,
   .c-crest.btn--solid:focus-visible{border-color:transparent;
+    color:var(--on-ink-hover);
     background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)))}
   .c-crest.btn--solid:active{background:color-mix(in srgb,var(--ink-hover) 80%,var(--bg))}
   .c-crest.btn--solid::after{
@@ -10580,6 +10643,51 @@ document.addEventListener("DOMContentLoaded", function () {
       color-mix(in srgb,var(--on-ink) 8%,transparent) 26%,
       color-mix(in srgb,var(--on-ink) 38%,transparent) 50%,
       color-mix(in srgb,var(--on-ink) 8%,transparent) 74%,
+      transparent 100%);
+  }
+
+  /* 123 in link, and both halves MOVE rather than one of them being dropped.
+     «A lift with no plate has nothing to raise and a streak has nothing to
+     cross» was right about the plate and wrong about what is left over: a link
+     has one surface, and it is the rule.
+     THE RULE CARRIES THE LADDER. Elevation on this card is lightness and never
+     a shadow, so the step that was --bg-2 to --bg-3 across 195px is --line-ctl
+     to --ink across 1.5px — the same three rungs, on the same clock, over a
+     three-hundredth of the area. The press keeps the fill's answer one version
+     over: --ink is the top of the ladder and there is no rung above it, so the
+     step that is left is the one toward the canvas.
+     The 2px rise needs no restatement at all, and that is the part worth
+     saying out loud — it is a transform on the BUTTON, so the rule and the
+     label rise together. It is the one thing card 49 does that a link can do
+     unaltered.
+     THE LIGHT CROSSES THE CARD. Card 10's outline version already solved this
+     and this takes its numbers verbatim — 7 and 34 per cent of --ink, not the
+     plate's 8 and 38 — because it is the same ground: a streak on a button
+     with no plate is a tint arriving on the card behind it. The delay is
+     untouched. The sequence is the study, and it does not care which surface
+     the light ends up on.
+     ⚠️ THE LABEL HAS TO BE REWRITTEN AND IT IS THE WHOLE RISK IN THIS BLOCK.
+     .btn:is(.lift, .c-crest) hands 123 --m-ink, which is fitted against the
+     three rungs of a plate this version does not have. Leave it and the label
+     is measured against a background it no longer sits on, which is exactly
+     what put 42, 43 and 116 at 1.25:1. --ink-text is the token fitted against
+     the CARD, and the card is what a link's label sits on.
+     The border goes transparent rather than to zero for the fill's reason,
+     one version over: the box keeps its measure. */
+  .btn--text.c-crest{background:none; border-color:transparent;
+    color:var(--ink-text)}
+  .btn--text.c-crest::before{content:""; position:absolute;
+    left:0; right:0; bottom:0; height:1.5px; background:var(--line-ctl);
+    transition:background var(--t-3) ease}
+  .btn--text.c-crest:hover::before,
+  .btn--text.c-crest:focus-visible::before{background:var(--ink)}
+  .btn--text.c-crest:active::before{
+    background:color-mix(in srgb,var(--ink) 82%,var(--bg))}
+  .btn--text.c-crest::after{
+    background:linear-gradient(100deg,transparent 0%,
+      color-mix(in srgb,var(--ink) 7%,transparent) 26%,
+      color-mix(in srgb,var(--ink) 34%,transparent) 50%,
+      color-mix(in srgb,var(--ink) 7%,transparent) 74%,
       transparent 100%);
   }
 
@@ -12615,7 +12723,66 @@ document.addEventListener("DOMContentLoaded", function () {
     var countEl = document.querySelector('.mast-sub');
     var favBtn  = document.querySelector('.fav-only');
     var reset   = document.querySelector('.tools-reset');
-    var state   = {fav:false, q:'', changes:[], hoverInk:false};
+    var state   = {fav:false, q:'', changes:[], hoverInk:false, autoPlate:false};
+    // How many studies wear a derived plate. Counted once, off the stylesheet,
+    // by the block that stamps data-auto-plate — never typed here. Three
+    // hand-written counts have already rotted in this file («four», «twelve»,
+    // «fourteen»), which is why the caption below takes this variable and the
+    // Button tooltip now takes none at all.
+    var PLATE_N = 0;
+    // ---- «Auto plate», painted -----------------------------------------
+    // Runs at the end of every paint(), and says one thing: the page derived a
+    // plate colour, here it is, here is how many studies show it, press to see
+    // only those. DIFFER-ONLY — see the stylesheet note. Three states:
+    //   no --m-face at all      → nothing was derived, stay hidden
+    //   --m-face === the pick   → nothing to report, stay hidden
+    //   otherwise               → name it
+    // ⚠️ A HIDDEN CONTROL CANNOT BE UNPRESSED. If the chip goes away while its
+    // filter is on — clear the swatches with the filter still applied and it
+    // does — the feed would be stuck showing a subset with nothing on screen
+    // to release it. So hiding also releases, on the next frame rather than
+    // inline: apply() is the caller's job here and re-entering it from inside
+    // paint() is how a repaint loop starts.
+    function paintPlateChip(){
+      var btn = document.querySelector('.set-plate');
+      if (!btn) return;
+      // Its own handle on the inline style, because paint()'s `root` is local
+      // to paint(). INLINE and not computed, deliberately: paint() writes these
+      // with setProperty, so the inline sheet is exactly «what was picked or
+      // derived this pass» — a computed read would hand back the stylesheet's
+      // own alias and never report unset.
+      var rs = document.documentElement.style;
+      var face = (rs.getPropertyValue('--m-face') || '').trim().toLowerCase();
+      // The source is the Button swatch, or Button-on-hover when that is the
+      // only one set — the same fallback project() walks from (mSource). With
+      // only Hover picked there is no Button colour to be «the same as», and
+      // the chip still has something true to say.
+      var pick = (rs.getPropertyValue('--ink') || '').trim().toLowerCase();
+      var fromHover = !pick;
+      if (fromHover) pick = (rs.getPropertyValue('--ink-hover') || '').trim().toLowerCase();
+      if (!face || face === pick){
+        btn.hidden = true;
+        if (state.autoPlate){
+          state.autoPlate = false;
+          btn.setAttribute('aria-pressed', 'false');
+          requestAnimationFrame(function(){ apply(); });
+        }
+        return;
+      }
+      btn.style.setProperty('--sw', face);
+      // The hex AND the count, because they answer different halves of the
+      // surprise: «what colour is this» and «how much of the page is it».
+      btn.textContent = 'Auto plate ' + face + ' · ' + PLATE_N + ' studies';
+      var src = fromHover ? 'Button-on-hover' : 'Button';
+      btn.title = 'The page derived this plate from your ' + src + ' colour: it keeps '
+                + 'the hue and holds its lightness clear of whatever arrives on top, so '
+                + 'the effect stays visible. ' + PLATE_N + ' studies show it. Press to '
+                + 'see only those.';
+      btn.setAttribute('aria-label',
+        'Auto plate ' + face + ', derived from the ' + src + ' colour. Show only the '
+        + PLATE_N + ' studies that use it');
+      btn.hidden = false;
+    }
 
     function load(name){
       // `|| []` only catches null. Anything else valid JSON — an object, a
@@ -12986,7 +13153,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       var filtered = state.fav || document.documentElement.dataset.vTreat
                   || state.q || state.changes.length
-                  || state.hoverInk
+                  || state.hoverInk || state.autoPlate
                   || look.text || look.accent || look.hover || look.radius !== PILL
                   || sortNow !== 'grouped';
       reset.hidden = !filtered;
@@ -13155,8 +13322,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
     // '' — unset, meaning the page's own monochrome. Unset is not «follow
     // another swatch»: leaving the token off the root lets the authored alias
-    // stand, and the aliases are deliberately uneven. --ink-text is pinned to
-    // --ink-hi so the label never drifts when only the accent is picked, while
+    // stand, and the aliases are deliberately uneven. ⚠️ THIS USED TO CLAIM
+    // --ink-text was pinned to --ink-hi «so the label never drifts». It is not:
+    // line 186 aliases it to var(--ink), so a blank Text swatch DOES follow the
+    // button until paint() refits it a few lines below. The alias and the
+    // override disagreed and the comment described neither. Meanwhile
     // --ink-hover is pinned to --ink so hover DOES follow the accent until it
     // is given a colour of its own. That is the behaviour a reader expects
     // from each: text stays put, hover goes along.
@@ -13565,7 +13735,12 @@ document.addEventListener("DOMContentLoaded", function () {
       // At 1.8, swept over all seven palettes in both themes: DARK NEVER WALKS
       // AT ALL — every material keeps the exact rung it was authored on, Ash
       // included — and light walks 20 to 67 points, which is the light theme's
-      // own geometry answering honestly. A pale hover colour on a plate the
+      // own geometry answering honestly.
+      // 🚨 THAT SWEEP DESCRIBES THE OLD START POINT AND IS KEPT FOR THE NUMBER
+      // ONLY. Since 3c9f023 the face starts on the PICK's lightness, not on the
+      // rung's, so «dark never walks» is no longer a thing that happens — see
+      // fromPick below. 1.8 is still the right floor and the reasoning above is
+      // still why; what changed is where the walk begins. A pale hover colour on a plate the
       // ladder puts at 90% lightness cannot be seen arriving; there is nowhere
       // above it to stand, so the plate goes under it.
       var M_STEP = 1.8;
@@ -13641,8 +13816,10 @@ document.addEventListener("DOMContentLoaded", function () {
           return far;
         };
         // Only --m-face is walked for an arrival, because only --m-face has one:
-        // 109 floods with --ink, 36, 44 and 113 with --ink-hover, 139 washes in
-        // both, and one face serves all thirteen so it clears BOTH. That walk
+        // ⚠️ CARDS 44 AND 113 ARE NOT ON THIS PAGE and this line named both.
+        // Measured: 42, 43, 109, 111 and 116 flood the plate with --ink; 36,
+        // 132, 139 and 140 arrive in --ink-hover. That is nine studies, and one
+        // face serves all eighteen, so it clears BOTH. That walk
         // is exactly what makes the wider scope safe — set Button and the plate
         // steps aside in lightness until what lands on it clears M_STEP, rather
         // than swallowing the effect in its own colour. The bevels are handed
@@ -14083,9 +14260,18 @@ document.addEventListener("DOMContentLoaded", function () {
           // it, and the one that is made of nothing it can offer. Named on the
           // Button caption because the Button swatch is what they follow.
           if (r.key === 'accent' && onPlate){
-            why += ' Fourteen material studies take it at their own lightness rather'
-                 + ' than as a fill — the plate keeps the rung it was authored'
-                 + ' on and takes the pick\'s hue; the label on those plates lands on '
+            // ⚠️ NO COUNT IN THIS SENTENCE. It said «Fourteen» while the list
+            // held seventeen keys, and it said «the plate keeps the rung it was
+            // authored on» — which stopped being true at 3c9f023, when the face
+            // began stepping from the pick's own lightness instead. This is the
+            // one sentence a reader who is surprised by a plate colour actually
+            // gets shown, so it has to describe what the code does now: the
+            // plate is the pick's hue, at a lightness held clear of whatever
+            // arrives on it.
+            why += ' The material studies take it as a plate rather than as a'
+                 + ' fill — the plate keeps the pick\'s hue and steps its'
+                 + ' lightness clear of whatever arrives on top, so the effect'
+                 + ' stays visible; the label on those plates lands on '
                  + onPlate.hex + ' — ' + onPlate.ratio.toFixed(1) + ':1 there.';
           }
           if (alsoOnFill){
@@ -14277,6 +14463,7 @@ document.addEventListener("DOMContentLoaded", function () {
                    :                    'Under 3:1. Not legible enough for any text size.')
                   + (moved ? ' ' + moved + (moved > 1 ? ' colours were' : ' colour was')
                              + ' refitted to stay legible — see the ↑.' : '');
+      paintPlateChip();
       root.setProperty('--btn-r', look.radius >= PILL ? '999px' : look.radius + 'px');
       readR.textContent = look.radius >= PILL ? 'Pill' : look.radius + 'px';
       // Written here and nowhere else, for the reason in the CSS: the filled
@@ -14428,7 +14615,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener('bhl:theme', function(){ remeasure(); paint(); });
 
     reset.addEventListener('click', function(){
-      state = {fav:false, q:'', changes:[], hoverInk:false};
+      state = {fav:false, q:'', changes:[], hoverInk:false, autoPlate:false};
       if (qEl) qEl.value = '';
       document.querySelectorAll('.rail-list input').forEach(function(b){ b.checked = false; });
       look  = {text:'', textHover:'', accent:'', hover:'', radius:PILL};
@@ -14437,8 +14624,9 @@ document.addEventListener("DOMContentLoaded", function () {
       markPreset();   // …and Graphite is what «no override» is called
       saveLook();
       favBtn.setAttribute('aria-pressed', 'false');
-      var uses = document.querySelector('.set-uses');
-      if (uses) uses.setAttribute('aria-pressed', 'false');
+      document.querySelectorAll('.set-uses').forEach(function(u){
+        u.setAttribute('aria-pressed', 'false');
+      });
       // And the version. Clicked rather than set, so the pressed state and the
       // re-render both happen through the one path that owns them — pressing
       // the pressed toggle is how this control clears. It ends in apply().
@@ -14728,6 +14916,7 @@ document.addEventListener("DOMContentLoaded", function () {
          swatch looked broken to anyone who happened to be looking at one of
          the other 65. The readout names the number and this filters to them. */
       if (state.hoverInk && !card.hasAttribute('data-hover-ink')) return false;
+      if (state.autoPlate && !card.hasAttribute('data-auto-plate')) return false;
       /* The VERSION control filters, and this is the whole of it.
 
          It used to only re-render: picking «Link» set every study that owns a
@@ -15301,6 +15490,55 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.addEventListener('click', function(){
         state.hoverInk = btn.getAttribute('aria-pressed') !== 'true';
         btn.setAttribute('aria-pressed', state.hoverInk ? 'true' : 'false');
+        apply();
+      });
+    })();
+
+    // ---- Which studies wear a DERIVED plate ---------------------------
+    // Membership is structural, so it is read once: every rule that points
+    // --lift-bg at var(--m-face…) names the studies whose plate is derived
+    // rather than picked. Seventeen keys in one :is() list plus 132 through
+    // its row — and the list is read rather than retyped, because it has
+    // already carried three different hand-written counts.
+    // ⚠️ Derived LIVE here, and that is safe only because this control is a
+    // readout: it hides itself when it finds nothing, and it decides no paint.
+    // Plate membership that DOES decide paint has to be stamped by a tool —
+    // the reason is the racing CSSOM described at MANIFEST above, and it is
+    // Step 4 of the vault plan. Do not promote this derivation to that job.
+    (function(){
+      var sels = [];
+      var walk = function(list){
+        for (var i = 0; i < list.length; i++){
+          var r = list[i];
+          if (r.selectorText && /var\(\s*--m-face/.test(r.style.getPropertyValue('--lift-bg') || ''))
+            sels.push(r.selectorText);
+          if (r.cssRules) walk(r.cssRules);
+        }
+      };
+      for (var i = 0; i < document.styleSheets.length; i++){
+        try { walk(document.styleSheets[i].cssRules); } catch(e){}
+      }
+      var q = [];
+      sels.forEach(function(sel){
+        sel.split(/,(?![^(]*\))/).forEach(function(part){
+          var one = part.replace(/::?(hover|focus-visible|focus|active|before|after)\b/g, '')
+                        .replace(/\s+/g, ' ').trim();
+          if (one && q.indexOf(one) < 0) q.push(one);
+        });
+      });
+      var all = document.querySelectorAll('.spec'), n = 0;
+      [].forEach.call(all, function(card){
+        var on = q.some(function(sel){
+          try { return !!card.querySelector(sel); } catch(e){ return false; }
+        });
+        if (on){ card.setAttribute('data-auto-plate', ''); n++; }
+      });
+      PLATE_N = n;
+      var btn = document.querySelector('.set-plate');
+      if (!btn) return;
+      btn.addEventListener('click', function(){
+        state.autoPlate = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', state.autoPlate ? 'true' : 'false');
         apply();
       });
     })();
