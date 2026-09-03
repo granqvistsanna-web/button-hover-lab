@@ -322,11 +322,17 @@ export const VERSIONS = {
   // rule is the same one: a 1.5px line along the bottom edge has no corners to
   // spend and no depth to trade. 156-162 land in the next pass.
   'k-share':'link',
-  'k-wght':'link', 'k-gap':'link', 'k-lever':'link',
+  'k-wght':'link', 'k-gap':'link',
+  'k-lever':'fill link',
   // 157 survives it because a shared far origin does not care what it is
-  // rotating. 156 and 158 were not asked for and are not offered: blur and
-  // deflection both read on a link, but neither has been measured there.
-  'k-fan':'link',
+  // rotating. 156 is still unasked — blur reads on a link but has not been
+  // measured there.
+  // ✅ 158 HAS BEEN MEASURED NOW, 2026-09-03, and it takes both. A real pointer
+  // on the third item deflects the row -2.2 / -7.05 / -14.1 / -3.3px, and the
+  // four numbers are IDENTICAL in fill, outline and link: a beam bends whatever
+  // is bolted to it.
+  'k-fan':'fill link',
+  'k-beam':'fill link',
   // 159 is the ONE deliberate departure from the line rule on this page, on
   // Sanna's ask: its link version keeps the plate and goes to a pill instead
   // of collapsing to a 1.5px bottom rule. A nav whose active item is a pill
@@ -336,8 +342,38 @@ export const VERSIONS = {
   'k-plate':'link',
   // 160 survives the link for the same reason 157 does: a mark above the row
   // does not care what it is pointing at, and the lean is a rotation on a
-  // triangle rather than anything the treatment owns.
-  'k-caret':'link',
+  // triangle rather than anything the treatment owns. The fill is the same
+  // sentence a third time: the caret travelled +323.7px in fill, +329.7 in
+  // outline and +179.7 in link, which is one mechanism and three row widths.
+  'k-caret':'fill link',
+  // — The row's OWN two, 2026-09-03 —————————————————————————————
+  // 63 is the cheapest study in this batch and possibly on the page: five
+  // sibling selectors and a translateX. Measured with a real pointer on the
+  // middle item, the row reads -2 / -5 / 0 / +5 / +2 px in fill, in outline and
+  // in link — the same five numbers three times. Nothing in it can tell what
+  // the items are made of.
+  // ⚠️ AND forcePseudoState CANNOT SEE THIS. Forcing :hover on every item at
+  // once makes every sibling selector match and the offsets cancel, so a row
+  // reads as inert under the cheap path. Every row in this slice was driven by
+  // a real pointer on ONE item for that reason.
+  'k-rep':'fill outline',
+  // 61 refuses both, and the card's own comment is the argument. THE RULE IS
+  // THE ITEM'S OWN WIDTH — that is the invariant this study was rebuilt to
+  // hold, after a flat 25% bar left «Log» underlined at 2.84x the width of the
+  // word. The rule tracks the ITEM, and .btn's 28px of side padding arrives
+  // with any treatment: the item goes 74.3px wide to 122.3, so against a 66.3px
+  // word the ratio goes 1.12 to 1.84, and on «Log» (26.2px of ink) it would be
+  // 3.14 — WORSE than the fault the rebuild removed. The rule also detaches
+  // from the word it underlines, 4.5px of gap becoming 11.5, and at bottom:0 of
+  // the row it tucks 1.5px inside a 999px radius so its square ends run out
+  // past the curve.
+  // The mechanism itself survives — the bar travels and takes each item's width
+  // in all three, measured — which is exactly why the refusal has to be stated
+  // rather than left to the absence: this is a version that WORKS and should
+  // not be offered.
+  // It is card 14 one scope up, and the same sentence decides both: a rule is
+  // an underline only while the thing above it has no box of its own.
+  'k-ind':'',
 };
 
 /* The version each study SHIPS in — one of the three, for every study on the
