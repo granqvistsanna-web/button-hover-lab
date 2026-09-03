@@ -86,8 +86,17 @@ export const VERSIONS = {
   // the plate's own rect, so no treatment can reach the mechanism at all.
   // Fill only, and for what it BUYS rather than what it survives: the cap is
   // the study and a hard edge is what a cap is judged against. An outline
-  // would restate the hairline the card already draws, and a link has no
-  // frame for a label to be loose inside.
+  // would restate the hairline the card already draws.
+  // ⚠️ THE LINK REFUSAL USED TO READ «a link has no frame for a label to be
+  // loose inside», AND MEASUREMENT TURNED IT ROUND, 2026-09-03. The frame
+  // survives perfectly well: `.btn.i-loose{border:1px solid var(--line)}` is
+  // two classes and .btn--text cannot touch it. What fails is the ROOM. The
+  // cap is CAP_X = 5 and CAP_Y = 3, stated in the script in pixels, and
+  // .btn--text's padding is 8px 4px — so the word is given four pixels to be
+  // loose in and asked to travel five. The label crosses the frame it is meant
+  // to be loose inside, in the one direction the study is mostly about.
+  // Native and fill both leave 28px. Same verdict, different mechanism, and
+  // the difference is the one that would have been found by shipping it.
   'i-loose':'fill',
   // 136's silhouette is the subject, and a plate, a ring and a rule are three
   // ways to state one — the rule shows the most of it, having nothing but
@@ -180,6 +189,11 @@ export const VERSIONS = {
   // plate the tide inverts to --on-ink and the letters that arrive go back to
   // --ink. No link — a level needs a surface to rise against, and with the
   // border gone the card is invisible until you point at it.
+  // ✅ 121's link refusal VERIFIED as written, 2026-09-03: the treatment does
+  // land — the box goes 123.305 x 51.5 to 73.305 x 35.5 and the border to 0 —
+  // and what is left at rest is the word and nothing else. Screenshotted:
+  // «Continue» on the card, no rule, no plate, no edge. The sentence above is
+  // the picture.
   // 122's ellipse needs a surface, and a link has none. 124 sets its own
   // border and radius, so a treatment on top of it is a third opinion. Only
   // the two pure roll-plus-transform cards survive all three.
@@ -214,6 +228,16 @@ export const VERSIONS = {
   // and a quarter pixels rather than let loose, and the verdict is the same for
   // the opposite reason. A link would also have to restate `background:none`,
   // which the outline version already does and which is the smaller half.
+  // ⚠️ AND FOR 139 AND 140 THE LINK IS NOT MERELY WRONG, IT IS INERT — measured
+  // 2026-09-03, the same shape of finding as 41 and 146. Both paint their
+  // surface on a CHILD at inset:0 and set their own padding:0, so .btn--text
+  // reaches neither: box, padding, background, border and colour all come back
+  // byte-identical with the class on and off. The single property that does
+  // change is the BUTTON's border-radius, 999px to 2px — and since the plate is
+  // the child's, even that is invisible. Screenshotted in «link»: a full pill.
+  // «A wash to sweep under» and «a face to turn» are both true and neither is
+  // the reason the version cannot exist; a version that renders identically to
+  // the one it is not is an absence claiming to be an answer.
   'c-against':'outline', 'c-wash':'outline', 'p-face':'outline',
   'u-burst':'outline',   'u-area':'outline', 'p-tighten':'outline',
   // 137 the other way round: it ships as an outline and takes the fill. The
