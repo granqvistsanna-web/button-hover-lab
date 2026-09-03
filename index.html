@@ -4197,7 +4197,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="s-mid" data-native="link" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="s-mid" data-native="link" data-added="2026-08-27T10:19:19+02:00" data-updated="2026-09-02T10:59:53+02:00" data-versions="fill outline">
       <div class="stage">
         <button type="button" class="btn btn--text s-mid"><span class="lbl">Read the note</span></button>
       </div>
@@ -4206,7 +4206,7 @@
       <div class="chips"><span class="chip">CSS</span><span class="chip">Variant in Framer</span><span class="chip">Subtle</span></div>
     </article>
 
-    <article class="spec" data-key="i-rule" data-native="outline" data-versions="link" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-09-02T10:59:53+02:00">
+    <article class="spec" data-key="i-rule" data-native="outline" data-added="2026-08-26T20:10:06+02:00" data-updated="2026-09-02T10:59:53+02:00" data-versions="fill link">
       <div class="stage">
         <button type="button" class="btn btn--line i-rule"><span class="i-rule-lbl">Open the pricing brief</span></button>
       </div>
@@ -6143,11 +6143,33 @@ document.addEventListener("DOMContentLoaded", function () {
      The colour used to run on --t-3 and a bare `ease`: two durations and two
      curves inside one effect, against the first rule of the doctrine. It joins
      the other two channels on --t-4 and --e-quint. */
+  /* ⚠️ currentColor AND NOT --ink-text, WHICH IS WHAT MADE THE FILL POSSIBLE.
+     --ink-text is the ink fitted against the CARD, and a filled button's label
+     is --ink-on-fill — the two are opposites the moment there is a plate. Left
+     as it was, the hover rule painted a near-white underline onto a near-white
+     plate and card 57's entire subject simply vanished: screenshotted at full
+     hover in fill, no decoration on the button at all. That is the same fault
+     that put 42, 43 and 116 at 1.25:1, one property over.
+     currentColor is the version-proof way to say it, because it IS --ink-text
+     wherever the label is: in outline and in link this renders the identical
+     colour it always did — measured in both themes — and in fill it follows the
+     label onto the plate.
+     🔑 THE 42% IS KEPT, AND THE FOUR NUMBERS ARE THE ARGUMENT FOR KEEPING IT.
+     Alpha does not composite symmetrically, so the same proportion reads
+     differently on a light ground and a dark one: the resting hairline is
+     3.67:1 in dark outline and 2.74 in dark fill, 2.76 in light outline and
+     4.10 in light fill. The pair the fill version adds is the pair the SHIPPED
+     outline already had, swapped by theme — so 42% is under 3:1 on one theme
+     either way, and raising it for the fill alone would make a version louder
+     than the card it is a version of. It is the subject at rest, not a
+     boundary: the hover state is currentColor whole, and the label it sits
+     under is 16.93:1. Worth 0.48 if the page ever wants every hairline over
+     3:1, but that is a decision about the card and not about the version. */
   .i-rule .i-rule-lbl{
     --i-rule-w:1px;
     text-decoration-line:underline;
     text-decoration-skip-ink:auto;
-    text-decoration-color:color-mix(in srgb,var(--ink-text) 42%,transparent);
+    text-decoration-color:color-mix(in srgb,currentColor 42%,transparent);
     text-decoration-thickness:var(--i-rule-w);
     text-underline-offset:.26em;
     transition:--i-rule-w            var(--t-4) var(--e-quint),
@@ -6157,7 +6179,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-rule:hover .i-rule-lbl, .i-rule:focus-visible .i-rule-lbl{
     --i-rule-w:2px;
     text-underline-offset:.12em;
-    text-decoration-color:var(--ink-text);
+    text-decoration-color:currentColor;
   }
   /* The frame is this study's own and not the shared one: .btn--line draws at
      full --ink, which put a solid white ring around an effect whose entire

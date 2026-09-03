@@ -270,6 +270,45 @@ export const VERSIONS = {
   // class on and off — same box, same plate, same caps. An absence claiming to
   // be an answer.
   'o-caps':'',
+  // — The rule under the word ——————————————————————————————————
+  // Batch 2, second slice: the Edge and Mark studies. 145 was already complete
+  // and 67 is on the plan's own do-not-touch list (a two-plate pair, refused
+  // above with a reason about the mechanism), so three were asked.
+  //
+  // 🔑 TWO UNDERLINES, OPPOSITE ANSWERS, AND THE ONLY DIFFERENCE IS WHICH BOX
+  // THE RULE IS DRAWN AGAINST. 39 draws its rule on the .lbl and 14 draws its
+  // on the BUTTON, and that one choice decides whether an underline survives a
+  // plate. Nothing else about the two differs in kind: both are a 1.5px
+  // currentColor bar, both scaleX from a transform-origin, both about
+  // direction.
+  //
+  // 39 needs NOTHING. .btn.s-mid .lbl::after is bottom:-4px of the label, so
+  // it stays 4px under the word whatever the padding does, and currentColor
+  // follows the label onto the plate. Verified at full hover in fill: a clean
+  // rule under «Read the note», inside the plate, in the plate's own ink.
+  's-mid':'fill outline',
+  // 14 refuses both, and it is not a colour that refuses. .uline::after is
+  // left:4px right:4px bottom:2px of the BUTTON, and there is no .lbl in this
+  // study to move it onto — the label is a bare text node. At .btn--text's
+  // 8px/4px padding that geometry IS an underline: 4px in from the text on
+  // each side, 6px below it. At .btn's 15px/28px it is a full-width stripe two
+  // pixels off the plate's bottom edge, and because the button is a pill with
+  // border-radius:999px the bar's ends run out past the curve on both sides.
+  // Screenshotted in both: it reads as a strikethrough of the button's own
+  // border, not as an underline. Restating the insets per version would work,
+  // and giving the study a label wrapper would work better — but both are
+  // rebuilding the study rather than versioning it, and the honest answer to
+  // «does this mechanism survive a plate» is no.
+  'uline':'',
+  // 57 takes the fill on ONE property, and the property is the study. Its
+  // text-decoration-color was --ink-text, the ink fitted against the CARD, so
+  // on a plate it painted a near-white underline onto a near-white plate and
+  // the whole card disappeared — screenshotted at full hover, no decoration on
+  // the button at all. currentColor says the same thing version-proof: measured
+  // in both themes, outline and link render the identical colour they always
+  // did, and fill follows the label onto the plate.
+  // Its `link` was hand-placed on the article and is adopted here.
+  'i-rule':'fill link',
   // — Buttons in a row ——————————————————————————————————————————
   // The hardest corner of the axis, because a ROW shares ONE version: there is
   // no per-item answer, and the treatment has to make sense of every sibling
