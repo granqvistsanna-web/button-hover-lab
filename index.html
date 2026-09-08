@@ -17963,6 +17963,606 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
+<style>
+  /* ============ Solo — one button, one ground, nothing else ============
+     WHAT THIS IS FOR. The page is a catalogue: 109 cards, three chips each, a
+     rail, a toolbar, a scroll-spy. All of that is right for reading and wrong
+     for RECORDING, which is the other thing this library has to do — a study
+     goes out into the world as a five-second screen capture, and a capture of
+     a card is a capture of a card, borders and chips and neighbours included.
+
+     So Solo is not a modal with the button inside it. It is a STAGE: an empty
+     ground the size of the display, one object on it, and every control
+     treated as studio furniture that walks off set the moment you stop
+     touching it. The idle timer is not a nicety here, it is the feature —
+     the take begins when the furniture has left.
+
+     🚨 THE VIEW MUST NOT ANIMATE THE THING IT IS SHOWING. Every reveal
+     instinct — scale it up, fade it in, spring it into place — puts motion on
+     a button whose OWN motion is the entire subject, and the first frame of
+     the recording is then a lie about what the study does. The ground moves,
+     the chrome moves, the button simply IS. That rule is why there is no
+     entrance on .bhl-solo-fit and why the stage is frozen with .bhl-swap for
+     one frame across the move: without the freeze, changing a button's
+     ancestor fires whatever transition its rest rule declares, and card 04
+     blooms on arrival.
+
+     🔑 THE STAGE IS MOVED, NOT CLONED. Twenty-four studies read the pointer in
+     script and their listeners are bound to the authored node; a clone is a
+     dead button that looks alive, which is the worst possible thing to hand a
+     recording. Moving the real .stage keeps every listener, and it brings the
+     per-card version radios with it because .vers already lives in there. A
+     placeholder of the measured size holds the card open meanwhile, so the
+     feed does not reflow underneath and the scroll position survives the trip
+     back.
+
+     ⚠️ NOT IN THE COPIED SNIPPET. Every selector here is .bhl-solo-something,
+     which is in neither VARIANTS nor the per-card key list, so baseMatcher
+     drops the rules that name a real class beside it and matcher() never
+     matches one on its own. The overlay is also EMPTY at rest, which is what
+     keeps tools/a11y.mjs, library.mjs and facet-manifest.mjs counting the same
+     173 buttons across 109 cards they counted before it existed. */
+  .bhl-solo{
+    position:fixed; inset:0; z-index:90;
+    display:grid; place-items:center;
+    background:var(--canvas);
+    /* The ground the button was DESIGNED against, so a capture shows the study
+       on the surface its contrast was fitted for. --canvas is the alternative
+       and it is one rung down, not a different idea. */
+    --solo-ground:var(--card);
+    --solo-s:1;
+    opacity:0; transition:opacity var(--t-3) var(--e-out);
+  }
+  .bhl-solo[data-open="1"]{opacity:1}
+  /* 🚨 [hidden] LOSES TO THE CLASS ABOVE. The UA sheet's `[hidden]{display:none}`
+     is outranked by any author rule that sets display, so `.bhl-solo{display:grid}`
+     kept the overlay laid out at opacity 0 across the entire viewport — invisible,
+     inert to the eye, and hit-testing every click on the page. elementFromPoint
+     over a card came back .bhl-solo-frame and nothing on the feed could be
+     clicked at all. Restated here at (0,2,0) so the attribute wins. */
+  .bhl-solo[hidden]{display:none}
+  html[data-solo="1"]{overflow:hidden}
+  /* The view takes focus on open so the keys have somewhere to land, and a
+     programmatically focused [tabindex="-1"] container draws the UA ring —
+     which here is a blue rectangle around the entire display, in the frame,
+     for the whole take. It is not a keyboard destination and it announces
+     itself as a dialog, so the ring has nothing to tell anyone. */
+  .bhl-solo:focus,.bhl-solo:focus-visible{outline:none}
+
+  /* THE RECORDED AREA, and the reason it is its own box. Free fills the
+     display; 16:9 and 1:1 letterbox to that ratio in the page canvas, so the
+     frame you are going to crop to is already drawn and a capture needs no
+     second guess about what will survive the export. */
+  .bhl-solo-frame{
+    position:relative; overflow:hidden;
+    width:100%; height:100%;
+    background:var(--solo-ground);
+    transition:background var(--t-3) var(--e-out);
+  }
+  .bhl-solo[data-frame="16x9"] .bhl-solo-frame{
+    width:min(100vw, calc(100vh * 16 / 9)); height:min(100vh, calc(100vw * 9 / 16));
+  }
+  .bhl-solo[data-frame="1x1"] .bhl-solo-frame{
+    width:min(100vw, 100vh); height:min(100vw, 100vh);
+  }
+  /* THE CROP HAS TO BE VISIBLE OR IT IS NOT A GUIDE. Card and canvas are one
+     rung of lightness apart — that separation is the page's whole structural
+     idea and it is deliberately quiet — so letterboxing one against the other
+     drew a boundary you had to already know was there. A hairline in --line,
+     and only when a ratio is actually chosen: in Free there is no crop to
+     mark and a rectangle around the display would be furniture. */
+  .bhl-solo:not([data-frame="free"]) .bhl-solo-frame{
+    box-shadow:0 0 0 1px var(--line);
+  }
+
+  /* OPTICAL CENTRE, NOT GEOMETRIC — card 79 argues this for a mark inside a
+     button and it is the same argument one level up. A subject on the true
+     middle of a frame sits low; 46% is the correction, and it is the whole
+     reason this is a grid with a fraction rather than place-items:center. */
+  .bhl-solo-fit{
+    position:absolute; left:50%; top:46%;
+    transform:translate(-50%,-50%) scale(var(--solo-s));
+    transform-origin:50% 50%;
+    transition:transform var(--t-4) var(--e-out);
+  }
+  /* The card's own stage arrives with a 216px height and 54px of top padding
+     meant to hold a hairline grid it is no longer in. Here it hugs. */
+  .bhl-solo-fit .stage{height:auto; padding:0; background:none}
+  /* Studio furniture that belongs to the card, not to the take. */
+  .bhl-solo-fit .copy-pair,
+  .bhl-solo-fit .fav{display:none}
+
+  /* ---- Chrome. Every piece leaves through its OWN edge ----------------
+     Fading furniture out still leaves it in the frame at 40% for a quarter of
+     a second, and a capture started on that frame has a grey smear across the
+     bottom of it. Translating each piece past the edge it belongs to means
+     there is a frame after which the chrome is not merely faint but ABSENT,
+     which is the only state worth starting a recording on. --e-quint because
+     it is the page's exit curve and the furniture is exiting. */
+  .bhl-solo-cap,
+  .bhl-solo-bar,
+  .bhl-solo-x{
+    position:absolute; z-index:2;
+    transition:transform var(--t-4) var(--e-quint), opacity var(--t-3) var(--e-out);
+  }
+  .bhl-solo[data-chrome="0"] .bhl-solo-cap{transform:translateY(calc(100% + 28px)); opacity:0}
+  .bhl-solo[data-chrome="0"] .bhl-solo-bar{transform:translateY(calc(100% + 28px)); opacity:0}
+  .bhl-solo[data-chrome="0"] .bhl-solo-x  {transform:translateY(calc(-100% - 28px)); opacity:0}
+  .bhl-solo[data-chrome="0"]{cursor:none}
+
+  /* Caption bottom LEFT and controls bottom RIGHT, with the subject on the
+     optical centre between them: three things on three different axes rather
+     than one bar holding all of it. A single centred bar under a centred
+     button reads as a caption OF the button and joins the composition it is
+     supposed to stay out of. */
+  .bhl-solo-cap{
+    left:28px; bottom:24px; display:flex; align-items:baseline; gap:12px;
+    color:var(--ink-mid);
+  }
+  .bhl-solo-num{font:500 11px/1 var(--mono); letter-spacing:.06em; color:var(--ink-low)}
+  .bhl-solo-name{font:500 15px/1.2 var(--font-ui); color:var(--ink-hi)}
+  /* Said once, in the register the chips use, and only by the studies it is
+     true of — see the cap on --solo-s in the script. */
+  .bhl-solo-note{font:500 10.5px/1 var(--mono); letter-spacing:.04em; color:var(--ink-low)}
+  .bhl-solo-note[hidden]{display:none}
+
+  .bhl-solo-bar{
+    right:24px; bottom:20px; display:flex; align-items:center; gap:18px;
+    /* Four groups is more than a phone can hold in one line, and the bar is
+       anchored to the right edge, so it has to grow leftward and DOWNWARD from
+       there rather than run off the left of the display. */
+    flex-wrap:wrap; justify-content:flex-end; max-width:calc(100vw - 48px);
+    row-gap:10px;
+  }
+  /* Under a phone width the caption and the bar would sit on the same line and
+     collide. The caption is the one that can go: the study's name is already
+     the reason you opened it, and the frame is the subject. */
+  @media (max-width:560px){
+    .bhl-solo-cap{display:none}
+    .bhl-solo-bar{left:24px; justify-content:center}
+  }
+  .bhl-solo-grp{display:flex; align-items:center; gap:8px}
+  .bhl-solo-lbl{font:500 10px/1 var(--mono); letter-spacing:.08em;
+    text-transform:uppercase; color:var(--ink-low)}
+  .bhl-solo-seg{display:flex; gap:2px}
+  .bhl-solo-b{
+    min-width:30px; height:28px; padding:0 9px;
+    display:grid; place-items:center;
+    background:none; border:0; border-radius:8px; cursor:pointer;
+    font:500 11.5px/1 var(--font-ui); color:var(--ink-mid);
+    transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+  }
+  .bhl-solo-b:hover{background:var(--on-card); color:var(--ink-hi)}
+  .bhl-solo-b[aria-checked="true"]{background:var(--on-card-hi); color:var(--ink-hi)}
+  .bhl-solo-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .bhl-solo-b[aria-disabled="true"]{opacity:.32; cursor:default}
+  .bhl-solo-b[aria-disabled="true"]:hover{background:none; color:var(--ink-mid)}
+
+  /* The card's own version radios, moved out of the stage so the scale control
+     cannot magnify them along with the subject. */
+  .bhl-solo-vers{display:flex; align-items:center; gap:15px}
+  .bhl-solo-vers:empty{display:none}
+  .bhl-solo-vers .vers{position:static; display:flex; gap:15px}
+
+  .bhl-solo-x{
+    top:20px; right:24px; width:34px; height:34px;
+    display:grid; place-items:center;
+    background:none; border:0; border-radius:9px; cursor:pointer;
+    color:var(--ink-mid);
+    transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+               transform var(--t-4) var(--e-quint), opacity var(--t-3) var(--e-out);
+  }
+  .bhl-solo-x:hover{background:var(--on-card); color:var(--ink-hi)}
+  .bhl-solo-x:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
+  .bhl-solo-x svg{width:15px; height:15px; stroke:currentColor; stroke-width:1.6;
+    fill:none; stroke-linecap:round}
+
+  /* Paging sits on the EDGES rather than in the bar, because it is the one
+     control you reach for without looking — a full-height hit zone needs no
+     aim, and the chevron only draws once the pointer is in it. */
+  .bhl-solo-step{
+    position:absolute; top:0; bottom:0; width:84px; z-index:2;
+    display:grid; place-items:center;
+    background:none; border:0; cursor:pointer; color:var(--ink-low);
+    opacity:0; transition:opacity var(--t-3) var(--e-out), color var(--t-fast) var(--ease);
+  }
+  .bhl-solo-step:hover{opacity:1; color:var(--ink-hi)}
+  .bhl-solo-step:focus-visible{opacity:1; outline:2px solid var(--ink-low); outline-offset:-6px}
+  .bhl-solo[data-chrome="0"] .bhl-solo-step{opacity:0; pointer-events:none}
+  .bhl-solo-prev{left:0}
+  .bhl-solo-next{right:0}
+  .bhl-solo-step svg{width:20px; height:20px; stroke:currentColor; stroke-width:1.4;
+    fill:none; stroke-linecap:round; stroke-linejoin:round}
+
+  /* The hole the stage leaves in the card. Sized in script from the measured
+     stage, so the feed's grid rows do not move while a study is out. */
+  .bhl-solo-hole{width:100%}
+
+  /* The opener, in the corner layer beside the two copy buttons. It borrows
+     .copy wholesale — same height, same register, same rest opacity — because
+     it is the third thing that row does and a differently-shaped control there
+     would read as a different KIND of thing. */
+  .copy--solo .copy-lbl{min-width:4ch}
+
+  @media (prefers-reduced-motion: reduce){
+    /* The * rule further up already stops every clock. This is here to say
+       that the chrome must still LEAVE, or the recording view loses the one
+       thing it is for; it leaves instantly instead of travelling. */
+    .bhl-solo-cap,.bhl-solo-bar,.bhl-solo-x{transition:none}
+  }
+</style>
+
+<!-- Empty at rest, on purpose: see the note at the top of the style block. -->
+<div class="bhl-solo" id="bhl-solo" role="dialog" aria-modal="true"
+     aria-label="Solo view" tabindex="-1" data-frame="free" data-chrome="1" hidden>
+  <div class="bhl-solo-frame"><div class="bhl-solo-fit"></div></div>
+  <button type="button" class="bhl-solo-step bhl-solo-prev" aria-label="Previous study (left arrow)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <button type="button" class="bhl-solo-step bhl-solo-next" aria-label="Next study (right arrow)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <div class="bhl-solo-cap">
+    <span class="bhl-solo-num"></span>
+    <span class="bhl-solo-name"></span>
+    <span class="bhl-solo-note" hidden>pointer-driven · 1&times; only</span>
+  </div>
+  <div class="bhl-solo-bar">
+    <div class="bhl-solo-vers"></div>
+    <div class="bhl-solo-grp" data-g="size">
+      <span class="bhl-solo-lbl" title="1, 2 or 3">Size</span>
+      <div class="bhl-solo-seg" role="radiogroup" aria-label="Size"></div>
+    </div>
+    <div class="bhl-solo-grp" data-g="ground">
+      <span class="bhl-solo-lbl" title="G cycles the ground">Ground</span>
+      <div class="bhl-solo-seg" role="radiogroup" aria-label="Ground"></div>
+    </div>
+    <div class="bhl-solo-grp" data-g="frame">
+      <span class="bhl-solo-lbl" title="F cycles the frame">Frame</span>
+      <div class="bhl-solo-seg" role="radiogroup" aria-label="Frame"></div>
+    </div>
+  </div>
+  <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, 1–3 the size.">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</div>
+
+<script>
+/* ============ Solo — the script ======================================== */
+(function(){
+  var solo = document.getElementById('bhl-solo');
+  if (!solo) return;
+  var fit   = solo.querySelector('.bhl-solo-fit');
+  var vers  = solo.querySelector('.bhl-solo-vers');
+  var capN  = solo.querySelector('.bhl-solo-num');
+  var capT  = solo.querySelector('.bhl-solo-name');
+  var note  = solo.querySelector('.bhl-solo-note');
+  var root  = document.documentElement;
+
+  /* WHICH STUDIES CANNOT BE MAGNIFIED, and why it is a data question rather
+     than a judgement. Size is a transform, and a transform changes what
+     getBoundingClientRect() returns while leaving the element's own CSS pixels
+     alone. A study that reads the pointer as a FRACTION of the button is
+     therefore unaffected — both halves of the division scale together — but
+     one that reads it as a NUMBER OF PIXELS and hands that number back to CSS
+     gets it multiplied by the scale. Measured on 2026-09-08 at scale 2: card
+     50 wrote 4.35px then 9.97px, card 132 wrote 76.72px then 153.43px, card 09
+     wrote 89px then 175.86px. Those are not softer versions of the effect,
+     they are the effect pointing somewhere else.
+     There is no honest way to detect the difference at runtime, so the gate is
+     the facet manifest's own `js` tag — conservative by a couple of studies
+     (67 and 59 are tagged js and scale correctly) and never wrong in the
+     direction that matters. Browser zoom magnifies all of them faithfully;
+     that is the way out, and it is not this page's to build. */
+  var JS_KEYS = {};
+  try {
+    var man = JSON.parse(document.getElementById('facet-manifest').textContent);
+    Object.keys(man).forEach(function(k){
+      var trig = (man[k].split('|')[1] || '').split(' ');
+      if (trig.indexOf('js') !== -1) JS_KEYS[k] = 1;
+    });
+  } catch (e) {}
+
+  var SIZES  = [1, 2, 3];
+  var GROUND = [['card','Card'], ['canvas','Page']];
+  var FRAMES = [['free','Free'], ['16x9','16:9'], ['1x1','1:1']];
+
+  function seg(name, items, get, set){
+    var box = solo.querySelector('[data-g="' + name + '"] .bhl-solo-seg');
+    var btns = items.map(function(it){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'bhl-solo-b';
+      b.setAttribute('role', 'radio');
+      b.dataset.v = it[0]; b.textContent = it[1];
+      b.addEventListener('click', function(){
+        if (b.getAttribute('aria-disabled') === 'true') return;
+        set(it[0]); paint();
+      });
+      box.appendChild(b);
+      return b;
+    });
+    function paint(){
+      var v = String(get());
+      btns.forEach(function(b){ b.setAttribute('aria-checked', b.dataset.v === v ? 'true' : 'false'); });
+    }
+    paint();
+    return {btns:btns, paint:paint};
+  }
+
+  /* TWO, NOT ONE. At 1× a 150×47 button on a 1440px display is a detail in a
+     field, and the view exists so that a capture is of the BUTTON. 2× is the
+     largest step that still fits the widest study — card 133's row — inside a
+     16:9 crop, so it is the default and 3× is the deliberate choice. Studies
+     that read the pointer in script are pushed back to 1× on open; see the
+     note on JS_KEYS. */
+  var size = 2, ground = 'card', frame = 'free';
+  function applySize(){
+    fit.style.setProperty('--solo-s', size);
+  }
+  function applyGround(){
+    solo.style.setProperty('--solo-ground', 'var(--' + (ground === 'card' ? 'card' : 'canvas') + ')');
+  }
+  var sSize = seg('size', SIZES.map(function(n){ return [String(n), n + '×']; }),
+                  function(){ return size; },
+                  function(v){ size = +v; applySize(); });
+  var sGround = seg('ground', GROUND, function(){ return ground; },
+                    function(v){ ground = v; applyGround(); });
+  var sFrame = seg('frame', FRAMES, function(){ return frame; },
+                   function(v){ frame = v; solo.dataset.frame = v; });
+
+  /* ---- open / close --------------------------------------------------- */
+  var open = null;        // {card, stage, hole, versEl, opener}
+  var idleT = null;
+
+  function visibleCards(){
+    return [].filter.call(document.querySelectorAll('.spec'), function(c){
+      return !c.hidden && c.offsetParent !== null && c.querySelector('.btn');
+    });
+  }
+
+  /* One frame with the studies' own clocks off, exactly as the version switch
+     does it — a button whose ancestor changes runs whatever its rest rule
+     declares, and the arrival must not be an animation. */
+  function still(scope, mutate){
+    var btns = [].slice.call(scope.querySelectorAll('.btn'));
+    btns.forEach(function(b){ b.classList.add('bhl-swap'); });
+    mutate();
+    btns.forEach(function(b){ void b.offsetWidth; });
+    requestAnimationFrame(function(){
+      btns.forEach(function(b){ b.classList.remove('bhl-swap'); });
+    });
+  }
+
+  function chrome(on){
+    solo.dataset.chrome = on ? '1' : '0';
+  }
+  function bumpIdle(){
+    if (solo.dataset.pinned === '1') return;
+    chrome(true);
+    clearTimeout(idleT);
+    idleT = setTimeout(function(){ chrome(false); }, 1600);
+  }
+
+  function openSolo(card){
+    if (open) restore();
+    var stage = card.querySelector('.stage');
+    if (!stage) return;
+
+    var r = stage.getBoundingClientRect();
+    var hole = document.createElement('div');
+    hole.className = 'bhl-solo-hole';
+    hole.style.height = r.height + 'px';
+
+    var versEl = stage.querySelector('.vers');
+    var key = card.dataset.key || '';
+
+    still(stage, function(){
+      stage.parentNode.insertBefore(hole, stage);
+      fit.appendChild(stage);
+      if (versEl) vers.appendChild(versEl);
+    });
+
+    open = {card:card, stage:stage, hole:hole, versEl:versEl,
+            opener:document.activeElement};
+
+    var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
+    capN.textContent = num;
+    capT.textContent = (card.querySelector('h3') || {textContent:''})
+                         .textContent.replace(num, '').trim();
+
+    /* The cap, and the one line that says why. */
+    var pinned1x = !!JS_KEYS[key];
+    note.hidden = !pinned1x;
+    sSize.btns.forEach(function(b){
+      var off = pinned1x && b.dataset.v !== '1';
+      b.setAttribute('aria-disabled', off ? 'true' : 'false');
+      b.title = off ? 'This study reads the pointer in script, so a transform would magnify what it measures as well as what it draws. Browser zoom magnifies it faithfully.' : '';
+    });
+    if (pinned1x) size = 1;
+    /* Applied on EVERY open, not only when the pin changes it. The default
+       lives in a variable and the variable was never written to the element,
+       so the first study of a visit opened at the stylesheet's fallback of 1
+       while the control said 2 — the one state where the chrome and the frame
+       disagree. */
+    applySize(); sSize.paint(); applyGround(); sGround.paint();
+
+    solo.hidden = false;
+    root.dataset.solo = '1';
+    // A frame between display and opacity, or the fade has nothing to run from.
+    requestAnimationFrame(function(){ solo.dataset.open = '1'; });
+    solo.focus();
+    bumpIdle();
+    /* Row studies write their own offsets once and on resize (card 132's
+       --k-o among them), and they have just been moved. */
+    dispatchEvent(new Event('resize'));
+  }
+
+  function restore(){
+    if (!open) return;
+    var o = open; open = null;
+    still(o.stage, function(){
+      if (o.versEl) o.stage.appendChild(o.versEl);
+      o.hole.parentNode.insertBefore(o.stage, o.hole);
+      o.hole.remove();
+    });
+    dispatchEvent(new Event('resize'));
+    return o;
+  }
+
+  function closeSolo(){
+    if (!open) return;
+    var o = restore();
+    solo.dataset.open = '0';
+    delete root.dataset.solo;
+    clearTimeout(idleT);
+    solo.dataset.pinned = '0';
+    // The 1× a pointer-driven study forced is that study's, not the view's.
+    if (size !== 2){ size = 2; applySize(); sSize.paint(); }
+    var done = function(){ solo.hidden = true; };
+    setTimeout(done, 220);
+    if (o && o.opener && o.opener.isConnected) o.opener.focus();
+    else if (o) o.card.scrollIntoView({block:'center'});
+  }
+
+  function step(d){
+    if (!open) return;
+    var card = open.card;
+    // The card is still in the feed with a hole where its stage was, so it is
+    // its own reference point and the list does not have to be cached.
+    var list = visibleCards();
+    var i = list.indexOf(card);
+    if (i === -1){
+      // Filtered out from under us; fall back to the nearest by DOM order.
+      list = [].slice.call(document.querySelectorAll('.spec'));
+      i = list.indexOf(card);
+    }
+    var next = list[(i + d + list.length) % list.length];
+    if (next && next !== card){
+      restore();
+      openSolo(next);
+    }
+  }
+
+  solo.querySelector('.bhl-solo-x').addEventListener('click', closeSolo);
+  solo.querySelector('.bhl-solo-prev').addEventListener('click', function(){ step(-1); });
+  solo.querySelector('.bhl-solo-next').addEventListener('click', function(){ step(1); });
+  solo.addEventListener('pointermove', bumpIdle);
+  solo.addEventListener('pointerdown', bumpIdle);
+
+  addEventListener('keydown', function(e){
+    if (solo.hidden) return;
+    if (e.key === 'Escape'){ e.preventDefault(); closeSolo(); return; }
+    if (e.key === 'ArrowRight'){ e.preventDefault(); step(1); return; }
+    if (e.key === 'ArrowLeft'){ e.preventDefault(); step(-1); return; }
+    if (e.key === 'h' || e.key === 'H'){
+      // Pinned off, rather than hidden until the next twitch of the mouse: a
+      // capture that has to be started without touching the pointer needs the
+      // furniture to STAY gone.
+      var pin = solo.dataset.pinned !== '1';
+      solo.dataset.pinned = pin ? '1' : '0';
+      clearTimeout(idleT);
+      chrome(!pin);
+      if (!pin) bumpIdle();
+      return;
+    }
+    if (e.key === 'g' || e.key === 'G'){
+      ground = ground === 'card' ? 'canvas' : 'card';
+      applyGround(); sGround.paint(); bumpIdle(); return;
+    }
+    if (e.key === 'f' || e.key === 'F'){
+      var order = FRAMES.map(function(f){ return f[0]; });
+      frame = order[(order.indexOf(frame) + 1) % order.length];
+      solo.dataset.frame = frame; sFrame.paint(); bumpIdle(); return;
+    }
+    if (e.key === '1' || e.key === '2' || e.key === '3'){
+      var b = sSize.btns[+e.key - 1];
+      if (b && b.getAttribute('aria-disabled') !== 'true'){
+        size = +e.key; applySize(); sSize.paint(); bumpIdle();
+      }
+      return;
+    }
+    /* Focus containment. The view is aria-modal and the feed behind it is
+       still in the tab order, so without this a Tab walks out of the take and
+       into a card nobody can see. */
+    if (e.key === 'Tab'){
+      var f = [].filter.call(
+        solo.querySelectorAll('button, [href], input, select, [tabindex]:not([tabindex="-1"])'),
+        function(el){ return el.offsetParent !== null || el === solo; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === solo)){
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last){
+        e.preventDefault(); first.focus();
+      }
+    }
+  });
+
+  /* ---- the openers ----------------------------------------------------
+     Two, because they answer two different reaches. The labelled control in
+     the corner layer is the one you find by reading; the stage's own empty
+     ground is the one you find by pointing, and it is the gesture the request
+     was phrased in — click the card. It listens on the STAGE and not the card,
+     and it refuses any press that landed on something interactive, because the
+     button in the middle of that stage is the whole reason the card exists and
+     stealing its click would be the worst trade on the page. */
+  var SOLO_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9' +
+    'M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg>';
+
+  /* ⚠️ AFTER DOMContentLoaded, AND THE REASON IS ORDERING. The corner layer
+     does not exist in the markup — the copy machinery builds .copy-pair inside
+     a DOMContentLoaded handler, and an inline script at the end of the body
+     runs BEFORE that event fires. Wiring at parse time found 109 stages, 109
+     buttons and 0 pairs, and appended the opener to nothing without erroring.
+     Registering here means this listener is added after theirs and therefore
+     runs after it, which is the only ordering guarantee available and is
+     enough. */
+  function wire(){
+  document.querySelectorAll('.spec').forEach(function(card){
+    var stage = card.querySelector('.stage');
+    if (!stage || !card.querySelector('.btn')) return;
+    var num = (card.querySelector('.num') || {textContent:''}).textContent.trim();
+    var name = (card.querySelector('h3') || {textContent:''}).textContent.replace(num, '').trim();
+
+    var pair = stage.querySelector('.copy-pair');
+    if (pair){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'copy copy--solo';
+      var ic = document.createElement('span');
+      ic.className = 'copy-i'; ic.innerHTML = SOLO_ICON;
+      var lb = document.createElement('span');
+      lb.className = 'copy-lbl'; lb.textContent = 'Solo';
+      b.appendChild(ic); b.appendChild(lb);
+      b.title = 'Show “' + name + '” full screen, on its own — for recording';
+      b.setAttribute('aria-label', b.title);
+      b.addEventListener('click', function(){ openSolo(card); });
+      pair.appendChild(b);
+    }
+
+    stage.addEventListener('click', function(e){
+      /* ⚠️ THE GUARD HAS TO BE SCOPED TO THE STAGE, and unscoped it rejected
+         everything. closest() walks all the way to the root, <main class="feed">
+         carries tabindex="-1" as the skip link's target, so a bare
+         closest('[tabindex]') matched an ancestor of every card on the page and
+         the gesture never fired once. Scoped by stage.contains, and -1 is not
+         a tab stop so it is not interactive and does not belong in the list. */
+      var hit = e.target.closest(
+        'button, a, input, select, label, [tabindex]:not([tabindex="-1"]), .vers');
+      if (hit && stage.contains(hit)) return;
+      // A press that ended a text selection is not a click on the ground.
+      var sel = window.getSelection && window.getSelection();
+      if (sel && String(sel).length) return;
+      openSolo(card);
+    });
+  });
+  }
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();
+</script>
+
 <!-- BHL:FRAMER-URLS start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","111":"https://framer.com/m/PressFill-lXFzHB.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","137":"https://framer.com/m/PixelDissolve-37CWZb.js","138":"https://framer.com/m/CounterRollingPair-uzCBDF.js","139":"https://framer.com/m/TheWashOutlivesTheFill-l4vter.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","140":"https://framer.com/m/AnswersBack-xwPxsf.js","141":"https://framer.com/m/BurstsFromTheMiddle-A1WsGg.js","142":"https://framer.com/m/EachLetterKeepsItsArea-bgTzt7.js","143":"https://framer.com/m/Tightens-xUIRJd.js","144":"https://framer.com/m/HingedAtTheFirstLetter-hjjcMU.js","145":"https://framer.com/m/OneDotFiveTimes-pxVKZF.js","146":"https://framer.com/m/OnlyTheEndsArePixels-7XPBQM.js","147":"https://framer.com/m/TurnsOver-UshzQR.js","148":"https://framer.com/m/CountsItsTurns-WO5Wj7.js","149":"https://framer.com/m/StopsHalfway-7MG1QB.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","150":"https://framer.com/m/RoundsACorner-7gNQwh.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
