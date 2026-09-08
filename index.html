@@ -889,6 +889,12 @@
      single seed. Unset, --ladder-fill is the same #3a3a3a and every computed
      value is unchanged; set (--bhl-ladder-fill from the Fill Default control),
      the whole ladder follows it.
+     🚨 AND EVERY READ CARRIES ITS OWN FALLBACK. The seed is declared on this
+     rule, but a COPIED component does not necessarily copy this rule — four
+     studies (117, 155, 162, 36) take only the --bg-* token block, and a
+     var() with nothing to resolve to and no fallback invalidates the whole
+     declaration, so their plate painted nothing at all. Measured on the
+     generated files, not reasoned about.
      ⚠️ IT IS A SEPARATE TOKEN NAME AND NOT --bg-4, for the cycle reason the
      comment above gives: a var() substitutes where it is USED, so a fallback
      naming the property it is declaring resolves against its own declaration.
@@ -896,10 +902,10 @@
      its own control, not rungs of the plate. */
   .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
     --ladder-fill:#3a3a3a;
-    --bg-0:var(--m-0,     color-mix(in srgb, var(--ladder-fill) 25.86%, #000));
-    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill) 58.62%, #000));
-    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill) 79.31%, #000));
-    --bg-4:var(--m-4,     var(--ladder-fill));
+    --bg-0:var(--m-0,     color-mix(in srgb, var(--ladder-fill, #3a3a3a) 25.86%, #000));
+    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill, #3a3a3a) 58.62%, #000));
+    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill, #3a3a3a) 79.31%, #000));
+    --bg-4:var(--m-4,     var(--ladder-fill, #3a3a3a));
     --ink-low:var(--m-low, #8a8a8a);
     --ink-mid:var(--m-mid, #b3b3b3);
   }
@@ -910,9 +916,9 @@
   :root[data-theme="light"] .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
     --ladder-fill:#c5c5c5;
     --bg-0:var(--m-0,     #ffffff);
-    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill) 41.38%, #fff));
-    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill) 70.69%, #fff));
-    --bg-4:var(--m-4,     var(--ladder-fill));
+    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill, #c5c5c5) 41.38%, #fff));
+    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill, #c5c5c5) 70.69%, #fff));
+    --bg-4:var(--m-4,     var(--ladder-fill, #c5c5c5));
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
@@ -16760,6 +16766,7 @@ document.addEventListener("DOMContentLoaded", function () {
               label:label, multi:btns.length !== 1, wrapKeys:wrapKeys,
               inherited:inherited, bodyTokens:bodyTokens, external:external.join(' '),
               roles:roles, versions:vlist, vcls:VCLS, native:native,
+              inkRole:inkRole, onInkRole:onInkRole,
               w:Math.round(box.width) || 180, h:Math.round(box.height) || 48};
     }
 
@@ -17284,25 +17291,45 @@ document.addEventListener("DOMContentLoaded", function () {
       var VERSION_ON  = { fill:'Text Hover',   outline:'Text Default',   link:'Text Default' };
       var propOf = {};
       p.roles.forEach(function(r){ propOf[r.title] = r.prop; });
-      function versionExpr(map){
+      // 🚨 «As authored» IS NOT undefined. 43 studies read var(--ink) in their own
+      // rules — not only through a version class — so leaving the default arm
+      // undefined shipped a Border Default or Fill Default swatch that moved
+      // nothing until somebody also switched the Version. The default arm is the
+      // role data-native says the ink plays, which is what those rules mean by it.
+      function versionExpr(map, nativeRole){
         var arms = p.versions.filter(function(v){ return v !== 'default' && propOf[map[v]]; })
           .map(function(v){ return 'version === ' + JSON.stringify(v) + ' ? ' + propOf[map[v]]; });
-        return arms.length ? arms.join('\n                    : ') + '\n                    : undefined' : null;
+        var tail = propOf[nativeRole] || 'undefined';
+        if (!arms.length) return tail === 'undefined' ? null : tail;
+        return arms.join('\n                    : ') + '\n                    : ' + tail;
+      }
+      // 🚨 WRITE THE PROPERTY THE SHEET ACTUALLY READS. overridable() only makes a
+      // var(--bhl-x, …) bridge for a token this page DECLARES, and three of the
+      // roles' tokens are written at runtime by the toolbar instead — --hover-set,
+      // --on-hover-set and --fill-ring never appear in a :root block, so the
+      // study's own rules read them bare. Writing --bhl-hover-set for those was
+      // 62 assignments across 46 files that reached nothing. So each token is
+      // written prefixed if the sheet bridges it and bare if it does not.
+      function assign(t, prop){
+        var bridged = cssText.indexOf('var(--' + PREFIX + t.slice(2)) !== -1;
+        return '["' + (bridged ? '--' + PREFIX + t.slice(2) : t) + '" as any]: ' + prop + ',';
       }
       var roleStyle = p.roles.map(function(r){
         return r.tokens.filter(function(t){ return t !== '--ink' && t !== '--on-ink'; })
-          .map(function(t){
-            return '["--' + PREFIX + t.slice(2) + '" as any]: ' + r.prop + ',';
-          }).join('\n                ');
+          .map(function(t){ return assign(t, r.prop); }).join('\n                ');
       }).filter(Boolean).join('\n                ');
-      if (p.versions.length > 1){
-        [['--ink', VERSION_INK], ['--on-ink', VERSION_ON]].forEach(function(pair){
-          var e = versionExpr(pair[1]);
-          if (!e) return;
-          roleStyle += (roleStyle ? '\n                ' : '') +
-            '["--' + PREFIX + pair[0].slice(2) + '" as any]:\n                    ' + e + ',';
-        });
-      }
+      [['--ink', VERSION_INK, p.inkRole], ['--on-ink', VERSION_ON, p.onInkRole]].forEach(function(pair){
+        var e = p.versions.length > 1 ? versionExpr(pair[1], pair[2])
+                                      : (propOf[pair[2]] || null);
+        if (!e) return;
+        var t = pair[0];
+        var bridged = cssText.indexOf('var(--' + PREFIX + t.slice(2)) !== -1;
+        var name = bridged ? '--' + PREFIX + t.slice(2) : t;
+        roleStyle += (roleStyle ? '\n                ' : '') +
+          (e.indexOf('version ===') === 0
+            ? '["' + name + '" as any]:\n                    ' + e + ','
+            : '["' + name + '" as any]: ' + e + ',');
+      });
       body.push('        <div' + (p.js ? ' ref={root}' : '') +
                 ' className="' + [cls].concat(p.wrapKeys).join(' ') +
                 '" style={{ ' + box + (roleStyle ? '' : '') + '...style' +
