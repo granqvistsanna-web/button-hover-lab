@@ -185,7 +185,6 @@
        actually set, and the Copy buttons resolve the alias either way. */
     --ink-text:var(--ink);          /* the label, at rest                  */
     --ink-hover:var(--ink);         /* the colour that arrives on hover    */
-    --on-ink-hover:var(--on-ink);   /* the label once that colour is under it */
     /* The label on a FILLED plate — every solid-plate study lands here, and
        every plate and mark study does too. It cannot simply read
        --ink-text: a label sitting on the accent has to contrast with the
@@ -195,6 +194,33 @@
        was. Note --on-ink is NOT that label: it doubles as a plain dark fill in
        card 31's inverting pair, which is why this needs its own name. */
     --ink-on-fill:var(--on-ink);
+    /* 🔑 THE SIX ROLES, AND THE TWO NAMES THAT WERE MISSING. Read as a set the
+       block above is Fill Hover (--ink-hover), Text Default (--ink-text) and
+       Text Hover (--ink-on-fill); --lift-bg and --line-ctl are Fill Default and
+       Border Default, and --muted is Text Muted. What had no name at all is the
+       BORDER ON HOVER: a study that answers the pointer with its edge had
+       nowhere to point, so six declarations across five studies reached for
+       --ink-hover — the token that means «the fill that ARRIVES» — and painted
+       a border with it (31, 42 twice, 05, 13, 92). --line-ctl's own hundred
+       uses are resting hairlines and are NOT this role, which is why the count
+       is six and not a hundred: the number was checked per declaration. That
+       is the one place the model actively misled, so the role gets its own
+       name here and aliases back, which keeps every rule that has not been
+       reclassified resolving to exactly the colour it resolves to now.
+       🔑 IT ALIASES --ink-hover AND NOT --line-ctl, WHICH IS THE MEASUREMENT
+       AND NOT A PREFERENCE. All six declarations that paint a hover border
+       today paint it with --ink-hover, so that is the page's own answer to
+       what this role's value is; aliasing the resting hairline instead would
+       have moved every one of them from opaque ink to 36% white the moment
+       they were renamed. Aliased rather than valued for the same reason the
+       --ink-text pair is: a missed rule is a rule that still works. */
+    --line-ctl-hover:var(--ink-hover);
+    /* --on-ink-hover is Text Hover under another name. It resolved to --on-ink
+       independently, which is the same place --ink-on-fill resolves to; naming
+       one in terms of the other makes the two spellings ONE role rather than a
+       coincidence, so a project that retargets the label on an arriving plate
+       does not have to find both. Value unchanged in both themes. */
+    --on-ink-hover:var(--ink-on-fill);
     --shadow-rgb:0,0,0;
     /* The channel a raised surface catches light in. On a dark ladder that is
        white, which is why eight material studies wrote rgba(255,255,255,…)
@@ -852,19 +878,41 @@
      the reason: what they mean is a STEP, and a step in the pick's hue is still
      a step. --bg-4 had to join the set for them; the two bevels do not read it
      and are unaffected by its arrival. */
+  /* 🔑 THE FALLBACKS ARE DERIVED FROM ONE SEED, SO A LADDER SURVIVES LEAVING
+     THIS PAGE. On the page the toolbar writes --m-0…--m-4 and the fallback is
+     never reached, which is why it could stay four unrelated literals. Pasted
+     into a project there is no toolbar, and four literals mean a Fill Default
+     control can only ever move the top rung: the other three stay graphite and
+     the step stops being a step in the picked hue. So the rungs are stated as
+     what they measured all along — 79.31%, 58.62% and 25.86% of the top rung
+     toward black, which reproduce #2e2e2e, #222222 and #0f0f0f exactly — off a
+     single seed. Unset, --ladder-fill is the same #3a3a3a and every computed
+     value is unchanged; set (--bhl-ladder-fill from the Fill Default control),
+     the whole ladder follows it.
+     ⚠️ IT IS A SEPARATE TOKEN NAME AND NOT --bg-4, for the cycle reason the
+     comment above gives: a var() substitutes where it is USED, so a fallback
+     naming the property it is declaring resolves against its own declaration.
+     --ink-low and --ink-mid stay literal — they are Text Muted, a role with
+     its own control, not rungs of the plate. */
   .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
-    --bg-0:var(--m-0,     #0f0f0f);
-    --bg-2:var(--m-2,     #222222);
-    --bg-3:var(--m-3,     #2e2e2e);
-    --bg-4:var(--m-4,     #3a3a3a);
+    --ladder-fill:#3a3a3a;
+    --bg-0:var(--m-0,     color-mix(in srgb, var(--ladder-fill) 25.86%, #000));
+    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill) 58.62%, #000));
+    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill) 79.31%, #000));
+    --bg-4:var(--m-4,     var(--ladder-fill));
     --ink-low:var(--m-low, #8a8a8a);
     --ink-mid:var(--m-mid, #b3b3b3);
   }
+  /* Light mixes toward white instead, and the percentages are the same
+     measurement run the other way: 70.69% and 41.38% of #c5c5c5 toward #fff
+     give #d6d6d6 and #e7e7e7 exactly. bg-0 is pure white, so it stays a
+     literal rather than a 0% mix. */
   :root[data-theme="light"] .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
+    --ladder-fill:#c5c5c5;
     --bg-0:var(--m-0,     #ffffff);
-    --bg-2:var(--m-2,     #e7e7e7);
-    --bg-3:var(--m-3,     #d6d6d6);
-    --bg-4:var(--m-4,     #c5c5c5);
+    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill) 41.38%, #fff));
+    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill) 70.69%, #fff));
+    --bg-4:var(--m-4,     var(--ladder-fill));
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
@@ -5229,7 +5277,11 @@ document.addEventListener("DOMContentLoaded", function () {
      what makes the difference knockout and the light edges turn the RIGHT way in both themes. */
   /* --f-lys is the LIGHT half of the pair, --f-mork the dark one. Dark-only
      now, so --ink is the light half — no theme guard left to keep in sync. */
-  .f-glas, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }
+  /* --f-lys is Fill Hover and --f-mork is Text Hover, under a local pair of
+     names. Pointed at the roles so a retarget reaches these two studies too;
+     --ink-hover and --ink-on-fill alias to --ink and --on-ink, so no value
+     moves in either theme. */
+  .f-glas, .f-lykta{ --f-lys:var(--ink-hover); --f-mork:var(--ink-on-fill) }
 
   /* 31 Frostat glas — suddning, yta och ljuskant materialiseras samtidigt */
   .stage.f-ruta{ background-image:repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 10px) }
@@ -5245,7 +5297,7 @@ document.addEventListener("DOMContentLoaded", function () {
                background-color var(--t-5) var(--e-out), box-shadow var(--t-5) var(--e-out);
   }
   .f-glas .lbl{ position:relative }
-  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 22%, var(--line)) }
+  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--line-ctl-hover) 22%, var(--line)) }
   .f-glas:hover .f-glas-yta, .f-glas:focus-visible .f-glas-yta{
     background-color:color-mix(in srgb, var(--ink) 7%, transparent);
     box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 65%, transparent);
@@ -5408,10 +5460,10 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:border-color var(--t-4) var(--e-out), transform var(--t-1) var(--e-out);
   }
   .f-kant .lbl{ position:relative; z-index:1 }
-  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--ink-hover) 24%, var(--line)) }
+  .f-kant:hover, .f-kant:focus-visible{ border-color:color-mix(in srgb, var(--line-ctl-hover) 24%, var(--line)) }
   /* .btn carried, so the press beats the hover pair's (0,2,0): a bare :active
      is (0,1,0) and would lose to any two-class hover on the same element. */
-  .btn.f-kant:active{ border-color:var(--ink-hover); transition-duration:var(--t-1) }
+  .btn.f-kant:active{ border-color:var(--line-ctl-hover); transition-duration:var(--t-1) }
   /* ---- the two surface versions ----------------------------------------
      ON FILL THE LIGHT HAS TO INVERT, for the reason card 72's progress bar
      inverts: the lamp is --accent, the filled plate is --ink, and white on
@@ -10123,7 +10175,7 @@ document.addEventListener("DOMContentLoaded", function () {
      is fixed — and because a centred glow at this strength is just a dimmer
      copy of the press. */
   .btn.v-inner.btn--line:hover,
-  .btn.v-inner.btn--line:focus-visible{border-color:var(--ink-hover);
+  .btn.v-inner.btn--line:focus-visible{border-color:var(--line-ctl-hover);
     box-shadow:inset 0 -7px 11px -7px rgba(var(--sheen),min(1,.24 * var(--m-sheen-k, 1))),
                inset 0 0 7px 0 rgba(var(--sheen),min(1,.07 * var(--m-sheen-k, 1)))}
   /* And the fill version inverts, because a white plate cannot be lit brighter:
@@ -11108,7 +11160,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-regis .marks i:nth-child(3){bottom:0; right:0; border-bottom-width:1px; border-right-width:1px}
   .c-regis .marks i:nth-child(4){bottom:0; left:0; border-bottom-width:1px; border-left-width:1px}
   .c-regis:hover .marks i,
-  .c-regis:focus-visible .marks i{border-color:var(--ink-hover)}
+  .c-regis:focus-visible .marks i{border-color:var(--line-ctl-hover)}
   .c-regis:hover .marks i:nth-child(1),
   .c-regis:focus-visible .marks i:nth-child(1){transform:translate(5px,4px)}
   .c-regis:hover .marks i:nth-child(2),
@@ -12358,7 +12410,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.c-against.btn--line{background:none; border-color:var(--ink);
     color:var(--ink-text)}
   .btn.c-against.btn--line:is(:hover,:focus-visible){background:none;
-    border-color:var(--ink-hover); color:var(--ink-text)}
+    border-color:var(--line-ctl-hover); color:var(--ink-text)}
 
   /* 139 in outline, and the study GAINS from the removal: with no plate at
      rest, the two-stage arrival and its reordered exit are the only things on
@@ -16449,9 +16501,26 @@ document.addEventListener("DOMContentLoaded", function () {
       var isBase = baseMatcher(btns, markup);
 
       var base = [], effect = [], atRules = [], usedTokens = {}, seen = {};
+      // paintTokens is the narrower question the colour controls ask. A token
+      // that only ever reaches `outline` is the shared focus ring, which every
+      // study inherits from .btn:focus-visible — count it and all 108 studies
+      // get a Text Muted swatch that has nothing to do with the study, which is
+      // exactly the noise the roles exist to remove. So role detection reads
+      // the properties that paint the BUTTON and skips the ring.
+      var paintTokens = {};
+      var PAINTS = /^(background|border|color|box-shadow|fill|stroke|text-shadow|--)/;
       function note(text){
         var m, re = /var\((--[\w-]+)/g;
         while ((m = re.exec(text))) usedTokens[m[1]] = 1;
+        // Declaration-wise for the narrow map: split on ; and test the property.
+        text.replace(/^[^{]*\{/, '').split(';').forEach(function(d){
+          var c = d.indexOf(':');
+          if (c < 0) return;
+          var prop = d.slice(0, c).trim().toLowerCase();
+          if (!PAINTS.test(prop)) return;
+          var mm, rr = /var\((--[\w-]+)/g, val = d.slice(c + 1);
+          while ((mm = rr.exec(val))) paintTokens[mm[1]] = 1;
+        });
       }
       walk(function(r, cond){
         if (r.selectorText){
@@ -16576,10 +16645,121 @@ document.addEventListener("DOMContentLoaded", function () {
       // 180. This is the one value that has to come from the document.
       var box = liveRoot.getBoundingClientRect();
 
+      // ---- the colour roles this study actually reads ------------------
+      // usedTokens is every var() the card's own rules name, which is exactly
+      // the question a property control answers: a study gets a Fill Hover
+      // swatch only if something in it paints with the fill that arrives. The
+      // titles are roles and not token names, because the token names are the
+      // page's history — --ink-hover means «the fill that ARRIVES» and
+      // --lift-bg means «a control at rest ON A CARD», and neither is
+      // guessable from a properties panel.
+      //
+      // 🔑 --ink AND --on-ink ARE TITLED BY THE VERSION, because that is what
+      // decides which role they play. .btn--solid paints its plate var(--ink)
+      // and .btn--line draws its border with it, so on a fill-native study the
+      // ink IS Fill Default and on an outline-native one it IS Border Default.
+      // One token, one role, three values — chosen by the version, which is
+      // why the version is a control of its own below.
+      var native = (card.dataset.native || 'fill').split('|')[0];
+      var inkRole = native === 'outline' ? 'Border Default'
+                  : native === 'link'    ? 'Text Default'
+                  :                        'Fill Default';
+      var onInkRole = native === 'outline' ? 'Text Default' : 'Text Hover';
+      var ROLE_OF = {
+        '--lift-bg':'Fill Default', '--ladder-fill':'Fill Default',
+        '--ink-hover':'Fill Hover', '--hover-set':'Fill Hover',
+        '--line-ctl':'Border Default', '--line-ctl-hover':'Border Hover',
+        '--fill-ring':'Border Default',
+        '--ink-text':'Text Default',
+        '--ink-on-fill':'Text Hover', '--on-ink-hover':'Text Hover',
+        '--on-hover-set':'Text Hover',
+        '--muted':'Text Muted', '--ink-low':'Text Muted',
+        '--accent':'Accent', '--on-accent':'Text On Accent',
+        '--ink':inkRole, '--on-ink':onInkRole
+      };
+      // One control per ROLE, not per token: two spellings of Text Hover are
+      // one swatch, and it writes both.
+      var ORDER = ['Fill Default','Fill Hover','Border Default','Border Hover',
+                   'Text Default','Text Hover','Text Muted','Accent','Text On Accent'];
+      // ⚠️ THE LIVE BUTTON AND NOT btns[0]. root is card.__idleRoot when the card
+      // has one — a DETACHED clone, which is the whole point of it for markup —
+      // and getComputedStyle on a detached element returns an empty declaration,
+      // so every defaultValue came back "". The document is the only place a
+      // resolved token value exists.
+      var liveBtn = card.querySelector('.btn') || document.documentElement;
+      var btnCs = getComputedStyle(liveBtn);
+      var byRole = {};
+      Object.keys(paintTokens).forEach(function(t){
+        var role = ROLE_OF[t];
+        if (!role) return;
+        (byRole[role] = byRole[role] || []).push(t);
+      });
+      // ⚠️ THE DEFAULT COMES FROM THE ROLE-SPECIFIC TOKEN, NOT ALPHABETICALLY.
+      // Two tokens can share a role — 42 reads both --lift-bg (its resting grey
+      // plate) and --ink (the plate its FILL version puts there) — and a sort
+      // put --ink first, so the swatch opened on #f2f2f2 for a button that is
+      // #3a3a3a at rest. The named role always wins; --ink and --on-ink are the
+      // version's answer and are only the default when nothing narrower exists.
+      var PREF = ['--lift-bg','--ladder-fill','--line-ctl','--line-ctl-hover',
+                  '--fill-ring','--ink-text','--ink-on-fill','--on-ink-hover',
+                  '--ink-hover','--hover-set','--on-hover-set','--muted','--ink-low',
+                  '--accent','--on-accent','--ink','--on-ink'];
+      var roles = ORDER.filter(function(r){ return byRole[r]; }).map(function(r){
+        var toks = byRole[r].slice().sort(function(a, b){
+          var ia = PREF.indexOf(a), ib = PREF.indexOf(b);
+          return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+        });
+        // The default is the study's own resolved value, so an untouched
+        // instance renders exactly as the gallery does.
+        // ⚠️ AND A ROLE CAN RESOLVE TO NOTHING, which is not a bug in the read.
+        // Four studies reach Fill Hover only through --hover-set, and that
+        // token does not exist until the toolbar's paint() writes it — so at
+        // rest there is no value to open the swatch on. Each role therefore
+        // names the token that ALWAYS has one as its last resort.
+        var LAST = { 'Fill Default':'--lift-bg', 'Fill Hover':'--ink-hover',
+                     'Border Default':'--line-ctl', 'Border Hover':'--line-ctl-hover',
+                     'Text Default':'--ink-text', 'Text Hover':'--ink-on-fill',
+                     'Text Muted':'--muted', 'Accent':'--accent',
+                     'Text On Accent':'--on-accent' };
+        var order = toks.concat([LAST[r], '--ink']);
+        var val = '';
+        for (var i = 0; i < order.length && !val; i++)
+          if (order[i]) val = btnCs.getPropertyValue(order[i]).trim();
+        return { title: r, tokens: toks,
+                 prop: r.toLowerCase().replace(/[^a-z]+(.)/g, function(_, c){ return c.toUpperCase(); }),
+                 value: val };
+      });
+
+      // The versions this card offers. A single-version card gets no control —
+      // an enum with one option is furniture.
+      //
+      // 🚨 «default» IS A REAL OPTION AND IT HAS TO BE FIRST. data-native names
+      // the version a study is AUTHORED AROUND, not the class it wears: on the
+      // page 42 sits on a bare `.btn f-kant` and paints its plate from
+      // --lift-bg, and .btn--solid is a surface the toolbar can put it on. Emit
+      // the native version as the default and the component opens on
+      // .btn--solid — a white plate where the gallery shows #3a3a3a, measured.
+      // So option one adds no class at all and is the authored surface, and the
+      // rest are the versions the toolbar offers. A class the markup already
+      // carries (60's .btn--text) is dropped from the list for the same reason:
+      // it is already the authored surface, not an alternative to it.
+      var VCLS = { fill:'btn--solid', outline:'btn--line', link:'btn--text' };
+      var authored = ' ' + btns.map(function(b){ return b.className; }).join(' ') + ' ';
+      var vlist = ['default'].concat([native])
+        .concat((card.dataset.versions || '').split(/\s+/))
+        .concat((card.dataset.native || '').split('|'))
+        .filter(function(v, i, a){
+          if (v === 'default') return i === 0;
+          if (!v || !VCLS[v] || a.indexOf(v) !== i) return false;
+          return authored.indexOf(' ' + VCLS[v] + ' ') === -1;
+        });
+      VCLS['default'] = '';
+
       return {num:num, name:name, chips:chips, route:route, tokens:tokens,
               base:base, ats:ats, effectCss:effectCss, markup:markup, js:js,
               label:label, multi:btns.length !== 1, wrapKeys:wrapKeys,
               inherited:inherited, bodyTokens:bodyTokens, external:external.join(' '),
+              roles:roles, versions:vlist, vcls:VCLS, native:native,
               w:Math.round(box.width) || 180, h:Math.round(box.height) || 48};
     }
 
@@ -16840,6 +17020,24 @@ document.addEventListener("DOMContentLoaded", function () {
       // On the page these sit in no form. In Framer they might, and a
       // type-less button submits it.
       var markup = jsxify(p.markup).replace(/<button(?![^>]*\btype=)/g, '<button type="button"');
+      // ---- the version, as a class the control swaps -------------------
+      // The page writes .btn--solid / .btn--line / .btn--text at runtime from
+      // the toolbar; a pasted component has no toolbar, so the version arrives
+      // as an enum and lands in the same place — on the button, where every
+      // version rule is written to match. The native version is already in the
+      // harvested markup, so it is stripped first and re-added from the control:
+      // without that a fill-native card would carry two version classes the
+      // moment somebody chose Outline.
+      if (p.versions.length > 1){
+        var vNames = p.versions.map(function(v){ return p.vcls[v] ? PREFIX + p.vcls[v] : ''; })
+                       .filter(Boolean);
+        markup = markup.replace(/className="([^"]*)"/g, function(all, v){
+          var kept = v.split(/\s+/).filter(function(c){ return vNames.indexOf(c) === -1; });
+          if (kept.length === v.split(/\s+/).length && kept.indexOf(PREFIX + 'btn') === -1) return all;
+          if (kept.indexOf(PREFIX + 'btn') === -1) return 'className="' + kept.join(' ') + '"';
+          return 'className={("' + kept.join(' ') + ' " + VER[version]).trim()}';
+        });
+      }
       // The label is only a control if it actually reaches the markup. Where it
       // does not — the text is split across spans, or it came from the button's
       // own textContent because there is no .lbl — the field would appear in
@@ -16933,12 +17131,18 @@ document.addEventListener("DOMContentLoaded", function () {
       var imports = [];
       imports.push('import type { CSSProperties } from "react"');
       imports.push('import { useEffect, useState' + (p.js ? ', useRef' : '') + ' } from "react"');
-      if (label || link) imports.push('import { addPropertyControls, ControlType } from "framer"');
+      var hasControls = label || link || p.roles.length || p.versions.length > 1;
+      if (hasControls) imports.push('import { addPropertyControls, ControlType } from "framer"');
 
       var body = [];
       var args = [], types = [];
       if (label){ args.push('label = ' + JSON.stringify(label)); types.push('label?: string'); }
       if (link){ args.push('href', 'newTab = false'); types.push('href?: string', 'newTab?: boolean'); }
+      if (p.versions.length > 1){
+        args.push('version = "default"');
+        types.push('version?: string');
+      }
+      p.roles.forEach(function(r){ args.push(r.prop); types.push(r.prop + '?: string'); });
       args.push('style'); types.push('style?: CSSProperties');
       body.push('export default function ' + comp + '({ ' + args.join(', ') + ' }: { ' +
         types.join('; ') + ' }) {');
@@ -17049,17 +17253,72 @@ document.addEventListener("DOMContentLoaded", function () {
       var box = p.multi
         ? 'display: "grid", gridTemplateColumns: "minmax(0,1fr)", placeItems: "center", width: "100%", '
         : 'display: "inline-flex", ';
+      // One assignment per emitted control, onto the component's own root. Every
+      // declaration in the CSS below is already written as
+      // var(--<prefix>name, <the page value>) by overridable(), so setting the
+      // prefixed property here is the whole of the wiring — and leaving a
+      // control empty is not a bug: React drops an undefined property and the
+      // fallback paints the gallery's own colour.
+      // 🚨 --ink AND --on-ink ARE WRITTEN FROM THE ACTIVE VERSION, NOT FROM ONE
+      // ROLE. They are the page's two primitives and the version decides which
+      // role they play: .btn--solid paints its plate var(--ink) and .btn--line
+      // draws its border with it. Handing them to whichever role matched
+      // data-native put 09's Border Default — a 36% white — into the plate of
+      // its own fill version, measured. So they are excluded from the role's
+      // own token list and written from `version` instead, and left undefined
+      // on «As authored», where no version rule reads them.
+      var VERSION_INK = { fill:'Fill Default', outline:'Border Default', link:'Text Default' };
+      var VERSION_ON  = { fill:'Text Hover',   outline:'Text Default',   link:'Text Default' };
+      var propOf = {};
+      p.roles.forEach(function(r){ propOf[r.title] = r.prop; });
+      function versionExpr(map){
+        var arms = p.versions.filter(function(v){ return v !== 'default' && propOf[map[v]]; })
+          .map(function(v){ return 'version === ' + JSON.stringify(v) + ' ? ' + propOf[map[v]]; });
+        return arms.length ? arms.join('\n                    : ') + '\n                    : undefined' : null;
+      }
+      var roleStyle = p.roles.map(function(r){
+        return r.tokens.filter(function(t){ return t !== '--ink' && t !== '--on-ink'; })
+          .map(function(t){
+            return '["--' + PREFIX + t.slice(2) + '" as any]: ' + r.prop + ',';
+          }).join('\n                ');
+      }).filter(Boolean).join('\n                ');
+      if (p.versions.length > 1){
+        [['--ink', VERSION_INK], ['--on-ink', VERSION_ON]].forEach(function(pair){
+          var e = versionExpr(pair[1]);
+          if (!e) return;
+          roleStyle += (roleStyle ? '\n                ' : '') +
+            '["--' + PREFIX + pair[0].slice(2) + '" as any]:\n                    ' + e + ',';
+        });
+      }
       body.push('        <div' + (p.js ? ' ref={root}' : '') +
                 ' className="' + [cls].concat(p.wrapKeys).join(' ') +
-                '" style={{ ' + box + '...style }}>');
+                '" style={{ ' + box + (roleStyle ? '' : '') + '...style' +
+                (roleStyle ? '' : '') + ' }}>');
+      if (roleStyle){
+        // rewrite the line just pushed, now that there is more than the box
+        body[body.length - 1] = '        <div' + (p.js ? ' ref={root}' : '') +
+          ' className="' + [cls].concat(p.wrapKeys).join(' ') + '" style={{\n' +
+          '                ' + box.replace(/,\s*$/, ',').replace(/,\s+/g, ',\n                ') + '\n' +
+          '                ' + roleStyle + '\n' +
+          '                ...style,\n' +
+          '            }}>';
+      }
       body.push('            {!hoisted && <style>{CSS}</style>}');
       body.push('            ' + indent(markup, '            ', true));
       body.push('        </div>');
       body.push('    )');
       body.push('}');
-      if (label || link){
+      if (hasControls){
         body.push('');
         body.push('addPropertyControls(' + comp + ', {');
+        if (p.versions.length > 1){
+          body.push('    version: { type: ControlType.Enum, title: "Version",');
+          body.push('        options: ' + JSON.stringify(p.versions) + ',');
+          body.push('        optionTitles: ' + JSON.stringify(p.versions.map(function(v){
+            return v === 'default' ? 'As authored'
+                 : v.charAt(0).toUpperCase() + v.slice(1); })) + ',');
+          body.push('        defaultValue: "default" },');
+        }
         if (label){
           body.push('    label: { type: ControlType.String, title: "Label", defaultValue: ' +
                     JSON.stringify(label) + ' },');
@@ -17069,12 +17328,24 @@ document.addEventListener("DOMContentLoaded", function () {
           body.push('    newTab: { type: ControlType.Boolean, title: "New tab", defaultValue: false,');
           body.push('        hidden: (p: any) => !p.href },');
         }
+        p.roles.forEach(function(r){
+          body.push('    ' + r.prop + ': { type: ControlType.Color, title: ' +
+            JSON.stringify(r.title) + ',');
+          body.push('        defaultValue: ' + JSON.stringify(r.value) + ' },');
+        });
         body.push('})');
       }
 
       var file = [head.join('\n'), ''];
       if (imports.length) file.push(imports.join('\n'), '');
       file.push('const SHEET = ' + JSON.stringify(cls), '');
+      if (p.versions.length > 1){
+        var verMap = {};
+        // «default» maps to the empty string, not to the bare prefix.
+        p.versions.forEach(function(v){ verMap[v] = p.vcls[v] ? PREFIX + p.vcls[v] : ''; });
+        file.push('// Version -> the class the sheet below matches on.',
+                  'const VER: Record<string, string> = ' + JSON.stringify(verMap, null, 4) + '', '');
+      }
       file.push('const CSS = `\n' + cssText.replace(/^\n+/, '') + '\n`', '');
       file.push('/**');
       file.push(' * @framerSupportedLayoutWidth ' + (p.multi ? 'any-prefer-fixed' : 'auto'));
