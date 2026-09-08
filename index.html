@@ -11502,34 +11502,45 @@ document.addEventListener("DOMContentLoaded", function () {
      study whose whole answer is «which of these two» spent its first 100ms
      answering «both, roughly».
 
-     Two bands, one per half, each anchored to the seam and opening away from
-     it. Nothing fades and nothing travels across the divider: the half you are
-     on grows out of the line, in place, and crossing the seam is one band
-     collapsing INTO the line as the other opens out of it — contiguous at
-     every frame and never ambiguous about which half is lit. The seam is the
-     pivot the study was already about, so it is also the right origin.
+     Two bands, one per half. Nothing fades and nothing crosses the divider:
+     the half you are on fills in place, and the half you left empties in
+     place.
 
-     ::before is the label half and takes its origin at 100%, which is the
-     seam; ::after is the mark half at left:50% with origin 0, the same line
-     from the other side. scaleX rather than width because a width animation is
-     layout and this one has to be free. */
+     ⚠️ EACH BAND IS ANCHORED TO ITS HALF'S OUTER CAP, NOT TO THE SEAM, and the
+     first attempt got this backwards. Opening out of the seam is the tidier
+     idea — the divider answers you — but the button is a pill, and a band that
+     starts at the middle spends its whole run as a hard-edged white RECTANGLE
+     floating between two dark rounded ends, only becoming the shape it is
+     meant to be on the last frame. Filmed on 2026-09-08 it read as a block
+     flashing in the middle of the button, which is worse than the smear it
+     replaced.
+
+     Anchored outward, the lit region contains its own cap from the first
+     frame: what grows is a properly capped half, and only the edge that meets
+     the seam is straight — which is correct, because that edge IS the seam.
+     ::before takes origin 0, the left cap; ::after sits at left:50% with
+     origin 100%, the right cap. scaleX rather than width because a width
+     animation is layout and this one has to be free. --t-3 rather than --t-4
+     so that crossing the seam — the one moment both bands are partial — is
+     over before it can be read as two separate blocks. */
   .btn.g-two::before,
   .btn.g-two::after{
     content:""; position:absolute; top:0; bottom:0; width:50%; z-index:0;
     background:var(--ink-hover); transform:scaleX(0);
-    transition:transform var(--t-4) var(--e-out);
+    transition:transform var(--t-3) var(--e-out);
   }
-  .btn.g-two::before{ left:0;   transform-origin:100% 50% }
-  .btn.g-two::after { left:50%; transform-origin:0 50% }
+  .btn.g-two::before{ left:0;   transform-origin:0 50% }
+  .btn.g-two::after { left:50%; transform-origin:100% 50% }
   .g-two .g-two-half{
     position:relative; z-index:1; flex:1 1 50%; min-width:0;
     text-align:center; white-space:nowrap; padding:15px 16px;
     /* Same rule as 07's label: the ink is the LAST thing to arrive and the
        FIRST to leave, because the rest-side duration is the one that paints
-       the way out. Crossing the seam uncovers the outgoing half from its far
-       edge inward, so a word that waits the band's full --t-4 to go light
-       spends the tail of that on white — --t-2 out against --t-3 in keeps the
-       word ahead of the edge that is leaving it. */
+       the way out. The enter carries --d-1 so the BAND leads and the ink
+       follows it — without the beat the word is halfway to dark while the
+       band is still halfway across, and the letters it has not reached yet
+       are grey on the dark ground. The exit has no delay for the mirror
+       reason: the word goes light before the band uncovers it. */
     color:var(--ink-text); transition:color var(--t-2) var(--e-out);
   }
   .g-two .g-two-half + .g-two-half{ border-left:1px solid var(--line) }
@@ -11537,7 +11548,8 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.g-two:has(.g-two-mark:hover)::after{ transform:scaleX(1) }
   .btn.g-two:has(.g-two-lbl:hover) .g-two-lbl,
   .btn.g-two:has(.g-two-mark:hover) .g-two-mark{
-    color:var(--on-ink-hover); transition-duration:var(--t-3);
+    color:var(--on-ink-hover);
+    transition:color var(--t-2) var(--e-out) var(--d-1);
   }
 </style>
 
@@ -12271,32 +12283,44 @@ document.addEventListener("DOMContentLoaded", function () {
      continuous because there is nothing to cancel.
 
      The beat is carried in the transition, not in a keyframe: the copy that is
-     LEAVING fades at once and the one ARRIVING waits --d-2, declared on both
+     LEAVING fades at once and the one ARRIVING waits --d-1, declared on both
      sides so the handoff holds in both directions. That preserves the rule the
      keyframes were written for — zero opacity ACROSS the swap, never through
-     it — without the pair ever being half-legible together. */
+     it — without the pair ever being half-legible together.
+
+     SOFTENED 2026-09-08, on three counts, because the first pass read as a
+     flash rather than a roll. The throw was half an em, which is most of the
+     cap height, so the word left the frame entirely and came back — a blink,
+     not a hand-off; it is .3em now, enough to be a direction and not enough to
+     be a disappearance. The fade was --t-2, sharper than anything else on the
+     button, and is --t-3. And the beat came down from --d-2 to --d-1 to close
+     the hole the longer fades would otherwise have opened between them: the
+     rule is still that the two are never both legible, it is just no longer
+     true that NEITHER is, for a tenth of a second in the middle. --e-out on
+     the travel rather than --e-quint for the same reason — a quintic on a
+     3px throw is all arrival and no journey. */
   .btn.p-tighten .p-tighten-w{display:inline-grid; place-items:center}
   .btn.p-tighten .p-tighten-a,
   .btn.p-tighten .p-tighten-b{grid-area:1/1; white-space:nowrap}
   .btn.p-tighten .p-tighten-a{
-    transition:transform var(--t-5) var(--e-quint),
-               opacity var(--t-2) var(--e-out) var(--d-2)}
+    transition:transform var(--t-5) var(--e-out),
+               opacity var(--t-3) var(--e-out) var(--d-1)}
   .btn.p-tighten .p-tighten-b{
-    opacity:0; transform:translateY(.5em);
-    transition:transform var(--t-5) var(--e-quint),
-               opacity var(--t-2) var(--e-out)}
+    opacity:0; transform:translateY(.3em);
+    transition:transform var(--t-5) var(--e-out),
+               opacity var(--t-3) var(--e-out)}
   @media (hover:hover) and (pointer:fine){
     .p-tighten:is(:hover,:focus-visible) .p-tighten-body{transform:rotateX(11deg) rotateY(3deg)}
     .p-tighten:is(:hover,:focus-visible) .p-tighten-plate{
       border-radius:var(--r-xs); inset:0 12px}
     .btn.p-tighten:is(:hover,:focus-visible) .p-tighten-a{
-      opacity:0; transform:translateY(-.5em);
-      transition:transform var(--t-5) var(--e-quint),
-                 opacity var(--t-2) var(--e-out)}
+      opacity:0; transform:translateY(-.3em);
+      transition:transform var(--t-5) var(--e-out),
+                 opacity var(--t-3) var(--e-out)}
     .btn.p-tighten:is(:hover,:focus-visible) .p-tighten-b{
       opacity:1; transform:none;
-      transition:transform var(--t-5) var(--e-quint),
-                 opacity var(--t-2) var(--e-out) var(--d-2)}
+      transition:transform var(--t-5) var(--e-out),
+                 opacity var(--t-3) var(--e-out) var(--d-1)}
   }
 
   /* ============ 137-143 in their other version ============================
@@ -12455,7 +12479,7 @@ document.addEventListener("DOMContentLoaded", function () {
      survives: 630ms in against 420ms out, and the beat is 70ms. The swing is
      the read here, and at 450 the far end of the word was through the arc
      before the eye had followed it back to the pivot. */
-  .btn.q-hinge{ --q-hinge-slow:1.4; --q-hinge-deg:16deg }
+  .btn.q-hinge{ --q-hinge-slow:1.5; --q-hinge-deg:16deg }
   /* THE SWING WAS THE READ AND ALMOST NONE OF IT WAS VISIBLE. Filmed on
      2026-09-08: --e-quint spends 78% of the arc in the first 28% of the clock,
      and the outgoing copy's fade was --t-2 with no delay, so it was down to
@@ -12483,10 +12507,26 @@ document.addEventListener("DOMContentLoaded", function () {
      the leaver has cleared, and no delay on the fade alone can put an arc back
      that has already been travelled.
 
-     Measured the same way as the fault: the arc you can actually see goes from
-     4° to 6.5° on the way out and from 2.9° to 5.3° on the way in, and it is
-     spent over roughly twice as much wall-clock, which is the half of «visible»
-     that is not degrees.
+     FOUR — added on the second pass, because 6.5° of visible arc was still not
+     a hinge. The leaver no longer FADES through its swing at all: it holds
+     opacity 1 until --t-3 and then goes in --t-1, so what you watch is the
+     whole travel at full strength and then a clean cut, instead of a word
+     dissolving while it is still moving.
+
+     FIVE, the arriver takes --ease rather than --e-out. Every out-curve on
+     this page is front-loaded by design, which is right for a thing arriving
+     at a destination and wrong for a thing you are meant to watch travel: on
+     --e-out the arriver was 91% home by the time its own fade cleared .5, so
+     it had about a degree left to show. --ease spreads the same 16° closer to
+     evenly. It is the only study here that wants a symmetrical curve, and the
+     reason is that the JOURNEY is the subject — the destination is just the
+     label sitting still again.
+
+     The clock goes to 1.5 rungs with it. The enter is slow for a button and
+     correct for this one: 144 is the study that argues the swing is the read,
+     and it now has the wall-clock to be read in. Measured after the change
+     rather than predicted before it: visible arc 4° → 13.2° out and 2.9° →
+     7.9° in, with zero frames in either direction where both copies clear .35.
 
      ⚠️ SIXTEEN DEGREES IS NOT A ROUND NUMBER AND MUST NOT BE RAISED. Twenty was
      tried here on 2026-09-08 and rejected on the screenshot, not on the box:
@@ -12503,28 +12543,34 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.q-hinge .q-hinge-b{
     grid-area:1/1; white-space:nowrap; transform-origin:0% 50%;
   }
-  /* A is arriving at rest, so its rest rule carries the ARRIVER's clock. */
-  .btn.q-hinge .q-hinge-a{
-    transition:transform calc(var(--t-5) * var(--q-hinge-slow)) var(--e-out) calc(var(--d-2) * var(--q-hinge-slow)),
-               opacity   calc(var(--t-2) * var(--q-hinge-slow)) var(--e-out) calc(var(--t-3) * var(--q-hinge-slow));
+  /* Two clocks, named once and used four times. The LEAVER swings on --e-out
+     at full opacity and is cut at the end; the ARRIVER waits a beat, swings on
+     --ease so its travel is spread, and only then fades up — after the leaver
+     has gone, which is what keeps «never both legible» true in both
+     directions. */
+  .btn.q-hinge{
+    --q-hinge-t:calc(var(--t-5) * var(--q-hinge-slow));
+    --q-hinge-leave:transform var(--q-hinge-t) var(--e-out),
+                    opacity calc(var(--t-1) * var(--q-hinge-slow)) var(--e-out) calc(var(--t-3) * var(--q-hinge-slow));
+    --q-hinge-arrive:transform var(--q-hinge-t) var(--ease) calc(var(--t-3) * var(--q-hinge-slow)),
+                     opacity calc(var(--t-2) * var(--q-hinge-slow)) var(--e-out) calc(var(--t-4) * var(--q-hinge-slow));
   }
+  /* A is arriving at rest, so its rest rule carries the ARRIVER's clock. */
+  .btn.q-hinge .q-hinge-a{ transition:var(--q-hinge-arrive) }
   /* B is leaving at rest, so its rest rule carries the LEAVER's. */
   .btn.q-hinge .q-hinge-b{
     opacity:0; transform:rotate(var(--q-hinge-deg));
-    transition:transform calc(var(--t-5) * var(--q-hinge-slow)) var(--e-out),
-               opacity   calc(var(--t-2) * var(--q-hinge-slow)) var(--e-out) calc(var(--d-1) * var(--q-hinge-slow));
+    transition:var(--q-hinge-leave);
   }
   .btn.q-hinge:hover .q-hinge-a,
   .btn.q-hinge:focus-visible .q-hinge-a{
     opacity:0; transform:rotate(calc(var(--q-hinge-deg) * -1));
-    transition:transform calc(var(--t-5) * var(--q-hinge-slow)) var(--e-out),
-               opacity   calc(var(--t-2) * var(--q-hinge-slow)) var(--e-out) calc(var(--d-1) * var(--q-hinge-slow));
+    transition:var(--q-hinge-leave);
   }
   .btn.q-hinge:hover .q-hinge-b,
   .btn.q-hinge:focus-visible .q-hinge-b{
     opacity:1; transform:none;
-    transition:transform calc(var(--t-5) * var(--q-hinge-slow)) var(--e-out) calc(var(--d-2) * var(--q-hinge-slow)),
-               opacity   calc(var(--t-2) * var(--q-hinge-slow)) var(--e-out) calc(var(--t-3) * var(--q-hinge-slow));
+    transition:var(--q-hinge-arrive);
   }
 
   /* ---- 145 · The mark is a function of one length.
@@ -13153,7 +13199,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","p-box":"moves|hover","p-die":"moves|js","p-hold":"moves|press hover","p-turn":"moves|hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves tone|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape seq|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop hover","q-hinge":"moves fades seq|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-wght":"tone type|hover","k-rad":"tone shape|hover","k-gap":"tone|hover","k-lever":"moves|hover","k-trade":"moves tone|hover","k-focus":"tone|hover","k-fan":"moves|hover","k-beam":"moves|hover","k-icon":"fades shape seq|hover","k-deck":"moves tone|hover","k-plate":"moves tone shape|hover","k-caret":"moves|js hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
+<script type="application/json" id="facet-manifest">{"c-swell":"moves|press hover","c-crest":"moves fades tone seq|press hover","c-tide":"moves seq|hover","c-against":"moves tone|hover","c-mass":"moves tone|press hover","c-relay":"moves tone shape seq|hover","c-regis":"moves tone|hover","g-measure":"tone shape seq|hover","squash":"moves tone|hover","g-key":"moves tone seq|press hover","lift":"moves tone seq|press hover","q-riser":"moves fades tone shape seq|press hover","z-gum":"moves tone|press hover","p-face":"moves fades seq|press hover","z-stack":"moves tone|press hover","p-box":"moves|hover","p-die":"moves|js","p-hold":"moves|press hover","p-turn":"moves|hover","magnet":"moves tone|js press hover","i-loose":"moves|js","i-mass":"moves tone|hover","g-two":"moves tone seq|hover","h-grow":"fades shape|hover","p-tighten":"moves fades shape seq|hover","o-caps":"moves fades seq|hover","o-quiet":"tone|hover","sweep":"moves tone seq|hover","j-dir":"moves shape|js","j-turns":"moves tone seq|js","shutter":"moves tone seq|hover","inkfill":"moves tone|js hover","y-hold":"moves fades tone|js press hover","j-plus":"tone shape seq|hover","o-step":"moves shape seq|hover","c-wash":"moves fades seq|press hover","o-pix":"moves tone seq|hover","uline":"moves|hover","s-mid":"moves|hover","i-rule":"type|hover","i-beam":"tone shape|hover","corners":"moves fades tone|hover","f-kant":"moves fades tone seq|press hover","e-chamfer":"shape|hover","w-corner":"shape|hover","roll":"moves fades shape seq|hover","h-arc":"moves seq|hover","h-marq":"moves fades seq|js hover","e-count":"fades|hover","u-roll":"moves seq|hover","u-words":"moves seq|hover","u-lift":"moves seq|hover","u-centre":"moves seq|hover","u-burst":"moves seq|js","u-shuffle":"moves seq|hover","e-wave":"type|js hover","q-jitter":"moves seq|loop hover","u-area":"moves tone seq|js loop hover","q-hinge":"moves fades|hover","j-resolve":"tone|js hover","relay":"moves tone seq|press hover","dotm":"moves fades tone seq|press hover","p-index":"moves|hover","p-cycle":"moves seq|js loop","i-throw":"moves tone|js press hover","j-out":"moves tone shape seq|hover","n-cross":"moves fades seq|js hover","p-walk":"moves|js hover","p-bud":"moves fades shape seq|hover","w-redraw":"moves seq|hover","n-join":"moves shape|hover","p-part":"moves shape|hover","w-grid":"moves|hover","i-anti":"moves|press hover","j-optic":"moves fades seq|hover","v-bloom":"tone|hover","v-inner":"tone|press hover","f-lykta":"moves fades tone|js hover","s-bevel":"moves tone|press hover","y-lit":"moves fades tone seq|hover","sheen":"moves fades tone seq|hover","f-glas":"moves tone|hover","s-sprite":"moves tone|press hover","x-bevel":"moves tone|press","t-report":"moves tone shape|js","t-mark":"moves fades tone shape seq|js","t-hold":"shape|js","q-spin":"moves fades|hover","k-recede":"moves tone|hover","k-share":"moves shape|hover","k-rep":"moves|hover","k-wght":"tone type|hover","k-rad":"tone shape|hover","k-gap":"tone|hover","k-lever":"moves|hover","k-trade":"moves tone|hover","k-focus":"tone|hover","k-fan":"moves|hover","k-beam":"moves|hover","k-icon":"fades shape seq|hover","k-deck":"moves tone|hover","k-plate":"moves tone shape|hover","k-caret":"moves|js hover","k-ind":"moves|hover","k-div":"moves fades tone|hover","k-pair":"moves tone|hover","k-lamp":"tone|js hover","k-hand":"moves tone|js hover","k-fit":"moves tone|js hover"}</script>
 
 <!-- What number each study wore when this was last stamped. The number is a
      POSITION, not a name — retire one study and every study after it takes a
