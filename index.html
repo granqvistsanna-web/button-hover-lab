@@ -201,9 +201,16 @@
        BORDER ON HOVER: a study that answers the pointer with its edge had
        nowhere to point, so six declarations across five studies reached for
        --ink-hover — the token that means «the fill that ARRIVES» — and painted
-       a border with it (31, 42 twice, 05, 13, 92). --line-ctl's own hundred
-       uses are resting hairlines and are NOT this role, which is why the count
-       is six and not a hundred: the number was checked per declaration. That
+       a border with it: 31 Frosted glass, 42 Edge light twice, 05 Inner light,
+       124 Closing marks and 138 Counter-rolling pair. ⚠️ AN EARLIER VERSION OF
+       THIS COMMENT SAID «13, 92», WHICH IS WRONG — the selectors are .c-regis
+       and .c-against, and those are 124 and 138; 13 Crop marks is .corners and
+       92 Changes sides is .n-cross, and neither has a border rule anywhere.
+       Read the card number off the article, never off the look of the key.
+       --line-ctl's own hundred occurrences are resting hairlines and are NOT
+       this role, which is why the count is six and not a hundred: the number
+       was checked per declaration. Three of the six are :focus-visible or
+       :active rather than :hover, and take the role for the same reason. That
        is the one place the model actively misled, so the role gets its own
        name here and aliases back, which keeps every rule that has not been
        reclassified resolving to exactly the colour it resolves to now.
@@ -878,34 +885,37 @@
      the reason: what they mean is a STEP, and a step in the pick's hue is still
      a step. --bg-4 had to join the set for them; the two bevels do not read it
      and are unaffected by its arrival. */
-  /* 🔑 THE FALLBACKS ARE DERIVED FROM ONE SEED, SO A LADDER SURVIVES LEAVING
-     THIS PAGE. On the page the toolbar writes --m-0…--m-4 and the fallback is
-     never reached, which is why it could stay four unrelated literals. Pasted
-     into a project there is no toolbar, and four literals mean a Fill Default
-     control can only ever move the top rung: the other three stay graphite and
-     the step stops being a step in the picked hue. So the rungs are stated as
-     what they measured all along — 79.31%, 58.62% and 25.86% of the top rung
-     toward black, which reproduce #2e2e2e, #222222 and #0f0f0f exactly — off a
-     single seed. Unset, --ladder-fill is the same #3a3a3a and every computed
-     value is unchanged; set (--bhl-ladder-fill from the Fill Default control),
-     the whole ladder follows it.
-     🚨 AND EVERY READ CARRIES ITS OWN FALLBACK. The seed is declared on this
-     rule, but a COPIED component does not necessarily copy this rule — four
-     studies (117, 155, 162, 36) take only the --bg-* token block, and a
-     var() with nothing to resolve to and no fallback invalidates the whole
-     declaration, so their plate painted nothing at all. Measured on the
-     generated files, not reasoned about.
-     ⚠️ IT IS A SEPARATE TOKEN NAME AND NOT --bg-4, for the cycle reason the
-     comment above gives: a var() substitutes where it is USED, so a fallback
-     naming the property it is declaring resolves against its own declaration.
-     --ink-low and --ink-mid stay literal — they are Text Muted, a role with
-     its own control, not rungs of the plate. */
+  /* 🚨 THE FALLBACKS ARE FOUR LITERALS, AND A DERIVED LADDER WAS TRIED AND
+     PULLED on 2026-09-08. Seeding all four rungs off one --ladder-fill and
+     three color-mix()es is arithmetically exact — 79.31%, 58.62% and 25.86% of
+     #3a3a3a toward black reproduce #2e2e2e, #222222 and #0f0f0f to the channel
+     — and it still cost more than it bought, for two reasons that only a
+     browser could show:
+
+     ONE, color-mix() CHANGES HOW THE PLATE SERIALISES. Chrome returns
+     `color(srgb 0.133332 …)` for the dark rungs and `oklab(…)` for the light
+     ones instead of `rgb(34, 34, 34)`. Two colour parsers on this page read
+     channels with `match(/[\d.]+/g)` and treat the first three numbers as
+     8-bit — ringable() here, and tools/a11y.mjs — so all four ladder studies
+     read as PURE BLACK to the ring test and to the contrast gate. A change that
+     blinds the gate is worse than the reach it adds.
+
+     TWO, THE CONTROL NEVER REACHED THE RUNG ANYWAY. overridable() is applied to
+     the :root-derived token blocks, never to the effect block, and the dark
+     ladder rule lands in the effect block verbatim — so a pasted component
+     carried `--ladder-fill:#3a3a3a` as a hard literal and the only bridged copy
+     was the light-theme one. --bhl-ladder-fill resolved to nothing in the
+     rendering Framer actually shows.
+
+     Both are fixable — teach the two parsers color()/oklab(), and pass the
+     ladder rule through overridable() — and neither is fixable in the same
+     breath as a colour-role rename. ⚠️ THE CYCLE WARNING BELOW STILL STANDS:
+     whatever replaces this cannot name --bg-4 in --bg-4's own fallback. */
   .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
-    --ladder-fill:#3a3a3a;
-    --bg-0:var(--m-0,     color-mix(in srgb, var(--ladder-fill, #3a3a3a) 25.86%, #000));
-    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill, #3a3a3a) 58.62%, #000));
-    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill, #3a3a3a) 79.31%, #000));
-    --bg-4:var(--m-4,     var(--ladder-fill, #3a3a3a));
+    --bg-0:var(--m-0,     #0f0f0f);
+    --bg-2:var(--m-2,     #222222);
+    --bg-3:var(--m-3,     #2e2e2e);
+    --bg-4:var(--m-4,     #3a3a3a);
     --ink-low:var(--m-low, #8a8a8a);
     --ink-mid:var(--m-mid, #b3b3b3);
   }
@@ -914,11 +924,10 @@
      give #d6d6d6 and #e7e7e7 exactly. bg-0 is pure white, so it stays a
      literal rather than a 0% mix. */
   :root[data-theme="light"] .btn:is(.s-bevel, .x-bevel, .lift, .c-crest){
-    --ladder-fill:#c5c5c5;
     --bg-0:var(--m-0,     #ffffff);
-    --bg-2:var(--m-2,     color-mix(in srgb, var(--ladder-fill, #c5c5c5) 41.38%, #fff));
-    --bg-3:var(--m-3,     color-mix(in srgb, var(--ladder-fill, #c5c5c5) 70.69%, #fff));
-    --bg-4:var(--m-4,     var(--ladder-fill, #c5c5c5));
+    --bg-2:var(--m-2,     #e7e7e7);
+    --bg-3:var(--m-3,     #d6d6d6);
+    --bg-4:var(--m-4,     #c5c5c5);
     --ink-low:var(--m-low, #636363);
     --ink-mid:var(--m-mid, #4b4b4b);
   }
@@ -16188,7 +16197,16 @@ document.addEventListener("DOMContentLoaded", function () {
           var r = rules[i];
           if (r.selectorText && r.style){
             var t = r.style.cssText;
-            if (t.indexOf('--ink-hover') > -1 || t.indexOf('--on-ink-hover') > -1) sels.push(r.selectorText);
+            // 🔑 --line-ctl-hover COUNTS TOO, and leaving it out was a readout that
+            // drifted from its mechanism. The token aliases --ink-hover at :root,
+            // so a study painting its edge through it is still painting with the
+            // hover colour — but this test matches on the SPELLING, so
+            // reclassifying six declarations dropped the marker from 124, 42 and
+            // 05 and took the page's own count from 29 to 27 with nothing having
+            // changed. Same lesson as data-versions: count with the predicate the
+            // mechanism uses, or the two drift.
+            if (t.indexOf('--ink-hover') > -1 || t.indexOf('--on-ink-hover') > -1 ||
+                t.indexOf('--line-ctl-hover') > -1) sels.push(r.selectorText);
           }
           if (r.cssRules && r.cssRules.length && !(r.name && !r.selectorText)) walk(r.cssRules);
         }
@@ -16751,14 +16769,29 @@ document.addEventListener("DOMContentLoaded", function () {
       // it is already the authored surface, not an alternative to it.
       var VCLS = { fill:'btn--solid', outline:'btn--line', link:'btn--text' };
       var authored = ' ' + btns.map(function(b){ return b.className; }).join(' ') + ' ';
-      var vlist = ['default'].concat([native])
-        .concat((card.dataset.versions || '').split(/\s+/))
-        .concat((card.dataset.native || '').split('|'))
-        .filter(function(v, i, a){
-          if (v === 'default') return i === 0;
-          if (!v || !VCLS[v] || a.indexOf(v) !== i) return false;
-          return authored.indexOf(' ' + VCLS[v] + ' ') === -1;
-        });
+      // 🚨 PULLED 2026-09-08, AND THE TWO REASONS ARE BOTH MEASURED. A Version
+      // enum shipped here for an hour and was broken twice over.
+      //
+      // ONE: the strip list was built from this very list, and this list DROPS a
+      // version whose class the markup already carries — so the authored class
+      // was the one class that could never be stripped, and VER[version] was
+      // appended beside it. 52 of 108 emitted a button wearing TWO version
+      // classes; on 05 Inner light, choosing Fill gave .btn--line and
+      // .btn--solid at once, so the fill plate wore the outline's 36% hairline
+      // and two equal-specificity sheen rules fought over the same element.
+      // Neither version, and no error anywhere.
+      //
+      // TWO: the list seeded from data-native and data-versions without asking
+      // whether the harvest had actually COLLECTED that version's rules. 82 of
+      // 99 offered at least one option whose class matches no selector in the
+      // sheet they ship — 154 Lever offered Fill and Link and carries neither.
+      //
+      // The fix is to decouple the two lists and gate each option on its rules
+      // existing in cssText, which is a pass of its own with its own
+      // verification. Until then the component ships the authored surface only,
+      // which is what it shipped before and what the gallery shows. --ink and
+      // --on-ink are still written, from the role data-native says they play.
+      var vlist = ['default'];
       VCLS['default'] = '';
 
       return {num:num, name:name, chips:chips, route:route, tokens:tokens,
@@ -17101,7 +17134,8 @@ document.addEventListener("DOMContentLoaded", function () {
       head.push(' * paste. The component then sits in the Code section, ready to drag out.');
       head.push(' *');
       head.push(' * The tokens are scoped to this component and the shared classes are');
-      head.push(' * prefixed ' + PREFIX + ', so nothing in here restyles the rest of the site.');
+      head.push(' * prefixed ' + HOUSE_PREFIX + ', so nothing in here restyles the rest of');
+      head.push(' * the site, and two of these on one page cannot restyle each other.');
       // Only claim this when a token block is actually condition-scoped. The page
       // was light+dark once; it is dark-only now, and the emitted values are flat.
       if (p.tokens.concat(p.bodyTokens).some(function(t){ return /prefers-color-scheme/.test(t.cond); })){
@@ -18878,7 +18912,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script type="application/json" id="bhl-framer-urls">{"04":"https://framer.com/m/Bloom-G3JcE2.js","05":"https://framer.com/m/InnerLight-5G2vNs.js","07":"https://framer.com/m/OneWaySweep-o3HxWT.js","08":"https://framer.com/m/Shutter-8E8j3M.js","09":"https://framer.com/m/InkFill-GW6yhu.js","10":"https://framer.com/m/Sheen-eN4I5o.js","100":"https://framer.com/m/PlusToX-mkFexy.js","104":"https://framer.com/m/BevelFlip-HI5Wtd.js","109":"https://framer.com/m/FixedLight-NwHXW1.js","11":"https://framer.com/m/ArrowRelay-NcEpRz.js","111":"https://framer.com/m/PressFill-lXFzHB.js","116":"https://framer.com/m/StackFan-9jMPfx.js","117":"https://framer.com/m/FixedShadow-4DP8tM.js","119":"https://framer.com/m/Swell-Vi6nJO.js","12":"https://framer.com/m/DotToArrow-MO7en3.js","120":"https://framer.com/m/LandsFirst-RZyfnF.js","121":"https://framer.com/m/Tide-xiidAm.js","122":"https://framer.com/m/LeadingEdge-6fteXU.js","123":"https://framer.com/m/Crest-YJ9shJ.js","124":"https://framer.com/m/ClosingMarks-NNfGBF.js","126":"https://framer.com/m/SquashAndStretch-j6cFHm.js","127":"https://framer.com/m/ArcSwap-MvpBiH.js","128":"https://framer.com/m/BudsAMark-5OzXqs.js","129":"https://framer.com/m/TakesTurns-6AUwSK.js","13":"https://framer.com/m/CropMarks-fjWU0F.js","130":"https://framer.com/m/LooseLabel-yl1ZuZ.js","131":"https://framer.com/m/TwoTargets-vk1ef8.js","132":"https://framer.com/m/OneLightForTheRow-T68dEc.js","133":"https://framer.com/m/TheRowThatDoesntFit-mE65eL.js","134":"https://framer.com/m/Handover-LNukTJ.js","135":"https://framer.com/m/ThePlusIsTheSource-b72jF5.js","136":"https://framer.com/m/GrowsItsWord-9etDAg.js","137":"https://framer.com/m/PixelDissolve-37CWZb.js","138":"https://framer.com/m/CounterRollingPair-uzCBDF.js","139":"https://framer.com/m/TheWashOutlivesTheFill-l4vter.js","14":"https://framer.com/m/DirectionalUnderline-IatvfH.js","140":"https://framer.com/m/AnswersBack-xwPxsf.js","141":"https://framer.com/m/BurstsFromTheMiddle-A1WsGg.js","142":"https://framer.com/m/EachLetterKeepsItsArea-bgTzt7.js","143":"https://framer.com/m/Tightens-xUIRJd.js","144":"https://framer.com/m/HingedAtTheFirstLetter-hjjcMU.js","145":"https://framer.com/m/OneDotFiveTimes-pxVKZF.js","146":"https://framer.com/m/OnlyTheEndsArePixels-7XPBQM.js","147":"https://framer.com/m/TurnsOver-UshzQR.js","148":"https://framer.com/m/CountsItsTurns-WO5Wj7.js","149":"https://framer.com/m/StopsHalfway-7MG1QB.js","15":"https://framer.com/m/LabelRoll-p0eOmG.js","150":"https://framer.com/m/RoundsACorner-7gNQwh.js","151":"https://framer.com/m/WeightBudget-od0X2j.js","152":"https://framer.com/m/RadiusBudget-7AoHAE.js","153":"https://framer.com/m/GapBudget-XrYMDc.js","154":"https://framer.com/m/Lever-j5BKrh.js","155":"https://framer.com/m/ElevationTrade-zuynim.js","156":"https://framer.com/m/DepthOfField-VWXc7T.js","157":"https://framer.com/m/Fan-iMeMgP.js","158":"https://framer.com/m/StiffBeam-xglPwj.js","159":"https://framer.com/m/OnePlateForTheRow-HV6JEg.js","160":"https://framer.com/m/SharedCaret-03D8Q5.js","161":"https://framer.com/m/IconToLabel-xZAfNQ.js","162":"https://framer.com/m/FannedDeck-7IGQi5.js","19":"https://framer.com/m/OverflowOnly-4AJUwh.js","20":"https://framer.com/m/LetterRoll-n85vF0.js","21":"https://framer.com/m/LetterLift-zzLBHY.js","23":"https://framer.com/m/WordRoll-B2vdSb.js","24":"https://framer.com/m/MiddleOut-B90dcq.js","25":"https://framer.com/m/RandomStagger-XvyEO0.js","26":"https://framer.com/m/WeightWave-w7rPq4.js","28":"https://framer.com/m/ChamferedCorner-lvjej9.js","30":"https://framer.com/m/Counter-R61N2D.js","31":"https://framer.com/m/FrostedGlass-7KQ8UZ.js","33":"https://framer.com/m/Lantern-ha7Vi5.js","34":"https://framer.com/m/LightFlip-Qxmx4k.js","36":"https://framer.com/m/SpriteSwap-rN9hP9.js","39":"https://framer.com/m/CentreUnderline-cONb3R.js","41":"https://framer.com/m/InsetFill-iP3HaW.js","42":"https://framer.com/m/EdgeLight-eEskv2.js","43":"https://framer.com/m/Keycap-UCXvh9.js","49":"https://framer.com/m/ElevationStep-AKmCza.js","50":"https://framer.com/m/Magnetic-SmTIHx.js","52":"https://framer.com/m/TwoMasses-Sb7Tcx.js","54":"https://framer.com/m/Anticipation-r4w6lE.js","55":"https://framer.com/m/RuleBend-LmMRFt.js","57":"https://framer.com/m/RealUnderline-c0quS1.js","59":"https://framer.com/m/ExitVelocity-x9fTRv.js","60":"https://framer.com/m/OthersRecede-ob1mJ6.js","61":"https://framer.com/m/TravellingRule-BgOJad.js","62":"https://framer.com/m/ConservedCompression-qOYXER.js","63":"https://framer.com/m/Repulsion-8kbI6W.js","64":"https://framer.com/m/EmphasisTrade-U0W05r.js","65":"https://framer.com/m/DividerYields-rfq3hJ.js","66":"https://framer.com/m/SplitApart-JyH30m.js","67":"https://framer.com/m/MarkWalk-UvFGfv.js","69":"https://framer.com/m/ClippedRelay-ZLi59f.js","72":"https://framer.com/m/StatusButton-ChYL00.js","73":"https://framer.com/m/PlateToCheck-kB2KHh.js","74":"https://framer.com/m/HoldToConfirm-R6YcFY.js","75":"https://framer.com/m/DirectionalFill-fpvcPF.js","78":"https://framer.com/m/CornerExit-nHkglt.js","79":"https://framer.com/m/OpticalCentre-wAtwP6.js","80":"https://framer.com/m/Resolve-QdqmRV.js","82":"https://framer.com/m/Riser-PKOmNa.js","83":"https://framer.com/m/WorkingState-oODTfM.js","85":"https://framer.com/m/NervousType-7TInHS.js","91":"https://framer.com/m/SteppedFill-6Em9QG.js","92":"https://framer.com/m/ChangesSides-0nQCL2.js","93":"https://framer.com/m/PiecesJoin-9opG0u.js","97":"https://framer.com/m/GridSteps-TQQ3A5.js","98":"https://framer.com/m/CellChamfer-srwdEx.js"}</script>
 <!-- BHL:FRAMER-URLS end -->
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
-<script type="application/json" id="bhl-framer-sync">{"04":"d3f09b7cebbf45d8","05":"071b8c245a8a519d","07":"aa08f12688e561cb","08":"50286c30c6d01600","09":"730dd4fb6d7dcdb4","10":"1dae73b5ec689721","100":"a918d0850afc70de","104":"c1e6d72f520d057b","109":"048f851d6230c317","11":"b6627a75764a2ec1","111":"bd3adcef1b937a92","116":"812a7ca2fe7e174d","117":"a4cff47ae109cf69","119":"f1e34feb25b78267","12":"ff6eb5d3353ee2ba","120":"75b6463a4d3c37e8","121":"615e5d402e92e997","122":"00081366be0e2b95","123":"d441535e9184ff07","124":"62ca27be805a09c9","126":"869315b2e680baaa","127":"46b447150ef5f48a","128":"df4dcf566b92ff4d","129":"275abe4a94f345ed","13":"46b64470270df143","130":"e8570025dfac192d","131":"a4611f28e98ff422","132":"e32ae437967d58b5","133":"3947142720cbcfb7","134":"6a5d1e3c47aa81ba","135":"7b564ecb4a12eb79","136":"cf58d90d9e8aef08","137":"56ee491ec56372e0","138":"5039b5dd348520aa","139":"e56214572e093ca0","14":"21483b6742579769","140":"b7aa0377eda5c077","141":"06a8698a8d862b8e","142":"b4f2947a5d720986","143":"dcfe07a18b67327f","144":"3f2bcb57486f1fb8","145":"98349c502a3e13b1","146":"f06f666cfea7b990","147":"61eb652a68d93d3b","148":"2bc2df7fde7df155","149":"b3dd23c9869dbd2a","15":"1e7c505a7e158158","150":"58832325bde1b3f0","151":"7f69e8fcc6218fa9","152":"3cb78dd77979bab5","153":"f81e2d2aa86deef2","154":"c8127224234eca80","155":"4719841e630350de","156":"b59928feec37578f","157":"37746a6e85dcd962","158":"3410e5e8edc811d8","159":"2179ce7848686da7","160":"a49cdc88ced8c81a","161":"01a0c1edd03ab73c","162":"c13fc7687d619804","19":"d0a66f57c1e45e06","20":"4d21baa2be7fcb8a","21":"316e8c0b20a7f3cf","23":"82da28889ca4f8ee","24":"1abd4cf5c7911e49","25":"5d17edeafa408070","26":"2b80a5e6393b161b","28":"420036e891c72bbb","30":"785e0e1524010a8e","31":"a38ff892c817a982","33":"9970969bf03cfa7f","34":"d57da87778e5c6de","36":"715fbfd9826e28c5","39":"8040ef6a4789ab44","41":"f6549e7f75bfac42","42":"ee53bfe8a4751b13","43":"92f59b3d629c6b92","49":"b57f38065251a55c","50":"a51de443c78150d1","52":"cd1ae64487dfa6d6","54":"33d8cb07fc197095","55":"3e64b623d4dc2cca","57":"7537d1f9bd38bc6f","59":"b0b0d121cb38c9cf","60":"66df5a8ad0f16f71","61":"924ae37dfdc49287","62":"cc3650a1cb89bab3","63":"f7461a53b3800a60","64":"d0748681505cfa51","65":"1db9065d0f496b6d","66":"b22967deaa785008","67":"14e0a1de097967c4","69":"7e54023367846a88","72":"ad6566d025a8daa8","73":"c1ef2984a3c20ae3","74":"73f4525fcae58c02","75":"92792f2902e6e9e4","78":"d650655f95147810","79":"a655fc333540f1bf","80":"12381831834de807","82":"f60369ef0c1264e5","83":"d93039809faae0b5","85":"2872197a48e9af4e","91":"a27cf0c1cb32141f","92":"7c98159d0cb70129","93":"0356f5bb73cbf8b5","97":"12faaf9295806318","98":"1039a47304a636b4"}</script>
+<script type="application/json" id="bhl-framer-sync">{"04":"97f96301286636f2","05":"4e3edffce9a0c349","07":"23c8f2f8405f7dfb","08":"09c8e54b5ac576cc","09":"446cb825f5f14c0d","10":"cfe14b8554e2a470","100":"96f332f92b316913","104":"9cb9902511c3c59e","109":"c242902c69b2d94a","11":"c5d7b06689520bf6","111":"37f306d36bee0367","116":"761baa1b97d76418","117":"d4930353eecaf0f7","119":"aff8533db5ff39ca","12":"e15e38d011f39122","120":"ca322922d312c5e2","121":"e9144cb34d62c960","122":"52c5f58eba623e9b","123":"34d7dfbef2848de0","124":"e947811754da58a5","126":"482a443a72d90dd3","127":"393534605892b005","128":"df4dcf566b92ff4d","129":"ce58e41cbd037780","13":"764b45f9e916b0cd","130":"855a549c70ae1878","131":"ad3511cbbcf0c07a","132":"ed1ce352005f54a0","133":"8f5e0fe48f27ff36","134":"97b050dac7cab8c0","135":"d63fdf2628aaf1ba","136":"0eea068331f01751","137":"017518376524f102","138":"43dc5a193ca85b2d","139":"08f07c4597cbe8ca","14":"5b4fc9b257c04d27","140":"5f8b77a79c10739f","141":"085492107e87371b","142":"5489f77035cb1b16","143":"291ecc8e8e2de85e","144":"dff793ca0312ee38","145":"aca61df1203655b9","146":"6f5c3818fe48f71f","147":"608b4620e748d2cc","148":"0687f235dfdcf458","149":"df96eeec6299a43d","15":"593758b51355d47e","150":"34a3daf7c0a90353","151":"7779e4d30ea36ac0","152":"1a7649b36775ecd7","153":"bf64c9a4dbe7caa5","154":"d28dbf798f005a98","155":"cb2cecfed3e12465","156":"9253e6f3cd19025e","157":"ed399be9830140ae","158":"6dd1c918e9b89ece","159":"4df8061a83404db5","160":"5c8953c4959ba0bf","161":"2ed3996db2313183","162":"c01236e741d48444","19":"11b32752f44d83d6","20":"35e47fb8918612a3","21":"45c55cc329250d86","23":"2bbf01c713181236","24":"2860cf94f3b91e9a","25":"f225245fd36f2d22","26":"21aae564f58e2f46","28":"5bdfd0adeb5d818d","30":"4051d63def9965b7","31":"8941cf59d6a0b035","33":"108b7c460b057609","34":"4fb6ce79ca408965","36":"efbfef0b604f0a28","39":"82bb8227103f902d","41":"063cac6ce1b6b24d","42":"0037c46a591e7b58","43":"c3e9a4ace471f38f","49":"47b12e0142d23fb0","50":"0464163f6a0fcd3b","52":"fa7090d089b97520","54":"ecf037901a3f7982","55":"ae2c81784f852cac","57":"97e1e04cfd4dcf7a","59":"26c5f6804ee21313","60":"eba69ad116d90250","61":"8b7780f73726e06c","62":"3a733d840c2c4720","63":"1dd61efbfdf1d6ff","64":"ee2413d4d007439d","65":"38209e83d45427bd","66":"ba01e54b9df60ccc","67":"21adf02374eda432","69":"0db76e328c4978df","72":"bbd8ced2c2017ac6","73":"697a4cc3885dbd21","74":"b58813d46bc9b520","75":"3bbbff62587edc2a","78":"22d8a9a490c5da55","79":"e832a4a763b89010","80":"bc090de882e559a3","82":"461359a8a7c2da17","83":"216c7bdb115226f5","85":"0d8c898320294ac8","91":"c0e941c0eec9114b","92":"43e41bb2ab0f9f27","93":"6a0c12604dd70716","97":"59255c624d618bdc","98":"8785fd0c252ef3ae"}</script>
 <!-- BHL:FRAMER-SYNC end -->
 
 
