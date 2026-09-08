@@ -16827,11 +16827,21 @@ document.addEventListener("DOMContentLoaded", function () {
     function scopeRoot(sel, cls){
       return /\s/.test(sel) ? sel : sel + ' .' + cls;
     }
-    function jsxify(markup){
+    // house is the per-component prefix for the SHARED class names, and it is
+    // not PREFIX. Every sheet used to rewrite .btn to .bhl-btn, so all 108
+    // components declared rules on one shared class — and the shared blocks are
+    // not identical: measured, there are 51 distinct versions of them across the
+    // set, because each harvest carries the base rules its own study happens to
+    // touch. Two library buttons on one page therefore restyled each other,
+    // silently and asymmetrically. Scoping the shared names to the component's
+    // own root class closes it: .bhl-edge-light-btn cannot collide with
+    // .bhl-ink-fill-btn. ⚠️ The TOKEN prefix stays PREFIX — --bhl-<name> is the
+    // documented retarget contract and must be the same in every component.
+    function jsxify(markup, house){
       return markup
         .replace(/\bclass="([^"]*)"/g, function(_, v){
           return 'className="' + v.split(/\s+/).map(function(c){
-            return HOUSE[c] ? PREFIX + c : c;
+            return HOUSE[c] ? house + c : c;
           }).join(' ') + '"';
         })
         .replace(/\s([a-z]+(?:-[a-z]+)+)=/g, function(all, name){
@@ -16983,6 +16993,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function asFramer(p){
       var comp = pascal(p.name);
       var cls  = PREFIX + kebab(p.name);
+      // The component's own namespace for the shared class names. Unique per
+      // study, because cls is: all 108 root classes were checked distinct.
+      var HOUSE_PREFIX = cls + '-';
       var chipText = p.chips.join(' ');
 
       // Two page-wide rules the collector cannot see, because both are
@@ -17003,7 +17016,7 @@ document.addEventListener("DOMContentLoaded", function () {
         '/* the plate renders as <a> the moment a Link is set; the page never has one. */\n' +
         '/* One declaration only — an element-qualified rule outranks the class rules */\n' +
         '/* it sits beside, and a shorthand here would take their transitions with it. */\n' +
-        'a.' + PREFIX + 'btn{text-decoration:none}';
+        'a.' + HOUSE_PREFIX + 'btn{text-decoration:none}';
 
       var css = [preamble];
       var allTokens = p.tokens.concat(p.bodyTokens);
@@ -17015,11 +17028,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (p.base.length) css.push(block('button base') + p.base.join('\n'));
       if (p.ats.length)  css.push(block('registered properties / keyframes') + p.ats.join('\n'));
       css.push(block('the effect') + p.effectCss);
-      var cssText = tpl(gateHover(css.join('\n')).replace(HOUSE_RE, '.' + PREFIX + '$1'));
+      var cssText = tpl(gateHover(css.join('\n')).replace(HOUSE_RE, '.' + HOUSE_PREFIX + '$1'));
 
       // On the page these sit in no form. In Framer they might, and a
       // type-less button submits it.
-      var markup = jsxify(p.markup).replace(/<button(?![^>]*\btype=)/g, '<button type="button"');
+      var markup = jsxify(p.markup, HOUSE_PREFIX).replace(/<button(?![^>]*\btype=)/g, '<button type="button"');
       // ---- the version, as a class the control swaps -------------------
       // The page writes .btn--solid / .btn--line / .btn--text at runtime from
       // the toolbar; a pasted component has no toolbar, so the version arrives
@@ -17029,12 +17042,12 @@ document.addEventListener("DOMContentLoaded", function () {
       // without that a fill-native card would carry two version classes the
       // moment somebody chose Outline.
       if (p.versions.length > 1){
-        var vNames = p.versions.map(function(v){ return p.vcls[v] ? PREFIX + p.vcls[v] : ''; })
+        var vNames = p.versions.map(function(v){ return p.vcls[v] ? HOUSE_PREFIX + p.vcls[v] : ''; })
                        .filter(Boolean);
         markup = markup.replace(/className="([^"]*)"/g, function(all, v){
           var kept = v.split(/\s+/).filter(function(c){ return vNames.indexOf(c) === -1; });
-          if (kept.length === v.split(/\s+/).length && kept.indexOf(PREFIX + 'btn') === -1) return all;
-          if (kept.indexOf(PREFIX + 'btn') === -1) return 'className="' + kept.join(' ') + '"';
+          if (kept.length === v.split(/\s+/).length && kept.indexOf(HOUSE_PREFIX + 'btn') === -1) return all;
+          if (kept.indexOf(HOUSE_PREFIX + 'btn') === -1) return 'className="' + kept.join(' ') + '"';
           return 'className={("' + kept.join(' ') + ' " + VER[version]).trim()}';
         });
       }
@@ -17342,7 +17355,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (p.versions.length > 1){
         var verMap = {};
         // «default» maps to the empty string, not to the bare prefix.
-        p.versions.forEach(function(v){ verMap[v] = p.vcls[v] ? PREFIX + p.vcls[v] : ''; });
+        p.versions.forEach(function(v){ verMap[v] = p.vcls[v] ? HOUSE_PREFIX + p.vcls[v] : ''; });
         file.push('// Version -> the class the sheet below matches on.',
                   'const VER: Record<string, string> = ' + JSON.stringify(verMap, null, 4) + '', '');
       }
