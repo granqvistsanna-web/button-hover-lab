@@ -970,27 +970,76 @@
      list once — specificity is unchanged, .btn:is(.x) is the same 0-2-0 as
      .btn.x, and the two lists are the same specificity as the one they replace.
      See the vault plan «2026-09-02 PLAN button-colour-model», step 2. */
+  /* 🔑 EVERY PLATE ON THIS PAGE IS NOW THE PICK, VERBATIM. The rule is one
+     sentence and it is the one a reader can hold: what you set in Button IS the
+     resting fill, on every study that has one. The nine in the first half used
+     to wear --m-face — the pick's hue walked in lightness until whatever landed
+     on it cleared M_STEP — which meant picking #ffa51e and being shown #c17400
+     on nine cards with a chip to explain why. The walk has moved to the other
+     side of the pair; see the vault plan «2026-09-08 PLAN plate-is-the-pick»,
+     which supersedes the plate half of «2026-09-02 PLAN button-colour-model».
+     ⚠️ .k-trade AND .k-deck ARE SPELLED AS DESCENDANTS, for 132's reason three
+     comments down: their card keys are «k-trade» and «k-deck» while the plates
+     sit on .btn children, so .btn.k-trade-i would fail the Copy collector's
+     /\.<key>(?![\w-])/ guard on the trailing -i and ship a coloured plate on
+     the page with graphite in the copied snippet. They were in no list at all
+     until now — they are the only two FILLED plates in the Row batch, the other
+     ten being btn--line or btn--text with no plate to colour, which is how the
+     omission survived. */
   .btn:is(.s-sprite, .y-lit,
-          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face){
-    --lift-bg:var(--m-face, #3a3a3a);
-    --bg-2:var(--m-face,    #222222);
-  }
-  .btn:is(.w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
-          .p-box, .p-die, .p-hold, .p-turn){
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack, .p-face,
+          .w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn),
+  .k-trade .btn, .k-deck .btn{
     --lift-bg:var(--m-plate, #3a3a3a);
     --bg-2:var(--m-plate,    #222222);
   }
   :root[data-theme="light"] .btn:is(.s-sprite, .y-lit,
-          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face){
-    --lift-bg:var(--m-face, #e7e7e7);
-    --bg-2:var(--m-face,    #e7e7e7);
-  }
-  :root[data-theme="light"] .btn:is(.w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
-          .p-box, .p-die, .p-hold, .p-turn){
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack, .p-face,
+          .w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn),
+  :root[data-theme="light"] .k-trade .btn,
+  :root[data-theme="light"] .k-deck .btn{
     --lift-bg:var(--m-plate, #e7e7e7);
     --bg-2:var(--m-plate,    #e7e7e7);
+  }
+  /* 🔑 …AND ON THE NINE WHERE THE PICK ARRIVES ON TOP OF THAT PLATE, THE
+     ARRIVAL IS WHAT STEPS ASIDE. Pick-on-pick is 1:1 by arithmetic and the
+     effect would be invisible, which is the whole argument the walk was built
+     for — only the half it applies to has changed. --m-arrive IS the walk that
+     wrote --m-face: same project() call, same lands, held clear of BOTH fills.
+     🔑 ALIASED ONTO --ink RATHER THAN WRITTEN INTO EACH STUDY'S RULES, because
+     the arrival is spelled var(--ink) in a dozen places spread across children
+     and pseudo-elements, and one alias catches every one of them. It also
+     catches the two focus rings drawn from var(--ink), which on a plate that is
+     now the pick verbatim would have gone invisible for precisely the reason
+     this rule exists.
+     ⚠️ var(--ink-hi) AND NOT var(--ink) AS THE FALLBACK. A custom property that
+     names itself is a cycle, and a cycle computes to nothing rather than to the
+     outer value — the plate would have gone unstyled with no error anywhere.
+     --ink-hi is what --ink already falls back to at :root, so unset renders
+     byte-identical to before. */
+  /* 🚨 AND ONLY WHERE THERE IS A PLATE TO STEP ASIDE FROM. The outline and
+     link versions of these nine have no plate — .btn.c-wash.btn--line and
+     .btn.p-face.btn--line already zero their border and hand the label
+     --ink-text, and the file says so at 42 and 43: «the face group's ink has no
+     plate to be fitted against». Without this guard the alias reached them
+     anyway and made their BORDER worse, which is the whole reason the step
+     exists inverted: .btn--line.g-key:hover and .btn--solid.f-kant:hover paint
+     border-color:var(--ink) directly, so on Amber the hover edge went from the
+     pick #ffa51e to the stepped-aside #c17400 — darker, against a card it now
+     had to be seen on rather than a plate it had to be seen against. A rest
+     border reads as the pick and a hover border reads as mud, which is exactly
+     the report that found this.
+     ⚠️ The version classes are TOGGLED AT RUNTIME by the version switcher
+     (still() / nativeOf(), further down), not authored once, so :not() is read
+     fresh on every swap and the guard follows the button rather than the
+     markup it shipped with. */
+  .btn:is(.s-sprite, .y-lit,
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
+          .p-face):not(.btn--line):not(.btn--text),
+  .k-lamp .btn:not(.btn--line):not(.btn--text){
+    --ink:var(--m-arrive, var(--ink-hi));
   }
   /* 🔑 132 OPTS IN THROUGH ITS ROW, and it is the only one that can't join the
      list. Its study class sits on .k-lamp — a k-row wrapper — while the plates
@@ -1004,13 +1053,13 @@
      descendant instead, which the collector sees and which is the same 0-2-0
      as the list. */
   .k-lamp .btn{
-    --lift-bg:var(--m-face, #3a3a3a);
-    --bg-2:var(--m-face,    #222222);
-    color:var(--m-face-ink, var(--ink-text));
+    --lift-bg:var(--m-plate, #3a3a3a);
+    --bg-2:var(--m-plate,    #222222);
+    color:var(--m-plate-ink, var(--ink-text));
   }
   :root[data-theme="light"] .k-lamp .btn{
-    --lift-bg:var(--m-face, #e7e7e7);
-    --bg-2:var(--m-face,    #e7e7e7);
+    --lift-bg:var(--m-plate, #e7e7e7);
+    --bg-2:var(--m-plate,    #e7e7e7);
   }
   /* 139's FIRST wash panel, and it is the only secondary ink on the page that
      is a fill rather than a de-emphasis. The study's whole argument is two
@@ -1104,12 +1153,10 @@
      grey. So each list takes the ink solved for its own plate, and the two
      rules are the same specificity as the one they replace. */
   .btn:is(.s-sprite, .y-lit,
-          .f-kant, .y-hold, .c-wash, .g-key, .z-stack,
-          .p-face){
-    color:var(--m-face-ink, var(--ink-text));
-  }
-  .btn:is(.w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
-          .p-box, .p-die, .p-hold, .p-turn){
+          .f-kant, .y-hold, .c-wash, .g-key, .z-stack, .p-face,
+          .w-corner, .u-burst, .u-area, .p-tighten, .o-caps,
+          .p-box, .p-die, .p-hold, .p-turn),
+  .k-trade .btn, .k-deck .btn{
     color:var(--m-plate-ink, var(--ink-text));
   }
   .btn:hover,
@@ -5849,7 +5896,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* 43 shades the same face to the same pair, so the pressed label takes the
        same ink 111's hovered one does — 55% and 50% are both grounds in that
        fit. .btn.g-key:active is 0-3-0 and clears the face group outright. */
-    color:var(--m-face-shade-ink, var(--m-face-ink, var(--ink-text)));
+    color:var(--m-plate-stage-ink, var(--m-plate-ink, var(--ink-text)));
     /* The stroke is continuous; the commit is not. Both colours carry a 0ms
        duration and a delay of 60% of the stroke, so they land as a step while
        the cap is still travelling the last 40%. */
@@ -10491,7 +10538,7 @@ document.addEventListener("DOMContentLoaded", function () {
        over four palettes. --m-face-shade-ink is the same fit taken against
        where the plate actually arrives. Unset, both fall through to --ink-text
        and the default rendering does not move. */
-    color:var(--m-face-shade-ink, var(--m-face-ink, var(--ink-text)));
+    color:var(--m-plate-stage-ink, var(--m-plate-ink, var(--ink-text)));
   }
   /* The press belongs to the state, not to :active — during a capture :active
      stays true off-plate, which is exactly where the plate must let go. This
@@ -13439,7 +13486,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // derived this pass» — a computed read would hand back the stylesheet's
       // own alias and never report unset.
       var rs = document.documentElement.style;
-      var face = (rs.getPropertyValue('--m-face') || '').trim().toLowerCase();
+      var face = (rs.getPropertyValue('--m-arrive') || '').trim().toLowerCase();
       // The source is the Button swatch, or Button-on-hover when that is the
       // only one set — the same fallback project() walks from (mSource). With
       // only Hover picked there is no Button colour to be «the same as», and
@@ -13459,15 +13506,16 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.style.setProperty('--sw', face);
       // The hex AND the count, because they answer different halves of the
       // surprise: «what colour is this» and «how much of the page is it».
-      btn.textContent = 'Auto plate ' + face + ' · ' + PLATE_N + ' studies';
+      btn.textContent = 'Auto arrival ' + face + ' · ' + PLATE_N + ' studies';
       var src = fromHover ? 'Button-on-hover' : 'Button';
-      btn.title = 'The page derived this plate from your ' + src + ' colour: it keeps '
-                + 'the hue and holds its lightness clear of whatever arrives on top, so '
-                + 'the effect stays visible. ' + PLATE_N + ' studies show it. Press to '
-                + 'see only those.';
+      btn.title = 'Your ' + src + ' colour is the resting fill on every study. On '
+                + 'these ' + PLATE_N + ' it also ARRIVES on top of that fill, and a colour '
+                + 'landing on itself is invisible — so the page derived this one for the '
+                + 'arrival, keeping your hue and holding it clear of the plate. The fill '
+                + 'you picked is untouched. Press to see only those.';
       btn.setAttribute('aria-label',
-        'Auto plate ' + face + ', derived from the ' + src + ' colour. Show only the '
-        + PLATE_N + ' studies that use it');
+        'Auto arrival ' + face + ', derived from the ' + src + ' colour for what lands on '
+        + 'the plate. Show only the ' + PLATE_N + ' studies that use it');
       btn.hidden = false;
     }
 
@@ -14424,7 +14472,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // encodes, so every step a material is built out of survives it.
       var M_SET = {'--bg-0':'--m-0', '--bg-2':'--m-2', '--bg-3':'--m-3',
                    '--bg-4':'--m-4',
-                   '--lift-bg':'--m-face', '--ink-low':'--m-low', '--ink-mid':'--m-mid'};
+                   '--lift-bg':'--m-arrive', '--ink-low':'--m-low', '--ink-mid':'--m-mid'};
       // 🔑 THE STEP A PLATE HAS TO LEAVE FOR WHAT LANDS ON IT, and the number
       // was swept rather than chosen. NOT 3:1 — that is the boundary floor, and
       // a boundary is a line ON a plate where this is a plate under another
@@ -14675,7 +14723,14 @@ document.addEventListener("DOMContentLoaded", function () {
         // is read in. The two bevels do not paint bg-4, and one rung further
         // down a ladder they already span costs them nothing measurable.
         var onBevel = labelOnGrounds([mv['--bg-2'], mv['--bg-3'], mv['--bg-4']]);
-        var onFace  = labelOnGrounds([mv['--lift-bg']]);
+        // 🔑 THE PLATE IS mSource NOW, SO THE INK ON IT IS SOLVED THERE. This
+        // read mv['--lift-bg'] — the WALKED colour — for as long as the walked
+        // colour was the plate. It is the arrival now, and an ink fitted to the
+        // arrival is an ink fitted to a colour the label never sits on. That is
+        // the same failure 49, 123 and 27 measured at 3.26–3.73:1 when their
+        // plates first stopped being grey, and it would have hit nine at once.
+        // Identical to onPlateV below, deliberately: one plate, one solve.
+        var onFace  = labelOnGrounds([mSource]);
         // ---- AND THE TWO FACES THAT MOVE UNDER THEIR OWN LABEL ------------
         // 🔑 --m-face-ink IS SOLVED FOR A PLATE AT REST, and two studies do not
         // leave their plate there. 111 hovers to color-mix(--lift-bg 50%,
@@ -14705,7 +14760,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // reproducible, and reading it would mean measuring a plate mid-
         // transition on a card that may not be on screen.
         var faceShade = function (p){
-          var f = mv['--lift-bg'];
+          // mSource and not mv['--lift-bg'], for b)'s reason: 111 hovers and 43
+          // presses to color-mix(--lift-bg 50%/55%, --stage), and --lift-bg
+          // resolves to the PICK now. Composited from the walked colour this
+          // would fit the label to a journey the plate does not take.
+          var f = mSource;
           return [0, 1, 2].map(function (i){
             return Math.round(f[i] * p + PANEL[i] * (1 - p));
           });
@@ -14726,8 +14785,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (worstOn(onFace.hex, shadeGrounds) >= worstOn(onFaceShade.hex, shadeGrounds))
           onFaceShade = onFace;
         root.setProperty('--m-ink',      onBevel.hex);
-        root.setProperty('--m-face-ink', onFace.hex);
-        root.setProperty('--m-face-shade-ink', onFaceShade.hex);
+        // --m-face-ink is GONE, not renamed: with onFace grounded on mSource it
+        // held the same value as --m-plate-ink, and two names for one colour is
+        // how a token drifts. Every CSS site that read it reads --m-plate-ink.
+        // --m-plate-stage-ink is the old --m-face-shade-ink under a name that
+        // says which shade it means — the plate composited toward the STAGE by
+        // 111's hover and 43's press, not the box family's wash toward black,
+        // which is --m-plate-shade-ink and is a different ground.
+        root.setProperty('--m-plate-stage-ink', onFaceShade.hex);
         // ---- THE LABEL ON THE VERBATIM PLATE, AND IT IS ITS OWN SOLVE ------
         // 🔑 A PLATE SPLIT WITHOUT ITS INK IS THE WORSE HALF OF THIS CHANGE.
         // --m-face-ink is solved against the walked face, and the walk is
@@ -14764,8 +14829,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         M_RUNGS.forEach(function (n){ root.removeProperty(M_SET[n]); });
         root.removeProperty('--m-ink');
-        root.removeProperty('--m-face-ink');
-        root.removeProperty('--m-face-shade-ink');
+        root.removeProperty('--m-plate-stage-ink');
         root.removeProperty('--m-plate');
         root.removeProperty('--m-plate-ink');
         root.removeProperty('--m-plate-shade-ink');
@@ -16266,7 +16330,11 @@ document.addEventListener("DOMContentLoaded", function () {
       var walk = function(list){
         for (var i = 0; i < list.length; i++){
           var r = list[i];
-          if (r.selectorText && /var\(\s*--m-face/.test(r.style.getPropertyValue('--lift-bg') || ''))
+          // --ink and --m-arrive, not --lift-bg and --m-face. Every plate takes
+          // --m-plate now, so the old predicate matched every study with a plate
+          // and told the reader nothing. What is derived — and what this chip
+          // exists to disclose — is the ARRIVAL.
+          if (r.selectorText && /var\(\s*--m-arrive/.test(r.style.getPropertyValue('--ink') || ''))
             sels.push(r.selectorText);
           if (r.cssRules) walk(r.cssRules);
         }
