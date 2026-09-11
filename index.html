@@ -2226,6 +2226,14 @@
      for the same reason. */
   .set-grp{display:inline-flex; align-items:center; gap:10px; margin-right:12px}
   .set-grp:last-of-type{margin-right:0}
+  /* The colour row WRAPS, at every width where it is a toolbar and not a wall.
+     It said so only below 520, so from 521 up to the wall nothing broke the
+     line: two groups, the Auto plate pill and the contrast readout in one
+     unbreakable row. Measured with the fold open, that made the page 781px
+     wide at 600 unset and 938px set, 1028px at 1024, and at 1280 the grade
+     chip still hung 16px past the panel. The wall states the same wrap for
+     itself, so from 1360 up this is a rule that is already true. */
+  .tools-row:has(.set-swatch){flex-wrap:wrap}
   .set-grp .tools-lbl{color:var(--ink-mid); margin-right:-2px}
   .set-grp .set-cap{font-size:11px; letter-spacing:0; font-weight:500}
   /* A readout that is also a control, so it looks like the version chips
@@ -2261,6 +2269,11 @@
      half that matters. */
   .set-plate{display:inline-flex; align-items:center; gap:6px; white-space:normal;
     text-align:left}
+  /* Its display outranks the UA's [hidden]{display:none}, the trap the four
+     panel handles were already fixed for: paintPlateChip() sets .hidden when
+     the plate IS the pick, and the empty pill still drew as a lone ring on
+     its own line under the Button group. */
+  .set-plate[hidden]{display:none}
   .set-plate::before{
     content:""; width:9px; height:9px; flex:none; border-radius:50%;
     background:var(--sw, transparent);
@@ -2492,7 +2505,16 @@
        The readout drops under them rather than squeezing HOVER off its own
        swatch — it reports on all three, so under all three is where it goes. */
     .tools-row--sets{align-items:flex-start}
-    .tools-row:has(.set-swatch){flex-wrap:wrap}
+    /* And a GROUP wraps the way its row does. The Button group carries the
+       «N of M react» chip on the swatches' line, and .set-uses is nowrap so a
+       count is never split — so a group that cannot wrap has exactly one
+       width, all of its content. Measured at 390: 325.5px unset and 359.8px
+       once the two clears arrive, in a 286px row. Unset the chip hung past the
+       panel's edge; set it ran to x:411.8 and the page scrolled sideways at
+       412. Wrapped, the chip takes the next line under the group's heading, at
+       the x of the Auto plate pill beneath it, and row-gap is the row's own
+       12px so the stack keeps one rhythm. */
+    .set-grp{flex-wrap:wrap; row-gap:12px}
     .tools-row:has(.set-swatch) .set-read{flex-basis:100%; text-align:right;
       margin-top:2px}
     .set-range{flex:1; min-width:0; max-width:150px}
