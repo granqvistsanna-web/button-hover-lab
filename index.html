@@ -4151,7 +4151,7 @@
         <button type="button" class="btn p-turn"><span class="p-turn-in" aria-hidden="true"><span class="p-turn-in2"><span class="p-turn-f p-turn-front">Send it</span><span class="p-turn-f p-turn-floor">Send it</span><span class="p-turn-f p-turn-back">Send it</span><span class="p-turn-f p-turn-side p-turn-left"></span><span class="p-turn-f p-turn-side p-turn-right"></span></span></span><span class="sr">Send it</span></button>
       </div>
       <h3><span class="num">150</span>Rounds a corner</h3>
-      <p>Half a turn on X and half on Y, on nested elements finishing 90ms apart, so the box goes round a corner instead of spinning on a spit. The depth is in the asynchrony. Two axes means two elements &mdash; one element cannot carry two transforms on two clocks &mdash; and only X keeps the overshoot, because two bouncing axes read as a wobble.</p>
+      <p>Half a turn on X and a whole one on Y, on nested elements finishing 90ms apart, so the box goes round a corner instead of spinning on a spit. The depth is in the asynchrony. Two axes means two elements &mdash; one element cannot carry two transforms on two clocks &mdash; and only X keeps the overshoot, because two bouncing axes read as a wobble.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -12857,12 +12857,19 @@ document.addEventListener("DOMContentLoaded", function () {
      550/800ms it settled in 799ms and read as lag (it was never dropping
      frames — max 9.4ms at 120Hz); the gap closed to 90ms settles in 475ms and
      reads as one gesture turning a corner. Only X overshoots — two bouncing
-     axes read as a wobble, one reads as weight. */
+     axes read as a wobble, one reads as weight.
+     🔑 Y IS A WHOLE TURN, NOT A HALF (2026-09-11). Half on X and half on Y
+     compose to half a turn on Z, which moves no face in depth — so the hover
+     landed on the FRONT face again, upside down, from 09-01 until this line.
+     X180 + Y360 is X180, the box family's own landing: the back face,
+     upright, and it is the face that takes the Hover pick. The roof this prism
+     does not have never faces the camera on the way — rotateY leaves every
+     face's height alone, and X stays inside 0-180. */
   .p-turn-in2{display:grid; grid-area:1/1; transform-style:preserve-3d;
     transition:transform calc(var(--t-5) + 90ms) var(--e-quint)}
   @media (hover:hover) and (pointer:fine){
     .p-turn:is(:hover,:focus-visible) .p-turn-in{transform:rotateX(180deg)}
-    .p-turn:is(:hover,:focus-visible) .p-turn-in2{transform:rotateY(180deg)}
+    .p-turn:is(:hover,:focus-visible) .p-turn-in2{transform:rotateY(360deg)}
   }
 
   /* A SHORTER CAMERA AND TWO REAL SIDES — both 150's alone; 147, 148 and 149
@@ -12888,8 +12895,7 @@ document.addEventListener("DOMContentLoaded", function () {
      instead of measuring it. Square, not pilled: seen along x, a pill's round
      end sweeps a full rectangle, and --btn-r here would draw a disc that opens
      gaps at the corners. Only ever one is visible, and backface-visibility
-     does the swap — the left through the first half of the X turn, the right
-     through the second. */
+     does the swap — each comes round once in the whole Y turn. */
   .p-turn{perspective:calc(var(--bx-h) * 6)}
   .p-turn-side{
     width:calc(var(--d) * 2); height:calc(var(--d) * 2); padding:0;
