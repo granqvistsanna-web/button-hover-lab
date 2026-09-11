@@ -12529,7 +12529,9 @@ document.addEventListener("DOMContentLoaded", function () {
      what this button paints. */
   .btn.o-pix.btn--solid{background:var(--ink)}
   .btn.o-pix.btn--solid::before{background:var(--ink)}
-  .btn.o-pix.btn--solid .o-pix-raster span{background:var(--on-ink)}
+  /* With a Hover pick the arriving cells are that colour, verbatim — the
+     outline's cells already are — and --m-pix-fill-hi is solved against it. */
+  .btn.o-pix.btn--solid .o-pix-raster span{background:var(--hover-set, var(--on-ink))}
   /* 🚨 AND IT IS THE EIGHTH STUDY IN THE «boundary on a plate that ARRIVES»
      BLOCK, so it draws that block's ring. Filmed at full hover on 2026-08-31:
      twenty-four --on-ink cells have landed and the plate is #101010 on a
@@ -14978,11 +14980,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         // 🔑 WITH A HOVER PICK THE OUTLINE'S CELLS ARE THAT COLOUR (2026-09-11),
         // so its full-hover constant is solved against it and not the accent.
-        // The fill version's pair above is untouched: its rest plate is --ink.
+        // The fill version's REST constant above is untouched: its rest plate
+        // is --ink. Its full-hover one is not — the fill's cells are the pick
+        // too now, so both versions end on the same ground and the same solve.
         if (fitted.hover){
           var pixHoverInk = look.textHover ? fitOn(look.textHover, 4.5, hoverRgb)
                                            : labelOn(hoverRgb);
-          root.setProperty('--m-pix-hi', pixFor(hoverRgb, toRgb(pixHoverInk.hex), 4.5));
+          var onPickC = pixFor(hoverRgb, toRgb(pixHoverInk.hex), 4.5);
+          root.setProperty('--m-pix-hi',      onPickC);
+          root.setProperty('--m-pix-fill-hi', onPickC);
         }
       } else {
         ['--m-pix', '--m-pix-hi', '--m-pix-fill', '--m-pix-fill-hi']
