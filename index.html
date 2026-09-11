@@ -7145,7 +7145,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-div{border:1px solid var(--line-ctl); border-radius:8px}
   .k-div .k-div-i{
     position:relative; padding:11px 16px; border-radius:0;
-    transition:background-color var(--t-3) ease, transform var(--t-1) var(--e-out);
+    transition:background-color var(--t-3) ease, color var(--t-3) ease, transform var(--t-1) var(--e-out);
   }
   .k-div .k-div-i:first-child{border-radius:7px 0 0 7px}
   .k-div .k-div-i:last-child{border-radius:0 7px 7px 0}
@@ -7154,7 +7154,10 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--line-ctl);
     transition:opacity var(--t-3) ease;
   }
-  .k-div .k-div-i:is(:hover,:focus-visible){background-color:color-mix(in srgb,var(--ink-hover) 7%,transparent)}
+  /* The Hover pick verbatim, the 7% wash unset — see 152. */
+  .k-div .k-div-i:is(:hover,:focus-visible){
+    background-color:var(--hover-set, color-mix(in srgb,var(--ink-hover) 7%,transparent));
+    color:var(--on-hover-set, var(--ink-text))}
   .k-div .k-div-i:is(:hover,:focus-visible)::before,
   .k-div .k-div-i:is(:hover,:focus-visible) + .k-div-i::before{opacity:0}
 
@@ -7244,12 +7247,19 @@ document.addEventListener("DOMContentLoaded", function () {
     --k-rad-hi:23.5px;                    /* h/2, measured on 47px  */
     --k-rad-lo:calc((var(--k-rad-0) * 4 - var(--k-rad-hi)) / 3);
     --btn-r:var(--k-rad-0);
-    transition:border-radius var(--t-4) var(--e-quint), background-color var(--t-3) ease;
+    transition:border-radius var(--t-4) var(--e-quint), background-color var(--t-3) ease,
+               color var(--t-3) ease;
   }
+  /* THE HOVER COLOUR IS THE HOVER COLOUR (2026-09-11). The 7% wash was the
+     only colour that arrives here, and with a pick set it measured #2c2420 for
+     #e8590c — a tint of the pick, never the pick. So it is 155's chain: the
+     Hover pick verbatim under its fitted label, and the wash and the rest
+     label byte for byte while nothing is picked. 153 and 65 say the same. */
   .k-rad:has(.btn:hover) .k-rad-i:hover,
   .k-rad:has(.btn:focus-visible) .k-rad-i:focus-visible{
     --btn-r:var(--k-rad-hi);
-    background-color:color-mix(in srgb,var(--ink-hover) 7%,transparent)}
+    background-color:var(--hover-set, color-mix(in srgb,var(--ink-hover) 7%,transparent));
+    color:var(--on-hover-set, var(--ink-text))}
   .k-rad:has(.btn:hover) .k-rad-i:not(:hover),
   .k-rad:has(.btn:focus-visible) .k-rad-i:not(:focus-visible){--btn-r:var(--k-rad-lo)}
 
@@ -7269,12 +7279,15 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-gap .k-gap-i{
     flex:1 1 0; min-width:0; justify-content:center; overflow:hidden;
     padding:15px 8px; margin-inline:5px;
-    transition:margin var(--t-4) var(--e-quint), background-color var(--t-3) ease;
+    transition:margin var(--t-4) var(--e-quint), background-color var(--t-3) ease,
+               color var(--t-3) ease;
   }
+  /* The Hover pick verbatim, the 7% wash unset — see 152. */
   .k-gap:has(.btn:hover) .k-gap-i:hover,
   .k-gap:has(.btn:focus-visible) .k-gap-i:focus-visible{
     margin-inline:14px;
-    background-color:color-mix(in srgb,var(--ink-hover) 7%,transparent)}
+    background-color:var(--hover-set, color-mix(in srgb,var(--ink-hover) 7%,transparent));
+    color:var(--on-hover-set, var(--ink-text))}
   .k-gap:has(.btn:hover) .k-gap-i:not(:hover),
   .k-gap:has(.btn:focus-visible) .k-gap-i:not(:focus-visible){margin-inline:2px}
 
@@ -16363,23 +16376,53 @@ document.addEventListener("DOMContentLoaded", function () {
     // is in tools/facet-manifest.mjs: a keyframes rule has a `name` and no
     // `selectorText`, and its children cannot be matched against the DOM.
     (function(){
-      var sels = [];
-      function walk(rules){
-        for (var i = 0; i < rules.length; i++){
-          var r = rules[i];
-          if (r.selectorText && r.style){
-            var t = r.style.cssText;
-            // 🔑 --line-ctl-hover COUNTS TOO, and leaving it out was a readout that
-            // drifted from its mechanism. The token aliases --ink-hover at :root,
-            // so a study painting its edge through it is still painting with the
-            // hover colour — but this test matches on the SPELLING, so
-            // reclassifying six declarations dropped the marker from 124, 42 and
-            // 05 and took the page's own count from 29 to 27 with nothing having
-            // changed. Same lesson as data-versions: count with the predicate the
-            // mechanism uses, or the two drift.
-            if (t.indexOf('--ink-hover') > -1 || t.indexOf('--on-ink-hover') > -1 ||
-                t.indexOf('--line-ctl-hover') > -1) sels.push(r.selectorText);
+      // 🔑 WHAT COUNTS IS THE PICK LANDING VERBATIM, ON HOVER (2026-09-11:
+      // «if i set hover color, this is the hover color»). Measured with a pick
+      // set and a real pointer, this chip stamped seven cards that show none of
+      // it — 50, 74, 152, 153, 42, 31, 132 — and missed seventeen that paint it
+      // edge to edge. Five faults, each closed below.
+      // 1. --hover-set and --on-hover-set were not in the test, so every study
+      //    whose unset fallback never names --ink-hover was invisible: 49, 123,
+      //    147–150, 117, 91, 137, 109, 155, 111, 43, 126, 52, 11. The press
+      //    pair (--hover-press) is left out on purpose: it is a press.
+      // 2. A token that reaches paint only through color-mix() is a tint of the
+      //    pick and never the pick — 152/153's 7% wash, 42's 24% edge, 132's
+      //    22% glow. Every color-mix() group is cut out before the test, and
+      //    var(--hover-set, color-mix(…)) survives that as var(--hover-set, ).
+      // 3. :active and [data-state] are a press, and :focus-visible with no
+      //    :hover beside it is the keyboard's own answer: 50 pulls toward a
+      //    pointer and paints the pick only for a key. A stateless rule on an
+      //    element whose reveal is written against [data-state] is revealed by
+      //    a script's press, not by hover — 74's fill and the label inside it.
+      // 4. A rule under a media query that does not apply is not painting.
+      //    50's :hover plate lives under prefers-reduced-motion and nowhere else.
+      // 5. The split ran on every comma, including the one inside
+      //    :is(:hover,:focus-visible), which cut 64's rule into two invalid
+      //    halves. It splits at depth 0 now.
+      // A custom property that RELAYS a token is followed to where it is spent:
+      // 117's --bg-4 is spent verbatim on its seat and counts, 31's --f-lys is
+      // spent at 65% and does not.
+      // 🔑 --line-ctl-hover COUNTS TOO — it aliases --ink-hover at :root, and
+      // leaving it out once took 124, 42 and 05 off this count with nothing
+      // having changed. Count with the predicate the mechanism uses.
+      var TOK = ['--ink-hover', '--on-ink-hover', '--line-ctl-hover', '--hover-set', '--on-hover-set'];
+      var rules = [];
+      function bare(v){
+        var out = '', i = 0, k, j, d;
+        while ((k = v.indexOf('color-mix(', i)) > -1){
+          out += v.slice(i, k);
+          for (d = 0, j = k + 9; j < v.length; j++){
+            if (v[j] === '(') d++; else if (v[j] === ')' && !--d) break;
           }
+          i = j + 1;
+        }
+        return out + v.slice(i);
+      }
+      function walk(list){
+        for (var i = 0; i < list.length; i++){
+          var r = list[i];
+          if (r.selectorText && r.style) rules.push({ sel: r.selectorText, decls: bare(r.style.cssText).split(';') });
+          if (r.media && !matchMedia(r.media.mediaText).matches) continue;
           if (r.cssRules && r.cssRules.length && !(r.name && !r.selectorText)) walk(r.cssRules);
         }
       }
@@ -16388,21 +16431,59 @@ document.addEventListener("DOMContentLoaded", function () {
         // another origin, and it holds no study rules, so skipping it is right.
         try { walk(document.styleSheets[i].cssRules); } catch(e){}
       }
-      // The selectors have to be matched against a DOM at rest, so the state
-      // pseudos come off. :focus-visible counts as arriving: this page pairs
-      // it with :hover everywhere, and a keyboard reader gets the same colour.
+      function parts(sel){
+        var out = [], d = 0, s = 0;
+        for (var i = 0; i < sel.length; i++){
+          if (sel[i] === '(') d++; else if (sel[i] === ')') d--;
+          else if (sel[i] === ',' && !d){ out.push(sel.slice(s, i)); s = i + 1; }
+        }
+        return out.concat(sel.slice(s));
+      }
+      function strip(part){
+        return part.replace(/\[data-state[^\]]*\]/g, '')
+                   .replace(/::?(hover|focus-visible|focus|active|before|after|first-line|placeholder)\b/g, '')
+                   .replace(/:is\([\s,]*\)/g, '').replace(/\s+/g, ' ').trim();
+      }
+      function has(s, list){ return list.some(function(t){ return s.indexOf(t) > -1; }); }
+      // Pass one: the relays, and the elements a script's press reveals.
+      var relays = [], gates = [];
+      rules.forEach(function(r){
+        parts(r.sel).forEach(function(p){ if (p.indexOf('[data-state') > -1) gates.push(strip(p)); });
+        r.decls.forEach(function(d){
+          var m = d.match(/^\s*(--[\w-]+)\s*:(.*)$/);
+          if (m && has(m[2], TOK)) relays.push({ name: 'var(' + m[1], at: parts(r.sel).map(strip) });
+        });
+      });
+      // Pass two: the rules that PAINT with a token, or with a relay of one.
       var q = [];
-      sels.forEach(function(sel){
-        sel.split(',').forEach(function(part){
-          var one = part.replace(/::?(hover|focus-visible|focus|active|before|after|first-line|placeholder)\b/g, '')
-                        .replace(/:is\(\s*\)/g, '').replace(/\s+/g, ' ').trim();
-          if (one && q.indexOf(one) < 0) q.push(one);
+      rules.forEach(function(r){
+        var via = null;
+        r.decls.forEach(function(d){
+          if (via || /^\s*--/.test(d)) return;
+          if (has(d, TOK)) via = true;
+          else relays.forEach(function(x){ if (!via && d.indexOf(x.name) > -1) via = x.at; });
+        });
+        if (!via) return;
+        parts(r.sel).forEach(function(part){
+          if (/:active\b|\[data-state/.test(part)) return;
+          if (/:focus/.test(part) && !/:hover\b/.test(part)) return;
+          var one = strip(part);
+          if (one) q.push({ sel: one, stateless: !/:hover\b/.test(part), at: via === true ? null : via });
         });
       });
       var all = document.querySelectorAll('.spec'), n = 0;
+      function inCard(card, sel){ try { return !!card.querySelector(sel); } catch(e){ return false; } }
       [].forEach.call(all, function(card){
-        var on = q.some(function(sel){
-          try { return !!card.querySelector(sel); } catch(e){ return false; }
+        var on = q.some(function(x){
+          var els; try { els = card.querySelectorAll(x.sel); } catch(e){ return false; }
+          if (!els.length) return false;
+          if (x.at && !x.at.some(function(a){ return inCard(card, a); })) return false;
+          if (!x.stateless) return true;
+          return [].some.call(els, function(el){
+            return !gates.some(function(g){
+              try { var h = el.closest(g); return !!h && card.contains(h); } catch(e){ return false; }
+            });
+          });
         });
         if (on){ card.setAttribute('data-hover-ink', ''); n++; }
       });
