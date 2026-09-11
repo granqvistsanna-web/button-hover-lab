@@ -18666,6 +18666,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="bhl-solo-grp" data-g="step">
       <span class="bhl-solo-lbl" title="Hover holds the hover state without the pointer; the arrows step one frame">Step</span>
       <div class="bhl-solo-seg">
+        <button type="button" class="bhl-solo-b" data-a="play" aria-pressed="false"
+                title="Play the hover over and over: in, rest, out, rest">Play</button>
         <button type="button" class="bhl-solo-b" data-a="hover" aria-pressed="false"
                 title="Hold the button in its hover state without the pointer on it">Hover</button>
         <button type="button" class="bhl-solo-b" data-a="back" aria-label="Back one frame (comma)" title="Back one frame (,)">&lsaquo;</button>
@@ -18894,7 +18896,7 @@ document.addEventListener("DOMContentLoaded", function () {
       el.dispatchEvent(new E(t, {bubbles:bubbles, clientX:x, clientY:y, pointerType:'mouse', isPrimary:true}));
     });
   }
-  function setHover(on){
+  function setHover(on, keep){
     if (!open || on === hovOn) return;
     var btn = open.stage.querySelector('.btn');
     if (!btn) return;
@@ -18908,7 +18910,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       hovChain.forEach(function(el){ el.classList.remove('bhl-hov'); });
       hovChain = [];
-      uncloneHover();
+      if (!keep) uncloneHover();
       fire(btn, ['pointerout','pointerleave','mouseout','mouseleave'], x, y);
     }
     hovOn = on;
@@ -18918,7 +18920,53 @@ document.addEventListener("DOMContentLoaded", function () {
     sweep(open.stage, rate());
     readout();
   }
-  hovBtn.addEventListener('click', function(){ setHover(!hovOn); });
+  hovBtn.addEventListener('click', function(){ setPlay(false); setHover(!hovOn); });
+
+  /* PLAY — the whole gesture on a loop, for a capture of the effect rather
+     than of one frame of it: in, wait for the stage to settle, rest, out,
+     settle, rest, again. It waits on the ANIMATIONS, not on a guessed
+     duration, so it keeps time at ¼× and ⅒× without being told, and Hold
+     pauses it where it stands because a rate-0 transition never settles.
+     Infinite loops (a spinner, a ticker) are not waited on — they never end.
+     🔑 THE COPIED :hover RULES STAY IN WHILE IT PLAYS. Inserting and deleting
+     three hundred rules re-styles the page, and doing it on every cycle put
+     that cost on the first frame of every enter, which is the frame a
+     recording is made of. They go when Play stops with the button at rest,
+     or when Solo lets the stage go. */
+  var DWELL_IN = 900, DWELL_OUT = 700;
+  var playing = false, playRaf = 0, playSince = 0;
+  var playBtn = solo.querySelector('[data-a="play"]');
+  function settled(){
+    return !open.stage.getAnimations({subtree:true}).some(function(a){
+      var end = a.effect.getComputedTiming().endTime;
+      return isFinite(end) && a.playState === 'running' && (a.currentTime || 0) < end;
+    });
+  }
+  function playTick(now){
+    playRaf = 0;
+    if (!playing || !open) return;
+    readout();
+    if (rate() === 0 || !settled()) playSince = 0;
+    else if (!playSince) playSince = now;
+    else if (now - playSince >= (hovOn ? DWELL_IN : DWELL_OUT)){
+      playSince = 0;
+      setHover(!hovOn, true);
+    }
+    playRaf = requestAnimationFrame(playTick);
+  }
+  function setPlay(on){
+    if (on === playing) return;
+    playing = on;
+    playBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    cancelAnimationFrame(playRaf); playRaf = 0; playSince = 0;
+    if (on){
+      // Play means play: a Hold left on from stepping would park it at once.
+      if (held){ held = false; applySpeed(); sSpeed.paint(); }
+      setHover(true, true);
+      playRaf = requestAnimationFrame(playTick);
+    } else if (!hovOn) uncloneHover();
+  }
+  playBtn.addEventListener('click', function(){ setPlay(!playing); });
   solo.querySelector('[data-a="back"]').addEventListener('click', function(){ stepFrames(-1); });
   solo.querySelector('[data-a="fwd"]').addEventListener('click', function(){ stepFrames(1); });
 
@@ -19026,6 +19074,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!open) return;
     // Released before the stage goes home: the class must not travel with it,
     // and the copied rules must be gone before a copy button can be reached.
+    setPlay(false);
     setHover(false);
     var o = open; open = null;
     cancelAnimationFrame(rafS); rafS = 0;
