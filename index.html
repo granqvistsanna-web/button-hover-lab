@@ -10725,16 +10725,21 @@ document.addEventListener("DOMContentLoaded", function () {
        literal worth repeating. Measured on the card the steps are 7, 13 and 22
        in 8-bit — the fan is even in GEOMETRY, at a 4px pitch; the tone climbs
        rather than steps, because that is what stacked alpha does. */
-    --z-sheet-1:rgba(var(--sheen),min(1,.10 * var(--m-sheen-k, 1)));
-    --z-sheet-2:rgba(var(--sheen),min(1,.06 * var(--m-sheen-k, 1)));
-    --z-sheet-3:rgba(var(--sheen),min(1,.03 * var(--m-sheen-k, 1)));
+    /* --z-hs-* exist only on a hovered fill with a Hover pick — see «THE FAN
+       IS WHAT HOVER BRINGS» below. Anywhere else they are absent and the
+       sheets are exactly the alphas described above. */
+    --z-sheet-1:var(--z-hs-1, rgba(var(--sheen),min(1,.10 * var(--m-sheen-k, 1))));
+    --z-sheet-2:var(--z-hs-2, rgba(var(--sheen),min(1,.06 * var(--m-sheen-k, 1))));
+    --z-sheet-3:var(--z-hs-3, rgba(var(--sheen),min(1,.03 * var(--m-sheen-k, 1))));
     background:var(--lift-bg);
     transform:translateY(0) scale(1) rotate(0.001deg);
     box-shadow:
       0 0 0 -3px var(--z-sheet-1),
       0 0 0 -3px var(--z-sheet-2),
-      0 0 0 -3px var(--z-sheet-3);
-    transition:transform var(--t-3) var(--e-out), box-shadow var(--t-3) var(--e-out);
+      0 0 0 -3px var(--z-sheet-3),
+      inset 0 0 0 999px var(--z-face, transparent);
+    transition:transform var(--t-3) var(--e-out), box-shadow var(--t-3) var(--e-out),
+               color var(--t-3) var(--e-out);
   }
   .btn.z-stack:hover,
   .btn.z-stack:focus-visible{
@@ -10742,7 +10747,36 @@ document.addEventListener("DOMContentLoaded", function () {
     box-shadow:
       0 5px 0 -3px var(--z-sheet-1),
       0 9px 0 -3px var(--z-sheet-2),
-      0 13px 0 -3px var(--z-sheet-3);
+      0 13px 0 -3px var(--z-sheet-3),
+      inset 0 0 0 999px var(--z-face, transparent);
+  }
+  /* 🔑 THE FAN IS WHAT HOVER BRINGS, SO WITH A HOVER PICK IT IS THAT COLOUR
+     (Sanna, 2026-09-11: «if i set hover color, this is the hover color»).
+     The three sheets are plates, not light — this card's own paragraph, and
+     the reason --sheen follows the pick at all — and they are the one surface
+     that arrives here. They cannot take the pick on their own: a stack is ONE
+     paper («the sheets are made of whatever the top plate is», below), and
+     orange sheets under a blue plate are two objects. So the lifted plate
+     takes the pick too, 49's chain, and the sheets are that pick in three
+     steps toward the ground. Still alpha, for the neutral sheets' reason — the
+     stack makes the tone: .556, .357 and .30 accumulate to 80, 55 and 30% of
+     the pick in the three bands over whatever ground the button is on.
+     ⚠️ THE FACE IS AN INSET LAYER OF THE SAME box-shadow, NOT A
+     background-color, for two reasons. It rides the clock the fan already
+     runs on, in both directions, with nothing new transitioned. And
+     background-color must never transition here: ringable() reads the plate's
+     computed background the instant paint() writes a new pick, so a
+     transition hands it the colour being LEFT — measured: a black Button on
+     dark lost its ring. The label is --on-hover-set, fitted by paint().
+     Unset, --hover-set is absent: the face is transparent, every --z-hs-* is
+     invalid, and the stack is byte for byte what shipped.
+     Fill only: the outline has no paper, and .btn--solid restates its own. */
+  .btn.z-stack:not(.btn--solid):not(.btn--line):not(.btn--text):is(:hover,:focus-visible){
+    --z-face:var(--hover-set, transparent);
+    --z-hs-1:color-mix(in srgb, var(--hover-set) 55.6%, transparent);
+    --z-hs-2:color-mix(in srgb, var(--hover-set) 35.7%, transparent);
+    --z-hs-3:color-mix(in srgb, var(--hover-set) 30%, transparent);
+    color:var(--on-hover-set, var(--m-plate-ink, var(--ink-text)));
   }
   /* Pressed, the plate goes back down onto its stack — the sheets close up
      rather than staying fanned under a button that has been pushed into them. */
@@ -10751,7 +10785,8 @@ document.addEventListener("DOMContentLoaded", function () {
     box-shadow:
       0 2px 0 -3px var(--z-sheet-1),
       0 4px 0 -3px var(--z-sheet-2),
-      0 6px 0 -3px var(--z-sheet-3);
+      0 6px 0 -3px var(--z-sheet-3),
+      inset 0 0 0 999px var(--z-face, transparent);
     transition-duration:var(--t-1);
   }
   @media (prefers-reduced-motion: reduce){
