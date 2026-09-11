@@ -18512,54 +18512,70 @@ document.addEventListener("DOMContentLoaded", function () {
      there is a frame after which the chrome is not merely faint but ABSENT,
      which is the only state worth starting a recording on. --e-quint because
      it is the page's exit curve and the furniture is exiting. */
-  .bhl-solo-cap,
-  .bhl-solo-bar,
+  .bhl-solo-foot,
   .bhl-solo-x{
     position:absolute; z-index:2;
     transition:transform var(--t-4) var(--e-quint), opacity var(--t-3) var(--e-out);
   }
-  .bhl-solo[data-chrome="0"] .bhl-solo-cap{transform:translateY(calc(100% + 28px)); opacity:0}
-  .bhl-solo[data-chrome="0"] .bhl-solo-bar{transform:translateY(calc(100% + 28px)); opacity:0}
-  .bhl-solo[data-chrome="0"] .bhl-solo-x  {transform:translateY(calc(-100% - 28px)); opacity:0}
+  .bhl-solo[data-chrome="0"] .bhl-solo-foot{transform:translateY(calc(100% + 28px)); opacity:0}
+  .bhl-solo[data-chrome="0"] .bhl-solo-x   {transform:translateY(calc(-100% - 28px)); opacity:0}
   .bhl-solo[data-chrome="0"]{cursor:none}
 
   /* Caption bottom LEFT and controls bottom RIGHT, with the subject on the
      optical centre between them: three things on three different axes rather
      than one bar holding all of it. A single centred bar under a centred
      button reads as a caption OF the button and joins the composition it is
-     supposed to stay out of. */
+     supposed to stay out of.
+     🚨 ONE ROW, TWO ENDS — NOT TWO ABSOLUTE BOXES. They used to be positioned
+     separately, left:28px and right:24px, and nothing told either how wide
+     the other was. Once Speed and Step joined the bar and a pointer-driven
+     study's note joined the caption, the two ran into each other at 1496px
+     (card 75, 2026-09-11): the note printed straight through Fill, Outline
+     and Size. In one flex row the caption shrinks and the bar wraps before
+     they can meet, at any width. The row itself takes no pointer, so the
+     empty middle of it is still the frame. */
+  .bhl-solo-foot{
+    left:28px; right:24px; bottom:20px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:28px;
+    pointer-events:none;
+  }
+  .bhl-solo-foot > *{pointer-events:auto}
   .bhl-solo-cap{
-    left:28px; bottom:24px; display:flex; align-items:baseline; gap:12px;
+    flex:0 1 auto; min-width:0; padding-bottom:4px;
+    display:grid; grid-template-columns:auto minmax(0,1fr); align-items:baseline;
+    column-gap:12px; row-gap:7px;
     color:var(--ink-mid);
   }
   .bhl-solo-num{font:500 11px/1 var(--mono); letter-spacing:.06em; color:var(--ink-low)}
-  .bhl-solo-name{font:500 15px/1.2 var(--font-ui); color:var(--ink-hi)}
+  .bhl-solo-name{font:500 15px/1.2 var(--font-ui); color:var(--ink-hi); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis}
   /* Said once, in the register the chips use, and only by the studies it is
-     true of — see the cap on --solo-s in the script. */
-  .bhl-solo-note{font:500 10.5px/1 var(--mono); letter-spacing:.04em; color:var(--ink-low)}
+     true of — see the cap on --solo-s in the script. Under the name, not
+     beside it: beside it the caption was as wide as the note. */
+  .bhl-solo-note{grid-column:2; font:500 10.5px/1.35 var(--mono); letter-spacing:.04em;
+    color:var(--ink-low); max-width:34ch}
   .bhl-solo-note[hidden]{display:none}
 
   .bhl-solo-bar{
-    right:24px; bottom:20px; display:flex; align-items:center; gap:18px;
-    /* Four groups is more than a phone can hold in one line, and the bar is
-       anchored to the right edge, so it has to grow leftward and DOWNWARD from
-       there rather than run off the left of the display. */
-    flex-wrap:wrap; justify-content:flex-end; max-width:calc(100vw - 48px);
-    row-gap:10px;
+    flex:0 1 auto; min-width:0;
+    display:flex; align-items:center; gap:14px;
+    /* More groups than a phone can hold in one line, and the bar is anchored
+       to the right end of the row, so it grows leftward and then DOWNWARD. */
+    flex-wrap:wrap; justify-content:flex-end; row-gap:10px;
   }
-  /* Under a phone width the caption and the bar would sit on the same line and
-     collide. The caption is the one that can go: the study's name is already
-     the reason you opened it, and the frame is the subject. */
+  /* Under a phone width the caption is the one that goes: the study's name is
+     already the reason you opened it, and the frame is the subject. */
   @media (max-width:560px){
     .bhl-solo-cap{display:none}
-    .bhl-solo-bar{left:24px; justify-content:center}
+    .bhl-solo-foot{left:24px}
+    .bhl-solo-bar{justify-content:center; flex:1 1 auto}
   }
-  .bhl-solo-grp{display:flex; align-items:center; gap:8px}
+  .bhl-solo-grp{display:flex; align-items:center; gap:6px}
   .bhl-solo-lbl{font:500 10px/1 var(--mono); letter-spacing:.08em;
     text-transform:uppercase; color:var(--ink-low)}
   .bhl-solo-seg{display:flex; gap:2px}
   .bhl-solo-b{
-    min-width:30px; height:28px; padding:0 9px;
+    min-width:28px; height:28px; padding:0 8px;
     display:grid; place-items:center;
     background:none; border:0; border-radius:8px; cursor:pointer;
     font:500 11.5px/1 var(--font-ui); color:var(--ink-mid);
@@ -18626,7 +18642,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* The * rule further up already stops every clock. This is here to say
        that the chrome must still LEAVE, or the recording view loses the one
        thing it is for; it leaves instantly instead of travelling. */
-    .bhl-solo-cap,.bhl-solo-bar,.bhl-solo-x{transition:none}
+    .bhl-solo-foot,.bhl-solo-x{transition:none}
   }
 </style>
 
@@ -18640,6 +18656,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <button type="button" class="bhl-solo-step bhl-solo-next" aria-label="Next study (right arrow)">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
   </button>
+  <div class="bhl-solo-foot">
   <div class="bhl-solo-cap">
     <span class="bhl-solo-num"></span>
     <span class="bhl-solo-name"></span>
@@ -18675,6 +18692,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <span class="bhl-solo-ms">0 ms</span>
     </div>
+  </div>
   </div>
   <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, S the speed, P holds the frame, comma and full stop step a frame, 1–3 the size.">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -18975,7 +18993,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var bits = [];
     if (JS_KEYS[key]){
       bits.push('pointer-driven · size 1× only');
-      if (rate() !== 1) bits.push('scripted motion keeps real time');
+      if (rate() !== 1) bits.push('script runs in real time');
     }
     note.textContent = bits.join(' · ');
     note.hidden = !bits.length;
