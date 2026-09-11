@@ -1853,20 +1853,22 @@
      155: the Hover pick when there is one, the Button pick when only that is
      set (hover keeps the button's own colour — the rise carries it), and the
      graphite rung when nothing is, so the monochrome page does not move. The
-     press is the same colour with the scale doing the pressing: a color-mix()
-     here would change how the plate serialises, which is the trap recorded at
-     the ladder rule. */
+     press is one step below the hover, --hover-press, a hex paint() solves —
+     not a color-mix() here, which would change how the plate serialises (the
+     trap recorded at the ladder rule). The fill versions press the same way. */
   .lift:hover,
   .lift:focus-visible{transform:translateY(-2px) rotate(0.001deg) scale(1);
     background-color:var(--hover-set, var(--m-plate, var(--bg-3)));
     border-color:var(--hover-set, color-mix(in srgb,var(--ink) 22%,var(--line-ctl)));
     transition-delay:var(--d-1), 0s, 0s}
   .lift:active{transform:translateY(0) rotate(0.001deg) scale(.98);
-    background-color:var(--hover-set, var(--m-plate, var(--bg-4)));
+    background-color:var(--hover-press, var(--m-plate, var(--bg-4)));
     transition-duration:var(--t-1); transition-delay:0s}
 
   .btn:is(.lift, .c-crest):not(.btn--solid):not(.btn--text):is(:hover, :focus-visible){
     color:var(--on-hover-set, var(--m-plate-ink, var(--ink-text)))}
+  .btn:is(.lift, .c-crest):not(.btn--solid):not(.btn--text):active{
+    color:var(--on-hover-press, var(--on-hover-set, var(--m-plate-ink, var(--ink-text))))}
 
   /* THE LABEL ROLLS PER CHARACTER, and the stagger is not a number anybody
      chose — it is the rise's own lead, divided. The light leaves at 0 and the
@@ -1958,8 +1960,12 @@
   .lift.btn--solid:focus-visible{border-color:transparent;
     color:var(--on-ink-hover);
     background-color:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)))}
+  /* The press is one step below whatever hover landed on: --hover-press, the
+     pick 80% of the way from the card, with the label fitted to it. Unset both
+     tokens are absent and the mix and the hover label stand byte for byte. */
   .lift.btn--solid:active{
-    background-color:color-mix(in srgb,var(--ink-hover) 80%,var(--bg))}
+    background-color:var(--hover-press, color-mix(in srgb,var(--ink-hover) 80%,var(--bg)));
+    color:var(--on-hover-press, var(--on-ink-hover))}
 
   /* 49 in link, and the rise is the half that needs no restatement at all.
      THE RULE CARRIES THE LADDER. Elevation on this card is lightness and never
@@ -2095,11 +2101,19 @@
     }
   }
   @media (prefers-reduced-transparency: reduce){
-    /* Card 31 is the one card built on transparency — frost it solid rather
-       than leaving the single effect that ignores the preference. */
+    /* Card 31 is the one card built on transparency — drop the blur rather
+       than leaving the single effect that ignores the preference.
+       🔑 THE TINT IS NOT RESTATED HERE, SO IT CANNOT DISAGREE. This block used
+       to add a 13% frost of --ink-hover while the blurred frost is 7% of
+       --ink: two tokens for one material, and the Hover pick would have
+       reached only the reader who asked for less transparency. It never
+       painted — 0-3-0, three thousand lines above the study's own 0-3-0 hover
+       rule, so it lost on source order (measured 2026-09-11 under emulated
+       reduce: 7% in both themes). What that reader sees is the study's own
+       7% --ink frost without the blur, and that is now the only rule there is.
+       ⚠️ Made live at 13% it costs the label: with Button #1f6feb the hover
+       label measured 4.25 → 4.04:1 in dark and 4.22 → 3.89:1 in light. */
     .f-glas .f-glas-yta{-webkit-backdrop-filter:none !important; backdrop-filter:none !important}
-    .f-glas:hover .f-glas-yta,
-    .f-glas:focus-visible .f-glas-yta{background-color:color-mix(in srgb, var(--ink-hover) 13%, transparent)}
     /* Same answer for the toolbar: keep the lift, drop the see-through. */
     .tools[data-stuck]{background:var(--panel);
       -webkit-backdrop-filter:none !important; backdrop-filter:none !important}
@@ -11163,7 +11177,7 @@ document.addEventListener("DOMContentLoaded", function () {
     background:var(--hover-set, var(--m-plate, var(--bg-3)));
     border-color:var(--hover-set, color-mix(in srgb,var(--ink) 22%,var(--line-ctl)))}
   .c-crest:active{transform:translateY(0) rotate(0.001deg) scale(.98);
-    background:var(--hover-set, var(--m-plate, var(--bg-4))); transition-duration:var(--t-1)}
+    background:var(--hover-press, var(--m-plate, var(--bg-4))); transition-duration:var(--t-1)}
   .c-crest::after{content:""; position:absolute; top:-4px; bottom:-4px;
     width:46%; left:0; pointer-events:none;
     --crest-sheen:var(--on-hover-set, var(--m-plate-ink, var(--ink)));
@@ -11216,7 +11230,10 @@ document.addEventListener("DOMContentLoaded", function () {
   .c-crest.btn--solid:focus-visible{border-color:transparent;
     color:var(--on-ink-hover);
     background:var(--hover-set, color-mix(in srgb,var(--ink-hover) 90%,var(--bg)))}
-  .c-crest.btn--solid:active{background:color-mix(in srgb,var(--ink-hover) 80%,var(--bg))}
+  /* 49's press, and its reason: one step below the hover, never a mix of
+     --ink-hover under a plate that painted --hover-set verbatim. */
+  .c-crest.btn--solid:active{background:var(--hover-press, color-mix(in srgb,var(--ink-hover) 80%,var(--bg)));
+    color:var(--on-hover-press, var(--on-ink-hover))}
   .c-crest.btn--solid::after{
     background:linear-gradient(100deg,transparent 0%,
       color-mix(in srgb,var(--on-ink) 8%,transparent) 26%,
@@ -15286,14 +15303,15 @@ document.addEventListener("DOMContentLoaded", function () {
       // mixed --ink, 126 mixed --accent — so the Hover swatch moved every
       // other part of those cards except the plate the card is named for.
       //
-      // ⚠️ NOT THE PRESSES AND NOT THE STATES. 123 keeps its :active at a mix
-      // of 80% and 43 keeps its 86% toward --on-ink: a press is a step BELOW
-      // whatever hover just landed on, so it stays relative to it rather than
-      // becoming a second flat colour. 72 fill and its done state are not
-      // hover at all and are left alone.
+      // ⚠️ NOT THE PRESSES AND NOT THE STATES. Unset, 123 keeps its :active at
+      // a mix of 80% and 43 keeps its 86% toward --on-ink: a press is a step
+      // BELOW whatever hover just landed on, so it never reads --hover-set and
+      // becomes a second flat copy of the hover. 72 fill and its done state
+      // are not hover at all and are left alone.
       // 🔑 …AND THE PRESS IS ONE STEP BELOW WHATEVER HOVER LANDED ON
       // (2026-09-11). Where a study's hover now paints the Hover pick verbatim
-      // and its press paints a surface of its own — 111's flood, 43's cap — the
+      // and its press paints a surface of its own — 111's flood, 43's cap, the
+      // fill plates of 49 and 123 — the
       // press cannot be the pick again or it has nothing to say. It is the pick
       // 80% of the way from the card, 123's own press step, with its label
       // fitted to it. Computed and not a color-mix() in the sheet, so unset the
