@@ -36,6 +36,34 @@
  * not re-run, which is twelve false failures. Same for the palette chips and
  * the treatment toggles.
  *
+ * 🚨 HOW A CELL IS READ, AND WHY NOT THE WAY IT WAS. Until 2026-09-11 every
+ * crop was a Page.captureScreenshot with a clip AND captureBeyondViewport, and
+ * only a cell that FAILED was re-read down a second path. That combination
+ * passed real failures: 137 o-pix Pine fill in light read 6.23 for a real
+ * 3.60, Mint dark rest read 10.73 for a real 6.18. Measured cause, not a
+ * guess: captureBeyondViewport RESIZES THE PAGE for the capture — the page
+ * sees a resize to 1x1 and back, every time — so (min-width:1360px) goes false
+ * and true again, `.tools{transform:translateX(100%)}` drops and comes back,
+ * and the off-canvas inspector (#tools, fixed, 276px, #e7e7e7 in light) runs
+ * its 340ms slide out FROM ON SCREEN. It is fixed, so it sits over whatever
+ * is in the viewport's band of the page — and the only thing that ever moved
+ * the scroll was a re-read of a failure, which centres the study it re-reads.
+ * From then on every clipped crop of a right-column study had a strip of the
+ * panel in it: plate-against-panel, reported as label-against-plate, and a
+ * pass, so nobody looked twice. The resize also re-runs every study's own
+ * resize handler mid-run.
+ * So: NO captureBeyondViewport anywhere. Every crop is brought ON SCREEN first
+ * (bring) and clipped in page coordinates — the surface as painted, no
+ * emulation, no resize. Checked against the unclipped viewport on 1,232 cells:
+ * none apart by more than 0.28 (Graphite, at 20:1), none by more than 0.035
+ * at the floor, which is the two paths' resolution and not a fault — and
+ * every cell is read until two reads GAP apart agree (READS at most), because
+ * a single read after a fixed sleep is a guess about when a transition ended.
+ * A cell that never agrees is a loop: it reports the worst read and says so.
+ * A resize seen mid-run aborts the run. SWEEP_XCHECK=1 re-reads EVERY cell
+ * through the unclipped viewport and prints any disagreement — the proof that
+ * the main path is honest, for whenever someone doubts it.
+ *
  * Read-only against the page. Writes JSON if asked; prints a table.
  */
 import fs from 'node:fs'
@@ -65,7 +93,11 @@ const VERS_ARG = flag('versions')
 const JSON_OUT = flag('json')
 const FORCE = argv.includes('--force')
 const SETTLE = Number(process.env.SWEEP_SETTLE || 950)   // longest --t-5 chain + slack
+const GAP = Number(process.env.SWEEP_GAP || 120)         // between two reads of one cell
+const READS = Number(process.env.SWEEP_READS || 8)       // reads of one cell before it is called a loop
+const XCHECK = !!process.env.SWEEP_XCHECK
 const FLOOR = 4.5
+const sleep = ms => new Promise(r => setTimeout(r, ms))
 
 /* ---- the page ---------------------------------------------------------- */
 const p = await open()
@@ -123,6 +155,14 @@ await p.evalJs(String.raw`(() => {
   })
   S.clientRect = i => { const q = window.__swN[i].b.getBoundingClientRect()
     return { x: q.x, y: q.y, w: q.width, h: q.height } }
+  // Where the viewport is, for bring(). And the tripwire: nothing this tool
+  // does resizes the page any more, so a resize seen mid-run means a capture
+  // path that emulates the viewport has come back, and every number since it
+  // was measured on a page that had just been re-laid-out at another size.
+  S.view = () => JSON.stringify({ sx: scrollX, sy: scrollY, iw: innerWidth, ih: innerHeight })
+  S.size0 = [innerWidth, innerHeight]; S.resized = 0
+  addEventListener('resize', () => {
+    if (innerWidth !== S.size0[0] || innerHeight !== S.size0[1]) S.resized++ })
 
   // The treatment classes, and the version each button SHIPPED in. Recorded
   // once, at bind, before anything has been switched. The page's own switch
@@ -334,19 +374,100 @@ const box = r => ({ x: r.lbl.x - 1, y: r.lbl.y - 1,
 const plateBox = r => ({ x: r.btn.x - 10, y: r.btn.y - 10,
   w: Math.round(r.btn.w) + 20, h: Math.round(r.btn.h) + 20 })
 
-async function shots (rects, kind) {
-  const out = []
-  for (const r of rects) {
-    if (!r.shipped) { out.push(null); continue }
-    const bx = kind === 'plate' ? plateBox(r) : box(r)
-    try {
-      const s = await p.send('Page.captureScreenshot', { format: 'png',
-        clip: { x: bx.x, y: bx.y, width: bx.w, height: bx.h, scale: 2 },
-        captureBeyondViewport: true, fromSurface: true, optimizeForSpeed: true })
-      out.push(s.result?.data || null)
-    } catch { out.push(null) }
+// One crop, of a rect that bring() has already put ON SCREEN. The clip is in
+// PAGE coordinates (a clip in viewport coordinates, or of a rect off screen,
+// comes back as flat page ground — which blind() catches rather than reads).
+// captureBeyondViewport is false and stays false: see the header. It is the
+// path that resized the page under every capture.
+async function clip (bx) {
+  try {
+    const s = await p.send('Page.captureScreenshot', { format: 'png',
+      clip: { x: bx.x, y: bx.y, width: bx.w, height: bx.h, scale: 2 },
+      captureBeyondViewport: false, fromSurface: true, optimizeForSpeed: true })
+    return s.result?.data || null
+  } catch { return null }
+}
+
+// The top 80px of the viewport is where the page keeps its fixed chrome — the
+// masthead and both panel handles sit at y 24..58 — so no crop is taken there.
+const VIEW_TOP = 80, VIEW_BOT = 16
+const onScreen = (bx, v) => bx.y - v.sy >= VIEW_TOP && bx.y + bx.h - v.sy <= v.ih - VIEW_BOT
+  && bx.x - v.sx >= 0 && bx.x + bx.w - v.sx <= v.iw
+const view = async () => JSON.parse(await p.evalJs('window.__sweep.view()'))
+// Scroll only when the rect is not already on screen, and then put it at the
+// top of the usable band, so the rects after it in page order ride along in
+// the same viewport. Returns the viewport, or null if the rect cannot be shown.
+async function bring (bx) {
+  let v = await view()
+  if (onScreen(bx, v)) return v
+  await p.evalJs(`window.scrollTo({ top: ${Math.max(0, Math.round(bx.y - VIEW_TOP - 8))}, left: 0, behavior: 'instant' })`)
+  await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
+  v = await view()
+  if (onScreen(bx, v)) return v
+  await p.evalJs(`window.__a11y.into(${Math.round(bx.y + bx.h / 2)})`)
+  await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
+  v = await view()
+  return onScreen(bx, v) ? v : null
+}
+
+// Two reads of one frame agree. Two flat crops agree too: a flat crop twice is
+// a flat crop, and blind() decides what that means, not this.
+const agree = (a, b) => !!a && !!b
+  && (blind(a) && blind(b) || !blind(a) && !blind(b) && Math.abs(exact(a) - exact(b)) <= 0.02)
+
+// Every label in `idxs`, read until it holds still. A band is the run of rects
+// one viewport can show; each round freezes the page, crops every label still
+// pending in the band, and thaws; a label is done when two rounds GAP apart
+// agree. One read after a fixed sleep was a guess about when a transition
+// had ended, and a Mint rest cell read mid-transition is the price of guessing.
+// A label that never agrees in READS rounds is a loop, not a transition: it is
+// reported at the WORST read seen, and flagged, because a gate has to answer
+// for the frame a visitor can land on.
+// `plateRects`, when given, also yields one crop of each plate + 10px after
+// the labels have settled — the rest-vs-hover diff that finds an inert hover.
+async function bandRead (lblRects, plateRects, idxs) {
+  const n = lblRects.length
+  const val = new Array(n).fill(null), reads = new Array(n).fill(0)
+  const loose = new Array(n).fill(false), plate = new Array(n).fill(null)
+  const outer = i => {
+    const a = box(lblRects[i]), b = plateBox((plateRects || lblRects)[i])
+    const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y)
+    return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y }
   }
-  return out
+  const todo = idxs.filter(i => lblRects[i].shipped).sort((a, b) => outer(a).y - outer(b).y)
+  for (let k = 0; k < todo.length;) {
+    const v = await bring(outer(todo[k]))
+    if (!v) { k++; continue }                 // cannot be shown: stays null, counted n/m
+    const band = []
+    while (k < todo.length && onScreen(outer(todo[k]), v)) band.push(todo[k++])
+    const hist = new Map(band.map(i => [i, []]))
+    let pending = band
+    for (let r = 0; r < READS && pending.length; r++) {
+      if (r) await sleep(GAP)
+      await p.evalJs('window.__a11y.freeze()')
+      const b64 = []
+      for (const i of pending) b64.push(await clip(box(lblRects[i])))
+      await p.evalJs('window.__a11y.thaw()')
+      const got = await read(b64)
+      pending = pending.filter((i, j) => {
+        const h = hist.get(i), prev = h[h.length - 1]
+        h.push(got[j]); reads[i]++
+        if (h.length > 1 && agree(prev, got[j])) { val[i] = got[j]; return false }
+        return true
+      })
+    }
+    for (const i of pending) {
+      const seen = hist.get(i).filter(x => x && !blind(x))
+      val[i] = seen.length ? seen.reduce((a, b) => exact(b) < exact(a) ? b : a) : hist.get(i).at(-1)
+      loose[i] = true
+    }
+    if (plateRects) {
+      await p.evalJs('window.__a11y.freeze()')
+      for (const i of band) plate[i] = await clip(plateBox(plateRects[i]))
+      await p.evalJs('window.__a11y.thaw()')
+    }
+  }
+  return { val, reads, loose, plate }
 }
 async function read (b64s) {
   const out = []
@@ -386,12 +507,9 @@ const exact = v => v ? (Math.max(v.tx, v.bg) + 0.05) / (Math.min(v.tx, v.bg) + 0
 // the next overlay takes it under, and worth seeing per cell.
 const ATFLOOR = 4.55
 
-// One rect off an UNCLIPPED viewport capture. Page.captureScreenshot's own clip
-// hands back blank surface — which is WHITE — for part of a clip a long way
-// down a 40,000px page, and the histogram then reads plate-against-blank as if
-// it were label-against-plate. Every reading that would be REPORTED as a
-// failure is re-taken down this second, independent path before it is believed:
-// a real failure measures the same twice, an artefact does not.
+// One rect off an UNCLIPPED viewport capture, cut out in the page — the second,
+// independent path. It is what bandRead's crops were checked against on
+// 2026-09-11 (SWEEP_XCHECK), and what a flat crop is re-read through.
 async function viewportRead (r, kind) {
   const bx = kind === 'plate' ? plateBox(r) : box(r)
   await p.evalJs(`window.__a11y.into(${Math.round(bx.y + bx.h / 2)})`)
@@ -408,22 +526,47 @@ async function viewportRead (r, kind) {
     ${JSON.stringify(shot.result.data)}, ${JSON.stringify(bx)}, window.__a11y.dpr())))()`)
   return v && v !== 'null' ? JSON.parse(v) : null
 }
+// A FLAT crop is re-taken down the viewport path and replaced if that one sees
+// a glyph. A reading under the floor is no longer re-taken and swapped for
+// whatever the second path says, for two measured reasons. The main path is
+// not the one that was lying any more. And the two paths do not resolve the
+// same: the clip rasterises at scale 2 on a 2x surface, the viewport is the 2x
+// surface itself, and across 1,232 cells compared on 2026-09-11 the viewport
+// read up to 0.035 LOWER or higher at the floor (123 Rose 4.5116 vs 4.4942).
+// «Believe the viewport» on a failure could therefore turn a 4.4995
+// into a 4.50 pass. The old rule only ever looked at failures — which is also
+// why a false PASS could never be caught by it.
 async function repair (rects, vals, kind) {
   let n = 0
   for (let i = 0; i < rects.length; i++) {
     const r = rects[i], v = vals[i]
     if (!r.shipped || r.lbl.noText) continue
-    if (!blind(v) && !(v && v.ratio < FLOOR)) continue
+    if (v && !blind(v)) continue
     const re = await viewportRead(r, kind)
     if (re && !blind(re)) { vals[i] = re; n++ }
   }
   return n
 }
 
+// Every cell, both paths, for SWEEP_XCHECK. Not the gate — the evidence that
+// the gate's own path reads what the viewport shows.
+const xrows = []
+async function xcheck (rects, vals, state, tag) {
+  for (let i = 0; i < rects.length; i++) {
+    const r = rects[i], v = vals[i]
+    if (!r.shipped || r.lbl.noText || !v || blind(v)) continue
+    const re = await viewportRead(r, 'lbl')
+    const d = re && !blind(re) ? exact(re) - exact(v) : null
+    xrows.push({ ...tag, state, key: r.key, i, main: exact(v), viewport: re ? exact(re) : null, d })
+  }
+}
+
 // The pointer path, for the studies whose hover is JS. forcePseudoState fires
 // no event, so a JS-driven study reads DEAD under it — and a hover column that
 // never hovered is a false pass, not a missing number. Only the buttons whose
 // plate did not move are re-measured this way, so the common case stays cheap.
+// Read through bandRead like every other cell: centred by into(), so bring()
+// never scrolls it out from under the pointer.
 async function pointerHover (i, r) {
   await p.evalJs(`window.__a11y.into(${Math.round(r.btn.y + r.btn.h / 2)})`)
   await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
@@ -437,13 +580,10 @@ async function pointerHover (i, r) {
   await p.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y, buttons: 0 })
   await new Promise(t => setTimeout(t, SETTLE))
   const fresh = await p.evalJs('JSON.stringify(window.__sweep.rects())').then(JSON.parse)
-  await p.evalJs('window.__a11y.freeze()')
-  const s = await shots([fresh[i]], 'lbl')
-  await p.evalJs('window.__a11y.thaw()')
-  const v = (await read(s))[0]
+  const got = await bandRead(fresh, null, [i])
   await p.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 5, y: 5, buttons: 0 })
   await new Promise(t => setTimeout(t, 250))
-  return v
+  return { v: got.val[i], reads: got.reads[i], loose: got.loose[i] }
 }
 
 /* ---- the sweep --------------------------------------------------------- */
@@ -474,24 +614,22 @@ for (const version of VERSIONS) {
       await setPalette(pal)
       await force(ids, []); await new Promise(r => setTimeout(r, 350))
       const rects = await p.evalJs('JSON.stringify(window.__sweep.rects())').then(JSON.parse)
-      await p.evalJs('window.__a11y.freeze()')
-      const restShots = await shots(rects, 'lbl')
-      const plateOff = await shots(rects, 'plate')
-      await p.evalJs('window.__a11y.thaw()')
-      const rest = await read(restShots)
+      const all = rects.map((_, i) => i)
+      const R = await bandRead(rects, rects, all)
+      const rest = R.val, plateOff = R.plate
       const fixR = await repair(rects, rest, 'lbl')
+      if (XCHECK) await xcheck(rects, rest, 'rest', { version, theme, palette: pal })
 
       await force(ids, ['hover']); await new Promise(r => setTimeout(r, SETTLE))
       // Two rects, because half these studies MOVE the label. The hover rect
       // answers «what is the contrast now»; reading it off the rest rect is how
-      // card 43 came back with no label in the crop at all.
+      // card 43 came back with no label in the crop at all. The plate crop
+      // keeps the REST rect, so the diff compares one region in two states.
       const hovRects = await p.evalJs('JSON.stringify(window.__sweep.rects())').then(JSON.parse)
-      await p.evalJs('window.__a11y.freeze()')
-      const hovShots = await shots(hovRects, 'lbl')
-      const plateOn = await shots(rects, 'plate')
-      await p.evalJs('window.__a11y.thaw()')
-      const hover = await read(hovShots)
+      const H = await bandRead(hovRects, rects, all)
+      const hover = H.val, plateOn = H.plate
       const fixH = await repair(hovRects, hover, 'lbl')
+      if (XCHECK) await xcheck(hovRects, hover, 'hover', { version, theme, palette: pal })
       const moved = await diff(plateOff, plateOn)
       await force(ids, [])
 
@@ -500,8 +638,18 @@ for (const version of VERSIONS) {
       for (let i = 0; i < rects.length; i++) {
         if (!rects[i].shipped || rects[i].lbl.noText) continue
         if (!(moved[i] && moved[i].moved < 0.005)) continue
-        const v = await pointerHover(i, rects[i])
-        if (v && !blind(v)) { hover[i] = v; ptr++ }
+        const got = await pointerHover(i, rects[i])
+        if (got.v && !blind(got.v)) {
+          hover[i] = got.v; H.reads[i] = got.reads; H.loose[i] = got.loose; ptr++ }
+      }
+
+      const tripped = await p.evalJs('window.__sweep.resized')
+      if (tripped) {
+        await p.close()
+        console.error(`[sweep] ABORT — the page was resized ${tripped}x during ${version}/${theme}/${pal}.`)
+        console.error('        Every capture since was taken on a page re-laid-out at another size, which')
+        console.error('        is the false-pass fault this tool was rebuilt to remove. Find the resize.')
+        process.exit(69)
       }
 
       for (let i = 0; i < rects.length; i++) {
@@ -514,15 +662,19 @@ for (const version of VERSIONS) {
           shipped: r.shipped, noText: r.lbl.noText,
           rest: rest[i], hover: hover[i],
           restBlind: blind(rest[i]), hoverBlind: blind(hover[i]),
+          restReads: R.reads[i], hoverReads: H.reads[i],
+          restLoose: R.loose[i], hoverLoose: H.loose[i],
           plateMoved: moved[i] ? moved[i].moved : null,
           pointer: !!(moved[i] && moved[i].moved < 0.005) })
       }
       const live = rows.filter(x => x.version === version && x.theme === theme && x.palette === pal && x.shipped)
       const bad = live.filter(x => !x.noText && !x.restBlind && x.rest && exact(x.rest) < FLOOR).length
         + live.filter(x => !x.noText && !x.hoverBlind && x.hover && exact(x.hover) < FLOOR).length
+      const loose = live.filter(x => x.restLoose).length + live.filter(x => x.hoverLoose).length
       console.error(`[sweep] ${version}/${theme}/${pal}: ${live.length}/${rects.length} shipped`
         + ` | under ${FLOOR}:1 — ${bad}`
         + (fixR + fixH ? ` | recaptured ${fixR}+${fixH}` : '')
+        + (loose ? ` | never held still ${loose}` : '')
         + (ptr ? ` | pointer hover ${ptr}` : ''))
     }
   }
@@ -534,7 +686,8 @@ const fx = v => v == null ? '   -' : String(v.toFixed(2)).padStart(5)
 const byKey = new Map()
 for (const r of rows) { if (!byKey.has(r.key)) byKey.set(r.key, []) ; byKey.get(r.key).push(r) }
 
-let fails = 0, nm = 0, readings = 0, atFloor = 0
+let fails = 0, nm = 0, readings = 0, atFloor = 0, looseN = 0
+const geomOut = {}
 console.log('')
 for (const m of meta) {
   const mine = byKey.get(m.key) || []
@@ -554,15 +707,18 @@ for (const m of meta) {
       const line = PALETTES.map(pal => {
         const c = vr.filter(r => r.theme === theme && r.palette === pal && r.shipped)
         if (!c.length) return '       ·'
-        const vals = c.map(r => ({ v: r[state], blind: r[state === 'rest' ? 'restBlind' : 'hoverBlind'], noText: r.noText }))
+        const vals = c.map(r => ({ v: r[state], blind: r[state === 'rest' ? 'restBlind' : 'hoverBlind'],
+          loose: r[state === 'rest' ? 'restLoose' : 'hoverLoose'], noText: r.noText }))
         const usable = vals.filter(x => x.v && !x.blind && !x.noText)
         readings += usable.length
         nm += vals.length - usable.length
         if (!usable.length) return (vals.some(x => x.noText) ? '~' : 'n/m').padStart(8)
-        const worst = Math.min(...usable.map(x => exact(x.v)))
-        if (worst < FLOOR) { fails++; return ('!' + worst.toFixed(2)).padStart(8) }
-        if (worst < ATFLOOR) { atFloor++; return ('=' + worst.toFixed(2)).padStart(8) }
-        return (' ' + worst.toFixed(2)).padStart(8)
+        const w = usable.reduce((a, b) => exact(b.v) < exact(a.v) ? b : a)
+        const worst = exact(w.v), q = w.loose ? '?' : ''
+        if (w.loose) looseN++
+        if (worst < FLOOR) { fails++; return ('!' + worst.toFixed(2) + q).padStart(8) }
+        if (worst < ATFLOOR) { atFloor++; return ('=' + worst.toFixed(2) + q).padStart(8) }
+        return (' ' + worst.toFixed(2) + q).padStart(8)
       }).join('')
       console.log('    ' + `${theme} ${state}`.padEnd(13) + line + (nb > 1 ? `   (worst of ${nb})` : ''))
     }
@@ -589,46 +745,72 @@ for (const m of meta) {
   // fixing it per study would mean changing what a shipped card measures.
   const PLATE = ['fill', 'outline']
   const BORDER = 2   // .btn--line's 1px, twice, in each dimension
-  const g = VERSIONS.map(v => [v, geom.get(`${m.key}|${v}`)]).filter(([, x]) => x)
+  // Printed in the toolbar's order whatever order --versions named them in, so
+  // two runs of one question print one answer.
+  const g = ORDER.filter(v => VERSIONS.includes(v)).map(v => [v, geom.get(`${m.key}|${v}`)]).filter(([, x]) => x)
   const gp = g.filter(([v]) => PLATE.includes(v))
   if (g.length) {
-    let note = '   '
+    let note = '   ', baseV = null, verdict = null
     if (gp.length > 1) {
-      const [, first] = gp[0]
+      // 🔑 AGAINST THE NATIVE VERSION, NOT THE FIRST ONE LISTED. This compared
+      // every box to gp[0], i.e. whichever --versions named first, and allowed
+      // only +2 — so outline,fill on an outline-native study saw fill at -2
+      // and called the page's own border DRIFT, while fill,outline on the same
+      // study said «~ 2px apart». The native version is the box the study was
+      // built at; a study with no plate native (link) falls back to the fill.
+      baseV = PLATE.includes(m.native) && gp.some(([v]) => v === m.native) ? m.native : 'fill'
+      const base = gp.find(([v]) => v === baseV)[1]
       // PER DIMENSION, and that is not a loosening. A study with a max-width
       // absorbs the border on the capped axis instead of growing: card 19 is
       // 264x45 in fill and 264x47 in outline, because max-width:264px is
       // already reached and the border eats into the content box. Requiring
       // both axes to move by 2 called that «the study's own box moves», which
       // is the one thing it is not.
-      // Each delta must be 0 or exactly +2, measured against the fill. A
-      // NEGATIVE delta is a real finding — a border cannot make a box smaller —
-      // and so is any other number.
-      const off = gp.map(([v, x]) => ({ v, dw: x.w - first.w, dh: x.h - first.h }))
-      const ok = d => Math.abs(d) < 0.5 || Math.abs(d - BORDER) < 0.5
-      const structural = off.every(o => ok(o.dw) && ok(o.dh))
+      // Each delta must be 0 or exactly the border, IN THE BORDER'S DIRECTION:
+      // outline is the fill +2 or +0, so seen from an outline native the fill
+      // is -2 or -0. The wrong sign is a real finding — a border cannot make a
+      // box smaller — and so is any other number.
+      const off = gp.filter(([v]) => v !== baseV).map(([v, x]) =>
+        ({ v, dw: x.w - base.w, dh: x.h - base.h, e: v === 'outline' ? BORDER : -BORDER }))
+      const ok = (d, e) => Math.abs(d) < 0.5 || Math.abs(d - e) < 0.5
+      const structural = off.every(o => ok(o.dw, o.e) && ok(o.dh, o.e))
       const identical = off.every(o => Math.abs(o.dw) < 0.5 && Math.abs(o.dh) < 0.5)
+      verdict = identical ? 'identical' : structural ? 'border' : 'drift'
       note = identical    ? '   ✓ identical across the plate versions'
            : structural   ? "   ~ 2px apart — .btn--line's border, which 44 of the page's 53 already are"
                           : '   !! DRIFT that is not the border — the study\'s own box moves between versions'
+      note += `  (against ${baseV}${baseV === m.native ? ', native' : ', no plate native'})`
       if (!structural) fails++
     }
+    geomOut[m.key] = { native: m.native, base: baseV, verdict, boxes: Object.fromEntries(g) }
     console.log('  geometry     ' + g.map(([v, x]) => `${v} ${x.w}x${x.h}`).join('  ·  ') + note)
   }
   console.log('')
 }
 console.log(`${readings} readings · ${nm} not measurable`
-  + ` · ${atFloor} cells at the floor · ${fails} under ${FLOOR}:1 or drifted`)
+  + ` · ${atFloor} cells at the floor · ${fails} under ${FLOOR}:1 or drifted`
+  + (looseN ? ` · ${looseN} never held still` : ''))
 console.log('  !  under ' + FLOOR + ':1     =  clears by under ' + (ATFLOOR - FLOOR).toFixed(2)
   + ', which is the palette row aiming at the floor     n/m  no glyph in the crop'
-  + '     ~  the label is a pseudo-element     ·  not offered')
+  + '     ~  the label is a pseudo-element     ·  not offered'
+  + `     ?  never read the same twice in ${READS} tries — a loop; the worst read is shown`)
+if (XCHECK) {
+  const cmp = xrows.filter(x => x.d != null)
+  const off = cmp.filter(x => Math.abs(x.d) > 0.05)
+  console.log(`XCHECK: ${cmp.length} cells re-read through the unclipped viewport · ${off.length} differ by more than 0.05`
+    + (cmp.length ? ` · largest ${Math.max(...cmp.map(x => Math.abs(x.d))).toFixed(3)}` : '')
+    + ` · ${xrows.length - cmp.length} with no viewport reading`)
+  for (const x of off) console.log(`  ${x.key}[${x.i}] ${x.version}/${x.theme}/${x.palette} ${x.state}: `
+    + `main ${x.main.toFixed(2)} · viewport ${x.viewport.toFixed(2)}`)
+}
 console.log(fails ? 'VERDICT: FAIL — do not declare these versions until every cell clears the floor.'
   : 'VERDICT: PASS — every cell clears the floor in every palette, both themes, rest and hovered.')
 
 if (JSON_OUT) {
   const out = path.isAbsolute(JSON_OUT) ? JSON_OUT : path.join(ROOT, JSON_OUT)
   fs.mkdirSync(path.dirname(out), { recursive: true })
-  fs.writeFileSync(out, JSON.stringify({ font, meta, versions: VERSIONS, themes: THEMES, palettes: PALETTES, rows }, null, 1))
+  fs.writeFileSync(out, JSON.stringify({ font, meta, versions: VERSIONS, themes: THEMES, palettes: PALETTES,
+    rows, geometry: geomOut, ...(XCHECK ? { xcheck: xrows } : {}) }, null, 1))
   console.error('[sweep] wrote', out)
 }
 process.exit(fails ? 1 : 0)
