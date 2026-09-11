@@ -5421,7 +5421,15 @@ document.addEventListener("DOMContentLoaded", function () {
                background-color var(--t-5) var(--e-out), box-shadow var(--t-5) var(--e-out);
   }
   .f-glas .lbl{ position:relative }
-  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--line-ctl-hover) 22%, var(--line)) }
+  /* 🔑 THE LABEL IS READ ON THE FROST, NOT ON THE CARD. --ink-text is fitted to
+     the card, and hovered the label sits on 7% of --ink over the blurred
+     stripes — with a Button colour set that measured 3.88–4.37:1, all thirteen
+     palettes in light and four in dark. --m-frost-ink is the rest ink walked
+     until it clears 4.5:1 there; paint() solves it and says how. Unset, it is
+     absent and this is --ink-text, the colour the label already has. The frost
+     itself is untouched. The colour snaps, as 111's hover label does. */
+  .f-glas:hover, .f-glas:focus-visible{ border-color:color-mix(in srgb, var(--line-ctl-hover) 22%, var(--line));
+    color:var(--m-frost-ink, var(--ink-text)) }
   .f-glas:hover .f-glas-yta, .f-glas:focus-visible .f-glas-yta{
     background-color:color-mix(in srgb, var(--ink) 7%, transparent);
     box-shadow:inset 0 1px 0 color-mix(in srgb, var(--f-lys) 65%, transparent);
@@ -14091,6 +14099,21 @@ document.addEventListener("DOMContentLoaded", function () {
       var v = bx ? parseFloat(getComputedStyle(bx).getPropertyValue('--bx-shade')) : NaN;
       return isFinite(v) ? v : .22;
     })();
+    // 31's FROST, read off the rule that paints it for BX_SHADE's reason: the
+    // fit below solves the label against it, so the number must not live in two
+    // places. The hover rule spells it `color-mix(… var(--ink) 7%, transparent)`.
+    var FROST = (function (){
+      var f = NaN;
+      [].forEach.call(document.styleSheets, function (sh){
+        var rules; try { rules = sh.cssRules; } catch (e){ return; }   // the DS sheet
+        [].forEach.call(rules, function (r){
+          if (!r.selectorText || r.selectorText.indexOf('.f-glas:hover .f-glas-yta') < 0) return;
+          var m = r.style.getPropertyValue('background-color').match(/var\(--ink\)\s*([\d.]+)%/);
+          if (m) f = m[1] / 100;
+        });
+      });
+      return isFinite(f) ? f : .07;
+    })();
     // White is the default for all three, and it is graphite's white rather
     // than #ffffff — the system ships --ink-hi at a shade under pure, because
     // pure white on near-black glares. Still measured rather than named, so it
@@ -15479,6 +15502,53 @@ document.addEventListener("DOMContentLoaded", function () {
       // The rest label, derived off the fill. After the loop, for the reason
       // given where inkText is computed.
       if (inkText) root.setProperty('--ink-text', inkText.hex);
+      // ---- 31's LABEL ON ITS OWN FROST -------------------------------------
+      // 🔑 The rest ink is fitted to the card, and hovered 31's label is not on
+      // the card: it is on FROST of --ink over a blur of the stage, and the stage
+      // is .f-ruta — a 1px --line stripe every 10px. So the ground is card and
+      // stripe composited under the frost, and a blur can only average the two:
+      // whatever it makes lies between them, and fitting both ends bounds it.
+      // The stripe end is not a margin, it is the ground itself wherever the
+      // blur is absent — prefers-reduced-transparency drops it and leaves the
+      // stripes under the tint. Nor is the blur's 10% average a safe ground:
+      // measured, the painted frost sits a little further out than that, and a
+      // fit to the average landed six palettes at 4.43–4.49:1 on the pixels.
+      // The two ends leave no blur model to trust.
+      // Arithmetic, never read back: the frost fades in over --t-5 and a read
+      // would catch it mid-way. saturate(1.06) acts on a grey backdrop and
+      // moves nothing. The ink is --ink as it resolves, which is accentRgb.
+      // Walked from the REST ink rather than solved from the pick, so the label
+      // keeps its hue and only steps as far as the frost demands.
+      if (fitted.text || fitted.accent){
+        var lineEl = document.createElement('span');
+        lineEl.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;background-color:var(--line)';
+        document.body.appendChild(lineEl);
+        var lm = getComputedStyle(lineEl).backgroundColor.match(/[\d.]+/g) || [];
+        lineEl.remove();
+        var la = lm.length > 3 ? +lm[3] : 1;
+        var frostOn = function (g){
+          return [0, 1, 2].map(function (i){
+            return Math.round(accentRgb[i] * FROST + g[i] * (1 - FROST));
+          });
+        };
+        var stripeRgb = [0, 1, 2].map(function (i){
+          return Math.round((+lm[i] || 0) * la + PANEL[i] * (1 - la));
+        });
+        var restInk = fitted.text ? fitted.text.hex : inkText ? inkText.hex : WHITE;
+        // …and TWO UNITS TOWARD THE LABEL, because rounded is what gets painted
+        // (fitOn's reason, one step on): stripe and frost are two layers, each
+        // blended in 8 bits, and the pixel lands up to a unit off the exact mix
+        // per layer. Measured, a fit that stopped at 4.52:1 on the arithmetic
+        // read 4.44 on the stripe pixel once the blur was dropped.
+        var toLbl = lum(toRgb(restInk)) > lum(PANEL) ? 2 : -2;
+        var q8 = function (g){
+          return g.map(function (c){ return Math.max(0, Math.min(255, c + toLbl)); });
+        };
+        root.setProperty('--m-frost-ink',
+          fitOnAll(restInk, 4.5, [q8(frostOn(PANEL)), q8(frostOn(stripeRgb))]).hex);
+      } else {
+        root.removeProperty('--m-frost-ink');
+      }
       if (anyColour){
         root.setProperty('--on-ink',      onAccent.hex);
         root.setProperty('--on-accent',   onAccent.hex);
