@@ -5845,7 +5845,10 @@ document.addEventListener("DOMContentLoaded", function () {
        3px at rest, 4 hovered, 0 pressed — and the two surface versions below
        re-point these two declarations and inherit the arithmetic untouched. */
     --g-riser:color-mix(in srgb,var(--ink) 20%,var(--line));
-    --g-riser-hi:color-mix(in srgb,var(--ink) 34%,var(--line));
+    /* With a Hover pick the climbed wall is that cap in shade, the press step —
+       not the pick mixed into --line, which inside .btn is the BUTTON pick's
+       hairline and turned an orange cap's wall mauve over a blue one. */
+    --g-riser-hi:var(--hover-press, color-mix(in srgb,var(--ink) 34%,var(--line)));
     background:var(--lift-bg);
     border:1px solid var(--line-ctl);
     box-shadow:0 3px 0 var(--g-riser);
@@ -5853,22 +5856,28 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:transform var(--t-2) var(--e-out), box-shadow var(--t-2) var(--e-out),
                background-color var(--t-3) ease, border-color var(--t-3) ease;
   }
+  /* A picked Hover colour is the cap on hover, verbatim, and the wall it
+     stands on climbs in the same hue — the wall is the face seen edge-on, so
+     --g-riser-hi reads the pick too. Unset, every value below is the one that
+     shipped. The press is one step under the pick (--hover-press). */
   .g-key:hover,
   .g-key:focus-visible{
     transform:translateY(-1px) rotate(0.001deg);
-    border-color:color-mix(in srgb,var(--ink) 32%,var(--line));
+    background-color:var(--hover-set, var(--lift-bg));
+    color:var(--on-hover-set, var(--m-plate-ink, var(--ink-text)));
+    border-color:var(--hover-set, color-mix(in srgb,var(--ink) 32%,var(--line)));
     box-shadow:0 4px 0 var(--g-riser-hi);
   }
   .btn.g-key:active{
     transform:translateY(3px) rotate(0.001deg);
     box-shadow:0 0 0 var(--g-riser-hi),
                inset 0 2px 3px rgba(var(--shadow-rgb),.2);
-    background-color:color-mix(in srgb,var(--lift-bg) 55%,var(--stage));
-    border-color:color-mix(in srgb,var(--ink) 55%,var(--line));
+    background-color:var(--hover-press, color-mix(in srgb,var(--lift-bg) 55%,var(--stage)));
+    border-color:var(--hover-press, color-mix(in srgb,var(--ink) 55%,var(--line)));
     /* 43 shades the same face to the same pair, so the pressed label takes the
        same ink 111's hovered one does — 55% and 50% are both grounds in that
        fit. .btn.g-key:active is 0-3-0 and clears the face group outright. */
-    color:var(--m-plate-stage-ink, var(--m-plate-ink, var(--ink-text)));
+    color:var(--on-hover-press, var(--m-plate-stage-ink, var(--m-plate-ink, var(--ink-text))));
     /* The stroke is continuous; the commit is not. Both colours carry a 0ms
        duration and a delay of 60% of the stroke, so they land as a step while
        the cap is still travelling the last 40%. */
@@ -10504,7 +10513,9 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.y-hold:hover,
   .btn.y-hold:focus-visible{
     transform:scale(.99) rotate(0.001deg);
-    background:color-mix(in srgb, var(--lift-bg) 50%, var(--stage));
+    /* A picked Hover colour is the hover, verbatim; unset, the approach is the
+       half-rung shade argued above. The flood below is then one step under it. */
+    background:var(--hover-set, color-mix(in srgb, var(--lift-bg) 50%, var(--stage)));
     /* The label moves with the ground. --m-face-ink is solved for the plate at
        REST, and this rule is the plate leaving that position: in light the face
        is a deep accent and the card is near-white, so shading half way to the
@@ -10512,7 +10523,7 @@ document.addEventListener("DOMContentLoaded", function () {
        over four palettes. --m-face-shade-ink is the same fit taken against
        where the plate actually arrives. Unset, both fall through to --ink-text
        and the default rendering does not move. */
-    color:var(--m-plate-stage-ink, var(--m-plate-ink, var(--ink-text)));
+    color:var(--on-hover-set, var(--m-plate-stage-ink, var(--m-plate-ink, var(--ink-text))));
   }
   /* The press belongs to the state, not to :active — during a capture :active
      stays true off-plate, which is exactly where the plate must let go. This
@@ -10531,7 +10542,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.y-hold::before{
     content:""; position:absolute; left:var(--y-x,50%); top:var(--y-y,50%); z-index:0;
     width:calc(var(--y-r,150px) * 2); aspect-ratio:1; border-radius:50%;
-    background:var(--ink);
+    background:var(--hover-press, var(--ink));
     transform:translate(-50%,-50%) scale(0) rotate(0.001deg);
     transition:transform var(--t-5) var(--e-out);
   }
@@ -10543,7 +10554,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .btn.y-hold[data-state="done"]::before{transition-duration:var(--t-1)}
   .btn.y-hold .lbl{position:relative; z-index:2; transition:color var(--t-3) ease}
   .btn.y-hold[data-state="pressing"] .lbl,
-  .btn.y-hold[data-state="done"] .lbl{color:var(--on-ink)}
+  .btn.y-hold[data-state="done"] .lbl{color:var(--on-hover-press, var(--on-ink))}
   @media (prefers-reduced-motion: reduce){
     .btn.y-hold::before{
       transform:translate(-50%,-50%) scale(1) rotate(0.001deg); opacity:0;
@@ -15172,12 +15183,31 @@ document.addEventListener("DOMContentLoaded", function () {
       // whatever hover just landed on, so it stays relative to it rather than
       // becoming a second flat colour. 72 fill and its done state are not
       // hover at all and are left alone.
+      // 🔑 …AND THE PRESS IS ONE STEP BELOW WHATEVER HOVER LANDED ON
+      // (2026-09-11). Where a study's hover now paints the Hover pick verbatim
+      // and its press paints a surface of its own — 111's flood, 43's cap — the
+      // press cannot be the pick again or it has nothing to say. It is the pick
+      // 80% of the way from the card, 123's own press step, with its label
+      // fitted to it. Computed and not a color-mix() in the sheet, so unset the
+      // token is absent and each study's own press stands byte for byte.
+      // ⚠️ NOT IN ROLE_OF. The Framer export's Fill Hover control writes every
+      // token of its role, which would set the press equal to the hover.
       if (look.hover && fitted.hover){
         root.setProperty('--hover-set', fitted.hover.hex);
         root.setProperty('--on-hover-set', onHover.hex);
+        var HOVER_PRESS = .8;
+        var pressRgb = [0, 1, 2].map(function (i){
+          return Math.round(hoverRgb[i] * HOVER_PRESS + PANEL[i] * (1 - HOVER_PRESS));
+        });
+        var onPress = look.textHover ? fitOn(look.textHover, 4.5, pressRgb)
+                                     : labelOnGrounds([pressRgb]);
+        root.setProperty('--hover-press', toHex(pressRgb));
+        root.setProperty('--on-hover-press', onPress.hex);
       } else {
         root.removeProperty('--hover-set');
         root.removeProperty('--on-hover-set');
+        root.removeProperty('--hover-press');
+        root.removeProperty('--on-hover-press');
       }
       // ---- The boundary on the plate those eight studies bring IN ---------
       // Same question ringable() asks about a rest plate, asked about the one
