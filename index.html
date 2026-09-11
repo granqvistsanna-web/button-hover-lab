@@ -2570,6 +2570,43 @@
     .set-range{flex:1; min-width:0; max-width:150px}
     .set-swatch{margin-left:auto}
   }
+  /* ---- The colour row under 375: two aligned rows per group -------------
+     Beside its heading a group needs its whole width on one line, and once
+     the clears arrive that is more than a small phone has. Measured on touch
+     (26px swatches), fold open: Text 243.6px set (its 12px margin included)
+     and 254.1 with a ↑ on both captions, Button 242.1 and 252.6 with one,
+     against a row of 216 at 320, 236 at 340 and 256 at 360. The group then
+     broke wherever the line ran out, which put Hover UNDER THE HEADING at
+     the heading's x, 41px left of the Default it pairs with — and 62 in the
+     Button group — and picking a colour reflowed a group that had fitted a
+     moment earlier. 360 held by 1.9px, which is not holding.
+     So below 375 each group is two rows: its heading, then Default and Hover
+     stacked in one column beside it, the clears in a column of their own.
+     The ROW is the grid and each group a subgrid of it, so TEXT and BUTTON
+     share the heading column — the four swatches sit on one vertical and
+     every ✕ on another, whichever roles are set. Picking a colour adds no
+     row: the ✕ arrives in its column, and a ↑ widens the caption column,
+     which moves all four swatches together. 375 up keeps the one-line
+     group: its widest
+     state is 254.1 in a 271 row there. The gaps are margins, not column-gap,
+     so heading → caption stays the 8px it is on one line and swatch → clear
+     the pair's own 2px; rows keep the row's 12. Gated on subgrid: without
+     it the pair would stack its ✕ under its swatch, and the one-line wrap
+     above is the better fallback. */
+  @media (max-width: 374px){ @supports (grid-template-columns:subgrid){
+    .tools-fold-body .tools-row:has(.set-swatch){display:grid;
+      grid-template-columns:max-content max-content max-content minmax(0,1fr);
+      gap:12px 0; align-items:center}
+    .tools-fold-body .tools-row:has(.set-swatch) > *{grid-column:1/-1}
+    .tools-fold-body .tools-row:has(.set-swatch) .set-grp{display:grid;
+      grid-template-columns:subgrid; column-gap:0; align-items:center;
+      margin-right:0}
+    .tools-fold-body .set-grp > .tools-lbl{grid-column:1; margin-right:8px}
+    .tools-fold-body .set-grp > .set-pair{grid-column:2/4; display:grid;
+      grid-template-columns:subgrid; column-gap:0}
+    .tools-fold-body .set-pair > .set-clear{margin-left:2px}
+    .tools-fold-body .set-grp > .set-uses{grid-column:1/-1; justify-self:start}
+  }}
 
   /* ---- Why the stage actions are visible at rest --------------------
      They were opacity:0 until the card was hovered, which hid the one thing
