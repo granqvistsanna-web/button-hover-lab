@@ -1456,11 +1456,21 @@
      right, so the word is uncovered from the LEFT, so the honest exit is
      immediate and on the plate's own curve: no delay, --t-1, --e-quint. The
      two now come off together and only the last letter or so is briefly light
-     on white, instead of the whole word being unreadable for 180ms. */
+     on white, instead of the whole word being unreadable for 180ms.
+
+     AND THE ENTER WAS LATE BY THE SAME ARGUMENT, found in Solo's frame step
+     on 2026-09-11. The plate is a quintic: it covers the word's centre at
+     57ms, but the label waited --d-2 and was only half turned at ~140ms, so
+     for about 80ms the covered half of the word was the plate's own colour on
+     the plate — at 67ms «See our» was simply gone. No delay, and --t-3:
+     `ease` is half done at 30% of its duration, so 200ms puts the label's
+     midpoint at 59ms, the frame the plate crosses the middle of the word
+     (--t-2 measured 39ms — early by as much as the old one was late by a
+     quarter). The label still finishes after the edge has passed it. */
   .sweep .lbl{position:relative; transition:color var(--t-1) var(--e-quint)}
   .sweep:hover .lbl,
   .sweep:focus-visible .lbl{color:var(--on-ink-hover);
-    transition:color var(--t-2) ease var(--d-2)}
+    transition:color var(--t-3) ease}
 
   /* 08 Slutare — ANCHORED, and the anchor is the card. It used to scale from
      transform-origin's default, the centre, which was never authored: it opened
@@ -1480,8 +1490,12 @@
   .shutter:hover::before,
   .shutter:focus-visible::before{transform:scaleY(1)}
   .shutter .lbl{position:relative; transition:color var(--t-2) ease var(--d-1)}
+  /* The enter loses its delay, for 07's reason (see the note there): the
+     --t-4 quintic reaches the word's centre at 40ms, and --d-1 + --t-2 was
+     half turned at 89ms. `ease` over --t-2 alone is half done at 40ms —
+     measured, the same frame. The exit keeps its rest-side timing. */
   .shutter:hover .lbl,
-  .shutter:focus-visible .lbl{color:var(--on-ink-hover); transition-delay:var(--d-1)}
+  .shutter:focus-visible .lbl{color:var(--on-ink-hover); transition:color var(--t-2) ease}
 
   /* 09 Ink fill — the fill grows from the point the pointer crossed, and the
      radius is MEASURED to that point rather than guessed. It was 240% of the
