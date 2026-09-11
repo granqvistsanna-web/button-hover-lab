@@ -18640,8 +18640,12 @@ document.addEventListener("DOMContentLoaded", function () {
       <span class="bhl-solo-lbl" title="F cycles the frame">Frame</span>
       <div class="bhl-solo-seg" role="radiogroup" aria-label="Frame"></div>
     </div>
+    <div class="bhl-solo-grp" data-g="speed">
+      <span class="bhl-solo-lbl" title="S cycles the speed, P holds the frame">Speed</span>
+      <div class="bhl-solo-seg" role="radiogroup" aria-label="Speed"></div>
+    </div>
   </div>
-  <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, 1–3 the size.">
+  <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, S the speed, P holds the frame, 1–3 the size.">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
 </div>
@@ -18729,6 +18733,61 @@ document.addEventListener("DOMContentLoaded", function () {
   var sFrame = seg('frame', FRAMES, function(){ return frame; },
                    function(v){ frame = v; solo.dataset.frame = v; });
 
+  /* SPEED IS A PLAYBACK RATE, NOT A DURATION. A still of the middle of a
+     sweep is the reason this exists, and at 1× that middle lasts two frames.
+     Rewriting durations would mean knowing every rule of every study; the
+     Web Animations clock already holds every CSS transition and keyframe
+     animation the stage is running, pseudo-elements included, and
+     playbackRate slows each one without touching what it draws.
+     🔑 A TRANSITION IS BORN ON HOVER, so it is not there to be slowed when
+     the control is set. The sweep runs every frame while the rate is not 1,
+     and getAnimations() flushes style as it reads, so a transition the
+     pointer started this frame is caught at its first frame rather than one
+     frame in. Hold is the same machine at rate 0: whatever starts while it is
+     on starts frozen, so a hovered frame survives the pointer leaving.
+     ⚠️ ONLY THE CSS CLOCK. Motion a study runs in script — springs on rAF,
+     sequences on setTimeout — keeps real time, and the note says so on the
+     studies the manifest tags js. Scoped to the moved stage and swept back
+     to 1 before it goes home, so the feed never inherits a slowed loop. */
+  var SPEEDS = [['1','1×'], ['0.25','¼×'], ['0.1','⅒×'], ['0','Hold']];
+  var speed = 1, held = false, rafS = 0;
+  function rate(){ return held ? 0 : speed; }
+  function sweep(stage, r){
+    stage.getAnimations({subtree:true}).forEach(function(a){
+      if (a.playbackRate !== r) a.playbackRate = r;
+    });
+  }
+  function tick(){
+    rafS = 0;
+    if (!open) return;
+    var r = rate();
+    sweep(open.stage, r);
+    if (r !== 1) rafS = requestAnimationFrame(tick);
+  }
+  function applySpeed(){
+    cancelAnimationFrame(rafS); rafS = 0;
+    tick();
+    paintNote();
+  }
+  var sSpeed = seg('speed', SPEEDS,
+                   function(){ return held ? '0' : String(speed); },
+                   function(v){
+                     if (+v === 0){ held = true; }
+                     else { held = false; speed = +v; }
+                     applySpeed();
+                   });
+
+  function paintNote(){
+    var key = open ? (open.card.dataset.key || '') : '';
+    var bits = [];
+    if (JS_KEYS[key]){
+      bits.push('pointer-driven · size 1× only');
+      if (rate() !== 1) bits.push('scripted motion keeps real time');
+    }
+    note.textContent = bits.join(' · ');
+    note.hidden = !bits.length;
+  }
+
   /* ---- open / close --------------------------------------------------- */
   var open = null;        // {card, stage, hole, versEl, opener}
   var idleT = null;
@@ -18791,7 +18850,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* The cap, and the one line that says why. */
     var pinned1x = !!JS_KEYS[key];
-    note.hidden = !pinned1x;
+    paintNote();
     sSize.btns.forEach(function(b){
       var off = pinned1x && b.dataset.v !== '1';
       b.setAttribute('aria-disabled', off ? 'true' : 'false');
@@ -18804,6 +18863,8 @@ document.addEventListener("DOMContentLoaded", function () {
        while the control said 2 — the one state where the chrome and the frame
        disagree. */
     applySize(); sSize.paint(); applyGround(); sGround.paint();
+    // Speed carries across a step, so paging a take at ¼× stays at ¼×.
+    applySpeed(); sSpeed.paint();
 
     solo.hidden = false;
     root.dataset.solo = '1';
@@ -18819,6 +18880,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function restore(){
     if (!open) return;
     var o = open; open = null;
+    cancelAnimationFrame(rafS); rafS = 0;
+    sweep(o.stage, 1);
     still(o.stage, function(){
       if (o.versEl) o.stage.appendChild(o.versEl);
       o.hole.parentNode.insertBefore(o.stage, o.hole);
@@ -18837,6 +18900,8 @@ document.addEventListener("DOMContentLoaded", function () {
     solo.dataset.pinned = '0';
     // The 1× a pointer-driven study forced is that study's, not the view's.
     if (size !== 2){ size = 2; applySize(); sSize.paint(); }
+    // A hold is a moment in one take; the chosen speed is the session's.
+    if (held){ held = false; sSpeed.paint(); }
     var done = function(){ solo.hidden = true; };
     setTimeout(done, 220);
     if (o && o.opener && o.opener.isConnected) o.opener.focus();
@@ -18892,6 +18957,17 @@ document.addEventListener("DOMContentLoaded", function () {
       var order = FRAMES.map(function(f){ return f[0]; });
       frame = order[(order.indexOf(frame) + 1) % order.length];
       solo.dataset.frame = frame; sFrame.paint(); bumpIdle(); return;
+    }
+    if (e.key === 's' || e.key === 'S'){
+      // Cycles the three rates and leaves Hold to P, so S never freezes a take.
+      var rates = [1, 0.25, 0.1];
+      speed = rates[(rates.indexOf(speed) + 1) % rates.length];
+      held = false; applySpeed(); sSpeed.paint(); bumpIdle(); return;
+    }
+    if (e.key === 'p' || e.key === 'P'){
+      // P and not Space: Space on a focused button presses it, and the button
+      // in the middle of the frame is the one thing a key must not reach.
+      held = !held; applySpeed(); sSpeed.paint(); bumpIdle(); return;
     }
     if (e.key === '1' || e.key === '2' || e.key === '3'){
       var b = sSize.btns[+e.key - 1];
