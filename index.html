@@ -18556,6 +18556,11 @@ document.addEventListener("DOMContentLoaded", function () {
   .bhl-solo-b:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
   .bhl-solo-b[aria-disabled="true"]{opacity:.32; cursor:default}
   .bhl-solo-b[aria-disabled="true"]:hover{background:none; color:var(--ink-mid)}
+  .bhl-solo-b[aria-pressed="true"]{background:var(--on-card-hi); color:var(--ink-hi)}
+  /* The clock under the step buttons. Tabular so the group does not shuffle
+     sideways by a digit's width on every frame. */
+  .bhl-solo-ms{font:500 10.5px/1 var(--mono); letter-spacing:.04em; color:var(--ink-low);
+    min-width:6ch; text-align:right; font-variant-numeric:tabular-nums}
 
   /* The card's own version radios, moved out of the stage so the scale control
      cannot magnify them along with the subject. */
@@ -18643,6 +18648,16 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="bhl-solo-grp" data-g="speed">
       <span class="bhl-solo-lbl" title="S cycles the speed, P holds the frame, comma and full stop step one frame">Speed</span>
       <div class="bhl-solo-seg" role="radiogroup" aria-label="Speed"></div>
+    </div>
+    <div class="bhl-solo-grp" data-g="step">
+      <span class="bhl-solo-lbl" title="Hover holds the hover state without the pointer; the arrows step one frame">Step</span>
+      <div class="bhl-solo-seg">
+        <button type="button" class="bhl-solo-b" data-a="hover" aria-pressed="false"
+                title="Hold the button in its hover state without the pointer on it">Hover</button>
+        <button type="button" class="bhl-solo-b" data-a="back" aria-label="Back one frame (comma)" title="Back one frame (,)">&lsaquo;</button>
+        <button type="button" class="bhl-solo-b" data-a="fwd" aria-label="Forward one frame (full stop)" title="Forward one frame (.)">&rsaquo;</button>
+      </div>
+      <span class="bhl-solo-ms">0 ms</span>
     </div>
   </div>
   <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, S the speed, P holds the frame, comma and full stop step a frame, 1–3 the size.">
@@ -18762,6 +18777,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!open) return;
     var r = rate();
     sweep(open.stage, r);
+    readout();
     if (r !== 1) rafS = requestAnimationFrame(tick);
   }
   function applySpeed(){
@@ -18789,6 +18805,15 @@ document.addEventListener("DOMContentLoaded", function () {
      next , then has nothing to walk back — measured, the list went to zero.
      0.01ms before the end draws the same frame and keeps it on the clock. */
   var FRAME = 1000 / 60;
+  var msEl = solo.querySelector('.bhl-solo-ms');
+  function readout(){
+    if (!open) return;
+    var t = 0;
+    open.stage.getAnimations({subtree:true}).forEach(function(a){
+      t = Math.max(t, a.currentTime || 0);
+    });
+    msEl.textContent = Math.round(t) + ' ms';
+  }
   function stepFrames(n){
     if (!open) return;
     if (!held){ held = true; applySpeed(); sSpeed.paint(); }
@@ -18797,7 +18822,91 @@ document.addEventListener("DOMContentLoaded", function () {
       var t = (a.currentTime || 0) + n * FRAME;
       a.currentTime = Math.max(0, isFinite(end) ? Math.min(end - 0.01, t) : t);
     });
+    readout();
   }
+
+  /* HOVER WITHOUT THE POINTER — what the step buttons need to be usable at
+     all. :hover cannot be set from script, so on first use every rule that
+     names :hover is copied with .bhl-hov in its place and inserted DIRECTLY
+     AFTER its original, inside the same @media or @supports. The copy then
+     sits exactly where the original sits in the cascade, and a later rule that
+     beat the hover rule still beats the copy.
+     🔑 THE CLASS GOES ON THE WHOLE CHAIN, button up to the stage, because real
+     hover does: an ancestor under the pointer is :hover too, and the row
+     studies (60, 62, 151…) read `.k-…-i:not(:hover)` on the item WRAPPING the
+     button. Class only on the button and every item in the row counts as
+     not-hovered.
+     ⚠️ Studies that listen for pointer events get a synthetic enter at the
+     button's centre and a leave on release. The pointer's real path over the
+     frame is still delivered to them, so a pass across the button while Hover
+     is on can move them; the CSS ones cannot be moved.
+     🚨 THE COPIES LIVE ONLY WHILE HOVER IS ON. The copy buttons read the live
+     CSSOM, and `.sweep.bhl-hov::before` names the key `sweep` — a snippet
+     taken after one use of Hover would have shipped the copies. They are
+     removed on release, so the sheet the copier reads is the authored one. */
+  var hovClones = [];
+  function cloneHover(){
+    if (hovClones.length) return;
+    function walk(list, owner){
+      for (var i = list.length - 1; i >= 0; i--){
+        var r = list[i];
+        if (r.cssRules && r.insertRule && !(r instanceof CSSStyleRule)){ walk(r.cssRules, r); continue; }
+        if (!(r instanceof CSSStyleRule) || r.selectorText.indexOf(':hover') === -1) continue;
+        var sel = r.selectorText.replace(/:hover\b/g, '.bhl-hov');
+        try {
+          owner.insertRule(sel + r.cssText.slice(r.selectorText.length), i + 1);
+          hovClones.push([owner, owner.cssRules[i + 1]]);
+        } catch (e) {}
+      }
+    }
+    [].forEach.call(document.styleSheets, function(s){
+      var rules; try { rules = s.cssRules; } catch (e) { return; }
+      walk(rules, s);
+    });
+  }
+  function uncloneHover(){
+    hovClones.forEach(function(c){
+      var i = [].indexOf.call(c[0].cssRules, c[1]);
+      if (i !== -1) c[0].deleteRule(i);
+    });
+    hovClones = [];
+  }
+  var hovOn = false, hovChain = [];
+  var hovBtn = solo.querySelector('[data-a="hover"]');
+  function fire(el, types, x, y){
+    types.forEach(function(t){
+      var bubbles = !/enter|leave/.test(t);
+      var E = t.indexOf('pointer') === 0 ? PointerEvent : MouseEvent;
+      el.dispatchEvent(new E(t, {bubbles:bubbles, clientX:x, clientY:y, pointerType:'mouse', isPrimary:true}));
+    });
+  }
+  function setHover(on){
+    if (!open || on === hovOn) return;
+    var btn = open.stage.querySelector('.btn');
+    if (!btn) return;
+    var r = btn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    if (on){
+      cloneHover();
+      hovChain = [];
+      for (var el = btn; el && el !== fit; el = el.parentElement) hovChain.push(el);
+      hovChain.forEach(function(el){ el.classList.add('bhl-hov'); });
+      fire(btn, ['pointerover','pointerenter','mouseover','mouseenter','pointermove','mousemove'], x, y);
+    } else {
+      hovChain.forEach(function(el){ el.classList.remove('bhl-hov'); });
+      hovChain = [];
+      uncloneHover();
+      fire(btn, ['pointerout','pointerleave','mouseout','mouseleave'], x, y);
+    }
+    hovOn = on;
+    hovBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    // Caught here, synchronously, rather than on the next tick: a transition
+    // born under Hold has to be frozen before its first frame is drawn.
+    sweep(open.stage, rate());
+    readout();
+  }
+  hovBtn.addEventListener('click', function(){ setHover(!hovOn); });
+  solo.querySelector('[data-a="back"]').addEventListener('click', function(){ stepFrames(-1); });
+  solo.querySelector('[data-a="fwd"]').addEventListener('click', function(){ stepFrames(1); });
 
   function paintNote(){
     var key = open ? (open.card.dataset.key || '') : '';
@@ -18901,6 +19010,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function restore(){
     if (!open) return;
+    // Released before the stage goes home: the class must not travel with it,
+    // and the copied rules must be gone before a copy button can be reached.
+    setHover(false);
     var o = open; open = null;
     cancelAnimationFrame(rafS); rafS = 0;
     sweep(o.stage, 1);
