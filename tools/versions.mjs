@@ -103,7 +103,7 @@ export const VERSIONS = {
   // length. No outline: .btn--line IS the ring 136 already draws for itself.
   'h-grow':'fill link',
   // — Material and light ————————————————————————————————————————
-  'f-glas':'', 'f-lykta':'',
+  'f-glas':'',
   's-bevel':'', 's-sprite':'', 'x-bevel':'',
   // — Icon ————————————————————————————————————————————————————
   // The mark is a child that moves, fades or redraws; the button's own surface
@@ -424,7 +424,7 @@ export const NATIVE = {
   // — Fill: the study paints its own plate ————————————————————————
   'o-caps':'fill', 'p-index':'fill',
   'sheen':'fill', 'relay':'fill', 'roll':'fill',   'h-marq':'fill', 'u-lift':'fill', 'u-words':'fill', 'u-shuffle':'fill',
-  'e-chamfer':'fill', 'e-count':'fill', 'f-lykta':'fill',
+  'e-chamfer':'fill', 'e-count':'fill',
   's-bevel':'fill', 's-sprite':'fill', 'g-measure':'fill', 'f-kant':'fill',
   'g-key':'fill', 'magnet':'fill',
   'i-mass':'fill', 'i-anti':'fill', 'i-throw':'fill', 'k-pair':'fill',

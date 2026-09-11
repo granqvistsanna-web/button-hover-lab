@@ -85,7 +85,7 @@ const GROUPS = [
 // Every copied snippet then carries the alias if and only if it reads it.
 const ALIAS_REHOME = [
   ['  .f-mat{ --f-lys:var(--ink); --f-mork:var(--on-ink) }',
-   '  .f-glas, .f-lykta{ --f-lys:var(--ink); --f-mork:var(--on-ink) }'],
+   '  .f-glas{ --f-lys:var(--ink); --f-mork:var(--on-ink) }'],
   // The .l-mat -> .l-deboss rehoming is gone WITH ITS CARD: Deboss was culled
   // (ef1ea6c) and the alias left the stylesheet with it, so there is nothing
   // left to move and nothing left that reads it. If a card reading --l-lys
@@ -286,7 +286,6 @@ const ORDER_OF = {
     // Light: something is emitting.
     'Bloom',
     'Inner light',
-    'Lantern',
     'Light flip',
     'Fixed light',
     'Sheen',
