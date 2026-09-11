@@ -18641,11 +18641,11 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="bhl-solo-seg" role="radiogroup" aria-label="Frame"></div>
     </div>
     <div class="bhl-solo-grp" data-g="speed">
-      <span class="bhl-solo-lbl" title="S cycles the speed, P holds the frame">Speed</span>
+      <span class="bhl-solo-lbl" title="S cycles the speed, P holds the frame, comma and full stop step one frame">Speed</span>
       <div class="bhl-solo-seg" role="radiogroup" aria-label="Speed"></div>
     </div>
   </div>
-  <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, S the speed, P holds the frame, 1–3 the size.">
+  <button type="button" class="bhl-solo-x" aria-label="Close solo view. Escape closes, arrows page, H hides the controls, G the ground, F the frame, S the speed, P holds the frame, comma and full stop step a frame, 1–3 the size.">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
 </div>
@@ -18776,6 +18776,28 @@ document.addEventListener("DOMContentLoaded", function () {
                      else { held = false; speed = +v; }
                      applySpeed();
                    });
+
+  /* FRAME BY FRAME, AND ONLY FROM THE KEYBOARD. A step button would have to
+     be clicked, and reaching it takes the pointer off the study: the hover
+     transition is cancelled, the way home starts, and the frame you step is
+     the button leaving rather than arriving. With the pointer parked on the
+     button, , and . move every animation on the stage one 60fps frame of its
+     own time, clamped to its ends. A step implies a hold, and it does not
+     call the chrome back, because the frame after a step is the capture.
+     ⚠️ THE CLAMP STOPS A HAIR SHORT OF THE END. A transition stepped onto its
+     endTime finishes, a finished transition leaves getAnimations(), and the
+     next , then has nothing to walk back — measured, the list went to zero.
+     0.01ms before the end draws the same frame and keeps it on the clock. */
+  var FRAME = 1000 / 60;
+  function stepFrames(n){
+    if (!open) return;
+    if (!held){ held = true; applySpeed(); sSpeed.paint(); }
+    open.stage.getAnimations({subtree:true}).forEach(function(a){
+      var end = a.effect.getComputedTiming().endTime;
+      var t = (a.currentTime || 0) + n * FRAME;
+      a.currentTime = Math.max(0, isFinite(end) ? Math.min(end - 0.01, t) : t);
+    });
+  }
 
   function paintNote(){
     var key = open ? (open.card.dataset.key || '') : '';
@@ -18968,6 +18990,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // P and not Space: Space on a focused button presses it, and the button
       // in the middle of the frame is the one thing a key must not reach.
       held = !held; applySpeed(); sSpeed.paint(); bumpIdle(); return;
+    }
+    if (e.key === ',' || e.key === '.'){
+      e.preventDefault(); stepFrames(e.key === '.' ? 1 : -1); return;
     }
     if (e.key === '1' || e.key === '2' || e.key === '3'){
       var b = sSize.btns[+e.key - 1];
