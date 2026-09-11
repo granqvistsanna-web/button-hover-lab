@@ -7735,18 +7735,35 @@ document.addEventListener("DOMContentLoaded", function () {
   .k-icon .k-icon-i:nth-child(3):is(:hover,:focus-visible){width:121px}
   .k-icon .k-icon-i:nth-child(4):is(:hover,:focus-visible){width:104px}
 
-  /* 162 Fanned deck -- at rest the buttons overlap by thirty pixels, stacked
+  /* 162 Fanned deck -- at rest the buttons overlap by twenty pixels, stacked
      front-to-back with a shadow at each edge, so the row reads as a held deck
      and only the first label is fully legible. 133 is the other study where the
      resting state hides part of the row on purpose; the difference is that 133
      hides the END of a row too wide for its holder, and this hides the MIDDLE
      of a row that chose to be compressed.
-     THE DECK OPENS ON ENTERING THE ROW, NOT THE BUTTON, and that is a fix rather
-     than a preference. Spreading on the button you point at slides that button
-     about forty pixels sideways, out from under the pointer -- the hover drops,
-     the deck re-stacks, and it re-opens the moment you land again, which reads
-     as a flicker and measures as a dead study. Opening on the row means the
-     layout has already stopped moving by the time the per-item lift plays.
+     🚨 THE DECK SPREADS AWAY FROM THE CARD YOU ARE ON, AND THAT CARD DOES NOT
+     MOVE. Both earlier versions slid the card out from under the pointer. The
+     first spread on the button and slid it ~40px. The second spread on the
+     ROW, which only moved the problem: the row is centred, so widening it by
+     90px spread it about its middle -- Ace went 45px left, the pointer landed
+     in the gap and nothing lifted -- and at 390, where safe centring falls
+     back to start, it grew rightward and pointing at Jack (+90) lifted Queen.
+     No spread that ignores which card you are on can be fixed: a card's
+     visible strip at rest is only 20px deeper than its tuck, and the deck has
+     to open by 30 per card. So the spread is keyed on the card: every card
+     translates by (its index - yours) x 30px, the 20px tuck undone plus the
+     10px gap, and yours is x 0 by construction. It is translate and not
+     margin, so the row's box and its centring never change and nothing
+     reflows under the pointer. The price is honest: sweeping the deck, it
+     re-anchors on each card you cross, so it steps 30px against the pointer
+     -- and that is stable, because the card you move onto only ever travels
+     back under you, and the 10px gap between two cards falls, at rest, inside
+     the visible strip of the card you were heading for.
+     THE LIFTED CARD KEEPS ITS OLD FOOTPRINT. Lifting 5px leaves the bottom 5px
+     of where the card stood with nothing in it, so a pointer resting there
+     dropped the card, landed on it again and lifted it -- measured at 13
+     hover flips in 700ms. The ::after reaches back down over those 5px, only
+     while hovered, painting nothing.
      THE OVERLAP CEILING IS THE PLATE'S OWN PADDING, and it was breached on the
      first attempt. .btn pads 28px on the left; overlapping by 30 put the front
      neighbour 2px PAST where the label starts, so the first glyph of King,
@@ -7761,30 +7778,34 @@ document.addEventListener("DOMContentLoaded", function () {
      visible at all -- cut the house 28px to 12 to fit a 276px stage and the tuck
      has to come down to 8, which is not a held deck, it is four buttons standing
      slightly close. The two constraints meet nowhere on a normal card, so this
-     is one of the four in the batch that takes the wide card: 316 stacked, 406
-     spread, inside the 616px wide stage at 1200 and the 496 it collapses to at
-     600. Nothing else changes -- the 20px tuck and the 28px padding are both
+     is one of the four in the batch that takes the wide card: 316 stacked,
+     reaching up to 90px past either end when spread, inside the 616px wide
+     stage at 1200 and the 496 it collapses to at 600. Nothing else changes --
+     the 20px tuck and the 28px padding are both
      already at their limit and both are the study. */
   .k-deck{gap:0; padding-left:4px}
   .k-deck .k-deck-i{
     margin-left:-20px;
     background-color:var(--bg-2); border:1px solid var(--line-ctl);
     box-shadow:-6px 0 14px -8px rgba(var(--shadow-rgb),.9);
-    transition:margin var(--t-5) var(--e-quint), transform var(--t-2) var(--e-out),
+    transition:translate var(--t-5) var(--e-quint), transform var(--t-2) var(--e-out),
                box-shadow var(--t-4) var(--e-quint);
   }
   .k-deck .k-deck-i:first-child{margin-left:0}
-  .k-deck .k-deck-i:nth-child(1){z-index:4}
-  .k-deck .k-deck-i:nth-child(2){z-index:3}
-  .k-deck .k-deck-i:nth-child(3){z-index:2}
-  .k-deck .k-deck-i:nth-child(4){z-index:1}
-  .k-deck:hover .k-deck-i,
-  .k-deck:has(.btn:focus-visible) .k-deck-i{margin-left:10px}
-  .k-deck:hover .k-deck-i:first-child,
-  .k-deck:has(.btn:focus-visible) .k-deck-i:first-child{margin-left:0}
+  .k-deck .k-deck-i:nth-child(1){z-index:4; --k-deck-n:0}
+  .k-deck .k-deck-i:nth-child(2){z-index:3; --k-deck-n:1}
+  .k-deck .k-deck-i:nth-child(3){z-index:2; --k-deck-n:2}
+  .k-deck .k-deck-i:nth-child(4){z-index:1; --k-deck-n:3}
+  .k-deck:has(.k-deck-i:nth-child(1):is(:hover,:focus-visible)){--k-deck-at:0}
+  .k-deck:has(.k-deck-i:nth-child(2):is(:hover,:focus-visible)){--k-deck-at:1}
+  .k-deck:has(.k-deck-i:nth-child(3):is(:hover,:focus-visible)){--k-deck-at:2}
+  .k-deck:has(.k-deck-i:nth-child(4):is(:hover,:focus-visible)){--k-deck-at:3}
+  .k-deck:has(.k-deck-i:is(:hover,:focus-visible)) .k-deck-i{
+    translate:calc((var(--k-deck-n) - var(--k-deck-at)) * 30px) 0}
   .k-deck .k-deck-i:is(:hover,:focus-visible){
     transform:translateY(-5px); z-index:9;
     box-shadow:0 12px 24px -10px rgba(var(--shadow-rgb),.95)}
+  .k-deck .k-deck-i:hover::after{content:""; position:absolute; inset:0 0 -5px}
 
   /* 160 Shared caret -- one caret above the row, sliding to whatever you point
      at. The twist is that it LEANS BACK THE WAY IT CAME: travelling right it
