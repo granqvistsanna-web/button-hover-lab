@@ -8156,10 +8156,28 @@ document.addEventListener("DOMContentLoaded", function () {
      honest fix: border-color now moves, so «one property» is no longer a claim
      about the one property that does not. */
   .o-quiet{border-color:var(--line-ctl); background:transparent;
-    transition:border-color var(--t-2) ease, background-color var(--t-2) ease}
+    transition:border-color var(--t-2) ease, background-color var(--t-2) ease,
+               color var(--t-2) ease}
+  /* 🔑 THE HOVER HERE IS A SURFACE ARRIVING, SO IT IS THE HOVER COLOUR'S TO
+     PAINT. It read --ink until 2026-09-11, and a picked hover never reached
+     this card: measured with Button #1f6feb and Hover #e8590c, half the
+     plate changed on hover, all of it blue, and swapping the Hover pick
+     moved 0 pixels. Spelled the way the nine tone steps are spelled at
+     --hover-set in paint(): the pick verbatim when there is one, this
+     card's own 12% ground when there is not, so the default page does not
+     move a pixel.
+     ⚠️ NOT --ink-hover AT 12%. That was measured first: the label is fitted
+     to the card at the floor, any wash under it takes it below, and it
+     left eight palette cells under 4.5:1 on hover. A verbatim plate has a
+     label fitted to it, --on-hover-set, so the label moves with it, on the
+     same --t-2 as the ground. The fill version names its own fallback
+     because its unset label is --ink-on-fill, not --ink-text. */
   .o-quiet:hover,.o-quiet:focus-visible{
-    border-color:var(--ink);
-    background:color-mix(in srgb, var(--ink) 12%, transparent)}
+    border-color:var(--hover-set, var(--ink));
+    background:var(--hover-set, color-mix(in srgb, var(--ink) 12%, transparent));
+    color:var(--on-hover-set, var(--ink-text))}
+  .o-quiet.btn--solid:hover,.o-quiet.btn--solid:focus-visible{
+    color:var(--on-hover-set, var(--ink-on-fill))}
 
   /* 87 Overrun — a second copy of the label sits just outside the
      right edge and the row slides far enough to prove it is there. Card 16
@@ -15081,6 +15099,16 @@ document.addEventListener("DOMContentLoaded", function () {
         // What this role was fitted against, in words. Only textHover sits on
         // a fill; everything else is read on the card.
         var against = r.onFill ? 'on the hover fill' : 'on the card';
+        // The exemption the Hover colour carries, said where it is set so it
+        // is never found as a bug. «Painted exactly» is a promise about what
+        // ARRIVES — a fill, a plate, a wash, a hairline. A study that hovers
+        // with light moves light, not a surface, and light is not recoloured.
+        // ⚠️ NO LIST OF CARDS AND NO COUNT, for the reason the Button caption
+        // gives: a hand-kept number in a tooltip is the first thing to go stale.
+        var lightNote = ' The studies that hover with light instead (a glow,'
+                      + ' a sheen, a bevel, a streak along the edge) keep their'
+                      + ' light, which can lean toward a picked colour but is'
+                      + ' never painted as one.';
         if (f){
           r.set.forEach(function(p){ root.setProperty(p, f.hex); });
           // The rest label answers for two fits: itself against the card, and
@@ -15146,6 +15174,9 @@ document.addEventListener("DOMContentLoaded", function () {
             why += ' On a filled button it is refitted against the fill and lands on '
                  + onAccent.hex + ' — ' + onAccent.ratio.toFixed(1) + ':1 there.';
           }
+          if (r.key === 'hover'){
+            why += ' Anything that arrives on hover takes it as it is.' + lightNote;
+          }
           cap.title = why;
           if (f.moved || alsoOnFill || derivedMoved) moved++;
           if (r.key === 'text') textRatio = f.ratio;
@@ -15161,7 +15192,8 @@ document.addEventListener("DOMContentLoaded", function () {
           // the accent and then the page.
           cap.title = name + ' is unset — ' + (
               r.key === 'textHover' ? 'the label keeps the rest colour, refitted against the hover fill.'
-            : r.key === 'hover'     ? 'hover keeps the button’s own colour.'
+            : r.key === 'hover'     ? 'hover keeps the button’s own colour. Once set, it is painted'
+                                    + ' exactly on anything that arrives on hover.' + lightNote
             : r.key === 'text'      ? 'the label follows the button colour, walked until it clears 4.5:1 on the card, and is computed black-or-white on a fill. The button’s own fill is never walked.'
             :                         'the button keeps graphite’s white.')
             + ' Left as an alias rather than written to the root, so a copied '
