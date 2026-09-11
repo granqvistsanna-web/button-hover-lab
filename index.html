@@ -10852,10 +10852,12 @@ document.addEventListener("DOMContentLoaded", function () {
      ⚠️ THE FACE IS AN INSET LAYER OF THE SAME box-shadow, NOT A
      background-color, for two reasons. It rides the clock the fan already
      runs on, in both directions, with nothing new transitioned. And
-     background-color must never transition here: ringable() reads the plate's
-     computed background the instant paint() writes a new pick, so a
-     transition hands it the colour being LEFT — measured: a black Button on
-     dark lost its ring. The label is --on-hover-set, fitted by paint().
+     background-color stays off the clock here: ringable() used to read the
+     plate's computed background the instant paint() wrote a new pick, so a
+     transition handed it the colour being LEFT — measured: a black Button on
+     dark lost its ring. It reads the destination now (restingBg), so this
+     is a second guard rather than the only one. The label is --on-hover-set,
+     fitted by paint().
      Unset, --hover-set is absent: the face is transparent, every --z-hs-* is
      invalid, and the stack is byte for byte what shipped.
      Fill only: the outline has no paper, and .btn--solid restates its own. */
@@ -14395,11 +14397,31 @@ document.addEventListener("DOMContentLoaded", function () {
     // 2px is the structural register and belongs to exactly two rules, both of
     // them a bevel; 1px is the hairline register, which is subordinate by
     // definition and is why 44 keeps its ring while 34 and 104 lose theirs.
+    // 🚨 …AND THE PLATE IS A COLOUR, SO IT WALKED INTO THAT SAME TRAP. A plate
+    // that transitions background-color, read in the task that wrote the pick,
+    // hands back the plate it is LEAVING. Measured 2026-09-11, black Button on
+    // dark: 10, 43, 49, 50, 52, 64, 111, 120, 123, 126, 138 and 155 read as
+    // graphite's #f2f2f2 («identifies itself») or the old #222222 («not the
+    // pick») and sat at 1.32:1 on the card with no ring — and Navy and Pine
+    // off the palette row lost the same ones. So the colour is taken from
+    // where the transition is GOING: the last keyframe, on the Web Animations
+    // clock the solo stage already reads. Nothing is forced, finished or
+    // suspended, so the fade the reader sees is untouched; with nothing
+    // running, the computed value already is the destination.
+    function restingBg(b, cs){
+      var to = cs.backgroundColor;
+      b.getAnimations().forEach(function (a){
+        if (a.transitionProperty !== 'background-color') return;
+        var k = a.effect.getKeyframes();
+        if (k.length && k[k.length - 1].backgroundColor) to = k[k.length - 1].backgroundColor;
+      });
+      return to;
+    }
     function ringable(A){
       var list = [];
       [].forEach.call(document.querySelectorAll('.spec .btn'), function (b){
         var cs = getComputedStyle(b);
-        var m = (cs.backgroundColor || '').match(/-?[\d.]+/g);
+        var m = (restingBg(b, cs) || '').match(/-?[\d.]+/g);
         if (!m) return;
         if (m.length > 3 && Number(m[3]) < .9) return;      // not an opaque plate
         var c = [+m[0], +m[1], +m[2]];
@@ -15437,8 +15459,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // ring can never disagree with the plate it is drawn on.
       //
       // ⚠️ COMPUTED OFF THE NUMBERS, NEVER OFF THE PAGE. ringable() reads its
-      // plates back out of the DOM and can, because it runs after the write
-      // and tests a width rather than a colour. There is no equivalent here:
+      // plates back out of the DOM and can, because it runs after the write,
+      // tests its edge by width, and takes the plate's colour from where its
+      // transition is going (restingBg). There is no equivalent here:
       // the arriving plate only exists while a pointer is on the button, so a
       // read would either find the resting plate or find a colour mid-
       // transition — the trap ringable's own comment records, one surface over.
