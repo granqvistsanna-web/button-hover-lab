@@ -1250,6 +1250,42 @@
      accessibility bug than the one being fixed. */
   .btn[data-ring]{ outline:1px solid var(--accent-ring, var(--line-ctl)); outline-offset:-1px }
   .btn[data-ring]:focus-visible{ outline:2px solid var(--ink-low); outline-offset:3px }
+  /* 🔑 …AND ON A PLATE THAT IS NOT THE BUTTON, THE RING GOES ON THE PLATE.
+     Eighteen studies paint theirs on a child, a pseudo-element, a row of
+     pieces or a prism's faces; paint() measures the plate PLATES names and
+     stamps data-plate-ring where the ring belongs, its value saying how, so
+     the ring takes the plate's own shape and rides its motion. A rectangle
+     round a chamfer or a pill round a split pair is the thing this refuses.
+     ⚠️ SPELLED WITH .spec AND NO STUDY CLASS. The Copy collector keeps a rule
+     only if every class in it is the card's or house furniture, and tag()
+     files a card by its own keys — so none of this reaches a snippet, a
+     Framer module or the facet rail, exactly like the stamp it keys on.
+     `thick` is the same outline at 1.5px, and the half pixel is contrast,
+     not weight: 147-150's faces are rasterised flat and resampled through
+     the perspective, and 41's plate is cut by an antialiased clip-path, so a
+     1px ring lands blurred across its neighbours — measured 2.49-2.65:1 on
+     the prisms and down to 2.42 round 41's caps. At 1.5px the core
+     survives: 3.12, black on dark, both places.
+     `shape` is a stroke traced round whatever the element paints (the SVG
+     filter #plate-ring, at the foot of the page), for the plates an outline
+     cannot follow: a chamfer's clip-path clips it, a row of cells or a pair
+     that splits and joins would get a grid or a seam, and 139's panels and
+     159's buttons are painted OVER an outline on the plate beneath them. It
+     sits 1px OUTSIDE the plate where an outline sits 1px inside. On the
+     button itself it stands down under focus, as .btn[data-ring] does, so a
+     focus ring is never traced.
+     (0,3,0) on the two that repaint a study's own layer, to outrank that
+     study's rest rule; 41's hover rule is later and still wins, so its trim
+     hands over to the plate exactly as authored. */
+  .spec [data-plate-ring="outline"],
+  .spec [data-plate-ring="::before"]::before{
+    outline:1px solid var(--accent-ring, var(--line-ctl)); outline-offset:-1px }
+  .spec [data-plate-ring="thick"]{
+    outline:1.5px solid var(--accent-ring, var(--line-ctl)); outline-offset:-1.5px }
+  .spec [data-plate-ring="shape"]{ filter:url(#plate-ring) }
+  .spec .btn[data-plate-ring="shape"]:focus-visible{ filter:none }
+  .spec .btn [data-plate-ring="border"]{ border-color:var(--accent-ring, var(--line-ctl)) }
+  .spec .btn[data-plate-ring="::before-fill"]::before{ background:var(--accent-ring, var(--line-ctl)) }
 
   /* ---- The four versions ----------------------------------------------
      Fill, outline and link are the three surface treatments; LONG is a label
@@ -14431,27 +14467,94 @@ document.addEventListener("DOMContentLoaded", function () {
     // clock the solo stage already reads. Nothing is forced, finished or
     // suspended, so the fade the reader sees is untouched; with nothing
     // running, the computed value already is the destination.
-    function restingBg(b, cs){
+    // A pseudo-element's transition runs on its originating element's clock,
+    // and only a subtree query hands it back — hence the option and the filter.
+    function restingBg(b, cs, pseudo){
       var to = cs.backgroundColor;
-      b.getAnimations().forEach(function (a){
+      b.getAnimations(pseudo ? {subtree:true} : undefined).forEach(function (a){
         if (a.transitionProperty !== 'background-color') return;
+        if (a.effect.target !== b || (a.effect.pseudoElement || '') !== (pseudo || '')) return;
         var k = a.effect.getKeyframes();
         if (k.length && k[k.length - 1].backgroundColor) to = k[k.length - 1].backgroundColor;
       });
       return to;
     }
+    // 🔑 EIGHTEEN STUDIES PAINT THEIR PLATE SOMEWHERE THE BUTTON IS NOT — a
+    // child, a pseudo-element, a row of pieces, a prism's faces, a plate beside
+    // the buttons — so the button reads transparent and the test above never
+    // saw them: black on dark sat at 1.32:1 on all eighteen with no ring. Each
+    // is declared here as [the plate to MEASURE, then where the ring is DRAWN
+    // and how], and the ring goes on the plate in the plate's own shape, never
+    // on the button's box. The hows are the house rules beside .btn[data-ring]:
+    //   outline   a rounded plate or face (140, 143) — follows its radius
+    //             and its transform
+    //   ::before  the same outline on a pseudo-element plate (11)
+    //   thick     the outline at 1.5px, where the plate's own edge eats half a
+    //             pixel of it: the prisms' resampled faces (147-150), 41's
+    //             clip-path
+    //   shape     a stroke traced round whatever the element paints — a
+    //             clip-path chamfer (28, 98), a plate of cells (146), a pair
+    //             that splits and joins (66, 67, 93), a plate something else
+    //             is painted over (139's panels, 159's buttons)
+    //   border / ::before-fill   the study's OWN boundary layer, repainted: 41's
+    //             trim and 36's stair hairline are --line-ctl, which is the
+    //             pick, so both went as invisible as the plate they frame
+    //   ring      the button itself — 69 is one capsule, its outline version
+    //             frames the button, and so does this
+    // ⚠️ CLASS NAMES WITHOUT THE DOT, ON PURPOSE. The Copy button hands over the
+    // FIRST script containing '.<key>' in quotes for any class in the card, and
+    // this script sits above every study's own — a dotted name here would ship
+    // the toolbar as 67's or 148's JavaScript.
+    var PLATES = {
+      'g-measure': ['g-measure-plate', ['g-measure-trim', 'border'], ['g-measure-plate', 'thick']],
+      'p-face':    ['p-face-bg', ['p-face-bg', 'outline'], ['p-face-back', 'outline']],
+      'p-tighten': ['p-tighten-plate', ['p-tighten-plate', 'outline']],
+      'c-wash':    ['c-wash-bg', ['c-wash-bg', 'shape']],
+      'relay':     ['::before', ['', '::before']],
+      'e-chamfer': ['::before', ['', 'shape']],
+      'w-corner':  ['::before', ['', 'shape']],
+      's-sprite':  ['::after', ['', '::before-fill']],
+      'o-caps':    ['o-caps-mid', ['o-caps-bg', 'shape']],
+      'p-box':     ['p-box-front', ['p-box-f', 'thick']],
+      'p-die':     ['p-die-front', ['p-die-f', 'thick']],
+      'p-hold':    ['p-hold-front', ['p-hold-f', 'thick']],
+      'p-turn':    ['p-turn-front', ['p-turn-f', 'thick']],
+      'p-part':    ['p-part-plate', ['p-part-row', 'shape']],
+      'p-walk':    ['p-walk-plate', ['p-walk-row', 'shape']],
+      'p-cycle':   ['p-cycle-plate', ['', 'ring']],
+      'n-join':    ['n-join-plate', ['n-join-row', 'shape']],
+      'k-plate':   ['k-plate-p', ['k-plate-p', 'shape']]
+    };
+    // One plate, one verdict: the same four questions for a button and for a
+    // declared plate. Returns true when the ring is owed.
+    function owes(el, pseudo, A){
+      var cs = getComputedStyle(el, pseudo || null);
+      var m = (restingBg(el, cs, pseudo) || '').match(/-?[\d.]+/g);
+      if (!m) return false;
+      if (m.length > 3 && Number(m[3]) < .9) return false;      // not an opaque plate
+      var c = [+m[0], +m[1], +m[2]];
+      if (ratio(c, PANEL) >= 3) return false;                   // identifies itself already
+      if (!isPick(c, A)) return false;                          // not this control's doing
+      if ((parseFloat(cs.borderTopWidth) || 0) >= 2) return false;    // …by its own edge
+      return true;
+    }
+    // [element, how] pairs; how '' is the button's own data-ring.
     function ringable(A){
       var list = [];
       [].forEach.call(document.querySelectorAll('.spec .btn'), function (b){
-        var cs = getComputedStyle(b);
-        var m = (restingBg(b, cs) || '').match(/-?[\d.]+/g);
-        if (!m) return;
-        if (m.length > 3 && Number(m[3]) < .9) return;      // not an opaque plate
-        var c = [+m[0], +m[1], +m[2]];
-        if (ratio(c, PANEL) >= 3) return;                   // identifies itself already
-        if (!isPick(c, A)) return;                          // not this control's doing
-        if ((parseFloat(cs.borderTopWidth) || 0) >= 2) return;    // …by its own edge
-        list.push(b);
+        if (owes(b, '', A)) list.push([b, '']);
+      });
+      Object.keys(PLATES).forEach(function (key){
+        var stage = document.querySelector('.spec[data-key="' + key + '"] .stage');
+        var btn = stage && stage.querySelector('.btn');
+        if (!btn) return;
+        var p = PLATES[key], at = p[0].indexOf('::');
+        var el = at === 0 ? btn : stage.querySelector('.' + (at > 0 ? p[0].slice(0, at) : p[0]));
+        if (!el || !owes(el, at < 0 ? '' : p[0].slice(at), A)) return;
+        p.slice(1).forEach(function (r){
+          var els = r[0] ? stage.querySelectorAll('.' + r[0]) : [btn];
+          [].forEach.call(els, function (e){ list.push([e, r[1] === 'ring' ? '' : r[1]]); });
+        });
       });
       return list;
     }
@@ -15389,12 +15492,16 @@ document.addEventListener("DOMContentLoaded", function () {
       // ---- The ring, for a fill that cannot identify itself ---------------
       // Published and stamped after the tokens, because ringable() reads the
       // plates back off the page and the plates are what was just written.
-      [].forEach.call(document.querySelectorAll('.btn[data-ring]'), function (b){
+      [].forEach.call(document.querySelectorAll('.btn[data-ring], [data-plate-ring]'), function (b){
         b.removeAttribute('data-ring');
+        b.removeAttribute('data-plate-ring');
       });
       if (ringHex){
         root.setProperty('--accent-ring', ringHex);
-        ringable(fitted.accent.rgb).forEach(function (b){ b.setAttribute('data-ring', ''); });
+        ringable(fitted.accent.rgb).forEach(function (r){
+          if (r[1]) r[0].setAttribute('data-plate-ring', r[1]);
+          else r[0].setAttribute('data-ring', '');
+        });
       } else {
         root.removeProperty('--accent-ring');
       }
@@ -16993,9 +17100,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Runtime writes inline styles (the tempo rung, the spring's transform).
       // Authored markup on this page carries none, so the clone drops them all.
+      // …and so does paint(): the ring stamps are this page's answer to a
+      // colour picked HERE, and the idle root is taken after paint() has run
+      // on a stored palette, so without this every ringed study copied out
+      // with data-ring / data-plate-ring baked into its markup.
       var clone = root.cloneNode(true);
       [].concat(clone, [].slice.call(clone.querySelectorAll('*'))).forEach(function(n){
         n.removeAttribute && n.removeAttribute('style');
+        n.removeAttribute && n.removeAttribute('data-ring');
+        n.removeAttribute && n.removeAttribute('data-plate-ring');
       });
       clone.removeAttribute('data-copy-root');      // a marker for this page, not for yours
       var markup = dedent(clone.outerHTML);
@@ -19673,6 +19786,22 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- BHL:FRAMER-SYNC start — generated by tools/sync-framer.mjs, do not edit by hand -->
 <script type="application/json" id="bhl-framer-sync">{"04":"49ba42bf4848b6fb","05":"8eef2efe3002f007","07":"d11ba1ba49d69458","08":"c004eb752f5eaa42","09":"fa6124516bcb4a60","10":"f4195abf7491d6c1","100":"c43c5e68babda693","104":"eaf2cb3570190a98","109":"38b34503cd16d96d","11":"9a06d491e8d8416f","111":"f06030d6a6a64d01","116":"7bd14d55580f6bb0","117":"1d8871606cc8ba75","119":"7371b04977647412","12":"8042a1b2f9c82e13","120":"4a1f75413753acb9","121":"5278e39052beea20","122":"afe5b5a15f37c4bd","123":"50448f55f4c13cb9","124":"ad10b56005e7a0a4","126":"f418091babbbf6f5","127":"fdacc2c5e25b2576","128":"479bc15281fed8db","129":"3370b76723464642","13":"9e47f4ab55d273ba","130":"8b2236f0c3b4fa9d","131":"4944534ea15c9e5f","132":"6791d9d9751c5712","133":"9899b3afefcedbb3","134":"189f37b09886f372","135":"b79f1d17c6199d7f","136":"58a7d70b2c402d76","137":"54688fbfc97d2662","138":"9c000b7b50af5f28","139":"b6313ac65acc4bff","14":"ed86fe5680868dc3","140":"e6eeaaca46f64142","141":"1828b60f2c2371ee","142":"af8cf6d4f2ead1c2","143":"4d1a2751a5f806c1","144":"9cb75d0bad707eb6","145":"7b2a60ecc7aa406c","146":"1a7638260c3e3666","147":"e5ed2c2d5526d4f1","148":"d21d1cb2a9738ba4","149":"fb9126a0f6566c64","15":"bf86dbe328c477d6","150":"8aa9dc2f3ae51b12","151":"f8b4b486e4514a55","152":"ba0d6bdc887fdf81","153":"8ea3164ef66824c0","154":"4dbf11e09914e214","155":"c0b5f9ed78514697","156":"6be859219883d910","157":"c58424b6b598c4ee","158":"1429e3634fa29f75","159":"21a92ab0f2913c94","160":"368f59c084f69abe","161":"f681740aee2d0d70","162":"34eeb821144263c5","19":"7166b40006cc6119","20":"abe63b82fdb1d3c6","21":"3257f4bccd5aa72f","23":"b4564b1c2d65796f","24":"affabc57485d6e01","25":"455befc12de3b63a","26":"dabb9c9df7bff213","28":"5eb662bc58b380a8","30":"192bcde6d2826f0a","31":"a29101635d73b98c","34":"d2a7bce6186fc4bc","36":"6ef1dc82c1e46e37","39":"d3263e1cb14f047e","41":"2461011539aa9d62","42":"55ecbd517742e99a","43":"d0ebd30572fe27c2","49":"5f767303f7491ffd","50":"f8d89f0602e81fbe","52":"b1d97239134bd1e3","54":"345332b2f69329b5","55":"748133a70eea0c2b","57":"bf67062fd24dcf67","59":"3c0a339b08c89e8d","60":"c12d94687d4d6af4","61":"e2ce38d903ac389e","62":"35f3cad2bb152ae0","63":"1e734637c70279f4","64":"4585ab353f2250dd","65":"97c77466ecfc5d1b","66":"86f3bd774fc0abb0","67":"0e5356e6b8410d22","69":"4cf0f812b4fcd733","72":"5ad195c3f9e82cf0","73":"d8e6e83b6a71919f","74":"dcd01045df83155b","75":"6c532ef387410815","78":"dc83149d7674695c","79":"e79670f664160fc1","80":"742353303de35634","82":"f479021396babf82","83":"a0c6ffcf6db6b288","85":"9aec2f43d8daeedd","91":"aa13ff96d5e045fe","92":"030a1ed9d7a55518","93":"6e6326f6eeaea3cc","97":"ccae69b9a0858318","98":"36112ba1df68fe95"}</script>
 <!-- BHL:FRAMER-SYNC end -->
+<!-- The stroke data-plate-ring="shape" draws — see the rule beside
+     .btn[data-ring]. An SVG filter and not a drop-shadow, because a shadow
+     shows through a translucent plate: 146's receding cells are its plate at
+     .26, and four chained drop-shadows turned every one of them into a solid
+     grey block louder than the edge. The alpha is thresholded first, so a
+     plate on its way out stops being traced instead of being filled. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <filter id="plate-ring" color-interpolation-filters="sRGB">
+    <feComponentTransfer in="SourceAlpha" result="solid"><feFuncA type="linear" slope="3" intercept="-1"/></feComponentTransfer>
+    <feMorphology in="solid" operator="dilate" radius="1" result="grown"/>
+    <feComposite in="grown" in2="solid" operator="out" result="edge"/>
+    <feFlood style="flood-color:var(--accent-ring, transparent)"/>
+    <feComposite in2="edge" operator="in" result="ring"/>
+    <feMerge><feMergeNode in="ring"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</svg>
 
 
 
