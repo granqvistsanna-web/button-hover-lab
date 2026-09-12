@@ -19,6 +19,27 @@
  * every button in the fallback, at the wrong width, and reports a page-wide
  * drift that does not exist. That has happened. The run aborts instead.
  *
+ * 🚨 HOW A CROP IS TAKEN, AND WHY NOT THE WAY IT WAS. Until 2026-09-11 every
+ * crop was a Page.captureScreenshot with a clip AND captureBeyondViewport, one
+ * shot per rect, and only a reading that failed was re-read down a second path
+ * and swapped for it. Ported here from tools/version-sweep.mjs (cac107d), where
+ * that combination was caught passing real failures. Measured cause:
+ * captureBeyondViewport RESIZES THE PAGE for every capture — the page sees a
+ * resize event per crop, 115 in the first pass of a run — so (min-width:1360px)
+ * goes false and true again and the hidden inspector (#tools, fixed, 276px on
+ * the right wall) runs its 340ms slide out FROM ON SCREEN, over whatever the
+ * viewport's band of the page holds. Painted magenta, it was in the plate crops
+ * of every right-column study in that band — up to 46,800 of a crop's pixels —
+ * and the band moves whenever a re-read of a failure centres its study. A strip
+ * of panel in a crop reads as plate-against-panel, or as a hover that changed.
+ * So: NO captureBeyondViewport anywhere. Every crop is brought ON SCREEN first
+ * (bring), below the fixed masthead, and clipped in page coordinates — the
+ * surface as painted, no emulation, no resize. Every label is read until two
+ * reads A11Y_GAP apart agree within 0.02 (A11Y_READS at most); one that never
+ * agrees is a loop and is reported at its WORST read. A failing number is never
+ * swapped for a viewport re-read; only a flat crop is re-taken. A resize seen
+ * mid-run aborts the run (exit 69).
+ *
  * Read-only. Writes JSON next to nothing; prints a table.
  */
 import fs from 'node:fs'
@@ -134,7 +155,21 @@ const KIT = String.raw`(() => {
   // holds at least 1% of the pixels as the text — a single stray pixel from a
   // neighbouring element must not be allowed to set the number, and neither
   // must the antialiasing, which is why it is the far mode and not the max.
-  A.textVsBg = img => {
+  // 🚨 THE FAR MODE IS NOT ALWAYS THE INK, and a rotated face is where that
+  // shows. 149's hovered floor fills 87.6% of its label crop at #b4b4b4 with
+  // the glyphs at 2.7% (#121212) — and 5.7% of the crop is the CARD, seen past
+  // a face that is 102px wide inside a 98.6px button. White is farther from the
+  // plate than the ink is, so «farthest luminance holding 1%» took the card and
+  // reported 2.07:1 for a label measuring 8.9:1. So the ink is named rather
+  // than guessed: inks holds the luminance of every colour the browser says is
+  // painted on text inside this button, and the far mode is chosen from the
+  // bins that match one of them. ⚠️ NOT WHERE THE LABEL IS BLENDED — under
+  // difference or hard-light (137) the computed colour is a constant and the
+  // rendered glyph is |ground − constant|, so inkOf() returns nothing there and
+  // the old rule stands, which is the rule that reads a blend correctly.
+  // A label that really has gone invisible still fails: its ink bin IS the
+  // plate bin, so the restricted pick returns ~1:1 exactly as before.
+  A.textVsBg = (img, inks) => {
     const d = img.data, n = d.length/4
     const bins = new Float64Array(101), cnt = new Float64Array(101)
     const px = []
@@ -149,10 +184,16 @@ const KIT = String.raw`(() => {
     const bg = bins[bgK]/cnt[bgK]
     const floor = Math.max(3, px.length * 0.003)
     let txK = bgK, best = 0
-    for (let k = 0; k <= 100; k++) {
-      if (cnt[k] < floor) continue
-      const dist = Math.abs(k - bgK)
-      if (dist > best) { best = dist; txK = k }
+    const near = k => !inks || !inks.length ||
+      inks.some(L => Math.abs(k - Math.round(L * 100)) <= 3)
+    for (let pass = 0; pass < 2; pass++) {
+      for (let k = 0; k <= 100; k++) {
+        if (cnt[k] < floor) continue
+        if (!pass && !near(k)) continue
+        const dist = Math.abs(k - bgK)
+        if (dist > best) { best = dist; txK = k }
+      }
+      if (best) break                    // nothing matched an ink: old rule
     }
     const tx = bins[txK]/cnt[txK]
     let sum = 0; for (const L of px) sum += L
@@ -275,6 +316,24 @@ const KIT = String.raw`(() => {
     return { x: box.l+sx, y: box.t+sy, w: box.r-box.l, h: box.b-box.t, noText }
   }
 
+  // Every colour the browser paints text in, inside this button. A blend
+  // anywhere over the glyphs means the painted colour is not this one, so the
+  // list comes back empty and textVsBg keeps its own rule.
+  A.inkOf = b => {
+    const out = new Set()
+    const w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT)
+    for (let t = w.nextNode(); t; t = w.nextNode()) {
+      if (!t.nodeValue.trim()) continue
+      for (let e = t.parentElement; e && e !== b.parentElement; e = e.parentElement) {
+        const cs = getComputedStyle(e)
+        if (cs.mixBlendMode !== 'normal') return []
+      }
+      const m = (getComputedStyle(t.parentElement).color || '').match(/[\d.]+/g)
+      if (m) out.add(+A.lum(+m[0], +m[1], +m[2]).toFixed(4))
+    }
+    return [...out]
+  }
+
   A.rects = () => [...document.querySelectorAll('.spec')].flatMap(card =>
     [...card.querySelectorAll('.stage button.btn')].map(b => {
       const br = b.getBoundingClientRect()
@@ -285,7 +344,7 @@ const KIT = String.raw`(() => {
       // an artefact of the filter and not a contrast fault anywhere.
       const shipped = b.offsetParent !== null && br.width > 0 && br.height > 0
       return { shipped, btn: { x: br.x+sx, y: br.y+sy, w: br.width, h: br.height },
-               lbl: A.textRect(b) }
+               lbl: A.textRect(b), ink: A.inkOf(b) }
     }))
 
   A.nodes = () => [...document.querySelectorAll('.spec .stage button.btn')]
@@ -341,7 +400,7 @@ const KIT = String.raw`(() => {
   // reached for because the clip cannot be trusted. An unclipped viewport
   // capture is neither — it is the surface as it is actually painted — so the
   // rectangle is taken from it here, in device pixels, against the live scroll.
-  A.cropRead = async (b64, page, dpr) => {
+  A.cropRead = async (b64, page, dpr, inks) => {
     const x = page.x - scrollX, y = page.y - scrollY
     if (y < 0 || y + page.h > innerHeight || x < 0 || x + page.w > innerWidth) return null
     const bmp = await createImageBitmap(await (await fetch('data:image/png;base64,' + b64)).blob())
@@ -349,7 +408,7 @@ const KIT = String.raw`(() => {
     const cv = new OffscreenCanvas(w, h)
     const cx = cv.getContext('2d', { willReadFrequently: true })
     cx.drawImage(bmp, Math.round(x * dpr), Math.round(y * dpr), w, h, 0, 0, w, h)
-    return A.textVsBg(cx.getImageData(0, 0, w, h))
+    return A.textVsBg(cx.getImageData(0, 0, w, h), inks)
   }
   A.dpr = () => devicePixelRatio
   A.freeze = () => { const a = document.getAnimations(); a.forEach(x => { try { x.pause() } catch (e) {} }); return a.length }
@@ -362,6 +421,14 @@ const KIT = String.raw`(() => {
   // sitting there in plain sight.
   A.into   = y => { window.scrollTo({ top: Math.max(0, y - window.innerHeight/2),
                                       left: 0, behavior: 'instant' }); return window.scrollY }
+  // Where the viewport is, for bring(). And the tripwire: nothing this tool
+  // does resizes the page any more, so a real resize seen mid-run means a
+  // capture path that emulates the viewport has come back. The page dispatches
+  // synthetic resize events of its own, so it is the SIZE that is compared.
+  A.view = () => JSON.stringify({ sx: scrollX, sy: scrollY, iw: innerWidth, ih: innerHeight })
+  A.size0 = [innerWidth, innerHeight]; A.resized = 0
+  addEventListener('resize', () => {
+    if (innerWidth !== A.size0[0] || innerHeight !== A.size0[1]) A.resized++ })
 
   A.fontOK = () => {
     const sheets = [...document.styleSheets].map(s => s.href).filter(Boolean)
@@ -395,6 +462,9 @@ const KIT = String.raw`(() => {
  */
 const OUTDIR = path.dirname(OUT)
 const SETTLE = Number(process.env.A11Y_SETTLE || 950)   // longest --t-5 chain + slack
+const GAP    = Number(process.env.A11Y_GAP || 120)      // between two reads of one label
+const READS  = Number(process.env.A11Y_READS || 8)      // reads of one label before it is called a loop
+const sleep  = ms => new Promise(r => setTimeout(r, ms))
 const THEMES   = (process.env.A11Y_THEMES   ?? 'dark,light').split(',')
 // THREE, NOT FOUR -- the same correction the toolbar already made. The leading
 // '' measured the page with no treatment pressed and printed it as «built»,
@@ -563,50 +633,134 @@ async function setVersion (v) {
   await new Promise(r => setTimeout(r, 700))
 }
 
-// One crop, one verdict. The label rect padded by a pixel each way, floored at
-// 6px tall so a one-line label still yields a histogram.
-async function measure (rects) {
-  const out = []
-  for (let i = 0; i < rects.length; i++) {
-    const r = rects[i]
-    const w = Math.max(4, Math.round(r.lbl.w) + 2), h = Math.max(6, Math.round(r.lbl.h) + 2)
-    let shot
-    try {
-      shot = await p.send('Page.captureScreenshot', { format: 'png',
-        clip: { x: r.lbl.x - 1, y: r.lbl.y - 1, width: w, height: h, scale: 2 },
-        captureBeyondViewport: true, fromSurface: true, optimizeForSpeed: true })
-    } catch (e) { out.push(null); continue }
-    const b64 = shot.result?.data
-    if (!b64) { out.push(null); continue }
-    const v = await p.evalJs(`(async () => { const img = await window.__a11y.pixels(${JSON.stringify(b64)})
-      return JSON.stringify(window.__a11y.textVsBg(img)) })()`)
-    out.push(v ? JSON.parse(v) : null)
-  }
-  return out
-}
-
 const results = []   // one row per theme x version x state
 const rings   = []   // one row per theme
 
-// Crops kept per (theme,version) so hover can be diffed against rest without a
-// second capture of the same rect.
-async function shots (rects, kind) {
-  const out = []
-  for (const r of rects) {
-    if (!r.shipped) { out.push(null); continue }
-    const box = kind === 'ring'
-      ? { x: r.btn.x - 10, y: r.btn.y - 10, w: Math.round(r.btn.w) + 20, h: Math.round(r.btn.h) + 20 }
-      : { x: r.lbl.x - 1,  y: r.lbl.y - 1,  w: Math.max(4, Math.round(r.lbl.w) + 2),
-          h: Math.max(6, Math.round(r.lbl.h) + 2) }
-    try {
-      const s = await p.send('Page.captureScreenshot', { format: 'png',
-        clip: { x: box.x, y: box.y, width: box.w, height: box.h, scale: 2 },
-        captureBeyondViewport: true, fromSurface: true, optimizeForSpeed: true })
-      out.push(s.result?.data || null)
-    } catch { out.push(null) }
-  }
-  return out
+// The two boxes every crop is cut to. The label rect padded by a pixel each
+// way, floored at 6px tall so a one-line label still yields a histogram; and
+// the plate with 10px of its ground, which is where hover and focus show.
+const lblBox  = r => ({ x: r.lbl.x - 1, y: r.lbl.y - 1,
+  w: Math.max(4, Math.round(r.lbl.w) + 2), h: Math.max(6, Math.round(r.lbl.h) + 2) })
+const ringBox = r => ({ x: r.btn.x - 10, y: r.btn.y - 10,
+  w: Math.round(r.btn.w) + 20, h: Math.round(r.btn.h) + 20 })
+const boxOf = kind => kind === 'ring' ? ringBox : lblBox
+
+// One crop, of a rect that bring() has already put ON SCREEN. The clip is in
+// PAGE coordinates (a clip of a rect off screen comes back as flat page ground,
+// which blind() catches rather than reads). captureBeyondViewport is false and
+// stays false: see the header. It is the path that resized the page under
+// every capture and slid the inspector back over the studies.
+async function clip (bx) {
+  try {
+    const s = await p.send('Page.captureScreenshot', { format: 'png',
+      clip: { x: bx.x, y: bx.y, width: bx.w, height: bx.h, scale: 2 },
+      captureBeyondViewport: false, fromSurface: true, optimizeForSpeed: true })
+    return s.result?.data || null
+  } catch { return null }
 }
+
+// The top 80px of the viewport is where the page keeps its fixed chrome — the
+// masthead and both panel handles sit at y 24..58 — so no crop is taken there.
+const VIEW_TOP = 80, VIEW_BOT = 16
+const onScreen = (bx, v) => bx.y - v.sy >= VIEW_TOP && bx.y + bx.h - v.sy <= v.ih - VIEW_BOT
+  && bx.x - v.sx >= 0 && bx.x + bx.w - v.sx <= v.iw
+const view = async () => JSON.parse(await p.evalJs('window.__a11y.view()'))
+// Scroll only when the rect is not already on screen, and then put it at the
+// top of the usable band, so the rects after it in page order ride along in
+// the same viewport. Returns the viewport, or null if the rect cannot be shown.
+async function bring (bx) {
+  let v = await view()
+  if (onScreen(bx, v)) return v
+  await p.evalJs(`window.scrollTo({ top: ${Math.max(0, Math.round(bx.y - VIEW_TOP - 8))}, left: 0, behavior: 'instant' })`)
+  await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
+  v = await view()
+  if (onScreen(bx, v)) return v
+  await p.evalJs(`window.__a11y.into(${Math.round(bx.y + bx.h / 2)})`)
+  await p.evalJs('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))')
+  v = await view()
+  return onScreen(bx, v) ? v : null
+}
+
+// The ratio off the two luminances rather than the 2dp field beside them, for
+// the agreement test only: two reads 0.004 apart can round 0.01 apart.
+const exact = v => v ? (Math.max(v.tx, v.bg) + 0.05) / (Math.min(v.tx, v.bg) + 0.05) : null
+// Two reads of one label agree. Two flat crops agree too: a flat crop twice is
+// a flat crop, and blind() decides what that means, not this.
+const agree = (a, b) => !!a && !!b
+  && (blind(a) && blind(b) || !blind(a) && !blind(b) && Math.abs(exact(a) - exact(b)) <= 0.02)
+
+// Every shipped button, captured on screen and held still. A band is the run
+// of rects one viewport can show; each round freezes the page, crops every
+// rect still pending in the band, and thaws; a rect is done when two rounds
+// GAP apart agree. One crop under a freeze that followed a fixed sleep was a
+// guess about when a transition had ended.
+//   settle 'lbl'  — the label box of rects[i], read with textVsBg; agreement is
+//                   the two ratios within 0.02. A label that never agrees in
+//                   READS rounds is a loop, not a transition: it is reported
+//                   at the WORST read seen and counted, because a gate has to
+//                   answer for the frame a visitor can land on.
+//   settle 'ring' — the plate box of rects[i], compared as pixels; agreement is
+//                   no visible change between the two (the ring pass's own
+//                   0.002). A loop keeps its last crop.
+// `extras` are further crops of the same buttons — [{ rects, kind }] — taken
+// ONCE per band after the band has settled, in the same viewport: the rest-rect
+// label under hover, and the plate crops the inert-hover diff compares.
+// Returns per index: val (label reading), b64 (the settled crop), loose,
+// reads, and extra[k] (the k-th extra crop).
+async function capture (rects, settle, extras = []) {
+  const n = rects.length, kinds = [{ rects, kind: settle }, ...extras]
+  const val = new Array(n).fill(null), b64 = new Array(n).fill(null)
+  const reads = new Array(n).fill(0), loose = new Array(n).fill(false)
+  const extra = extras.map(() => new Array(n).fill(null))
+  const outer = i => {
+    const bs = kinds.map(k => boxOf(k.kind)(k.rects[i]))
+    const x = Math.min(...bs.map(b => b.x)), y = Math.min(...bs.map(b => b.y))
+    return { x, y, w: Math.max(...bs.map(b => b.x + b.w)) - x, h: Math.max(...bs.map(b => b.y + b.h)) - y }
+  }
+  const todo = rects.map((r, i) => i).filter(i => rects[i].shipped).sort((a, b) => outer(a).y - outer(b).y)
+  for (let k = 0; k < todo.length;) {
+    const v = await bring(outer(todo[k]))
+    if (!v) { k++; continue }                 // cannot be shown: stays null, counted
+    const band = []
+    while (k < todo.length && onScreen(outer(todo[k]), v)) band.push(todo[k++])
+    const hist = new Map(band.map(i => [i, []]))
+    let pending = band
+    for (let r = 0; r < READS && pending.length; r++) {
+      if (r) await sleep(GAP)
+      await p.evalJs('window.__a11y.freeze()')
+      const got = []
+      for (const i of pending) got.push(await clip(boxOf(settle)(rects[i])))
+      await p.evalJs('window.__a11y.thaw()')
+      const vals = settle === 'lbl'
+        ? await read(got, pending.map(i => rects[i].ink)) : null
+      const same = settle === 'ring'
+        ? await diff(pending.map(i => hist.get(i).at(-1)?.b ?? null), got) : null
+      pending = pending.filter((i, j) => {
+        const h = hist.get(i), prev = h.at(-1)
+        h.push({ b: got[j], v: vals ? vals[j] : null }); reads[i]++
+        const ok = prev && (settle === 'lbl' ? agree(prev.v, vals[j])
+          : !!(prev.b && got[j] && same[j] && same[j].moved < 0.002))
+        if (ok) { b64[i] = got[j]; val[i] = vals ? vals[j] : null; return false }
+        return true
+      })
+    }
+    for (const i of pending) {
+      const h = hist.get(i)
+      loose[i] = true
+      const seen = settle === 'lbl' ? h.filter(x => x.v && !blind(x.v)) : []
+      const pick = seen.length ? seen.reduce((a, b) => exact(b.v) < exact(a.v) ? b : a) : h.at(-1)
+      b64[i] = pick.b; val[i] = pick.v
+    }
+    if (extras.length) {
+      await p.evalJs('window.__a11y.freeze()')
+      for (const i of band) for (let e = 0; e < extras.length; e++)
+        extra[e][i] = await clip(boxOf(extras[e].kind)(extras[e].rects[i]))
+      await p.evalJs('window.__a11y.thaw()')
+    }
+  }
+  return { val, b64, reads, loose, extra }
+}
+
 // A crop that comes back flat has no glyph in it, and two different things land
 // here. One is a fault the tool can fix: a capture that failed, which repair()
 // scrolls to and asks again. The other is a button that is genuinely NOT PAINTED
@@ -636,26 +790,28 @@ const blind = v => !!v && v.bgShare >= 0.999 && v.sd <= 0.002
 // is cut out of it in the page (A.cropRead). Confirmed against this tool's own
 // numbers: 143 in dark/outline reads 14.21 rest / 14.19 hover either way.
 //
-// So the verdict is no longer only as good as its worst crop. Every reading
-// that would be reported as a FAILURE is re-taken through that second, wholly
-// independent path before it is believed — a real failure measures the same
-// twice, an artefact does not. Only failures are re-shot, so the run does not
-// get slower; an unclipped capture is too heavy to be the default for all 125.
+// ⚠️ SUPERSEDED 2026-09-11, and the paragraph above is only half right. What
+// came back blank was a clip taken of a rect that was NOT ON SCREEN; a clip in
+// page coordinates of a rect bring() has scrolled into view is the surface as
+// painted, and that is now the only way a crop is taken (capture). And the
+// rule that used to follow here — every reading under the floor re-taken down
+// the viewport path and REPLACED by it — is gone, for three measured reasons.
+// Each re-read scrolled, and moving the scroll is what put the sliding
+// inspector over a new band of studies for every crop that came after it. The
+// two paths do not resolve the same: the clip rasterises at scale 2 on a 2x
+// surface, the viewport is the 2x surface itself, and across 1,232 cells
+// compared in version-sweep they differ by up to 0.035 at the floor — enough
+// to turn a real 4.4995 into a 4.50 pass. And a rule that only ever looks at
+// failures can never catch a false PASS, which is the fault this one hid.
+// So only a FLAT crop is re-taken, and replaced only if that one sees a glyph.
 async function repair (rects, b64s, vals, kind) {
   let n = 0
   for (let i = 0; i < rects.length; i++) {
     const r = rects[i], v = vals[i]
     if (!r.shipped || r.lbl.noText) continue
-    // Two reasons to look again, and the second one is the point. A flat crop is
-    // a capture that failed. A crop that would be REPORTED — anything under the
-    // floor — is a claim the tool is about to make about the page, and it is
-    // worth one more capture down a path that fails differently.
-    if (!blind(v) && !(v && v.ratio < 4.5)) continue
+    if (v && !blind(v)) continue
     const re = await viewportRead(r, kind)
-    if (!re) continue
-    // Believed only when it is a reading at all. Same number on a real failure;
-    // on the blank-surface artefact it is the number the label actually has.
-    if (!blind(re)) { vals[i] = re; b64s[i] = b64s[i]; n++ }
+    if (re && !blind(re)) { vals[i] = re; n++ }
   }
   return n
 }
@@ -683,15 +839,18 @@ async function viewportRead (r, kind) {
   const b64 = shot.result?.data
   if (!b64) return null
   const v = await p.evalJs(`(async () => JSON.stringify(await window.__a11y.cropRead(
-    ${JSON.stringify(b64)}, ${JSON.stringify(box)}, window.__a11y.dpr())))()`)
+    ${JSON.stringify(b64)}, ${JSON.stringify(box)}, window.__a11y.dpr(),
+    ${JSON.stringify(kind === 'lbl' ? (r.ink || []) : [])})))()`)
   return v && v !== 'null' ? JSON.parse(v) : null
 }
-async function read (b64s) {
+async function read (b64s, inks = []) {
   const out = []
-  for (const b of b64s) {
+  for (let i = 0; i < b64s.length; i++) {
+    const b = b64s[i]
     if (!b) { out.push(null); continue }
     const v = await p.evalJs(`(async () => JSON.stringify(
-      window.__a11y.textVsBg(await window.__a11y.pixels(${JSON.stringify(b)}))))()`)
+      window.__a11y.textVsBg(await window.__a11y.pixels(${JSON.stringify(b)}),
+        ${JSON.stringify(inks[i] || [])})))()`)
     out.push(v ? JSON.parse(v) : null)
   }
   return out
@@ -707,6 +866,20 @@ async function diff (a, b) {
   return out
 }
 
+// Nothing this tool does resizes the page any more. A resize seen mid-run
+// means every number since was measured on a page that had just been re-laid
+// out at another size — the false-pass fault this was rebuilt to remove — so
+// the run stops rather than print them.
+async function tripwire (where) {
+  const n = await p.evalJs('window.__a11y.resized')
+  if (!n) return
+  await p.close()
+  console.error(`[a11y] ABORT — the page was resized ${n}x by the end of ${where}.`)
+  console.error('       Every capture since was taken on a page re-laid-out at another size, which')
+  console.error('       is the false-pass fault this tool was rebuilt to remove. Find the resize.')
+  process.exit(69)
+}
+
 for (const theme of THEMES) {
   await setTheme(theme)
   await setPalette(PALETTE)
@@ -716,10 +889,13 @@ for (const theme of THEMES) {
     await force(ids, []); await new Promise(r => setTimeout(r, 350))
     let rects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
     if (LIMIT) rects = rects.slice(0, LIMIT)
-    await p.evalJs('window.__a11y.freeze()')
-    const restShots = await shots(rects, 'lbl')
-    await p.evalJs('window.__a11y.thaw()')
-    const rest = await read(restShots)
+    // Rest: every label read on screen until it holds still, and the plate plus
+    // its ground cropped once per band after that — the «off» half of the
+    // inert-hover diff. It used to be re-taken after hover was released and
+    // another SETTLE had passed; the rest before hover is the same state, and
+    // the cleaner one.
+    const R = await capture(rects, 'lbl', [{ rects, kind: 'ring' }])
+    const rest = R.val, restShots = R.b64, plateOff = R.extra[0]
     const fixR = await repair(rects, restShots, rest, 'lbl')
     await force(ids, ['hover']); await new Promise(r => setTimeout(r, SETTLE))
     // Two hover crops, because half these studies MOVE the label. The rest-rect
@@ -727,36 +903,35 @@ for (const theme of THEMES) {
     // answers "what is the contrast now". Reading the second question off the
     // first rect is how card 43 came back with no label at all: the keycap had
     // translated out of the box the rect was taken from.
-    await p.evalJs('window.__a11y.freeze()')
-    const hovAtRest = await shots(rects, 'lbl')
-    let hovRects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
-    if (LIMIT) hovRects = hovRects.slice(0, LIMIT)
-    const hovShots = await shots(hovRects, 'lbl')
-    await p.evalJs('window.__a11y.thaw()')
-    const hover = await read(hovShots)
-    const fixH = await repair(hovRects, hovShots, hover, 'lbl')
-    const moved = await diff(restShots, hovAtRest)
     // The label box is too narrow to decide whether hover did anything: a study
     // that lights its edge or walks its mark leaves the label untouched and
-    // would read as inert. The plate plus ten pixels of ground is the question.
-    await p.evalJs('window.__a11y.freeze()')
-    const plateRest = await shots(rects, 'ring')
-    await p.evalJs('window.__a11y.thaw()')
-    // plateRest was taken under forced hover above, so re-take rest after release
+    // would read as inert. The plate plus ten pixels of ground is the question,
+    // so that is the second extra crop — at the REST rect, one region in two
+    // states, in the same viewport as the reading.
+    let hovRects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
+    if (LIMIT) hovRects = hovRects.slice(0, LIMIT)
+    const H = await capture(hovRects, 'lbl', [{ rects, kind: 'lbl' }, { rects, kind: 'ring' }])
+    const hover = H.val, hovShots = H.b64, hovAtRest = H.extra[0], plateRest = H.extra[1]
+    const fixH = await repair(hovRects, hovShots, hover, 'lbl')
     await force(ids, [])
-    await new Promise(r => setTimeout(r, SETTLE))
-    await p.evalJs('window.__a11y.freeze()')
-    const plateOff = await shots(rects, 'ring')
-    await p.evalJs('window.__a11y.thaw()')
+    const moved = await diff(restShots, hovAtRest)
     const plateMoved = await diff(plateOff, plateRest)
+    await tripwire(`${theme}/${version || 'built'}`)
     results.push({ theme, version, rects, hovRects, rest, hover, moved, plateMoved,
-      blind: { rest: rest.map(blind), hover: hover.map(blind) } })
+      blind: { rest: rest.map(blind), hover: hover.map(blind) },
+      reads: { rest: R.reads, hover: H.reads }, loose: { rest: R.loose, hover: H.loose } })
     const ship = rects.filter(r => r.shipped).length
     const u = a => a.filter((x, i) =>
       x && !rects[i].lbl.noText && !blind(x) && x.ratio < 4.5).length
     const nb = a => a.filter((x, i) => x && !rects[i].lbl.noText && blind(x)).length
     const blindR = nb(rest), blindH = nb(hover)
     const inert = moved.filter(m => m && m.moved < 0.005).length
+    // Counted, not folded in: a loop is reported at its worst read (see
+    // capture), and a shipped label with no reading at all was never on screen.
+    const lp = a => a.filter((x, i) => x && rects[i].shipped && !rects[i].lbl.noText).length
+    const looseN = lp(R.loose) + lp(H.loose)
+    const lost = rects.filter((r, i) => r.shipped && !r.lbl.noText && !rest[i]).length
+      + hovRects.filter((r, i) => r.shipped && !r.lbl.noText && !hover[i]).length
     console.error(`[a11y] ${theme}/${version || 'built'}: ${ship}/${rects.length} shipped`
       + ` | under 4.5:1 — rest ${u(rest)}, hover ${u(hover)}`
       + ` | css-hover inert ${plateMoved.filter(m => m && m.moved < 0.005).length}`
@@ -764,7 +939,9 @@ for (const theme of THEMES) {
       + ` | recaptured ${fixR}+${fixH}`
       + (blindR + blindH
           ? ` | NOT MEASURABLE (no glyph in the crop) ${blindR}+${blindH}`
-          : ''))
+          : '')
+      + (looseN ? ` | never held still ${looseN}` : '')
+      + (lost ? ` | NOT CAPTURED ${lost}` : ''))
   }
 }
 
@@ -778,19 +955,18 @@ for (const theme of THEMES) {
   let rects = await p.evalJs('JSON.stringify(window.__a11y.rects())').then(JSON.parse)
   if (LIMIT) rects = rects.slice(0, LIMIT)
   await force(ids, []); await new Promise(r => setTimeout(r, 350))
-  await p.evalJs('window.__a11y.freeze()')
-  const off = await shots(rects, 'ring')
-  await p.evalJs('window.__a11y.thaw()')
+  // Both halves on screen and held still, the same as every label: a crop is
+  // done when two in a row show no visible change against each other.
+  const off = (await capture(rects, 'ring')).b64
   await force(ids, ['focus-visible']); await new Promise(r => setTimeout(r, 500))
   // The ring crop keeps the REST rect on purpose: 10px of ground either side is
   // enough to hold a plate that shifts, and the diff needs one frame of
   // reference. A moved plate is itself a visible focus change.
-  await p.evalJs('window.__a11y.freeze()')
-  const on = await shots(rects, 'ring')
-  await p.evalJs('window.__a11y.thaw()')
+  const on = (await capture(rects, 'ring')).b64
   const declared = await p.evalJs('JSON.stringify(window.__a11y.ring())').then(JSON.parse)
   const changed = await diff(off, on)
   await force(ids, [])
+  await tripwire(`ring/${theme}`)
   rings.push({ theme, declared, changed })
   const dead = changed.filter(c => c && c.moved < 0.002).length
   const thin = declared.filter(d => d.style === 'none' || parseFloat(d.width) < 2).length
