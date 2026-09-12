@@ -1765,7 +1765,10 @@
      sits above the button's own box and below its text instead of falling
      behind the card. Scoped to .btn--solid: the outline and link versions have
      no plate to grow and would otherwise gain a solid one. */
-  .btn--solid.relay{background:none; isolation:isolate}
+  .btn--solid.relay{background:none; isolation:isolate;
+    transition:color var(--t-3) var(--e-out)}
+  /* The label goes with the plate — see 41. */
+  .btn--solid.relay:is(:hover, :focus-visible){color:var(--on-hover-set, var(--ink-on-fill))}
   .btn--solid.relay::before{
     content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
     background-color:var(--ink);
@@ -2069,7 +2072,27 @@
     scale:1;
     will-change:translate;
     transition:scale var(--t-1) var(--e-out),
-               background-color var(--t-3) var(--e-out)}
+               background-color var(--t-3) var(--e-out),
+               color var(--t-3) var(--e-out)}
+  /* 🚨 50's HOVER PAINTS NOTHING — the study is the travel, and its plate rule
+     lives inside @media (prefers-reduced-motion: reduce) and nowhere else. So
+     the hovered label stays the ink of the plate that is still there; fitting
+     it to the Hover pick put a #6a00d9 label on 50's own #7d00ff plate, 1.27:1
+     on Violet, which is this card measured as if it were 41. The states that
+     DO bring --hover-set are the keyboard's and the reduced-motion reader's,
+     and those two take the fit. */
+  /* ⚠️ AND EVERY VERSION, WHICH IS A CHANGE TO THE DEFAULT PAGE AND IS MEANT.
+     The plate rule is unscoped, so a keyboard focus brings the same near-white
+     plate to the outline and link versions — where the label is --ink-text,
+     the card's ink, and stayed light on it: measured 1.29:1 on GRAPHITE, with
+     no palette set at all, and 1.98 on Violet, 1.87 on Pine. A plate that
+     arrives takes the ink fitted to a plate, so all three versions read
+     --ink-on-fill when nothing is picked (13.22:1 on graphite) and
+     --on-hover-set when something is (4.52). */
+  .magnet:focus-visible{color:var(--on-hover-set, var(--ink-on-fill))}
+  @media (prefers-reduced-motion: reduce){
+    .magnet:hover{color:var(--on-hover-set, var(--ink-on-fill))}
+  }
   /* transform:none, or .btn:active's shorthand lands a SECOND scale on top of
      this one and the press reads .94 instead of .97. */
   .magnet:active{transform:none; scale:.97}
@@ -5875,7 +5898,8 @@ document.addEventListener("DOMContentLoaded", function () {
      plate that has just gained a pixel of travel is not enough of an arrival.
      It rides the plate's own duration and curve, so the growth and the
      deepening are one move rather than two. */
-  .g-measure{padding:17px 34px; color:var(--ink-on-fill)}
+  .g-measure{padding:17px 34px; color:var(--ink-on-fill);
+    transition:color var(--t-5) var(--e-out)}
   /* --line-ctl and not --line. The card is named for a RESERVED MEASURE and
      the trim is the only thing that states it, and at --line's 8% alpha on this
      ground the measure was not visible at all — the rest state read as a plate
@@ -5902,6 +5926,15 @@ document.addEventListener("DOMContentLoaded", function () {
     transition:clip-path var(--t-5) var(--e-out),
                background-color var(--t-5) var(--e-out);
   }
+  /* 🔑 THE LABEL GOES WITH THE PLATE. The plate above arrives as the Hover
+     pick verbatim; the label kept the ink fitted to the BUTTON colour, so on
+     the six palettes whose hover differs from their accent it was read against
+     a plate it no longer sat on — measured 1.19:1 on Navy, 1.48 Violet, 1.58
+     Pine, 1.86 Orchid, 2.04 Mint, 2.95 Straw, in both themes. --on-hover-set
+     is paint()'s fit against that arriving plate; unset it is absent and the
+     rest ink stands, so the default page does not move. 10 and 120 already
+     said this with --on-ink-hover. */
+  .g-measure:is(:hover, :focus-visible){color:var(--on-hover-set, var(--ink-on-fill))}
   .g-measure:hover .g-measure-plate,
   .g-measure:focus-visible .g-measure-plate{
     clip-path:inset(0px round var(--btn-r));
@@ -6252,8 +6285,11 @@ document.addEventListener("DOMContentLoaded", function () {
   .i-mass:hover .i-mass-arrow, .i-mass:focus-visible .i-mass-arrow{transform:translateX(6px)}
   .btn--solid.i-mass{
     transition:transform var(--t-1) var(--e-out),
-               background-color var(--t-4) var(--e-out);
+               background-color var(--t-4) var(--e-out),
+               color var(--t-4) var(--e-out);
   }
+  /* The label goes with the plate — see 41. */
+  .btn--solid.i-mass:is(:hover, :focus-visible){color:var(--on-hover-set, var(--ink-on-fill))}
   .btn--solid.i-mass:hover,
   .btn--solid.i-mass:focus-visible{
     background-color:var(--hover-set, color-mix(in srgb, var(--ink) 86%, var(--bg-0)));
@@ -7241,6 +7277,8 @@ document.addEventListener("DOMContentLoaded", function () {
                transform var(--t-1) var(--e-out);
   }
   .k-pair .k-pair-a{background-color:var(--ink); color:var(--ink-on-fill)}
+  /* The label goes with the plate — see 41. */
+  .k-pair .k-pair-a:is(:hover,:focus-visible){color:var(--on-hover-set, var(--ink-on-fill))}
   .k-pair .k-pair-b{
     background-color:color-mix(in srgb,var(--ink) 0%,transparent);
     color:var(--ink-text); border-color:var(--line-ctl);
@@ -11490,8 +11528,10 @@ document.addEventListener("DOMContentLoaded", function () {
      claims. */
   .btn.squash{
     background:var(--accent); color:var(--on-accent);
-    transition:background var(--t-2) var(--e-out);
+    transition:background var(--t-2) var(--e-out), color var(--t-2) var(--e-out);
   }
+  /* The label goes with the plate — see 41. */
+  .btn.squash:is(:hover, :focus-visible){color:var(--on-hover-set, var(--on-accent))}
   .btn.squash:hover, .btn.squash:focus-visible{
     background:var(--hover-set, color-mix(in srgb, var(--accent) 92%, var(--bg)));
     animation:squash-mass 950ms both;
