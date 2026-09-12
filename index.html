@@ -5218,7 +5218,7 @@
         </div>
       </div>
       <h3><span class="num">162</span>Fanned deck</h3>
-      <p>At rest the buttons overlap by twenty pixels &mdash; as far as the plate&rsquo;s own padding allows before a label slides under its neighbour &mdash; stacked front-to-back, so the row reads as a held deck and only the first label is fully clear. Entering the row anywhere spreads the whole deck; only then does the one you are on come forward.</p>
+      <p>At rest the buttons overlap by twenty pixels &mdash; as far as the plate&rsquo;s own padding allows before a label slides under its neighbour &mdash; stacked front-to-back, so the row reads as a held deck and only the first label is fully clear. Entering the row anywhere spreads the whole deck; only then does the one you are on come forward. The deck needs about four hundred and ninety pixels of card to open into &mdash; four plates side by side are wider than a narrow card, so below that the spread is held and only the lift runs.</p>
       <div class="chips"><span class="chip">CSS</span><span class="chip chip--kod">Code in Framer</span><span class="chip">Bold</span></div>
     </article>
 
@@ -7939,6 +7939,29 @@ document.addEventListener("DOMContentLoaded", function () {
     transform:translateY(-5px); z-index:9;
     box-shadow:0 12px 24px -10px rgba(var(--shadow-rgb),.95)}
   .k-deck .k-deck-i:hover::after{content:""; position:absolute; inset:0 0 -5px}
+  /* 🚨 NO SPREAD BELOW 760, BECAUSE THERE IS NOWHERE TO SPREAD TO. The four
+     plates measure 376.16px laid side by side with no gap at all, and at 390
+     the stage's content box is 286 — so no narrow layout holds an open deck:
+     not a smaller step, not a deeper tuck, not a re-anchor. Nor is the
+     overflow reachable. The clip is .spec's own overflow:hidden (the card's
+     14px radius) with the stage's overflow-x:auto on the same edge, and a
+     TRANSLATED sibling does not extend a scroll port — measured at 390,
+     hovering Ace put Jack 96.16px past the clip while the stage's maxScroll
+     stayed at 6. Before this rule, at 390: hovering Queen cut 32px off Ace and
+     hovering Jack cut 62px, which is the word «Ace» gone and a stump of plate
+     left against the card's rounded corner.
+     WHAT SURVIVES IS THE LIFT, and it is the half that reads: the card you are
+     on still comes forward, out of a deck that stays held. The spread returns
+     the moment the card can hold it — 488.16px, measured: a 484px card still
+     cuts 2px and a 504px one is clean.
+     @media AND NOT @container, though the condition is the card's width and
+     not the window's: the Copy collector's walk() recurses @media, @supports
+     and @starting-style only, so a @container block is dropped out of the
+     copied CSS without a word. The price of the blunter gate is 553–711px,
+     where the card is wide enough and loses the spread anyway. */
+  @media (max-width: 760px){
+    .k-deck:has(.k-deck-i:is(:hover,:focus-visible)) .k-deck-i{translate:none}
+  }
 
   /* 160 Shared caret -- one caret above the row, sliding to whatever you point
      at. The twist is that it LEANS BACK THE WAY IT CAME: travelling right it
