@@ -151,7 +151,12 @@ await p.evalJs(String.raw`(() => {
     const shipped = b.offsetParent !== null && br.width > 0 && br.height > 0
     return { key: k, shipped,
       btn: { x: br.x + sx, y: br.y + sy, w: br.width, h: br.height },
-      lbl: A.textRect(b) }
+      // The ink the browser paints this button's text in — textVsBg picks the
+      // far mode among the bins that match it, because a label crop can hold a
+      // third ground. 159's link items sit on a plate that is 70% of the crop
+      // with the card showing past it, and white is farther from the plate than
+      // the ink: reported 3.21:1 on light Ember for a label measuring 4.58.
+      lbl: A.textRect(b), ink: A.inkOf(b) }
   })
   S.clientRect = i => { const q = window.__swN[i].b.getBoundingClientRect()
     return { x: q.x, y: q.y, w: q.width, h: q.height } }
@@ -448,7 +453,7 @@ async function bandRead (lblRects, plateRects, idxs) {
       const b64 = []
       for (const i of pending) b64.push(await clip(box(lblRects[i])))
       await p.evalJs('window.__a11y.thaw()')
-      const got = await read(b64)
+      const got = await read(b64, pending.map(i => lblRects[i].ink))
       pending = pending.filter((i, j) => {
         const h = hist.get(i), prev = h[h.length - 1]
         h.push(got[j]); reads[i]++
@@ -469,12 +474,14 @@ async function bandRead (lblRects, plateRects, idxs) {
   }
   return { val, reads, loose, plate }
 }
-async function read (b64s) {
+async function read (b64s, inks = []) {
   const out = []
-  for (const b of b64s) {
+  for (let i = 0; i < b64s.length; i++) {
+    const b = b64s[i]
     if (!b) { out.push(null); continue }
     const v = await p.evalJs(`(async () => JSON.stringify(
-      window.__a11y.textVsBg(await window.__a11y.pixels(${JSON.stringify(b)}))))()`)
+      window.__a11y.textVsBg(await window.__a11y.pixels(${JSON.stringify(b)}),
+        ${JSON.stringify(inks[i] || [])})))()`)
     out.push(v ? JSON.parse(v) : null)
   }
   return out
@@ -523,7 +530,8 @@ async function viewportRead (r, kind) {
   await p.evalJs('window.__a11y.thaw()')
   if (!shot.result?.data) return null
   const v = await p.evalJs(`(async () => JSON.stringify(await window.__a11y.cropRead(
-    ${JSON.stringify(shot.result.data)}, ${JSON.stringify(bx)}, window.__a11y.dpr())))()`)
+    ${JSON.stringify(shot.result.data)}, ${JSON.stringify(bx)}, window.__a11y.dpr(),
+    ${JSON.stringify(kind === 'lbl' ? (r.ink || []) : [])})))()`)
   return v && v !== 'null' ? JSON.parse(v) : null
 }
 // A FLAT crop is re-taken down the viewport path and replaced if that one sees

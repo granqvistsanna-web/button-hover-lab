@@ -134,7 +134,17 @@ const KIT = String.raw`(() => {
   // holds at least 1% of the pixels as the text — a single stray pixel from a
   // neighbouring element must not be allowed to set the number, and neither
   // must the antialiasing, which is why it is the far mode and not the max.
-  A.textVsBg = img => {
+  // 🚨 THE FAR MODE IS NOT ALWAYS THE INK — the same fault the gate closed on
+  // 2026-09-11. A label crop can hold a THIRD ground: 159's link items sit on
+  // a plate that is 70% of the crop with 12% card showing past it, and white
+  // is farther from the plate than the ink is, so «farthest luminance holding
+  // 1%» reported plate-against-card — 3.21:1 on light Ember for a label
+  // measuring 4.58, and the same on Fern and Azure. inks names what the
+  // browser actually paints the text in, and the far mode is chosen from the
+  // bins that match one of them. Empty (a BLENDED label, where the computed
+  // colour is a constant and the glyph is |ground − constant|) keeps the old
+  // rule, which is the one that reads a blend correctly.
+  A.textVsBg = (img, inks) => {
     const d = img.data, n = d.length/4
     const bins = new Float64Array(101), cnt = new Float64Array(101)
     const px = []
@@ -149,10 +159,16 @@ const KIT = String.raw`(() => {
     const bg = bins[bgK]/cnt[bgK]
     const floor = Math.max(3, px.length * 0.003)
     let txK = bgK, best = 0
-    for (let k = 0; k <= 100; k++) {
-      if (cnt[k] < floor) continue
-      const dist = Math.abs(k - bgK)
-      if (dist > best) { best = dist; txK = k }
+    const near = k => !inks || !inks.length ||
+      inks.some(L => Math.abs(k - Math.round(L * 100)) <= 3)
+    for (let pass = 0; pass < 2; pass++) {
+      for (let k = 0; k <= 100; k++) {
+        if (cnt[k] < floor) continue
+        if (!pass && !near(k)) continue
+        const dist = Math.abs(k - bgK)
+        if (dist > best) { best = dist; txK = k }
+      }
+      if (best) break                    // nothing matched an ink: old rule
     }
     const tx = bins[txK]/cnt[txK]
     let sum = 0; for (const L of px) sum += L
@@ -275,6 +291,22 @@ const KIT = String.raw`(() => {
     return { x: box.l+sx, y: box.t+sy, w: box.r-box.l, h: box.b-box.t, noText }
   }
 
+  // Every colour the browser paints text in inside this button. A blend over
+  // the glyphs means the painted colour is not this one, so the list comes
+  // back empty and textVsBg keeps its own rule.
+  A.inkOf = b => {
+    const out = new Set()
+    const w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT)
+    for (let t = w.nextNode(); t; t = w.nextNode()) {
+      if (!t.nodeValue.trim()) continue
+      for (let e = t.parentElement; e && e !== b.parentElement; e = e.parentElement)
+        if (getComputedStyle(e).mixBlendMode !== 'normal') return []
+      const m = (getComputedStyle(t.parentElement).color || '').match(/[\d.]+/g)
+      if (m) out.add(+A.lum(+m[0], +m[1], +m[2]).toFixed(4))
+    }
+    return [...out]
+  }
+
   A.rects = () => [...document.querySelectorAll('.spec')].flatMap(card =>
     [...card.querySelectorAll('.stage button.btn')].map(b => {
       const br = b.getBoundingClientRect()
@@ -285,7 +317,7 @@ const KIT = String.raw`(() => {
       // an artefact of the filter and not a contrast fault anywhere.
       const shipped = b.offsetParent !== null && br.width > 0 && br.height > 0
       return { shipped, btn: { x: br.x+sx, y: br.y+sy, w: br.width, h: br.height },
-               lbl: A.textRect(b) }
+               lbl: A.textRect(b), ink: A.inkOf(b) }
     }))
 
   A.nodes = () => [...document.querySelectorAll('.spec .stage button.btn')]
@@ -341,7 +373,7 @@ const KIT = String.raw`(() => {
   // reached for because the clip cannot be trusted. An unclipped viewport
   // capture is neither — it is the surface as it is actually painted — so the
   // rectangle is taken from it here, in device pixels, against the live scroll.
-  A.cropRead = async (b64, page, dpr) => {
+  A.cropRead = async (b64, page, dpr, inks) => {
     const x = page.x - scrollX, y = page.y - scrollY
     if (y < 0 || y + page.h > innerHeight || x < 0 || x + page.w > innerWidth) return null
     const bmp = await createImageBitmap(await (await fetch('data:image/png;base64,' + b64)).blob())
@@ -349,7 +381,7 @@ const KIT = String.raw`(() => {
     const cv = new OffscreenCanvas(w, h)
     const cx = cv.getContext('2d', { willReadFrequently: true })
     cx.drawImage(bmp, Math.round(x * dpr), Math.round(y * dpr), w, h, 0, 0, w, h)
-    return A.textVsBg(cx.getImageData(0, 0, w, h))
+    return A.textVsBg(cx.getImageData(0, 0, w, h), inks)
   }
   A.dpr = () => devicePixelRatio
   A.freeze = () => { const a = document.getAnimations(); a.forEach(x => { try { x.pause() } catch (e) {} }); return a.length }
