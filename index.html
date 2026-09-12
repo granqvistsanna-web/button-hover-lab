@@ -15728,8 +15728,26 @@ document.addEventListener("DOMContentLoaded", function () {
         var q8 = function (g){
           return g.map(function (c){ return Math.max(0, Math.min(255, c + toLbl)); });
         };
-        root.setProperty('--m-frost-ink',
-          fitOnAll(restInk, 4.5, [q8(frostOn(PANEL)), q8(frostOn(stripeRgb))]).hex);
+        var onFrost = fitOnAll(restInk, 4.5, [q8(frostOn(PANEL)), q8(frostOn(stripeRgb))]);
+        root.setProperty('--m-frost-ink', onFrost.hex);
+        // …and the caption says so, here rather than in the ROLES loop: that
+        // loop has already run by the time the frost is known, and the frost is
+        // the fourth surface it cannot see. A fit nobody is told about is the
+        // silent fit fitOn's comment promises never to make. It reports on
+        // whichever swatch owns the rest label — Text when one was picked,
+        // Button when the label was derived off it — and it only adds an arrow
+        // where that caption has not already earned one, so the readout's count
+        // stays a count of captions rather than a count of fits.
+        if (onFrost.moved){
+          var frostCap = fitted.text ? caps.text : caps.accent;
+          if (frostCap.innerHTML.indexOf('<b>') < 0){
+            frostCap.innerHTML += ' <b>↑</b>';
+            moved++;
+          }
+          frostCap.title += ' On 31 Frosted glass the label is refitted against'
+                          + ' the frost and lands on ' + onFrost.hex + ' — '
+                          + onFrost.ratio.toFixed(1) + ':1 there.';
+        }
       } else {
         root.removeProperty('--m-frost-ink');
       }
