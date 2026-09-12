@@ -2564,6 +2564,20 @@
 
   @media (max-width: 420px){ .feed{grid-template-columns:1fr} }
 
+  /* ---- 521–534: the Version row cannot shrink, so it has to wrap ---------
+     .set-read is white-space:nowrap, so its min-content size IS its text —
+     172.5px for «all 108, each as it ships», the widest reading it holds. That
+     makes the row's min-content equal its max-content, 442.2px, and flex-shrink
+     has nothing to give. The panel's content box is 429px at 521 and only
+     reaches 442 at 534, so the readout's ink ran up to 13.2px past the panel's
+     own padding — inside the panel, no page scroll, just text on the border.
+     Measured: overflow at every width 521–534 and at none outside it, so the
+     wrap that already handles ≤520 is lifted to 534 and nothing else moves. */
+  @media (max-width: 534px){
+    .tools-row:has(.vers-seg){flex-wrap:wrap; justify-content:flex-start}
+    .tools-row:has(.vers-seg) .set-read{margin-left:auto}
+  }
+
   @media (max-width: 520px){
     .tools{gap:10px; padding:12px 14px}
     /* Each axis gets its own line WITH its label — two unlabelled «All»
@@ -2571,9 +2585,9 @@
     .tools-row{width:100%; justify-content:space-between}
     /* A vertical rule between stacked full-width rows separates nothing. */
     /* Four treatments plus a toggle plus a readout will not sit on one phone
-       line with a label; the track wraps and the readout takes the next. */
-    .tools-row:has(.vers-seg){flex-wrap:wrap; justify-content:flex-start}
-    .tools-row:has(.vers-seg) .set-read{margin-left:auto}
+       line with a label; the track wraps and the readout takes the next.
+       The two rules that do it now live in the 534 block above — they are
+       needed 14px higher than this breakpoint reaches. */
     /* Three captioned swatches and a contrast phrase do not fit a 390px line.
        The readout drops under them rather than squeezing HOVER off its own
        swatch — it reports on all three, so under all three is where it goes. */
