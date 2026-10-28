@@ -3671,19 +3671,26 @@
   .tools .vers-long{border-radius:var(--r-pill); min-height:32px; padding:0 14px}
   .tools-fold-sum{border-radius:var(--r-row)}
   .rail-q, .rail-sort{border-radius:var(--r-pill)}
+  .rail-sort{padding-left:14px}
   .rail-sum, .rail-list label, .rail-sects a{border-radius:var(--r-row); padding-left:12px; padding-right:12px}
   .rail-lbl{margin-left:12px}
   .rail-toggle{border-radius:var(--r-pill)}
+  /* Inter sets wider than Geist did, so at the 320px card floor the three
+     copy buttons (each reserving room for «Copied») ran 32px under the star.
+     Tighter padding and a shorter reserve for Framer, at every width, since
+     the floor is reachable from phone to 1359. */
+  .copy{padding:0 8px; gap:5px}
+  .copy--fr .copy-lbl{min-width:8ch}
   @media (min-width: 1360px){
     .rail:not([hidden]){
       inset:var(--hug) auto var(--hug) var(--hug);
       width:calc(var(--rail-w) - var(--hug));
-      border-radius:var(--r-card); overflow:hidden;
+      border-radius:var(--r-card); overflow:hidden; box-shadow:var(--lift);
     }
     .tools, .tools[data-stuck]{
       inset:var(--hug) var(--hug) var(--hug) auto;
       width:calc(var(--insp-w) - var(--hug));
-      border-radius:var(--r-card);
+      border-radius:var(--r-card); box-shadow:var(--lift);
     }
     body[data-rail="off"] .rail:not([hidden]){transform:translateX(calc(-100% - var(--hug)))}
     body[data-insp="off"] .tools{transform:translateX(calc(100% + var(--hug)))}
