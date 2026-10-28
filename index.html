@@ -74,7 +74,6 @@
     --r-xs:10px; --r-sm:12px; --r-md:20px; --r-lg:28px; --r-xl:28px; --r-pill:999px;
     --row-h:48px; --gap-row:10px; --pad-control:16px; --pad-panel:20px; --gap-section:32px;
     --font-ui:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
-    --font-mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
     --ease:cubic-bezier(.25,.1,.25,1); --t-fast:120ms; --t-med:180ms;
     /* A 288px wall repositioning is the one move on this page big enough to
        want a settle rather than a duration. Critically damped — it must not
@@ -273,7 +272,6 @@
        controls, the other holds a search, two facet lists and eighteen
        section links. */
     --insp-w:276px;
-    --mono:var(--font-mono);
     --e-quint:cubic-bezier(0.22,1,0.36,1);
     --e-out:cubic-bezier(0.33,1,0.68,1);
     /* ---- Timing ladder -------------------------------------------------
@@ -1823,7 +1821,7 @@
   .dotm:focus-visible .ar{transform:translateX(0)}
 
   /* 13 Crop marks */
-  .corners{font:500 11.5px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; border-radius:0; padding:15px 24px}
+  .corners{font:500 11.5px/1 var(--font-ui); letter-spacing:.14em; text-transform:uppercase; border-radius:0; padding:15px 24px}
   .corners::before,.corners::after,.corners i::before,.corners i::after{
     content:""; position:absolute; width:9px; height:9px; opacity:0;
     transition:opacity var(--t-3) ease,transform var(--t-4) var(--e-quint);
@@ -5458,7 +5456,7 @@
   @property --e-n{syntax:"<integer>"; inherits:true; initial-value:0}
   .e-count .e-count-n{
     --e-n:0;
-    font:500 10.5px/1 var(--mono); letter-spacing:.06em;
+    font:500 10.5px/1 var(--font-ui); letter-spacing:.06em; font-variant-numeric:tabular-nums;
     padding:4px 6px 3px; border-radius:5px;
     border:1px solid color-mix(in srgb,var(--on-ink) 35%,transparent);
     opacity:.6;
@@ -6934,11 +6932,12 @@ document.addEventListener("DOMContentLoaded", function () {
   /* 80 Resolve — the label churns and locks in left to right. Two decisions
      keep it from becoming a gimmick: the pool is the label's OWN characters, so
      the button never shows a glyph that does not belong to it; and the face is
-     the mono, where every advance is identical, so a scramble cannot move the
-     plate by a fraction of a pixel. Nothing is reserved because nothing can
-     change width. */
+     held at its resting width while it scrambles. The face is Inter now, where
+     advances differ, so the script pins the label's width for the run and
+     centres the letters inside it, then lets go when the word settles — a
+     scramble still cannot move the plate by a fraction of a pixel. */
   .btn.j-resolve{
-    font:500 13px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    font:500 13px/1 var(--font-ui); letter-spacing:.08em; text-transform:uppercase;
     border-radius:6px; padding:16px 24px;
   }
   /* The label sits at full strength at rest. The soft-to-text lift that used
@@ -6949,7 +6948,7 @@ document.addEventListener("DOMContentLoaded", function () {
      a label held under strength until you point at it reads as disabled, which
      is the one thing a primary action must never read as. So the dim moves
      into the only place it was ever load-bearing. */
-  .j-resolve .j-resolve-lbl{color:var(--ink-text)}
+  .j-resolve .j-resolve-lbl{color:var(--ink-text); display:inline-block; white-space:nowrap; text-align:center}
   /* THE FILL VERSION HAS TO RESTATE THE LABEL COLOUR, and it is the one line
      that makes the version exist. .btn--solid paints the plate --ink and sets
      the button's own colour to --ink-on-fill, but the rule above names the SPAN
@@ -7155,6 +7154,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (raf !== null) cancelAnimationFrame(raf);
         raf = null;
         el.textContent = text;                // interrupted: home immediately
+        el.style.width = '';
       }
       function tick(now){
         if (!t0) t0 = now;
@@ -7168,11 +7168,12 @@ document.addEventListener("DOMContentLoaded", function () {
           }).join('');
         }
         if (p < 1){ raf = requestAnimationFrame(tick); }
-        else { raf = null; el.textContent = text; }
+        else { raf = null; el.textContent = text; el.style.width = ''; }
       }
       function start(){
         if (reduced.matches) return;          // the colour shift carries it
         stop(); t0 = 0; frame = 0;
+        el.style.width = el.getBoundingClientRect().width + 'px';
         raf = requestAnimationFrame(tick);
       }
 
@@ -7914,7 +7915,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .k-icon .k-icon-gl{
     flex:none; width:var(--k-icon-cell); text-align:center;
-    font-family:var(--font-mono); font-size:15px;
+    font-family:var(--font-ui); font-size:15px;
   }
   .k-icon .k-icon-wd{
     white-space:nowrap; padding-right:18px; opacity:0;
@@ -9595,7 +9596,7 @@ document.addEventListener("DOMContentLoaded", function () {
      was missing. */
   .btn.s-sprite{
     background:none; border:0; border-radius:0; transition:none;
-    font:500 13px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+    font:500 13px/1 var(--font-ui); letter-spacing:.1em; text-transform:uppercase;
     padding:16px 26px;
   }
   .btn.s-sprite::before{
@@ -9643,7 +9644,7 @@ document.addEventListener("DOMContentLoaded", function () {
      is not.
      The visible letters are aria-hidden and an .sr copy carries the
      accessible name, the way 85 and 80 do. */
-  .s-print{font:500 13px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase}
+  .s-print{font:500 13px/1 var(--font-ui); letter-spacing:.1em; text-transform:uppercase}
   .s-print .s-print-l{
     display:inline-block; opacity:.3; filter:blur(.4px);
     transition:opacity var(--t-1) steps(1,end), filter var(--t-1) steps(1,end);
