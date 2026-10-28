@@ -11,18 +11,19 @@
 <!-- Mobile browser chrome, kept in step with the page. Not a media-query pair:
      the theme here is a CHOICE, and a media query would leave the address bar
      arguing with a page the reader has explicitly set the other way. -->
-<meta name="theme-color" content="#0f0f0f">
+<meta name="theme-color" content="#ffffff">
 <!-- The theme is stamped before the first paint, so a visitor who chose light
      last time never sees the dark page flash past on the way to it. -->
 <script>
   (function(){
     try{
       var t = localStorage.getItem('bhl-theme');
-      if (t === 'light' || t === 'dark'){
-        document.documentElement.dataset.theme = t;
-        var m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.content = t === 'light' ? '#ffffff' : '#0f0f0f';
-      }
+      /* Pumice is light-first: with no stored choice the page follows the
+         system, and only a dark system gets the dark page. */
+      if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = t;
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.content = t === 'light' ? '#ffffff' : '#000000';
     }catch(e){}
   })();
 </script>
@@ -56,19 +57,24 @@
      what the page IS. «Button Lab» alone is ten characters: a tab label, not
      something anyone can pick out of a list of ten results. -->
 <title>Button Lab — button hover animations, actually built</title>
-<!-- Graphite Console tokens, inlined as a fallback FIRST so the page still
-     renders if the linked sheet does not arrive; the link follows and wins
-     whenever it does. Keep the two in step. -->
+<!-- Pumice tokens (https://granqvistsanna-web.github.io/pumice/), written
+     under the base names this page has always read — --bg-n, --ink-hi… — so
+     the role aliases below and every study keep resolving unchanged. Pumice's
+     own tokens.css is NOT linked: its --ink and --bg would collide with this
+     page's aliases of the same name, and its [data-theme] rule outranks them. -->
 <style>
   :root{
-    --bg-0:#0f0f0f; --bg-1:#171717; --bg-2:#222222; --bg-3:#2e2e2e; --bg-4:#3a3a3a;
-    --hairline:rgba(255,255,255,.08);
-    --ink-hi:#f2f2f2; --ink-mid:#b3b3b3; --ink-low:#8a8a8a; --ink-faint:#5f5f5f;
-    --inverse-bg:#ffffff; --inverse-ink:#101010;
-    --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:999px;
+    /* dark: Pumice's black ladder */
+    --bg-0:#000000; --bg-1:#0f0f0f; --bg-2:#181818; --bg-3:#202020; --bg-4:#303030;
+    --hairline:rgba(255,255,255,.09);
+    --ink-hi:#ffffff; --ink-mid:#b4b4b4; --ink-low:#9a9a9a; --ink-faint:#828282;
+    --inverse-bg:#ffffff; --inverse-ink:#000000;
+    /* Pumice has two shapes: pills for controls, 28px for cards; 12px for
+       small inner panels. */
+    --r-xs:10px; --r-sm:12px; --r-md:20px; --r-lg:28px; --r-xl:28px; --r-pill:999px;
     --row-h:48px; --gap-row:10px; --pad-control:16px; --pad-panel:20px; --gap-section:32px;
-    --font-ui:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
-    --font-mono:"Geist Mono",ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --font-ui:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
     --ease:cubic-bezier(.25,.1,.25,1); --t-fast:120ms; --t-med:180ms;
     /* A 288px wall repositioning is the one move on this page big enough to
        want a settle rather than a duration. Critically damped — it must not
@@ -77,12 +83,14 @@
     --t-panel:340ms; --e-panel:cubic-bezier(.32,.72,0,1);
   }
 </style>
-<link rel="stylesheet" href="https://granqvistsanna-web.github.io/graphite-console/tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap">
 <style>
   /* ============================================================
-     Graphite Console — https://granqvistsanna-web.github.io/graphite-console/
-     Dark only, one grayscale ladder, white as the single accent, elevation by
-     lightness. The DS tokens arrive from tokens.css; everything below is an
+     Pumice — https://granqvistsanna-web.github.io/pumice/
+     Warm greys, ink as the single accent, pills for controls and 28px cards.
+     The DS values are set in the block above; everything below is an
      ALIAS so every effect rule keeps resolving under its own name.
      ============================================================ */
   :root{
@@ -352,12 +360,13 @@
      theme manages and is the right way round for the lighter ground. */
   :root[data-theme="light"]{
     color-scheme:light;
-    --bg-0:#ffffff; --bg-1:#f4f4f4; --bg-2:#e7e7e7; --bg-3:#d6d6d6; --bg-4:#c5c5c5;
-    --hairline:rgba(0,0,0,.10);
-    --ink-hi:#121212; --ink-mid:#4b4b4b; --ink-low:#636363; --ink-faint:#6d6d6d;
+    /* light: Pumice's warm, slightly olive greys */
+    --bg-0:#ffffff; --bg-1:#f7f7f6; --bg-2:#f1f1f0; --bg-3:#ecebe7; --bg-4:#dcd9cf;
+    --hairline:rgba(23,24,26,.08);
+    --ink-hi:#17181a; --ink-mid:#3c3b37; --ink-low:#5c5b56; --ink-faint:#6f6e68;
     /* The inverse pair is still THE accent — it just points the other way, so a
        solid plate is black on white here exactly as it is white on black there. */
-    --inverse-bg:#101010; --inverse-ink:#ffffff;
+    --inverse-bg:#17181a; --inverse-ink:#ffffff;
     /* --line-ctl keeps its ARGUMENT, not its value, and the argument is a
        RATIO: a control boundary has to clear 3:1, which is the whole point of
        the note on the dark token. THE ALPHA IS NOT PORTABLE. .36 white over
@@ -370,7 +379,7 @@
        Composited before measuring, which is the step that catches this — read
        rgba(0,0,0,.36) against its background WITHOUT compositing and it reports
        19:1, and the token looks fine. */
-    --line-ctl:rgba(0,0,0,.45);
+    --line-ctl:rgba(23,24,26,.45);
     /* Light is the weak ground for this and it is not close: NINE of the
        thirteen dots sit under 3:1 against #e7e7e7 here, against three in dark,
        because a light panel is a near neighbour of every tint the row ships.
@@ -379,7 +388,7 @@
        at .45 the ring was the thinnest thing in the row: Straw 3.41, Mint 4.12,
        Orchid 4.31, all inside a whisker of the 3:1 floor. .62 lifts the worst
        of them to 6.02 and leaves the dot's own colour untouched. */
-    --sw-ring:rgba(0,0,0,.62);
+    --sw-ring:rgba(23,24,26,.62);
     --sheen:var(--m-sheen, 0,0,0);
     /* Away from white is down, toward white is up — see the roles' own note.
        The sentence is the same in both themes even though the order is not:
@@ -456,7 +465,7 @@
      stacked because the count is an attribute of the name and not a second
      statement — the page has one heading and no subtitle to argue with it. */
   .mast{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
-  h1{color:var(--ink-hi); font-size:21px; font-weight:600;
+  h1{color:var(--ink-hi); font-size:21px; font-weight:500;
     letter-spacing:-.01em; line-height:1.2; margin:0}
   /* Tabular figures: this is the page's live count now and it changes under
      the reader's hand, so a proportional 1 would make the line twitch as the
@@ -542,7 +551,7 @@
   /* 14px and not --r-xl's 20. Every other radius in the chrome is 8 (6 on the
      panel rows), so a 20px card was 2.5x the largest thing around it and
      competed with the pill buttons standing inside it. */
-  .spec{background:var(--card); border-radius:14px; overflow:hidden;
+  .spec{background:var(--card); border-radius:var(--r-lg); overflow:hidden;
     display:flex; flex-direction:column}
   /* Three demos are rows of controls rather than single buttons — a nav row, a
      button pair, a segmented pair — and want more width than one column gives.
@@ -611,7 +620,7 @@
      text column takes the stage's 24. */
   .spec h3{display:flex; align-items:baseline; gap:10px;
     border-top:1px solid var(--hairline); padding:17px 24px 0; margin:0 0 5px;
-    font-size:14.5px; font-weight:600; color:var(--ink-hi); letter-spacing:0}
+    font-size:14.5px; font-weight:500; color:var(--ink-hi); letter-spacing:0}
   .num{font:400 11px/1 var(--mono); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
   /* The description is clamped to three lines, which is not a guess: the
@@ -2248,7 +2257,7 @@
   .tools-fold[open] > .tools-fold-sum::after{transform:rotate(-135deg); margin-top:1px}
   .tools-fold-body{display:flex; flex-direction:column; gap:14px;
     padding:14px 10px 4px}
-  .tools-lbl{font-size:11px; font-weight:600; letter-spacing:.14em;
+  .tools-lbl{font-size:11px; font-weight:500; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-low)}
 
   /* ---- Global settings ------------------------------------------------
@@ -2356,7 +2365,7 @@
   }
   .set-pair{display:inline-flex; align-items:center; gap:2px}
   .set-lab{display:inline-flex; align-items:center; gap:8px; cursor:pointer}
-  .set-cap{font-size:11px; font-weight:600; letter-spacing:0;
+  .set-cap{font-size:11px; font-weight:500; letter-spacing:0;
     color:var(--ink-low); transition:color var(--t-2) ease}
   .set-lab:hover .set-cap{color:var(--ink-mid)}
   /* The marker the fit puts up when it had to move a colour. Inline with the
@@ -3723,7 +3732,7 @@
     <details class="tools-fold">
       <summary class="tools-fold-sum">
         <span class="tools-lbl">Colour</span>
-        <span class="tools-fold-state" data-set="">Graphite</span>
+        <span class="tools-fold-state" data-set="">Pumice</span>
       </summary>
       <div class="tools-fold-body">
     <div class="tools-row">
@@ -3817,7 +3826,7 @@
       <span class="tools-lbl">Palette</span>
       <div class="set-presets" role="group" aria-label="Colour palette">
         <button type="button" class="set-p set-p--none" data-p=""
-                aria-pressed="true" title="Graphite — the page&rsquo;s own monochrome. A swatch showing the page&rsquo;s own ink means this: the role follows the system rather than being pinned to a colour.">Graphite</button>
+                aria-pressed="true" title="Pumice — the page&rsquo;s own monochrome. A swatch showing the page&rsquo;s own ink means this: the role follows the system rather than being pinned to a colour.">Pumice</button>
         <!-- Sanna's set, revised 2026-08-31. The BASE colour is the accent
              exactly as given; the other three cells are derived from it, and
              every one was measured before it was written down:
@@ -18757,7 +18766,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         try { localStorage.setItem('bhl-theme', b.dataset.theme); } catch (e) {}
         var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.content = b.dataset.theme === 'light' ? '#ffffff' : '#0f0f0f';
+        if (meta) meta.content = b.dataset.theme === 'light' ? '#ffffff' : '#000000';
         // Announced, not called: the colour machinery measures the page it is
         // fitting against and lives in another IIFE.
         document.dispatchEvent(new CustomEvent('bhl:theme'));

@@ -6,8 +6,8 @@ Button hover animations, actually built. Hover, tab and press all of them.
 
 A monochrome specimen page, so each effect can be judged on its mechanism rather than its
 colour. The page itself is built in
-[Graphite Console](https://granqvistsanna-web.github.io/graphite-console/) — one grayscale
-ladder, white as the only accent, elevation stated as lightness rather than shadow — so the
+[Pumice](https://granqvistsanna-web.github.io/pumice/) — warm greys, ink as the only
+accent, pills for controls and 28px cards, light and dark — so the
 chrome stays out of the way of the thing being shown. Every card names the technique, says when to reach for it, and is honest about what
 it costs to build. Each one also has two copy buttons, both extracted from the live
 stylesheet so nothing can drift out of sync: **CSS** hands you a paste-ready snippet — only
@@ -115,8 +115,8 @@ when only the accent is picked. `--ink-hover` is pinned to `--ink`, so hover *do
 the accent until it is given a colour of its own. That is what each one is expected to do:
 text stays put, hover goes along.
 
-White is the default for all three, and it is graphite's white — `--ink-hi`, a shade under
-pure, because pure white on near-black glares. The toolbar measures it off a probe that asks
+Ink is the default for all three — `--ink-hi`, near-black on the light page and white on
+the dark one. The toolbar measures it off a probe that asks
 for `var(--ink)` rather than naming it, and leaves it as an alias rather than writing it to
 the root, so a snippet copied at the default still reads `--ink-hi` and follows the system it
 lands in. Picking `#ffffff` by hand is a real choice and is treated as one.
@@ -350,17 +350,17 @@ headless Chrome, presses every card's copy button with the clipboard stubbed, pu
 result into a Framer project as one code file per study, and writes the module URLs back into
 the page and into `framer-components.json`. It skips any study whose content hash has not
 moved, so published URLs stay put, and it never deletes a code file that no study claims any
-more — somebody may already have pasted it. One linked stylesheet — the Graphite Console
-tokens, which carry self-hosted Geist and Geist Mono — and everything else is CSS, with
+more — somebody may already have pasted it. One linked stylesheet — Inter from Google
+Fonts; the Pumice tokens are inlined at the top of the page — and everything else is CSS, with
 small vanilla-JS loops in 14 of the 103 cards, only
 where CSS genuinely cannot reach — a critically damped spring, a pointer-driven gradient, a
 per-character weight ripple, an overflow measurement, a velocity handoff, a pointer-speed
 reading, and the edge the pointer crossed.
 
-Colour lives entirely in tokens, and there is now exactly one set of them: Graphite Console
-is dark-only, so the light `:root` / `prefers-color-scheme` / `[data-theme]` trio is gone.
-The page's own names (`--ink`, `--stage`, `--accent`, …) survive as **aliases** onto the
-graphite ladder, which is why all sixty-four effect rules kept working untouched — and why
+Colour lives entirely in tokens: Pumice's ladder, written under the base names `--bg-0…4`
+and `--ink-hi…faint`, once for dark and once for light. With no stored choice the page
+follows the system. The page's own names (`--ink`, `--stage`, `--accent`, …) survive as
+**aliases** onto that ladder, which is why all sixty-four effect rules kept working untouched — and why
 the copy buttons still hand you a self-contained snippet, resolving each alias to its value
 off the computed root.
 
