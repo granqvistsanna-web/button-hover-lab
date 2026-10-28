@@ -3648,6 +3648,52 @@
   @media (prefers-reduced-motion: no-preference){
     html{scroll-behavior:smooth}
   }
+
+  /* ============ Pumice panels ============
+     https://granqvistsanna-web.github.io/pumice/#panels
+     Last in the sheet on purpose: these only reshape the chrome, so they
+     override by source order at the specificity each original rule already
+     has. Nothing here reaches a study. Radii nest — a 22px panel holds 18px
+     rows; controls are pills; the walls float 12px off the screen edges as
+     28px cards instead of running edge to edge. */
+  :root{
+    --r-card:28px; --r-menu:22px; --r-row:18px; --hug:12px;
+    --lift:0 2px 5px rgba(0,0,0,.22), 0 10px 24px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.07);
+  }
+  :root[data-theme="light"]{
+    --lift:0 2px 5px rgba(0,0,0,.06), 0 10px 24px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.03);
+  }
+  .tools{border-radius:var(--r-menu)}
+  .tools[data-stuck]{border-radius:0 0 var(--r-menu) var(--r-menu); box-shadow:var(--lift)}
+  .tools .vers-seg{border-radius:var(--r-pill); padding:2px; gap:2px}
+  .tools .vers-b{border-radius:var(--r-pill); min-height:32px; font-size:12.5px; font-weight:500}
+  .tools .vers-seg .vers-b:is([aria-checked="true"], [aria-pressed="true"]){box-shadow:0 1px 2px rgba(var(--shadow-rgb),.12)}
+  .tools .vers-long{border-radius:var(--r-pill); min-height:32px; padding:0 14px}
+  .tools-fold-sum{border-radius:var(--r-row)}
+  .rail-q, .rail-sort{border-radius:var(--r-pill)}
+  .rail-sum, .rail-list label, .rail-sects a{border-radius:var(--r-row); padding-left:12px; padding-right:12px}
+  .rail-lbl{margin-left:12px}
+  .rail-toggle{border-radius:var(--r-pill)}
+  @media (min-width: 1360px){
+    .rail:not([hidden]){
+      inset:var(--hug) auto var(--hug) var(--hug);
+      width:calc(var(--rail-w) - var(--hug));
+      border-radius:var(--r-card); overflow:hidden;
+    }
+    .tools, .tools[data-stuck]{
+      inset:var(--hug) var(--hug) var(--hug) auto;
+      width:calc(var(--insp-w) - var(--hug));
+      border-radius:var(--r-card);
+    }
+    body[data-rail="off"] .rail:not([hidden]){transform:translateX(calc(-100% - var(--hug)))}
+    body[data-insp="off"] .tools{transform:translateX(calc(100% + var(--hug)))}
+    .mast{left:calc(58px + var(--hug)); width:calc(var(--rail-w) - 58px - var(--hug));
+      padding-top:calc(24px + var(--hug))}
+    body[data-rail="off"] .mast{left:calc(58px + var(--hug)); top:calc(24px + var(--hug)); padding:0}
+    .rail-fold, .rail-show, .tools-hide, .tools-show{border-radius:var(--r-pill)}
+    .rail-show{left:calc(12px + var(--hug)); top:calc(24px + var(--hug))}
+    .tools-hide, .tools-show{right:calc(12px + var(--hug)); top:calc(24px + var(--hug))}
+  }
 </style>
 </head>
 <body>
