@@ -470,7 +470,7 @@
   /* Tabular figures: this is the page's live count now and it changes under
      the reader's hand, so a proportional 1 would make the line twitch as the
      digits swap. */
-  .mast-sub{margin:0; font:400 12px/1 var(--mono); letter-spacing:.02em;
+  .mast-sub{margin:0; font:400 12px/1 var(--font-ui); letter-spacing:.02em;
     color:var(--ink-low); font-variant-numeric:tabular-nums}
   /* This line is the page's answer to every filter, and it changed silently:
      89 became 33 became 4 with nothing to catch the eye, in the one place a
@@ -621,7 +621,7 @@
   .spec h3{display:flex; align-items:baseline; gap:10px;
     border-top:1px solid var(--hairline); padding:17px 24px 0; margin:0 0 5px;
     font-size:14.5px; font-weight:500; color:var(--ink-hi); letter-spacing:0}
-  .num{font:400 11px/1 var(--mono); color:var(--ink-low);
+  .num{font:400 11px/1 var(--font-ui); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
   /* The description is clamped to three lines, which is not a guess: the
      first sentence of these cards is the plain statement of what happens and
@@ -644,7 +644,7 @@
      the field has anything in it, every card is open. */
   body.is-searching .spec p{display:block; -webkit-line-clamp:none; overflow:visible}
   .chips{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
-    margin-top:auto; padding:0 24px 20px; font:400 11.5px/1.6 var(--mono)}
+    margin-top:auto; padding:0 24px 20px; font:400 11.5px/1.6 var(--font-ui)}
   /* --ink-faint measures 2.8:1 on the panel — under AA. Every chip is
      information, not decoration, so the ladder starts one step higher. */
   .chip{color:var(--ink-low)}
@@ -2118,7 +2118,7 @@
   /* ============ footer ============ */
   .foot{margin-top:80px; padding-top:0;
     display:flex; flex-wrap:wrap; gap:6px 26px;
-    font:400 11.5px/1.7 var(--mono); color:var(--ink-low)}
+    font:400 11.5px/1.7 var(--font-ui); color:var(--ink-low)}
   .foot p{margin:0}
   .foot b{font-weight:500; color:var(--ink-mid)}
   /* The specs above are what the page is; this is who made it. A library that
@@ -2321,7 +2321,7 @@
   /* A readout that is also a control, so it looks like the version chips
      rather than like the static numbers beside the swatches. */
   .set-uses{
-    font:400 10.5px/1 var(--mono); letter-spacing:.02em;
+    font:400 10.5px/1 var(--font-ui); letter-spacing:.02em;
     color:var(--ink-low); background:none; border:0; border-radius:var(--r-xs);
     padding:5px 8px; margin-left:2px; cursor:pointer; white-space:nowrap;
     transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
@@ -2457,7 +2457,7 @@
   .set-range:focus-visible{outline:2px solid var(--ink-low); outline-offset:3px}
   /* Mono and tabular, and wide enough for the longest reading it can hold, so
      dragging the slider does not shove the row around under the pointer. */
-  .set-read{font:400 11.5px/1 var(--mono); color:var(--ink-low);
+  .set-read{font:400 11.5px/1 var(--font-ui); color:var(--ink-low);
     font-variant-numeric:tabular-nums; min-width:7ch; white-space:nowrap}
   .set-read b{font-weight:400; color:var(--ink-mid); cursor:help}
   /* The verdict beside the number. A chip and not more grey text: it is the
@@ -3019,7 +3019,7 @@
        most load-bearing thing on the card at that moment, and faint measures
        2.81:1 on this panel — the same argument the chips and the counts have
        already had. */
-    font:400 11px/1 var(--mono); color:var(--ink-low);
+    font:400 11px/1 var(--font-ui); color:var(--ink-low);
     font-variant-numeric:tabular-nums;
   }
   .spec-when[hidden]{display:none}
@@ -3106,7 +3106,7 @@
      the accent pair is the page's one piece of emphasis and this is the one
      thing in the panel that has to survive being glanced at. */
   .rail-sum-n{
-    font:400 10px/1 var(--mono); letter-spacing:0;
+    font:400 10px/1 var(--font-ui); letter-spacing:0;
     min-width:16px; height:16px; padding:0 4px; border-radius:var(--r-pill);
     display:inline-flex; align-items:center; justify-content:center;
     background:var(--accent); color:var(--on-accent);
@@ -3186,7 +3186,7 @@
      the column look bent. --ink-low and not --ink-faint: faint measures 2.8:1
      on this panel, which is under AA, and the note at the top of the chip rules
      already settled that a count is information rather than decoration. */
-  .rail-n{font:500 12px/1 var(--mono); color:var(--ink-low);
+  .rail-n{font:500 12px/1 var(--font-ui); color:var(--ink-low);
     font-variant-numeric:tabular-nums}
   .rail-list label:hover .rail-n{color:var(--ink-hi)}
   /* A facet that can no longer match anything says so by going quiet, and
@@ -3672,6 +3672,10 @@
   .tools-fold-sum{border-radius:var(--r-row)}
   .rail-q, .rail-sort{border-radius:var(--r-pill)}
   .rail-sort{padding-left:14px}
+  /* No mono in the chrome: Pumice sets everything in Inter, and the numbers
+     that stack or tick keep their columns with tabular figures. The studies
+     that use mono keep it — there the typeface is the effect. */
+  .num, .chips, .foot, .set-uses, .set-read, .spec-when, .rail-sum-n, .rail-n{font-variant-numeric:tabular-nums}
   .rail-sum, .rail-list label, .rail-sects a{border-radius:var(--r-row); padding-left:12px; padding-right:12px}
   .rail-lbl{margin-left:12px}
   .rail-toggle{border-radius:var(--r-pill)}
@@ -19244,13 +19248,13 @@ document.addEventListener("DOMContentLoaded", function () {
     column-gap:12px; row-gap:7px;
     color:var(--ink-mid);
   }
-  .bhl-solo-num{font:500 11px/1 var(--mono); letter-spacing:.06em; color:var(--ink-low)}
+  .bhl-solo-num{font:500 11px/1 var(--font-ui); letter-spacing:.06em; color:var(--ink-low)}
   .bhl-solo-name{font:500 15px/1.2 var(--font-ui); color:var(--ink-hi); white-space:nowrap;
     overflow:hidden; text-overflow:ellipsis}
   /* Said once, in the register the chips use, and only by the studies it is
      true of — see the cap on --solo-s in the script. Under the name, not
      beside it: beside it the caption was as wide as the note. */
-  .bhl-solo-note{grid-column:2; font:500 10.5px/1.35 var(--mono); letter-spacing:.04em;
+  .bhl-solo-note{grid-column:2; font:500 10.5px/1.35 var(--font-ui); letter-spacing:.04em;
     color:var(--ink-low); max-width:34ch}
   .bhl-solo-note[hidden]{display:none}
 
@@ -19269,7 +19273,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .bhl-solo-bar{justify-content:center; flex:1 1 auto}
   }
   .bhl-solo-grp{display:flex; align-items:center; gap:6px}
-  .bhl-solo-lbl{font:500 10px/1 var(--mono); letter-spacing:.08em;
+  .bhl-solo-lbl{font:500 10px/1 var(--font-ui); letter-spacing:.08em;
     text-transform:uppercase; color:var(--ink-low)}
   .bhl-solo-seg{display:flex; gap:2px}
   .bhl-solo-b{
@@ -19287,7 +19291,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .bhl-solo-b[aria-pressed="true"]{background:var(--on-card-hi); color:var(--ink-hi)}
   /* The clock under the step buttons. Tabular so the group does not shuffle
      sideways by a digit's width on every frame. */
-  .bhl-solo-ms{font:500 10.5px/1 var(--mono); letter-spacing:.04em; color:var(--ink-low);
+  .bhl-solo-ms{font:500 10.5px/1 var(--font-ui); letter-spacing:.04em; color:var(--ink-low);
     min-width:6ch; text-align:right; font-variant-numeric:tabular-nums}
 
   /* The card's own version radios, moved out of the stage so the scale control
