@@ -2695,6 +2695,19 @@
      *,*::before,*::after rule below, so the fill lands and the pop does not. */
   .fav-pop svg{animation:bhl-star-set var(--t-4) cubic-bezier(.34,1.4,.64,1)}
   @keyframes bhl-star-set{ from{ transform:scale(.66) } to{ transform:scale(1) } }
+  /* Pumice like-pop: the set star also throws a ring and eight ink dots. Same
+     rule as the scale above: on set only, never for a star restored at load. */
+  .fav-pop::before,.fav-pop::after{content:""; position:absolute; pointer-events:none}
+  .fav-pop::after{inset:-2px; border-radius:inherit; box-shadow:0 0 0 2px var(--ink-hi); opacity:0;
+    animation:bhl-pop-ring 520ms cubic-bezier(.32,.72,0,1)}
+  .fav-pop::before{left:50%; top:50%; width:4px; height:4px; margin:-2px; border-radius:50%; opacity:0;
+    animation:bhl-pop-dots 560ms cubic-bezier(.32,.72,0,1)}
+  @keyframes bhl-pop-ring{ from{ opacity:.4; scale:.9 } to{ opacity:0; scale:1.4 } }
+  @keyframes bhl-pop-dots{
+    0%,45%{ opacity:1 }
+    from{ box-shadow:0 -10px var(--ink-hi),8px -8px var(--ink-hi),10px 0 var(--ink-hi),8px 8px var(--ink-hi),0 10px var(--ink-hi),-8px 8px var(--ink-hi),-10px 0 var(--ink-hi),-8px -8px var(--ink-hi) }
+    to{ opacity:0; box-shadow:0 -24px 0 -1px var(--ink-hi),17px -17px 0 -1px var(--ink-hi),24px 0 0 -1px var(--ink-hi),17px 17px 0 -1px var(--ink-hi),0 24px 0 -1px var(--ink-hi),-17px 17px 0 -1px var(--ink-hi),-24px 0 0 -1px var(--ink-hi),-17px -17px 0 -1px var(--ink-hi) }
+  }
   /* Copy to Framer — mirrors .fav at the other corner of the stage, so the two
      stage actions read as one small bar rather than two unrelated affordances. */
   /* ---- The two stage actions -----------------------------------------
