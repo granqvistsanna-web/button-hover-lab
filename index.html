@@ -3674,8 +3674,11 @@
   .tools-fold-sum{border-radius:var(--r-row)}
   .rail-q, .rail-sort{border-radius:var(--r-pill)}
   .rail-sort{padding-left:14px}
-  .mast .tb-home{align-self:center}
-  @media (min-width: 1360px){ body:not([data-rail="off"]) .mast .tb-sep{display:none} body:not([data-rail="off"]) .mast .tb-home{margin-bottom:10px} }
+  /* the Toolbox mascot stands in for a hero here: bigger, but in the title row */
+  .mast .tb-home{align-self:center; --tb-size:40px}
+  @media (min-width: 1360px){ body:not([data-rail="off"]) .mast .tb-sep{display:none} body:not([data-rail="off"]) .mast .tb-home{margin-bottom:10px; align-self:flex-start}
+    /* the mark stacks above the title, so the panel's search starts that much lower */
+    body:not([data-rail="off"]) .rail-head{padding-top:136px} }
   /* No mono in the chrome: Pumice sets everything in Inter, and the numbers
      that stack or tick keep their columns with tabular figures. The studies
      that use mono keep it — there the typeface is the effect. */
@@ -3705,6 +3708,7 @@
     .mast{left:calc(58px + var(--hug)); width:calc(var(--rail-w) - 58px - var(--hug));
       padding-top:calc(24px + var(--hug))}
     body[data-rail="off"] .mast{left:calc(58px + var(--hug)); top:calc(24px + var(--hug)); padding:0}
+    body[data-rail="off"] .mast .tb-home{--tb-size:26px} /* folded, the title floats in a 26px strip above the cards */
     .rail-fold, .rail-show, .tools-hide, .tools-show{border-radius:var(--r-pill)}
     .rail-show{left:calc(12px + var(--hug)); top:calc(24px + var(--hug))}
     .tools-hide, .tools-show{right:calc(12px + var(--hug)); top:calc(24px + var(--hug))}
