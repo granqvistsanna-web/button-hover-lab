@@ -85,6 +85,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap">
+<script src="https://granqvistsanna-web.github.io/mascot.js" defer></script>
 <style>
   /* ============================================================
      Pumice — https://granqvistsanna-web.github.io/pumice/
@@ -3673,6 +3674,8 @@
   .tools-fold-sum{border-radius:var(--r-row)}
   .rail-q, .rail-sort{border-radius:var(--r-pill)}
   .rail-sort{padding-left:14px}
+  .mast .tb-home{align-self:center}
+  @media (min-width: 1360px){ body:not([data-rail="off"]) .mast .tb-sep{display:none} body:not([data-rail="off"]) .mast .tb-home{margin-bottom:10px} }
   /* No mono in the chrome: Pumice sets everything in Inter, and the numbers
      that stack or tick keep their columns with tabular figures. The studies
      that use mono keep it — there the typeface is the effect. */
@@ -3752,6 +3755,7 @@
        better by the cards themselves, which are hoverable from the first
        row up. The count is never typed — see the .mast-sub fill below. -->
   <header class="mast">
+    <a href="https://granqvistsanna-web.github.io/" data-toolbox-home>Toolbox</a> <span class="tb-sep" aria-hidden="true">/</span>
     <h1>Button Lab</h1>
     <!-- The page's one count, and it is the LIVE one. It used to be the total
          here and the live figure in the panel's status bar, which meant the
