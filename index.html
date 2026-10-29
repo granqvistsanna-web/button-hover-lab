@@ -145,11 +145,11 @@
     /* An <input> has no ::before, so the magnifier is a background image. A
        data URI cannot read currentColor, so the stroke is written per theme
        and the two are kept in step here. */
-    --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.4 10.4 14 14'/%3E%3C/svg%3E");
+    --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a9a9a' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
     /* The clear cross, as a MASK and not a fill, so one declaration serves both
        themes — see the rule on ::-webkit-search-cancel-button. Same 1.5 stroke
        and round cap as the magnifier above, so the two read as one family. */
-    --x-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M4 4 12 12M12 4 4 12'/%3E%3C/svg%3E");
+    --x-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
     --ink:var(--ink-hi);
     --ink-soft:var(--ink-mid);
     --muted:var(--ink-low);
@@ -407,7 +407,7 @@
     --on-card-hi:var(--bg-2);
     --well:var(--bg-3);
     --raised:var(--bg-0);
-    --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23636363' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.4 10.4 14 14'/%3E%3C/svg%3E");
+    --find-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5b56' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
   }
 
   /* ============ the swap between the two grounds ============
@@ -2679,7 +2679,7 @@
   .fav:hover{background:var(--on-card); color:var(--ink-hi)}
   .fav[aria-pressed="true"]{color:var(--ink-hi)}
   .fav:active{transform:scale(.88)}
-  .fav svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor; stroke-width:1.6}
+  .fav svg{width:18px; height:18px; display:block; fill:none; stroke:currentColor; stroke-width:2}
   .fav[aria-pressed="true"] svg{fill:currentColor}
   /* Starring is a COMMIT, and a commit is the one case on this page where an
      overshoot is honest — the press carried momentum into it. Damping ≈ .8,
@@ -2756,7 +2756,7 @@
   @keyframes bhl-tick{ to{ stroke-dashoffset:0 } }
   .copy-i{display:grid; place-items:center}
   .copy svg{width:15px; height:15px; display:block; fill:none; stroke:currentColor;
-    stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+    stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
   .copy-lbl{min-width:7ch}
   /* «Code file» is the longest thing this one ever says — see the Option
      hint in the copy script. */
@@ -3702,6 +3702,16 @@
     .rail-fold, .rail-show, .tools-hide, .tools-show{border-radius:var(--r-pill)}
     .rail-show{left:calc(12px + var(--hug)); top:calc(24px + var(--hug))}
     .tools-hide, .tools-show{right:calc(12px + var(--hug)); top:calc(24px + var(--hug))}
+    /* Lucide panel glyphs, drawn as masks so they take currentColor */
+    .rail-fold::before, .rail-show::before, .tools-hide::before, .tools-show::before{
+      width:18px; height:18px; margin:-9px 0 0 -9px; border:0; border-radius:0;
+      background:currentColor; -webkit-mask:var(--panel-glyph) center/18px 18px no-repeat; mask:var(--panel-glyph) center/18px 18px no-repeat;
+    }
+    .rail-fold::after, .rail-show::after, .tools-hide::after, .tools-show::after{display:none}
+    .rail-fold{--panel-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 3v18m7-6-3-3 3-3'/%3E%3C/svg%3E")}
+    .rail-show{--panel-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 3v18m5-12 3 3-3 3'/%3E%3C/svg%3E")}
+    .tools-hide{--panel-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M15 3v18M8 9l3 3-3 3'/%3E%3C/svg%3E")}
+    .tools-show{--panel-glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M15 3v18m-5-6-3-3 3-3'/%3E%3C/svg%3E")}
   }
 </style>
 </head>
@@ -13941,7 +13951,7 @@ document.addEventListener("DOMContentLoaded", function () {
        buzz. Silent everywhere it is unsupported, which is every desktop. */
     var buzz = function(){ try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
 
-    var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.85-4.25 4.15 1 5.9-5.25-2.75-5.25 2.75 1-5.9L3.5 9.75l5.9-.85z" stroke-linejoin="round"/></svg>';
+    var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.53 2.3a.53.53 0 0 1 .94 0l2.31 4.68a2.12 2.12 0 0 0 1.6 1.16l5.16.76a.53.53 0 0 1 .3.9l-3.74 3.64a2.12 2.12 0 0 0-.61 1.88l.88 5.14a.53.53 0 0 1-.77.56l-4.62-2.43a2.12 2.12 0 0 0-1.97 0L6.4 21.01a.53.53 0 0 1-.77-.56l.88-5.14a2.12 2.12 0 0 0-.61-1.88L2.16 9.8a.53.53 0 0 1 .3-.9l5.16-.76a2.12 2.12 0 0 0 1.6-1.16z" stroke-linejoin="round"/></svg>';
 
     cards.forEach(function(card){
       var name = (card.querySelector('h3') || {}).textContent || '';
@@ -17120,9 +17130,9 @@ document.addEventListener("DOMContentLoaded", function () {
                  'bhl-swap':1};
     var HOUSE_RE = /\.(btn--solid|btn--line|btn--text|btn|lbl|icon|sr|slot|track)(?![\w-])/g;
     var PREFIX = 'bhl-';
-    var ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 6.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1.5"/></svg>';
-    var DONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="24" d="M4 12.5l5 5L20 6.5"/></svg>';
-    var FRAMER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 7L5 12l4.5 5M14.5 7l4.5 5-4.5 5"/></svg>';
+    var ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+    var DONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="24" d="M4 12l5 5L20 6"/></svg>';
+    var FRAMER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>';
 
     var live = document.createElement('span');
     live.className = 'sr';
@@ -19311,7 +19321,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .bhl-solo-x:hover{background:var(--on-card); color:var(--ink-hi)}
   .bhl-solo-x:focus-visible{outline:2px solid var(--ink-low); outline-offset:2px}
-  .bhl-solo-x svg{width:15px; height:15px; stroke:currentColor; stroke-width:1.6;
+  .bhl-solo-x svg{width:18px; height:18px; stroke:currentColor; stroke-width:2;
     fill:none; stroke-linecap:round}
 
   /* Paging sits on the EDGES rather than in the bar, because it is the one
@@ -19328,7 +19338,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .bhl-solo[data-chrome="0"] .bhl-solo-step{opacity:0; pointer-events:none}
   .bhl-solo-prev{left:0}
   .bhl-solo-next{right:0}
-  .bhl-solo-step svg{width:20px; height:20px; stroke:currentColor; stroke-width:1.4;
+  .bhl-solo-step svg{width:18px; height:18px; stroke:currentColor; stroke-width:2;
     fill:none; stroke-linecap:round; stroke-linejoin:round}
 
   /* The hole the stage leaves in the card. Sized in script from the measured
@@ -19354,10 +19364,10 @@ document.addEventListener("DOMContentLoaded", function () {
      aria-label="Solo view" tabindex="-1" data-frame="free" data-chrome="1" hidden>
   <div class="bhl-solo-frame"><div class="bhl-solo-fit"></div></div>
   <button type="button" class="bhl-solo-step bhl-solo-prev" aria-label="Previous study (left arrow)">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
   </button>
   <button type="button" class="bhl-solo-step bhl-solo-next" aria-label="Next study (right arrow)">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
   </button>
   <div class="bhl-solo-foot">
   <div class="bhl-solo-cap">
@@ -19923,8 +19933,8 @@ document.addEventListener("DOMContentLoaded", function () {
      button in the middle of that stage is the whole reason the card exists and
      stealing its click would be the worst trade on the page. */
   var SOLO_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-    '<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9' +
-    'M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg>';
+    '<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3' +
+    'M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
 
   /* ⚠️ AFTER DOMContentLoaded, AND THE REASON IS ORDERING. The corner layer
      does not exist in the markup — the copy machinery builds .copy-pair inside
